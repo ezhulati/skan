@@ -2,7 +2,7 @@
 [build]
   base = "skan-ecosystem/marketing-site"
   command = "npm install && npm run build"
-  publish = "skan-ecosystem/marketing-site/dist"
+  publish = "dist"
 
 [[redirects]]
   from = "/demo/*"
