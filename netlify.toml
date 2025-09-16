@@ -1,13 +1,22 @@
-# Netlify configuration for SKAN.AL admin portal
+# Netlify configuration for SKAN.AL marketing site
 [build]
-  base = "skan-ecosystem/admin-portal"
+  base = "skan-ecosystem/marketing-site"
   command = "npm install && npm run build"
-  publish = "build"
+  publish = "dist"
 
-# SPA redirect for React Router
 [[redirects]]
-  from = "/*"
-  to = "/index.html"
+  from = "/demo/*"
+  to = "/demo/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/features/*"
+  to = "/features/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/pricing/*"
+  to = "/pricing/index.html"
   status = 200
 
 # API proxy for development and production
