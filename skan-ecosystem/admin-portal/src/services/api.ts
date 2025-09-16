@@ -1,6 +1,6 @@
 import { Order, OrdersResponse, LoginResponse, OrderFilters, OrderStats } from '../types';
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://api.skan.al/v1';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://api-mkazmlu7ta-ew.a.run.app';
 
 class ApiError extends Error {
   constructor(public status: number, message: string) {
