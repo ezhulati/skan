@@ -1,0 +1,216 @@
+---
+export interface Props {
+  title: string;
+  description?: string;
+  ogTitle?: string;
+  ogDescription?: string;
+  ogImage?: string;
+}
+
+const { 
+  title, 
+  description = "SKAN.AL - QR Code Ordering System for Albanian Restaurants. Streamline your restaurant operations with digital menus and seamless ordering.", 
+  ogTitle = title,
+  ogDescription = description,
+  ogImage = "https://skan.al/images/og-image.jpg"
+} = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+---
+
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="generator" content={Astro.generator} />
+  
+  <!-- Primary Meta Tags -->
+  <title>{title}</title>
+  <meta name="title" content={title} />
+  <meta name="description" content={description} />
+  <link rel="canonical" href={canonicalURL} />
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content={canonicalURL} />
+  <meta property="og:title" content={ogTitle} />
+  <meta property="og:description" content={ogDescription} />
+  <meta property="og:image" content={ogImage} />
+  <meta property="og:site_name" content="SKAN.AL" />
+  
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="twitter:url" content={canonicalURL} />
+  <meta property="twitter:title" content={ogTitle} />
+  <meta property="twitter:description" content={ogDescription} />
+  <meta property="twitter:image" content={ogImage} />
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="icon" type="image/png" href="/favicon.png" />
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "SKAN.AL",
+      "url": "https://skan.al",
+      "logo": "https://skan.al/images/logo.png",
+      "description": "QR Code Ordering System for Albanian Restaurants",
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "AL"
+      },
+      "sameAs": [
+        "https://order.skan.al",
+        "https://admin.skan.al"
+      ]
+    }
+  </script>
+</head>
+
+<body class="font-sans antialiased bg-white text-gray-900">
+  <!-- Navigation -->
+  <nav class="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-sm border-b border-gray-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16">
+        <!-- Logo -->
+        <div class="flex items-center">
+          <a href="/" class="flex items-center space-x-2">
+            <div class="w-8 h-8 bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg flex items-center justify-center">
+              <span class="text-white font-bold text-lg">S</span>
+            </div>
+            <span class="font-bold text-xl text-gray-900">SKAN.AL</span>
+          </a>
+        </div>
+        
+        <!-- Desktop Navigation -->
+        <div class="hidden md:block">
+          <div class="ml-10 flex items-baseline space-x-8">
+            <a href="/features" class="text-gray-600 hover:text-gray-900 px-3 py-2 text-sm font-medium transition-colors">Features</a>
+            <a href="/pricing" class="text-gray-600 hover:text-gray-900 px-3 py-2 text-sm font-medium transition-colors">Pricing</a>
+            <a href="/demo" class="text-gray-600 hover:text-gray-900 px-3 py-2 text-sm font-medium transition-colors">Demo</a>
+            <a href="/blog" class="text-gray-600 hover:text-gray-900 px-3 py-2 text-sm font-medium transition-colors">Blog</a>
+            <a href="/contact" class="text-gray-600 hover:text-gray-900 px-3 py-2 text-sm font-medium transition-colors">Contact</a>
+          </div>
+        </div>
+        
+        <!-- CTA Buttons -->
+        <div class="hidden md:flex items-center space-x-4">
+          <a href="https://admin.skan.al/login" class="text-gray-600 hover:text-gray-900 px-3 py-2 text-sm font-medium transition-colors">Sign In</a>
+          <a href="/demo" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">Try Demo</a>
+        </div>
+        
+        <!-- Mobile menu button -->
+        <div class="md:hidden">
+          <button type="button" class="text-gray-600 hover:text-gray-900" id="mobile-menu-button">
+            <span class="sr-only">Open main menu</span>
+            <svg class="block h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Mobile menu -->
+    <div class="md:hidden hidden" id="mobile-menu">
+      <div class="px-2 pt-2 pb-3 space-y-1 bg-white border-t border-gray-100">
+        <a href="/features" class="text-gray-600 hover:text-gray-900 block px-3 py-2 text-base font-medium">Features</a>
+        <a href="/pricing" class="text-gray-600 hover:text-gray-900 block px-3 py-2 text-base font-medium">Pricing</a>
+        <a href="/demo" class="text-gray-600 hover:text-gray-900 block px-3 py-2 text-base font-medium">Demo</a>
+        <a href="/blog" class="text-gray-600 hover:text-gray-900 block px-3 py-2 text-base font-medium">Blog</a>
+        <a href="/contact" class="text-gray-600 hover:text-gray-900 block px-3 py-2 text-base font-medium">Contact</a>
+        <div class="border-t border-gray-100 pt-3">
+          <a href="https://admin.skan.al/login" class="text-gray-600 hover:text-gray-900 block px-3 py-2 text-base font-medium">Sign In</a>
+          <a href="/demo" class="bg-blue-600 hover:bg-blue-700 text-white block px-3 py-2 rounded-lg text-base font-medium transition-colors mx-3 mt-2">Try Demo</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="pt-16">
+    <slot />
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-gray-50 border-t border-gray-200">
+    <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <!-- Logo and Description -->
+        <div class="col-span-1 md:col-span-2">
+          <div class="flex items-center space-x-2 mb-4">
+            <div class="w-8 h-8 bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg flex items-center justify-center">
+              <span class="text-white font-bold text-lg">S</span>
+            </div>
+            <span class="font-bold text-xl text-gray-900">SKAN.AL</span>
+          </div>
+          <p class="text-gray-600 mb-4 max-w-md">
+            QR code ordering system designed for Albanian restaurants. Streamline operations, reduce wait times, and enhance customer experience.
+          </p>
+          <div class="flex space-x-4">
+            <a href="/contact" class="text-gray-400 hover:text-gray-600">
+              <span class="sr-only">Email</span>
+              <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+        
+        <!-- Quick Links -->
+        <div>
+          <h3 class="text-sm font-semibold text-gray-900 tracking-wider uppercase mb-4">Product</h3>
+          <ul class="space-y-2">
+            <li><a href="/features" class="text-gray-600 hover:text-gray-900">Features</a></li>
+            <li><a href="/pricing" class="text-gray-600 hover:text-gray-900">Pricing</a></li>
+            <li><a href="/demo" class="text-gray-600 hover:text-gray-900">Demo</a></li>
+            <li><a href="/integrations" class="text-gray-600 hover:text-gray-900">Integrations</a></li>
+          </ul>
+        </div>
+        
+        <!-- Support -->
+        <div>
+          <h3 class="text-sm font-semibold text-gray-900 tracking-wider uppercase mb-4">Support</h3>
+          <ul class="space-y-2">
+            <li><a href="/help" class="text-gray-600 hover:text-gray-900">Help Center</a></li>
+            <li><a href="/contact" class="text-gray-600 hover:text-gray-900">Contact</a></li>
+            <li><a href="/blog" class="text-gray-600 hover:text-gray-900">Blog</a></li>
+            <li><a href="/about" class="text-gray-600 hover:text-gray-900">About</a></li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="mt-8 pt-8 border-t border-gray-200">
+        <div class="flex flex-col md:flex-row justify-between items-center">
+          <p class="text-gray-500 text-sm">
+            © 2024 SKAN.AL. All rights reserved.
+          </p>
+          <div class="mt-2 md:mt-0">
+            <a href="/privacy" class="text-gray-500 hover:text-gray-900 text-sm mr-6">Privacy Policy</a>
+            <a href="/terms" class="text-gray-500 hover:text-gray-900 text-sm">Terms of Service</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Mobile Menu JavaScript -->
+  <script>
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+    
+    mobileMenuButton?.addEventListener('click', () => {
+      mobileMenu?.classList.toggle('hidden');
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,4 @@
+🚀 Local API server running on http://localhost:5000
+📋 Health check: http://localhost:5000/health
+🍺 Demo venue: http://localhost:5000/venue/beach-bar-durres/menu
+🔑 Demo login: manager_email@gmail.com / demo123

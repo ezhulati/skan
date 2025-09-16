@@ -1,0 +1,333 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout 
+  title="Live Demo - SKAN.AL QR Ordering System"
+  description="Try our live QR ordering demo with real Albanian restaurant data. See how customers order from Beach Bar Durrës."
+>
+  <!-- Hero Section -->
+  <section class="bg-gradient-to-br from-blue-50 to-indigo-100 py-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h1 class="text-4xl sm:text-5xl font-bold text-gray-900 mb-6">
+        Try Our Live Demo
+      </h1>
+      <p class="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
+        Experience the complete QR ordering system with real Albanian restaurant data from Beach Bar Durrës
+      </p>
+      <div class="bg-yellow-100 border border-yellow-400 rounded-lg p-4 max-w-2xl mx-auto">
+        <p class="text-yellow-800">
+          <strong>Note:</strong> This demo uses real data from our existing Firebase project. All features are fully functional!
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Demo Options -->
+  <section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        <!-- Customer Experience Demo -->
+        <div class="bg-white border-2 border-blue-200 rounded-2xl p-8 hover:shadow-xl transition-shadow">
+          <div class="text-center mb-6">
+            <div class="w-16 h-16 bg-blue-100 rounded-xl flex items-center justify-center mx-auto mb-4">
+              <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+              </svg>
+            </div>
+            <h2 class="text-2xl font-bold text-gray-900 mb-2">Customer Ordering Experience</h2>
+            <p class="text-gray-600 mb-6">
+              See exactly what your customers will experience when they scan a QR code at your restaurant
+            </p>
+          </div>
+          
+          <!-- QR Code Demo -->
+          <div class="bg-gray-50 rounded-xl p-6 mb-6">
+            <div class="text-center">
+              <div class="w-32 h-32 bg-gray-900 rounded-xl mx-auto mb-4 flex items-center justify-center">
+                <span class="text-white text-xs">QR CODE</span>
+              </div>
+              <h3 class="font-semibold text-lg mb-2">Beach Bar Durrës - Table A1</h3>
+              <p class="text-sm text-gray-600 mb-4">Scan this QR code or click the link below</p>
+            </div>
+          </div>
+          
+          <div class="space-y-4">
+            <a 
+              href="https://order.skan.al/beach-bar-durres/a1" 
+              target="_blank"
+              class="w-full bg-blue-600 hover:bg-blue-700 text-white px-6 py-4 rounded-xl text-lg font-semibold transition-colors block text-center"
+            >
+              👉 Try Customer Ordering Demo
+            </a>
+            <p class="text-sm text-gray-500 text-center">
+              Opens in new tab • Real menu from Beach Bar Durrës
+            </p>
+          </div>
+          
+          <!-- What You'll See -->
+          <div class="mt-6 pt-6 border-t border-gray-100">
+            <h4 class="font-semibold text-gray-900 mb-3">What you'll experience:</h4>
+            <ul class="space-y-2 text-sm text-gray-600">
+              <li class="flex items-center">
+                <svg class="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                </svg>
+                Browse real Albanian menu items with prices
+              </li>
+              <li class="flex items-center">
+                <svg class="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                </svg>
+                Add items to cart and see running total
+              </li>
+              <li class="flex items-center">
+                <svg class="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                </svg>
+                Submit order and receive confirmation
+              </li>
+              <li class="flex items-center">
+                <svg class="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                </svg>
+                Track order status in real-time
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Restaurant Dashboard Demo -->
+        <div class="bg-white border-2 border-green-200 rounded-2xl p-8 hover:shadow-xl transition-shadow">
+          <div class="text-center mb-6">
+            <div class="w-16 h-16 bg-green-100 rounded-xl flex items-center justify-center mx-auto mb-4">
+              <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+              </svg>
+            </div>
+            <h2 class="text-2xl font-bold text-gray-900 mb-2">Restaurant Dashboard</h2>
+            <p class="text-gray-600 mb-6">
+              Experience the complete restaurant management interface for handling orders and operations
+            </p>
+          </div>
+          
+          <!-- Dashboard Preview -->
+          <div class="bg-gray-50 rounded-xl p-6 mb-6">
+            <div class="space-y-3">
+              <div class="flex justify-between items-center pb-2 border-b border-gray-200">
+                <h3 class="font-semibold">Live Orders Dashboard</h3>
+                <div class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">Live</div>
+              </div>
+              <div class="space-y-2">
+                <div class="bg-red-50 border-l-4 border-red-500 p-3 rounded-r">
+                  <div class="flex justify-between items-center">
+                    <div>
+                      <div class="font-medium text-sm">SKN-20240916-001</div>
+                      <div class="text-xs text-gray-600">Table A1 • €11.50</div>
+                    </div>
+                    <span class="bg-red-600 text-white px-2 py-1 rounded text-xs">New</span>
+                  </div>
+                </div>
+                <div class="bg-yellow-50 border-l-4 border-yellow-500 p-3 rounded-r">
+                  <div class="flex justify-between items-center">
+                    <div>
+                      <div class="font-medium text-sm">SKN-20240916-002</div>
+                      <div class="text-xs text-gray-600">Table B3 • €6.50</div>
+                    </div>
+                    <span class="bg-yellow-600 text-white px-2 py-1 rounded text-xs">Preparing</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="space-y-4">
+            <a 
+              href="https://admin.skan.al/login" 
+              target="_blank"
+              class="w-full bg-green-600 hover:bg-green-700 text-white px-6 py-4 rounded-xl text-lg font-semibold transition-colors block text-center"
+            >
+              👥 Try Restaurant Dashboard
+            </a>
+            <p class="text-sm text-gray-500 text-center">
+              Opens in new tab • Use demo credentials
+            </p>
+          </div>
+          
+          <!-- Demo Credentials -->
+          <div class="mt-6 pt-6 border-t border-gray-100">
+            <h4 class="font-semibold text-gray-900 mb-3">Demo login credentials:</h4>
+            <div class="bg-gray-50 rounded-lg p-3 text-sm">
+              <div class="mb-2">
+                <strong>Email:</strong> manager_email@gmail.com
+              </div>
+              <div>
+                <strong>Password:</strong> demo123
+              </div>
+            </div>
+            <ul class="space-y-2 text-sm text-gray-600 mt-3">
+              <li class="flex items-center">
+                <svg class="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                </svg>
+                See real-time orders as they come in
+              </li>
+              <li class="flex items-center">
+                <svg class="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                </svg>
+                Update order status with one click
+              </li>
+              <li class="flex items-center">
+                <svg class="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                </svg>
+                Manage menu items and pricing
+              </li>
+              <li class="flex items-center">
+                <svg class="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                </svg>
+                View analytics and sales reports
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Complete Demo Flow -->
+  <section class="py-20 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+          Complete Demo Experience
+        </h2>
+        <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+          For the full experience, try both demos and see how orders flow from customer to kitchen
+        </p>
+      </div>
+      
+      <div class="bg-white rounded-2xl shadow-xl p-8">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <!-- Step 1 -->
+          <div class="text-center">
+            <div class="w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">
+              1
+            </div>
+            <h3 class="font-semibold text-gray-900 mb-2">Open Customer Demo</h3>
+            <p class="text-sm text-gray-600">Click the customer ordering demo link above and place an order</p>
+          </div>
+          
+          <!-- Arrow -->
+          <div class="hidden md:flex items-center justify-center">
+            <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
+          </div>
+          
+          <!-- Step 2 -->
+          <div class="text-center">
+            <div class="w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">
+              2
+            </div>
+            <h3 class="font-semibold text-gray-900 mb-2">Open Restaurant Demo</h3>
+            <p class="text-sm text-gray-600">Login to the restaurant dashboard using the demo credentials</p>
+          </div>
+          
+          <!-- Arrow -->
+          <div class="hidden md:flex items-center justify-center">
+            <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
+          </div>
+          
+          <!-- Step 3 -->
+          <div class="text-center">
+            <div class="w-12 h-12 bg-green-600 text-white rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">
+              ✓
+            </div>
+            <h3 class="font-semibold text-gray-900 mb-2">See Order Appear</h3>
+            <p class="text-sm text-gray-600">Watch your customer order appear instantly in the restaurant dashboard</p>
+          </div>
+        </div>
+        
+        <div class="mt-8 p-4 bg-blue-50 rounded-lg">
+          <p class="text-blue-800 text-center">
+            <strong>💡 Pro Tip:</strong> Open both demos in separate browser windows to see real-time order synchronization
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Demo Features -->
+  <section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+          What Makes Our Demo Special
+        </h2>
+        <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+          Unlike other demos, ours uses real Albanian restaurant data and fully functional features
+        </p>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="text-center">
+          <div class="w-16 h-16 bg-blue-100 rounded-xl flex items-center justify-center mx-auto mb-4">
+            <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 mb-2">Real Albanian Data</h3>
+          <p class="text-gray-600">Menu items from actual Beach Bar Durrës with real pricing in Euros and Albanian translations</p>
+        </div>
+        
+        <div class="text-center">
+          <div class="w-16 h-16 bg-green-100 rounded-xl flex items-center justify-center mx-auto mb-4">
+            <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 mb-2">Fully Functional</h3>
+          <p class="text-gray-600">All features work exactly as they would in production. Orders are created, statuses update, everything syncs</p>
+        </div>
+        
+        <div class="text-center">
+          <div class="w-16 h-16 bg-purple-100 rounded-xl flex items-center justify-center mx-auto mb-4">
+            <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 mb-2">Real-Time Updates</h3>
+          <p class="text-gray-600">See live order synchronization between customer and restaurant interfaces in real-time</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Next Steps -->
+  <section class="py-20 bg-blue-600">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4">
+        Ready to Set Up Your Restaurant?
+      </h2>
+      <p class="text-xl text-blue-100 mb-8 max-w-3xl mx-auto">
+        Convinced by the demo? Get your restaurant set up with the same system in 24 hours
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+        <a href="/contact" class="bg-white hover:bg-gray-50 text-blue-600 px-8 py-4 rounded-xl text-lg font-semibold transition-colors">
+          Get Started Now
+        </a>
+        <a href="/pricing" class="border border-blue-400 hover:border-blue-300 text-white px-8 py-4 rounded-xl text-lg font-semibold transition-colors">
+          See Pricing
+        </a>
+      </div>
+      <p class="text-blue-100 mt-6">
+        <strong>Free setup</strong> • <strong>24-hour launch</strong> • <strong>Albanian support</strong>
+      </p>
+    </div>
+  </section>
+</BaseLayout>
