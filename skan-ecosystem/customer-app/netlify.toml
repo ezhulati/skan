@@ -1,0 +1,10 @@
+# Netlify configuration for SKAN Customer App
+[build]
+  command = "npm run build"
+  publish = "build"
+
+# SPA redirects for React Router (already exists in _redirects but this ensures it works)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

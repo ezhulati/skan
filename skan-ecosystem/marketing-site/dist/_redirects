@@ -1,4 +1,0 @@
-# Astro static site redirects
-/demo/* /demo/index.html 200
-/features/* /features/index.html 200  
-/pricing/* /pricing/index.html 200
