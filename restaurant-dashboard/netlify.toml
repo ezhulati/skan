@@ -1,0 +1,10 @@
+# Netlify configuration for SKAN.AL admin portal
+[build]
+  command = "npm install && npm run build"
+  publish = "build"
+
+# SPA routing redirects for React Router
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
