@@ -1,6 +1,7 @@
 # Netlify configuration for SKAN.AL marketing site
 # Trigger rebuild after removing problematic root netlify.toml
 [build]
+  base = "skan-ecosystem/marketing-site"
   command = "npm install && npm run build"
   publish = "dist"
 
