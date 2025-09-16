@@ -5,12 +5,6 @@
   command = "npm install && npm run build"
   publish = "dist"
 
-# Admin portal configuration (for skan-admin.netlify.app)
-[context.admin]
-  base = "restaurant-dashboard"
-  command = "npm install && npm run build"
-  publish = "build"
-
 [[redirects]]
   from = "/demo/*"
   to = "/demo/index.html"
