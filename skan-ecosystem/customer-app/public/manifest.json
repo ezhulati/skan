@@ -1,6 +1,7 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Skan.al Order",
+  "name": "Skan.al Restaurant Ordering",
+  "description": "Order food from your table with QR codes - Albanian restaurants made easy",
   "icons": [
     {
       "src": "favicon.ico",
@@ -18,8 +19,34 @@
       "sizes": "512x512"
     }
   ],
-  "start_url": ".",
+  "start_url": "/",
   "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "theme_color": "#2563eb",
+  "background_color": "#f9fafb",
+  "orientation": "portrait-primary",
+  "categories": ["food", "business", "productivity"],
+  "lang": "en",
+  "scope": "/",
+  "shortcuts": [
+    {
+      "name": "Scan QR Code",
+      "short_name": "Scan QR",
+      "description": "Scan a table QR code to start ordering",
+      "url": "/help",
+      "icons": [
+        {
+          "src": "logo192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "logo512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "form_factor": "narrow"
+    }
+  ]
 }
