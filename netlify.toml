@@ -1,6 +1,6 @@
-# Netlify configuration for SKAN.AL customer app
+# Netlify configuration for SKAN.AL admin portal
 [build]
-  base = "skan-ecosystem/customer-app"
+  base = "skan-ecosystem/admin-portal"
   command = "npm install && npm run build"
   publish = "build"
 

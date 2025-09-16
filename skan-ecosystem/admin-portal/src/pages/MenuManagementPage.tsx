@@ -35,7 +35,7 @@ const MenuManagementPage: React.FC = () => {
     isActive: true
   });
 
-  const baseUrl = '/api';
+  const baseUrl = '/api/v1';
 
   useEffect(() => {
     loadMenu();
