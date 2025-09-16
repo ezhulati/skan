@@ -1,6 +1,6 @@
 import { VenueMenuResponse, Order, OrderResponse, OrderTracking } from '../types';
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://api.skan.al/v1';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://api-mkazmlu7ta-ew.a.run.app/v1';
 
 class ApiError extends Error {
   constructor(public status: number, message: string) {

@@ -4,6 +4,9 @@ import { VenueProvider } from './contexts/VenueContext';
 import { CartProvider } from './contexts/CartContext';
 import { QRLanding } from './pages/QRLanding';
 import { Menu } from './pages/Menu';
+import { Cart } from './pages/Cart';
+import { Confirmation } from './pages/Confirmation';
+import { OrderTracking } from './pages/OrderTracking';
 import './index.css';
 
 function VenueRoutes() {
@@ -11,6 +14,9 @@ function VenueRoutes() {
     <Routes>
       <Route path="/:venueSlug/:tableNumber" element={<QRLanding />} />
       <Route path="/:venueSlug/:tableNumber/menu" element={<MenuWithContext />} />
+      <Route path="/:venueSlug/:tableNumber/cart" element={<CartWithContext />} />
+      <Route path="/:venueSlug/:tableNumber/confirmation" element={<ConfirmationWithContext />} />
+      <Route path="/:venueSlug/:tableNumber/track/:orderNumber" element={<OrderTrackingWithContext />} />
       <Route path="/" element={<Navigate to="/help" replace />} />
       <Route path="/help" element={<HelpPage />} />
       <Route path="/offline" element={<OfflinePage />} />
@@ -30,6 +36,54 @@ function MenuWithContext() {
   return (
     <VenueProvider venueSlug={venueSlug} tableNumber={tableNumber}>
       <Menu />
+    </VenueProvider>
+  );
+}
+
+function CartWithContext() {
+  const pathParts = window.location.pathname.split('/').filter(Boolean);
+  const venueSlug = pathParts[0];
+  const tableNumber = pathParts[1];
+
+  if (!venueSlug || !tableNumber) {
+    return <Navigate to="/help" replace />;
+  }
+
+  return (
+    <VenueProvider venueSlug={venueSlug} tableNumber={tableNumber}>
+      <Cart />
+    </VenueProvider>
+  );
+}
+
+function ConfirmationWithContext() {
+  const pathParts = window.location.pathname.split('/').filter(Boolean);
+  const venueSlug = pathParts[0];
+  const tableNumber = pathParts[1];
+
+  if (!venueSlug || !tableNumber) {
+    return <Navigate to="/help" replace />;
+  }
+
+  return (
+    <VenueProvider venueSlug={venueSlug} tableNumber={tableNumber}>
+      <Confirmation />
+    </VenueProvider>
+  );
+}
+
+function OrderTrackingWithContext() {
+  const pathParts = window.location.pathname.split('/').filter(Boolean);
+  const venueSlug = pathParts[0];
+  const tableNumber = pathParts[1];
+
+  if (!venueSlug || !tableNumber) {
+    return <Navigate to="/help" replace />;
+  }
+
+  return (
+    <VenueProvider venueSlug={venueSlug} tableNumber={tableNumber}>
+      <OrderTracking />
     </VenueProvider>
   );
 }
