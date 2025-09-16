@@ -25,7 +25,7 @@ const QRCodePage: React.FC = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const generateQRCode = async (tableNumber: string): Promise<TableQR> => {
+  const generateQRCode = useCallback(async (tableNumber: string): Promise<TableQR> => {
     const url = `${baseUrl}/order/${venueSlug}/${tableNumber}`;
     
     try {
@@ -47,7 +47,7 @@ const QRCodePage: React.FC = () => {
       console.error('Error generating QR code:', error);
       throw error;
     }
-  };
+  }, [baseUrl, venueSlug]);
 
   const generateQRCodes = useCallback(async (tableNumbers: string[]) => {
     setLoading(true);
@@ -62,7 +62,7 @@ const QRCodePage: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  }, [baseUrl, venueSlug, generateQRCode]);
+  }, [generateQRCode]);
 
   const addTable = async () => {
     if (!newTableNumber.trim()) return;
