@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { restaurantApiService, Order } from '../services/api';
 
 const DashboardPage: React.FC = () => {
-  const { auth, logout } = useAuth();
+  const { auth } = useAuth();
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedStatus, setSelectedStatus] = useState<string>('all');
   const [refreshing, setRefreshing] = useState(false);
 
-  const loadOrders = async () => {
+  const loadOrders = useCallback(async () => {
     if (!auth.user?.venueId) return;
 
     try {
@@ -27,11 +27,11 @@ const DashboardPage: React.FC = () => {
       setLoading(false);
       setRefreshing(false);
     }
-  };
+  }, [auth.user?.venueId, selectedStatus]);
 
   useEffect(() => {
     loadOrders();
-  }, [auth.user?.venueId, selectedStatus]);
+  }, [auth.user?.venueId, selectedStatus, loadOrders]);
 
   useEffect(() => {
     // Auto-refresh every 30 seconds
@@ -43,7 +43,7 @@ const DashboardPage: React.FC = () => {
     }, 30000);
 
     return () => clearInterval(interval);
-  }, [auth.user?.venueId, selectedStatus]);
+  }, [auth.user?.venueId, selectedStatus, loadOrders]);
 
   const handleStatusUpdate = async (orderId: string, newStatus: string) => {
     try {

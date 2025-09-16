@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import QRCode from 'qrcode';
 import { useAuth } from '../contexts/AuthContext';
 
@@ -9,7 +9,7 @@ interface TableQR {
 }
 
 const QRCodePage: React.FC = () => {
-  const { auth } = useAuth();
+  const { } = useAuth();
   const [tables, setTables] = useState<TableQR[]>([]);
   const [newTableNumber, setNewTableNumber] = useState('');
   const [loading, setLoading] = useState(false);
@@ -21,6 +21,7 @@ const QRCodePage: React.FC = () => {
   useEffect(() => {
     // Generate some default table QR codes
     generateQRCodes(['1', '2', '3', '4', '5', 'a1', 'a2', 'b1', 'b2']);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const generateQRCode = async (tableNumber: string): Promise<TableQR> => {
@@ -47,7 +48,7 @@ const QRCodePage: React.FC = () => {
     }
   };
 
-  const generateQRCodes = async (tableNumbers: string[]) => {
+  const generateQRCodes = useCallback(async (tableNumbers: string[]) => {
     setLoading(true);
     try {
       const qrCodes = await Promise.all(
@@ -60,7 +61,7 @@ const QRCodePage: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [baseUrl, venueSlug]);
 
   const addTable = async () => {
     if (!newTableNumber.trim()) return;

@@ -21,11 +21,6 @@ const Navigation: React.FC<NavigationProps> = ({ children }) => {
     setIsMobileMenuOpen(false);
   };
 
-  const handleOverlayClick = (e: React.MouseEvent) => {
-    if (e.target === e.currentTarget) {
-      closeMobileMenu();
-    }
-  };
 
   return (
     <div className={`navigation-layout ${isMobileMenuOpen ? 'menu-open' : ''}`}>
