@@ -35,7 +35,7 @@ const MenuManagementPage: React.FC = () => {
     isActive: true
   });
 
-  const baseUrl = 'http://localhost:5001';
+  const baseUrl = '/api';
 
   useEffect(() => {
     loadMenu();

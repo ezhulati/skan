@@ -1,23 +1,13 @@
-# Netlify configuration for SKAN.AL marketing site
-# Trigger rebuild after removing problematic root netlify.toml
+# Netlify configuration for SKAN.AL customer app
 [build]
-  base = "skan-ecosystem/marketing-site"
+  base = "skan-ecosystem/customer-app"
   command = "npm install && npm run build"
-  publish = "dist"
+  publish = "build"
 
+# SPA redirect for React Router
 [[redirects]]
-  from = "/demo/*"
-  to = "/demo/index.html"
-  status = 200
-
-[[redirects]]
-  from = "/features/*"
-  to = "/features/index.html"
-  status = 200
-
-[[redirects]]
-  from = "/pricing/*"
-  to = "/pricing/index.html"
+  from = "/*"
+  to = "/index.html"
   status = 200
 
 # API proxy for development and production

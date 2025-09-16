@@ -3,6 +3,13 @@
   command = "npm install && npm run build"
   publish = "build"
 
+# API proxy for development and production
+[[redirects]]
+  from = "/api/*"
+  to = "https://api-mkazmlu7ta-ew.a.run.app/:splat"
+  status = 200
+  force = true
+
 # SPA routing redirects for React Router
 [[redirects]]
   from = "/*"

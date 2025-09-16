@@ -59,7 +59,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   }, []);
 
   const login = async (email: string, password: string) => {
-    const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://api-mkamlu7ta-e-europe-west1.cloudfunctions.net/api';
+    const API_BASE_URL = process.env.REACT_APP_API_URL || '/api';
     
     try {
       const response = await fetch(`${API_BASE_URL}/auth/login`, {
