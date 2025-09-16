@@ -1,0 +1,32 @@
+{
+  "name": "skan-e2e-tests",
+  "version": "1.0.0",
+  "description": "End-to-end tests for SKAN.AL QR ordering system",
+  "main": "index.js",
+  "scripts": {
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:headed": "playwright test --headed",
+    "test:e2e:debug": "playwright test --debug",
+    "test:e2e:report": "playwright show-report",
+    "test:marketing": "playwright test tests/marketing-site",
+    "test:customer": "playwright test tests/customer-app",
+    "test:admin": "playwright test tests/admin-portal",
+    "test:accessibility": "playwright test tests/accessibility",
+    "test:mobile": "playwright test --project=mobile",
+    "test:desktop": "playwright test --project=desktop",
+    "install:browsers": "playwright install",
+    "install:deps": "playwright install-deps"
+  },
+  "keywords": ["e2e", "testing", "playwright", "skan", "qr-ordering"],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.40.0",
+    "@axe-core/playwright": "^4.8.2",
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "dotenv": "^16.3.1"
+  }
+}

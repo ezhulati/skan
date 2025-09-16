@@ -1,0 +1,288 @@
+name: E2E Tests
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  schedule:
+    # Run tests daily at 2 AM UTC
+    - cron: '0 2 * * *'
+
+jobs:
+  test:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        browser: [chromium, firefox, webkit]
+        
+    steps:
+    - uses: actions/checkout@v4
+    
+    - uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        cache-dependency-path: '**/package-lock.json'
+    
+    # Install dependencies for all applications
+    - name: Install Marketing Site dependencies
+      run: |
+        cd marketing-site
+        npm ci
+        
+    - name: Install Customer App dependencies
+      run: |
+        cd customer-app
+        npm ci
+        
+    - name: Install Admin Portal dependencies
+      run: |
+        cd admin-portal
+        npm ci
+        
+    - name: Install E2E test dependencies
+      run: |
+        cd e2e-tests
+        npm ci
+    
+    # Install Playwright browsers
+    - name: Install Playwright Browsers
+      run: |
+        cd e2e-tests
+        npx playwright install --with-deps ${{ matrix.browser }}
+    
+    # Start all applications in background
+    - name: Start Marketing Site
+      run: |
+        cd marketing-site
+        npm run build
+        npm run preview &
+        sleep 10
+        
+    - name: Start Customer App
+      run: |
+        cd customer-app
+        npm run build
+        npm start &
+        sleep 10
+        
+    - name: Start Admin Portal
+      run: |
+        cd admin-portal
+        npm run build
+        npm run preview &
+        sleep 10
+    
+    # Wait for all services to be ready
+    - name: Wait for services
+      run: |
+        npx wait-on http://localhost:4321 http://localhost:3000 http://localhost:3002 --timeout 60000
+    
+    # Run E2E tests
+    - name: Run E2E tests
+      run: |
+        cd e2e-tests
+        npx playwright test --project=${{ matrix.browser }}
+      env:
+        CI: true
+        
+    # Upload test results
+    - uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: playwright-report-${{ matrix.browser }}
+        path: e2e-tests/playwright-report/
+        retention-days: 30
+        
+    - uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: test-results-${{ matrix.browser }}
+        path: e2e-tests/test-results/
+        retention-days: 30
+
+  accessibility:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        cache-dependency-path: '**/package-lock.json'
+    
+    # Install dependencies and start applications
+    - name: Install and start applications
+      run: |
+        cd marketing-site && npm ci && npm run build && npm run preview &
+        cd customer-app && npm ci && npm run build && npm start &
+        cd admin-portal && npm ci && npm run build && npm run preview &
+        cd e2e-tests && npm ci && npx playwright install chromium
+        sleep 30
+    
+    # Run accessibility tests
+    - name: Run accessibility tests
+      run: |
+        cd e2e-tests
+        npx playwright test --project=accessibility
+      env:
+        CI: true
+        
+    - uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: accessibility-report
+        path: e2e-tests/playwright-report/
+        retention-days: 30
+
+  mobile:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        cache-dependency-path: '**/package-lock.json'
+    
+    # Install dependencies and start applications
+    - name: Install and start applications
+      run: |
+        cd marketing-site && npm ci && npm run build && npm run preview &
+        cd customer-app && npm ci && npm run build && npm start &
+        cd admin-portal && npm ci && npm run build && npm run preview &
+        cd e2e-tests && npm ci && npx playwright install chromium webkit
+        sleep 30
+    
+    # Run mobile tests
+    - name: Run mobile tests
+      run: |
+        cd e2e-tests
+        npx playwright test --project=mobile-chrome --project=mobile-safari
+      env:
+        CI: true
+        
+    - uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: mobile-test-report
+        path: e2e-tests/playwright-report/
+        retention-days: 30
+
+  performance:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        cache-dependency-path: '**/package-lock.json'
+    
+    # Install dependencies and start applications
+    - name: Install and start applications
+      run: |
+        cd marketing-site && npm ci && npm run build && npm run preview &
+        cd customer-app && npm ci && npm run build && npm start &
+        cd admin-portal && npm ci && npm run build && npm run preview &
+        cd e2e-tests && npm ci && npx playwright install chromium
+        sleep 30
+    
+    # Run performance-focused tests
+    - name: Run performance tests
+      run: |
+        cd e2e-tests
+        npx playwright test tests/marketing-site/homepage.spec.ts::should\ load\ within\ performance\ budget
+        npx playwright test tests/customer-app/qr-ordering-flow.spec.ts::should\ work\ on\ mobile\ devices
+      env:
+        CI: true
+        PERFORMANCE_BUDGET_MS: 3000
+        
+    - uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: performance-report
+        path: e2e-tests/playwright-report/
+        retention-days: 30
+
+  integration:
+    timeout-minutes: 90
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        cache-dependency-path: '**/package-lock.json'
+    
+    # Install dependencies and start applications
+    - name: Install and start applications
+      run: |
+        cd marketing-site && npm ci && npm run build && npm run preview &
+        cd customer-app && npm ci && npm run build && npm start &
+        cd admin-portal && npm ci && npm run build && npm run preview &
+        cd e2e-tests && npm ci && npx playwright install chromium
+        sleep 30
+    
+    # Run integration tests
+    - name: Run integration tests
+      run: |
+        cd e2e-tests
+        npx playwright test tests/integration/
+      env:
+        CI: true
+        
+    - uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: integration-report
+        path: e2e-tests/playwright-report/
+        retention-days: 30
+
+  report:
+    if: always()
+    needs: [test, accessibility, mobile, performance, integration]
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Download all artifacts
+      uses: actions/download-artifact@v4
+      
+    - name: Merge reports
+      run: |
+        mkdir -p merged-report
+        cp -r playwright-report-chromium/* merged-report/ 2>/dev/null || true
+        cp -r accessibility-report/* merged-report/ 2>/dev/null || true
+        cp -r mobile-test-report/* merged-report/ 2>/dev/null || true
+        cp -r performance-report/* merged-report/ 2>/dev/null || true
+        cp -r integration-report/* merged-report/ 2>/dev/null || true
+        
+    - name: Upload merged report
+      uses: actions/upload-artifact@v4
+      with:
+        name: merged-e2e-report
+        path: merged-report/
+        retention-days: 30
+        
+    # Deploy report to GitHub Pages (optional)
+    - name: Deploy to GitHub Pages
+      if: github.ref == 'refs/heads/main'
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: merged-report
+        destination_dir: e2e-reports/${{ github.run_number }}

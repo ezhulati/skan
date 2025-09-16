@@ -1,0 +1,35 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom styles */
+html {
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+/* Ensure proper text rendering */
+body {
+  @apply antialiased text-gray-900;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Focus styles for accessibility */
+*:focus-visible {
+  @apply outline-2 outline-offset-2 outline-primary-500;
+}
+
+/* Button hover states */
+.btn-primary {
+  @apply bg-primary-600 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-200 hover:bg-primary-700 focus:bg-primary-700;
+}
+
+.btn-secondary {
+  @apply bg-white text-primary-600 border-2 border-primary-600 px-6 py-3 rounded-lg font-semibold transition-all duration-200 hover:bg-primary-50 focus:bg-primary-50;
+}
+
+/* Link styles */
+.link-primary {
+  @apply text-primary-600 hover:text-primary-700 transition-colors duration-200 underline-offset-2 hover:underline;
+}
