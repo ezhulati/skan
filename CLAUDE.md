@@ -8,13 +8,16 @@
 
 ## Architecture & Components
 
+
 ### Domain Strategy
+
 - `skan.al` → Marketing site (Astro) - Lead generation and SEO
 - `order.skan.al` → Customer ordering app (React PWA) - QR ordering experience  
 - `admin.skan.al` → Restaurant admin portal (React) - Order management dashboard
 - `api.skan.al` → Backend API (Firebase Functions) - All business logic
 
 ### Project Structure
+
 ```
 skan.al/
 ├── skan-ecosystem/
