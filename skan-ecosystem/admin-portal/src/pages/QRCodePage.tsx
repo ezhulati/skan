@@ -9,7 +9,8 @@ interface TableQR {
 }
 
 const QRCodePage: React.FC = () => {
-  const { } = useAuth();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const _auth = useAuth();
   const [tables, setTables] = useState<TableQR[]>([]);
   const [newTableNumber, setNewTableNumber] = useState('');
   const [loading, setLoading] = useState(false);
@@ -61,7 +62,7 @@ const QRCodePage: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  }, [baseUrl, venueSlug]);
+  }, [baseUrl, venueSlug, generateQRCode]);
 
   const addTable = async () => {
     if (!newTableNumber.trim()) return;
