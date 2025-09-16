@@ -19,7 +19,6 @@ function VenueRoutes() {
 }
 
 function MenuWithContext() {
-  const params = new URLSearchParams(window.location.pathname);
   const pathParts = window.location.pathname.split('/').filter(Boolean);
   const venueSlug = pathParts[0];
   const tableNumber = pathParts[1];

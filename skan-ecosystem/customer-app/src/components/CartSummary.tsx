@@ -3,7 +3,7 @@ import { useCart } from '../contexts/CartContext';
 import { useNavigate, useParams } from 'react-router-dom';
 
 export function CartSummary() {
-  const { items, totalAmount, itemCount } = useCart();
+  const { totalAmount, itemCount } = useCart();
   const navigate = useNavigate();
   const { venueSlug, tableNumber } = useParams<{ venueSlug: string; tableNumber: string }>();
 

@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
 import { VenueContextType, Venue, MenuCategory } from '../types';
 import { api } from '../services/api';
 
@@ -16,7 +16,7 @@ export function VenueProvider({ children, venueSlug, tableNumber }: VenueProvide
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const loadVenueMenu = async () => {
+  const loadVenueMenu = useCallback(async () => {
     if (!venueSlug) return;
     
     setIsLoading(true);
@@ -33,11 +33,11 @@ export function VenueProvider({ children, venueSlug, tableNumber }: VenueProvide
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [venueSlug]);
 
   useEffect(() => {
     loadVenueMenu();
-  }, [venueSlug]);
+  }, [loadVenueMenu]);
 
   const value: VenueContextType = {
     venueSlug,
