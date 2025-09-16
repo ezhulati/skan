@@ -1,4 +1,3 @@
-import React from 'react';
 import { OrderStatus } from '../types';
 
 interface OrderFiltersProps {

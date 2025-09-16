@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Order, OrderStatus } from '../types';
 import { api } from '../services/api';
 

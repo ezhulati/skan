@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { OrderCard } from '../components/OrderCard';
 import { OrderFilters } from '../components/OrderFilters';
 import { Order, OrderStatus } from '../types';
-import * as api from '../services/api';
+import { api } from '../services/api';
 
 export function Dashboard() {
   const { user, venue } = useAuth();
@@ -44,7 +44,7 @@ export function Dashboard() {
 
     try {
       setError(null);
-      const response = await api.getOrders(venue.id, activeFilter === 'all' ? undefined : activeFilter);
+      const response = await api.getOrders(venue.id, activeFilter === 'all' ? {} : { status: activeFilter });
       setOrders(response.orders);
     } catch (err) {
       console.error('Failed to load orders:', err);

@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Order, OrderStatus } from '../types';
-import * as api from '../services/api';
+import { api } from '../services/api';
 
 export function OrderDetails() {
   const { orderId } = useParams<{ orderId: string }>();
@@ -21,7 +21,7 @@ export function OrderDetails() {
 
     try {
       setError(null);
-      const orderData = await api.getOrder(orderId);
+      const orderData = await api.getOrderDetails(orderId);
       setOrder(orderData);
     } catch (err) {
       console.error('Failed to load order:', err);
