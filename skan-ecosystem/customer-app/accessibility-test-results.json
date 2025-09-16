@@ -1,0 +1,1300 @@
+{
+  "summary": {
+    "totalPages": 4,
+    "totalIssues": 66,
+    "criticalIssues": 0,
+    "highIssues": 0,
+    "mediumIssues": 66,
+    "lowIssues": 0
+  },
+  "touchTargetCompliance": {
+    "totalTouchTargetIssues": 66,
+    "pagesWithTouchTargetIssues": [
+      "Features",
+      "Pricing"
+    ],
+    "resolved": false
+  },
+  "issuesByPage": [
+    {
+      "page": "Home",
+      "path": "/",
+      "issues": 0,
+      "touchTargetIssues": 0
+    },
+    {
+      "page": "Features",
+      "path": "/features",
+      "issues": 34,
+      "touchTargetIssues": 34
+    },
+    {
+      "page": "Pricing",
+      "path": "/pricing",
+      "issues": 32,
+      "touchTargetIssues": 32
+    },
+    {
+      "page": "Demo",
+      "path": "/demo",
+      "issues": 0,
+      "touchTargetIssues": 0
+    }
+  ],
+  "allIssues": [
+    {
+      "page": "Features",
+      "selector": "button",
+      "element": {
+        "tagName": "BUTTON",
+        "className": "w-full bg-blue-600 text-white py-3 rounded-lg font-semibold",
+        "id": "",
+        "textContent": "\nAdd to Cart\n",
+        "href": "",
+        "type": "submit"
+      },
+      "size": {
+        "width": 83.03125,
+        "height": 24
+      },
+      "issue": "Touch target too small: 83.03125x24px (minimum: 44x44px)",
+      "severity": "medium",
+      "wcagGuideline": "2.5.5 Target Size (Level AAA)"
+    },
+    {
+      "page": "Features",
+      "selector": "button",
+      "element": {
+        "tagName": "BUTTON",
+        "className": "bg-red-600 text-white px-6 py-3 rounded-lg text-sm font-medium",
+        "id": "",
+        "textContent": "\nNew\n",
+        "href": "",
+        "type": "submit"
+      },
+      "size": {
+        "width": 32.46875,
+        "height": 24
+      },
+      "issue": "Touch target too small: 32.46875x24px (minimum: 44x44px)",
+      "severity": "medium",
+      "wcagGuideline": "2.5.5 Target Size (Level AAA)"
+    },
+    {
+      "page": "Features",
+      "selector": "button",
+      "element": {
+        "tagName": "BUTTON",
+        "className": "bg-yellow-600 text-white px-6 py-3 rounded-lg text-sm font-medium",
+        "id": "",
+        "textContent": "\nPreparing\n",
+        "href": "",
+        "type": "submit"
+      },
+      "size": {
+        "width": 70.078125,
+        "height": 24
+      },
+      "issue": "Touch target too small: 70.078125x24px (minimum: 44x44px)",
+      "severity": "medium",
+      "wcagGuideline": "2.5.5 Target Size (Level AAA)"
+    },
+    {
+      "page": "Features",
+      "selector": "button",
+      "element": {
+        "tagName": "BUTTON",
+        "className": "bg-green-600 text-white px-6 py-3 rounded-lg text-sm font-medium",
+        "id": "",
+        "textContent": "\nReady\n",
+        "href": "",
+        "type": "submit"
+      },
+      "size": {
+        "width": 45.140625,
+        "height": 24
+      },
+      "issue": "Touch target too small: 45.140625x24px (minimum: 44x44px)",
+      "severity": "medium",
+      "wcagGuideline": "2.5.5 Target Size (Level AAA)"
+    },
+    {
+      "page": "Features",
+      "selector": "button",
+      "element": {
+        "tagName": "BUTTON",
+        "className": "item",
+        "id": "",
+        "textContent": "\n\t\t\t\t\n\t\t\t\tMenu\n\t\t\t",
+        "href": "",
+        "type": "submit"
+      },
+      "size": {
+        "width": 42,
+        "height": 40
+      },
+      "issue": "Touch target too small: 42x40px (minimum: 44x44px)",
+      "severity": "medium",
+      "wcagGuideline": "2.5.5 Target Size (Level AAA)"
+    },
+    {
+      "page": "Features",
+      "selector": "button",
+      "element": {
+        "tagName": "BUTTON",
+        "className": "item",
+        "id": "",
+        "textContent": "\n\t\t\t\t\n\t\t\t\tInspect\n\t\t\t",
+        "href": "",
+        "type": "submit"
+      },
+      "size": {
+        "width": 44,
+        "height": 40
+      },
+      "issue": "Touch target too small: 44x40px (minimum: 44x44px)",
+      "severity": "medium",
+      "wcagGuideline": "2.5.5 Target Size (Level AAA)"
+    },
+    {
+      "page": "Features",
+      "selector": "button",
+      "element": {
+        "tagName": "BUTTON",
+        "className": "item",
+        "id": "",
+        "textContent": "\n\t\t\t\t\n\t\t\t\tAudit\n\t\t\t",
+        "href": "",
+        "type": "submit"
+      },
+      "size": {
+        "width": 44,
+        "height": 40
+      },
+      "issue": "Touch target too small: 44x40px (minimum: 44x44px)",
+      "severity": "medium",
+      "wcagGuideline": "2.5.5 Target Size (Level AAA)"
+    },
+    {
+      "page": "Features",
+      "selector": "button",
+      "element": {
+        "tagName": "BUTTON",
+        "className": "item",
+        "id": "",
+        "textContent": "\n\t\t\t\t\n\t\t\t\tSettings\n\t\t\t",
+        "href": "",
+        "type": "submit"
+      },
+      "size": {
+        "width": 42,
+        "height": 40
+      },
+      "issue": "Touch target too small: 42x40px (minimum: 44x44px)",
+      "severity": "medium",
+      "wcagGuideline": "2.5.5 Target Size (Level AAA)"
+    },
+    {
+      "page": "Features",
+      "selector": "a",
+      "element": {
+        "tagName": "A",
+        "className": "text-gray-600 hover:text-gray-900 px-4 py-3 text-sm font-medium transition-colors",
+        "id": "",
+        "textContent": "Features",
+        "href": "http://localhost:4323/features",
+        "type": ""
+      },
+      "size": {
+        "width": 63.15625,
+        "height": 18
+      },
+      "issue": "Touch target too small: 63.15625x18px (minimum: 44x44px)",
+      "severity": "medium",
+      "wcagGuideline": "2.5.5 Target Size (Level AAA)"
+    },
+    {
+      "page": "Features",
+      "selector": "a",
+      "element": {
+        "tagName": "A",
+        "className": "text-gray-600 hover:text-gray-900 px-4 py-3 text-sm font-medium transition-colors",
+        "id": "",
+        "textContent": "Pricing",
+        "href": "http://localhost:4323/pricing",
+        "type": ""
+      },
+      "size": {
+        "width": 50.015625,
+        "height": 18
+      },
+      "issue": "Touch target too small: 50.015625x18px (minimum: 44x44px)",
+      "severity": "medium",
+      "wcagGuideline": "2.5.5 Target Size (Level AAA)"
+    },
+    {
+      "page": "Features",
+      "selector": "a",
+      "element": {
+        "tagName": "A",
+        "className": "text-gray-600 hover:text-gray-900 px-4 py-3 text-sm font-medium transition-colors",
+        "id": "",
+        "textContent": "Demo",
+        "href": "http://localhost:4323/demo",
+        "type": ""
+      },
+      "size": {
+        "width": 42.890625,
+        "height": 18
+      },
+      "issue": "Touch target too small: 42.890625x18px (minimum: 44x44px)",
+      "severity": "medium",
+      "wcagGuideline": "2.5.5 Target Size (Level AAA)"
+    },
+    {
+      "page": "Features",
+      "selector": "a",
+      "element": {
+        "tagName": "A",
+        "className": "text-gray-600 hover:text-gray-900 px-4 py-3 text-sm font-medium transition-colors",
+        "id": "",
+        "textContent": "Blog",
+        "href": "http://localhost:4323/blog",
+        "type": ""
+      },
+      "size": {
+        "width": 32.515625,
+        "height": 18
+      },
+      "issue": "Touch target too small: 32.515625x18px (minimum: 44x44px)",
+      "severity": "medium",
+      "wcagGuideline": "2.5.5 Target Size (Level AAA)"
+    },
+    {
+      "page": "Features",
+      "selector": "a",
+      "element": {
+        "tagName": "A",
+        "className": "text-gray-600 hover:text-gray-900 px-4 py-3 text-sm font-medium transition-colors",
+        "id": "",
+        "textContent": "Contact",
+        "href": "http://localhost:4323/contact",
+        "type": ""
+      },
+      "size": {
+        "width": 57.625,
+        "height": 18
+      },
+      "issue": "Touch target too small: 57.625x18px (minimum: 44x44px)",
+      "severity": "medium",
+      "wcagGuideline": "2.5.5 Target Size (Level AAA)"
+    },
+    {
+      "page": "Features",
+      "selector": "a",
+      "element": {
+        "tagName": "A",
+        "className": "text-gray-600 hover:text-gray-900 px-4 py-3 text-sm font-medium transition-colors",
+        "id": "",
+        "textContent": "Sign In",
+        "href": "https://admin.skan.al/login",
+        "type": ""
+      },
+      "size": {
+        "width": 49.171875,
+        "height": 18
+      },
+      "issue": "Touch target too small: 49.171875x18px (minimum: 44x44px)",
+      "severity": "medium",
+      "wcagGuideline": "2.5.5 Target Size (Level AAA)"
+    },
+    {
+      "page": "Features",
+      "selector": "a",
+      "element": {
+        "tagName": "A",
+        "className": "bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg text-sm font-medium transition-colors",
+        "id": "",
+        "textContent": "Try Demo",
+        "href": "http://localhost:4323/demo",
+        "type": ""
+      },
+      "size": {
+        "width": 69.96875,
+        "height": 18
+      },
+      "issue": "Touch target too small: 69.96875x18px (minimum: 44x44px)",
+      "severity": "medium",
+      "wcagGuideline": "2.5.5 Target Size (Level AAA)"
+    },
+    {
+      "page": "Features",
+      "selector": "a",
+      "element": {
+        "tagName": "A",
+        "className": "text-gray-600 hover:text-gray-900 block px-4 py-3 text-base font-medium",
+        "id": "",
+        "textContent": "Features",
+        "href": "http://localhost:4323/features",
+        "type": ""
+      },
+      "size": {
+        "width": 63.15625,
+        "height": 18
+      },
+      "issue": "Touch target too small: 63.15625x18px (minimum: 44x44px)",
+      "severity": "medium",
+      "wcagGuideline": "2.5.5 Target Size (Level AAA)"
+    },
+    {
+      "page": "Features",
+      "selector": "a",
+      "element": {
+        "tagName": "A",
+        "className": "text-gray-600 hover:text-gray-900 block px-4 py-3 text-base font-medium",
+        "id": "",
+        "textContent": "Pricing",
+        "href": "http://localhost:4323/pricing",
+        "type": ""
+      },
+      "size": {
+        "width": 50.015625,
+        "height": 18
+      },
+      "issue": "Touch target too small: 50.015625x18px (minimum: 44x44px)",
+      "severity": "medium",
+      "wcagGuideline": "2.5.5 Target Size (Level AAA)"
+    },
+    {
+      "page": "Features",
+      "selector": "a",
+      "element": {
+        "tagName": "A",
+        "className": "text-gray-600 hover:text-gray-900 block px-4 py-3 text-base font-medium",
+        "id": "",
+        "textContent": "Demo",
+        "href": "http://localhost:4323/demo",
+        "type": ""
+      },
+      "size": {
+        "width": 42.890625,
+        "height": 18
+      },
+      "issue": "Touch target too small: 42.890625x18px (minimum: 44x44px)",
+      "severity": "medium",
+      "wcagGuideline": "2.5.5 Target Size (Level AAA)"
+    },
+    {
+      "page": "Features",
+      "selector": "a",
+      "element": {
+        "tagName": "A",
+        "className": "text-gray-600 hover:text-gray-900 block px-4 py-3 text-base font-medium",
+        "id": "",
+        "textContent": "Blog",
+        "href": "http://localhost:4323/blog",
+        "type": ""
+      },
+      "size": {
+        "width": 32.515625,
+        "height": 18
+      },
+      "issue": "Touch target too small: 32.515625x18px (minimum: 44x44px)",
+      "severity": "medium",
+      "wcagGuideline": "2.5.5 Target Size (Level AAA)"
+    },
+    {
+      "page": "Features",
+      "selector": "a",
+      "element": {
+        "tagName": "A",
+        "className": "text-gray-600 hover:text-gray-900 block px-4 py-3 text-base font-medium",
+        "id": "",
+        "textContent": "Contact",
+        "href": "http://localhost:4323/contact",
+        "type": ""
+      },
+      "size": {
+        "width": 57.625,
+        "height": 18
+      },
+      "issue": "Touch target too small: 57.625x18px (minimum: 44x44px)",
+      "severity": "medium",
+      "wcagGuideline": "2.5.5 Target Size (Level AAA)"
+    },
+    {
+      "page": "Features",
+      "selector": "a",
+      "element": {
+        "tagName": "A",
+        "className": "text-gray-600 hover:text-gray-900 block px-4 py-3 text-base font-medium",
+        "id": "",
+        "textContent": "Sign In",
+        "href": "https://admin.skan.al/login",
+        "type": ""
+      },
+      "size": {
+        "width": 49.171875,
+        "height": 18
+      },
+      "issue": "Touch target too small: 49.171875x18px (minimum: 44x44px)",
+      "severity": "medium",
+      "wcagGuideline": "2.5.5 Target Size (Level AAA)"
+    },
+    {
+      "page": "Features",
+      "selector": "a",
+      "element": {
+        "tagName": "A",
+        "className": "bg-blue-600 hover:bg-blue-700 text-white block px-4 py-3 rounded-lg text-base font-medium transition-colors mx-3 mt-2",
+        "id": "",
+        "textContent": "Try Demo",
+        "href": "http://localhost:4323/demo",
+        "type": ""
+      },
+      "size": {
+        "width": 69.96875,
+        "height": 18
+      },
+      "issue": "Touch target too small: 69.96875x18px (minimum: 44x44px)",
+      "severity": "medium",
+      "wcagGuideline": "2.5.5 Target Size (Level AAA)"
+    },
+    {
+      "page": "Features",
+      "selector": "a",
+      "element": {
+        "tagName": "A",
+        "className": "bg-white hover:bg-gray-50 text-blue-600 px-8 py-4 rounded-xl text-lg font-semibold transition-colors",
+        "id": "",
+        "textContent": "\nTry Live Demo\n",
+        "href": "http://localhost:4323/demo",
+        "type": ""
+      },
+      "size": {
+        "width": 107.640625,
+        "height": 18
+      },
+      "issue": "Touch target too small: 107.640625x18px (minimum: 44x44px)",
+      "severity": "medium",
+      "wcagGuideline": "2.5.5 Target Size (Level AAA)"
+    },
+    {
+      "page": "Features",
+      "selector": "a",
+      "element": {
+        "tagName": "A",
+        "className": "border border-blue-400 hover:border-blue-300 text-white px-8 py-4 rounded-xl text-lg font-semibold transition-colors",
+        "id": "",
+        "textContent": "\nSee Pricing\n",
+        "href": "http://localhost:4323/pricing",
+        "type": ""
+      },
+      "size": {
+        "width": 81.75,
+        "height": 18
+      },
+      "issue": "Touch target too small: 81.75x18px (minimum: 44x44px)",
+      "severity": "medium",
+      "wcagGuideline": "2.5.5 Target Size (Level AAA)"
+    },
+    {
+      "page": "Features",
+      "selector": "a",
+      "element": {
+        "tagName": "A",
+        "className": "text-gray-600 hover:text-gray-900",
+        "id": "",
+        "textContent": "Features",
+        "href": "http://localhost:4323/features",
+        "type": ""
+      },
+      "size": {
+        "width": 63.15625,
+        "height": 18
+      },
+      "issue": "Touch target too small: 63.15625x18px (minimum: 44x44px)",
+      "severity": "medium",
+      "wcagGuideline": "2.5.5 Target Size (Level AAA)"
+    },
+    {
+      "page": "Features",
+      "selector": "a",
+      "element": {
+        "tagName": "A",
+        "className": "text-gray-600 hover:text-gray-900",
+        "id": "",
+        "textContent": "Pricing",
+        "href": "http://localhost:4323/pricing",
+        "type": ""
+      },
+      "size": {
+        "width": 50.015625,
+        "height": 18
+      },
+      "issue": "Touch target too small: 50.015625x18px (minimum: 44x44px)",
+      "severity": "medium",
+      "wcagGuideline": "2.5.5 Target Size (Level AAA)"
+    },
+    {
+      "page": "Features",
+      "selector": "a",
+      "element": {
+        "tagName": "A",
+        "className": "text-gray-600 hover:text-gray-900",
+        "id": "",
+        "textContent": "Demo",
+        "href": "http://localhost:4323/demo",
+        "type": ""
+      },
+      "size": {
+        "width": 42.890625,
+        "height": 18
+      },
+      "issue": "Touch target too small: 42.890625x18px (minimum: 44x44px)",
+      "severity": "medium",
+      "wcagGuideline": "2.5.5 Target Size (Level AAA)"
+    },
+    {
+      "page": "Features",
+      "selector": "a",
+      "element": {
+        "tagName": "A",
+        "className": "text-gray-600 hover:text-gray-900",
+        "id": "",
+        "textContent": "Integrations",
+        "href": "http://localhost:4323/integrations",
+        "type": ""
+      },
+      "size": {
+        "width": 86.3125,
+        "height": 18
+      },
+      "issue": "Touch target too small: 86.3125x18px (minimum: 44x44px)",
+      "severity": "medium",
+      "wcagGuideline": "2.5.5 Target Size (Level AAA)"
+    },
+    {
+      "page": "Features",
+      "selector": "a",
+      "element": {
+        "tagName": "A",
+        "className": "text-gray-600 hover:text-gray-900",
+        "id": "",
+        "textContent": "Help Center",
+        "href": "http://localhost:4323/help",
+        "type": ""
+      },
+      "size": {
+        "width": 86.75,
+        "height": 18
+      },
+      "issue": "Touch target too small: 86.75x18px (minimum: 44x44px)",
+      "severity": "medium",
+      "wcagGuideline": "2.5.5 Target Size (Level AAA)"
+    },
+    {
+      "page": "Features",
+      "selector": "a",
+      "element": {
+        "tagName": "A",
+        "className": "text-gray-600 hover:text-gray-900",
+        "id": "",
+        "textContent": "Contact",
+        "href": "http://localhost:4323/contact",
+        "type": ""
+      },
+      "size": {
+        "width": 57.625,
+        "height": 18
+      },
+      "issue": "Touch target too small: 57.625x18px (minimum: 44x44px)",
+      "severity": "medium",
+      "wcagGuideline": "2.5.5 Target Size (Level AAA)"
+    },
+    {
+      "page": "Features",
+      "selector": "a",
+      "element": {
+        "tagName": "A",
+        "className": "text-gray-600 hover:text-gray-900",
+        "id": "",
+        "textContent": "Blog",
+        "href": "http://localhost:4323/blog",
+        "type": ""
+      },
+      "size": {
+        "width": 32.515625,
+        "height": 18
+      },
+      "issue": "Touch target too small: 32.515625x18px (minimum: 44x44px)",
+      "severity": "medium",
+      "wcagGuideline": "2.5.5 Target Size (Level AAA)"
+    },
+    {
+      "page": "Features",
+      "selector": "a",
+      "element": {
+        "tagName": "A",
+        "className": "text-gray-600 hover:text-gray-900",
+        "id": "",
+        "textContent": "About",
+        "href": "http://localhost:4323/about",
+        "type": ""
+      },
+      "size": {
+        "width": 43.65625,
+        "height": 18
+      },
+      "issue": "Touch target too small: 43.65625x18px (minimum: 44x44px)",
+      "severity": "medium",
+      "wcagGuideline": "2.5.5 Target Size (Level AAA)"
+    },
+    {
+      "page": "Features",
+      "selector": "a",
+      "element": {
+        "tagName": "A",
+        "className": "text-gray-500 hover:text-gray-900 text-sm mr-6",
+        "id": "",
+        "textContent": "Privacy Policy",
+        "href": "http://localhost:4323/privacy",
+        "type": ""
+      },
+      "size": {
+        "width": 100.1875,
+        "height": 18
+      },
+      "issue": "Touch target too small: 100.1875x18px (minimum: 44x44px)",
+      "severity": "medium",
+      "wcagGuideline": "2.5.5 Target Size (Level AAA)"
+    },
+    {
+      "page": "Features",
+      "selector": "a",
+      "element": {
+        "tagName": "A",
+        "className": "text-gray-500 hover:text-gray-900 text-sm",
+        "id": "",
+        "textContent": "Terms of Service",
+        "href": "http://localhost:4323/terms",
+        "type": ""
+      },
+      "size": {
+        "width": 121.734375,
+        "height": 18
+      },
+      "issue": "Touch target too small: 121.734375x18px (minimum: 44x44px)",
+      "severity": "medium",
+      "wcagGuideline": "2.5.5 Target Size (Level AAA)"
+    },
+    {
+      "page": "Pricing",
+      "selector": "button",
+      "element": {
+        "tagName": "BUTTON",
+        "className": "item",
+        "id": "",
+        "textContent": "\n\t\t\t\t\n\t\t\t\tMenu\n\t\t\t",
+        "href": "",
+        "type": "submit"
+      },
+      "size": {
+        "width": 42,
+        "height": 40
+      },
+      "issue": "Touch target too small: 42x40px (minimum: 44x44px)",
+      "severity": "medium",
+      "wcagGuideline": "2.5.5 Target Size (Level AAA)"
+    },
+    {
+      "page": "Pricing",
+      "selector": "button",
+      "element": {
+        "tagName": "BUTTON",
+        "className": "item",
+        "id": "",
+        "textContent": "\n\t\t\t\t\n\t\t\t\tInspect\n\t\t\t",
+        "href": "",
+        "type": "submit"
+      },
+      "size": {
+        "width": 44,
+        "height": 40
+      },
+      "issue": "Touch target too small: 44x40px (minimum: 44x44px)",
+      "severity": "medium",
+      "wcagGuideline": "2.5.5 Target Size (Level AAA)"
+    },
+    {
+      "page": "Pricing",
+      "selector": "button",
+      "element": {
+        "tagName": "BUTTON",
+        "className": "item",
+        "id": "",
+        "textContent": "\n\t\t\t\t\n\t\t\t\tAudit\n\t\t\t",
+        "href": "",
+        "type": "submit"
+      },
+      "size": {
+        "width": 44,
+        "height": 40
+      },
+      "issue": "Touch target too small: 44x40px (minimum: 44x44px)",
+      "severity": "medium",
+      "wcagGuideline": "2.5.5 Target Size (Level AAA)"
+    },
+    {
+      "page": "Pricing",
+      "selector": "button",
+      "element": {
+        "tagName": "BUTTON",
+        "className": "item",
+        "id": "",
+        "textContent": "\n\t\t\t\t\n\t\t\t\tSettings\n\t\t\t",
+        "href": "",
+        "type": "submit"
+      },
+      "size": {
+        "width": 42,
+        "height": 40
+      },
+      "issue": "Touch target too small: 42x40px (minimum: 44x44px)",
+      "severity": "medium",
+      "wcagGuideline": "2.5.5 Target Size (Level AAA)"
+    },
+    {
+      "page": "Pricing",
+      "selector": "a",
+      "element": {
+        "tagName": "A",
+        "className": "text-gray-600 hover:text-gray-900 px-4 py-3 text-sm font-medium transition-colors",
+        "id": "",
+        "textContent": "Features",
+        "href": "http://localhost:4323/features",
+        "type": ""
+      },
+      "size": {
+        "width": 63.15625,
+        "height": 18
+      },
+      "issue": "Touch target too small: 63.15625x18px (minimum: 44x44px)",
+      "severity": "medium",
+      "wcagGuideline": "2.5.5 Target Size (Level AAA)"
+    },
+    {
+      "page": "Pricing",
+      "selector": "a",
+      "element": {
+        "tagName": "A",
+        "className": "text-gray-600 hover:text-gray-900 px-4 py-3 text-sm font-medium transition-colors",
+        "id": "",
+        "textContent": "Pricing",
+        "href": "http://localhost:4323/pricing",
+        "type": ""
+      },
+      "size": {
+        "width": 50.015625,
+        "height": 18
+      },
+      "issue": "Touch target too small: 50.015625x18px (minimum: 44x44px)",
+      "severity": "medium",
+      "wcagGuideline": "2.5.5 Target Size (Level AAA)"
+    },
+    {
+      "page": "Pricing",
+      "selector": "a",
+      "element": {
+        "tagName": "A",
+        "className": "text-gray-600 hover:text-gray-900 px-4 py-3 text-sm font-medium transition-colors",
+        "id": "",
+        "textContent": "Demo",
+        "href": "http://localhost:4323/demo",
+        "type": ""
+      },
+      "size": {
+        "width": 42.890625,
+        "height": 18
+      },
+      "issue": "Touch target too small: 42.890625x18px (minimum: 44x44px)",
+      "severity": "medium",
+      "wcagGuideline": "2.5.5 Target Size (Level AAA)"
+    },
+    {
+      "page": "Pricing",
+      "selector": "a",
+      "element": {
+        "tagName": "A",
+        "className": "text-gray-600 hover:text-gray-900 px-4 py-3 text-sm font-medium transition-colors",
+        "id": "",
+        "textContent": "Blog",
+        "href": "http://localhost:4323/blog",
+        "type": ""
+      },
+      "size": {
+        "width": 32.515625,
+        "height": 18
+      },
+      "issue": "Touch target too small: 32.515625x18px (minimum: 44x44px)",
+      "severity": "medium",
+      "wcagGuideline": "2.5.5 Target Size (Level AAA)"
+    },
+    {
+      "page": "Pricing",
+      "selector": "a",
+      "element": {
+        "tagName": "A",
+        "className": "text-gray-600 hover:text-gray-900 px-4 py-3 text-sm font-medium transition-colors",
+        "id": "",
+        "textContent": "Contact",
+        "href": "http://localhost:4323/contact",
+        "type": ""
+      },
+      "size": {
+        "width": 57.625,
+        "height": 18
+      },
+      "issue": "Touch target too small: 57.625x18px (minimum: 44x44px)",
+      "severity": "medium",
+      "wcagGuideline": "2.5.5 Target Size (Level AAA)"
+    },
+    {
+      "page": "Pricing",
+      "selector": "a",
+      "element": {
+        "tagName": "A",
+        "className": "text-gray-600 hover:text-gray-900 px-4 py-3 text-sm font-medium transition-colors",
+        "id": "",
+        "textContent": "Sign In",
+        "href": "https://admin.skan.al/login",
+        "type": ""
+      },
+      "size": {
+        "width": 49.171875,
+        "height": 18
+      },
+      "issue": "Touch target too small: 49.171875x18px (minimum: 44x44px)",
+      "severity": "medium",
+      "wcagGuideline": "2.5.5 Target Size (Level AAA)"
+    },
+    {
+      "page": "Pricing",
+      "selector": "a",
+      "element": {
+        "tagName": "A",
+        "className": "bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg text-sm font-medium transition-colors",
+        "id": "",
+        "textContent": "Try Demo",
+        "href": "http://localhost:4323/demo",
+        "type": ""
+      },
+      "size": {
+        "width": 69.96875,
+        "height": 18
+      },
+      "issue": "Touch target too small: 69.96875x18px (minimum: 44x44px)",
+      "severity": "medium",
+      "wcagGuideline": "2.5.5 Target Size (Level AAA)"
+    },
+    {
+      "page": "Pricing",
+      "selector": "a",
+      "element": {
+        "tagName": "A",
+        "className": "text-gray-600 hover:text-gray-900 block px-4 py-3 text-base font-medium",
+        "id": "",
+        "textContent": "Features",
+        "href": "http://localhost:4323/features",
+        "type": ""
+      },
+      "size": {
+        "width": 63.15625,
+        "height": 18
+      },
+      "issue": "Touch target too small: 63.15625x18px (minimum: 44x44px)",
+      "severity": "medium",
+      "wcagGuideline": "2.5.5 Target Size (Level AAA)"
+    },
+    {
+      "page": "Pricing",
+      "selector": "a",
+      "element": {
+        "tagName": "A",
+        "className": "text-gray-600 hover:text-gray-900 block px-4 py-3 text-base font-medium",
+        "id": "",
+        "textContent": "Pricing",
+        "href": "http://localhost:4323/pricing",
+        "type": ""
+      },
+      "size": {
+        "width": 50.015625,
+        "height": 18
+      },
+      "issue": "Touch target too small: 50.015625x18px (minimum: 44x44px)",
+      "severity": "medium",
+      "wcagGuideline": "2.5.5 Target Size (Level AAA)"
+    },
+    {
+      "page": "Pricing",
+      "selector": "a",
+      "element": {
+        "tagName": "A",
+        "className": "text-gray-600 hover:text-gray-900 block px-4 py-3 text-base font-medium",
+        "id": "",
+        "textContent": "Demo",
+        "href": "http://localhost:4323/demo",
+        "type": ""
+      },
+      "size": {
+        "width": 42.890625,
+        "height": 18
+      },
+      "issue": "Touch target too small: 42.890625x18px (minimum: 44x44px)",
+      "severity": "medium",
+      "wcagGuideline": "2.5.5 Target Size (Level AAA)"
+    },
+    {
+      "page": "Pricing",
+      "selector": "a",
+      "element": {
+        "tagName": "A",
+        "className": "text-gray-600 hover:text-gray-900 block px-4 py-3 text-base font-medium",
+        "id": "",
+        "textContent": "Blog",
+        "href": "http://localhost:4323/blog",
+        "type": ""
+      },
+      "size": {
+        "width": 32.515625,
+        "height": 18
+      },
+      "issue": "Touch target too small: 32.515625x18px (minimum: 44x44px)",
+      "severity": "medium",
+      "wcagGuideline": "2.5.5 Target Size (Level AAA)"
+    },
+    {
+      "page": "Pricing",
+      "selector": "a",
+      "element": {
+        "tagName": "A",
+        "className": "text-gray-600 hover:text-gray-900 block px-4 py-3 text-base font-medium",
+        "id": "",
+        "textContent": "Contact",
+        "href": "http://localhost:4323/contact",
+        "type": ""
+      },
+      "size": {
+        "width": 57.625,
+        "height": 18
+      },
+      "issue": "Touch target too small: 57.625x18px (minimum: 44x44px)",
+      "severity": "medium",
+      "wcagGuideline": "2.5.5 Target Size (Level AAA)"
+    },
+    {
+      "page": "Pricing",
+      "selector": "a",
+      "element": {
+        "tagName": "A",
+        "className": "text-gray-600 hover:text-gray-900 block px-4 py-3 text-base font-medium",
+        "id": "",
+        "textContent": "Sign In",
+        "href": "https://admin.skan.al/login",
+        "type": ""
+      },
+      "size": {
+        "width": 49.171875,
+        "height": 18
+      },
+      "issue": "Touch target too small: 49.171875x18px (minimum: 44x44px)",
+      "severity": "medium",
+      "wcagGuideline": "2.5.5 Target Size (Level AAA)"
+    },
+    {
+      "page": "Pricing",
+      "selector": "a",
+      "element": {
+        "tagName": "A",
+        "className": "bg-blue-600 hover:bg-blue-700 text-white block px-4 py-3 rounded-lg text-base font-medium transition-colors mx-3 mt-2",
+        "id": "",
+        "textContent": "Try Demo",
+        "href": "http://localhost:4323/demo",
+        "type": ""
+      },
+      "size": {
+        "width": 69.96875,
+        "height": 18
+      },
+      "issue": "Touch target too small: 69.96875x18px (minimum: 44x44px)",
+      "severity": "medium",
+      "wcagGuideline": "2.5.5 Target Size (Level AAA)"
+    },
+    {
+      "page": "Pricing",
+      "selector": "a",
+      "element": {
+        "tagName": "A",
+        "className": "w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl text-lg font-semibold transition-colors",
+        "id": "",
+        "textContent": "\nTry Free Demo\n",
+        "href": "http://localhost:4323/demo",
+        "type": ""
+      },
+      "size": {
+        "width": 110.390625,
+        "height": 18
+      },
+      "issue": "Touch target too small: 110.390625x18px (minimum: 44x44px)",
+      "severity": "medium",
+      "wcagGuideline": "2.5.5 Target Size (Level AAA)"
+    },
+    {
+      "page": "Pricing",
+      "selector": "a",
+      "element": {
+        "tagName": "A",
+        "className": "w-full sm:w-auto border border-gray-300 hover:border-gray-400 text-gray-700 px-8 py-4 rounded-xl text-lg font-semibold transition-colors",
+        "id": "",
+        "textContent": "\nContact Sales\n",
+        "href": "http://localhost:4323/contact",
+        "type": ""
+      },
+      "size": {
+        "width": 100.828125,
+        "height": 18
+      },
+      "issue": "Touch target too small: 100.828125x18px (minimum: 44x44px)",
+      "severity": "medium",
+      "wcagGuideline": "2.5.5 Target Size (Level AAA)"
+    },
+    {
+      "page": "Pricing",
+      "selector": "a",
+      "element": {
+        "tagName": "A",
+        "className": "bg-white hover:bg-gray-50 text-blue-600 px-8 py-4 rounded-xl text-lg font-semibold transition-colors",
+        "id": "",
+        "textContent": "\nTry Free Demo\n",
+        "href": "http://localhost:4323/demo",
+        "type": ""
+      },
+      "size": {
+        "width": 110.390625,
+        "height": 18
+      },
+      "issue": "Touch target too small: 110.390625x18px (minimum: 44x44px)",
+      "severity": "medium",
+      "wcagGuideline": "2.5.5 Target Size (Level AAA)"
+    },
+    {
+      "page": "Pricing",
+      "selector": "a",
+      "element": {
+        "tagName": "A",
+        "className": "border border-blue-400 hover:border-blue-300 text-white px-8 py-4 rounded-xl text-lg font-semibold transition-colors",
+        "id": "",
+        "textContent": "\nGet Started Today\n",
+        "href": "http://localhost:4323/contact",
+        "type": ""
+      },
+      "size": {
+        "width": 131.40625,
+        "height": 18
+      },
+      "issue": "Touch target too small: 131.40625x18px (minimum: 44x44px)",
+      "severity": "medium",
+      "wcagGuideline": "2.5.5 Target Size (Level AAA)"
+    },
+    {
+      "page": "Pricing",
+      "selector": "a",
+      "element": {
+        "tagName": "A",
+        "className": "text-gray-600 hover:text-gray-900",
+        "id": "",
+        "textContent": "Features",
+        "href": "http://localhost:4323/features",
+        "type": ""
+      },
+      "size": {
+        "width": 63.15625,
+        "height": 18
+      },
+      "issue": "Touch target too small: 63.15625x18px (minimum: 44x44px)",
+      "severity": "medium",
+      "wcagGuideline": "2.5.5 Target Size (Level AAA)"
+    },
+    {
+      "page": "Pricing",
+      "selector": "a",
+      "element": {
+        "tagName": "A",
+        "className": "text-gray-600 hover:text-gray-900",
+        "id": "",
+        "textContent": "Pricing",
+        "href": "http://localhost:4323/pricing",
+        "type": ""
+      },
+      "size": {
+        "width": 50.015625,
+        "height": 18
+      },
+      "issue": "Touch target too small: 50.015625x18px (minimum: 44x44px)",
+      "severity": "medium",
+      "wcagGuideline": "2.5.5 Target Size (Level AAA)"
+    },
+    {
+      "page": "Pricing",
+      "selector": "a",
+      "element": {
+        "tagName": "A",
+        "className": "text-gray-600 hover:text-gray-900",
+        "id": "",
+        "textContent": "Demo",
+        "href": "http://localhost:4323/demo",
+        "type": ""
+      },
+      "size": {
+        "width": 42.890625,
+        "height": 18
+      },
+      "issue": "Touch target too small: 42.890625x18px (minimum: 44x44px)",
+      "severity": "medium",
+      "wcagGuideline": "2.5.5 Target Size (Level AAA)"
+    },
+    {
+      "page": "Pricing",
+      "selector": "a",
+      "element": {
+        "tagName": "A",
+        "className": "text-gray-600 hover:text-gray-900",
+        "id": "",
+        "textContent": "Integrations",
+        "href": "http://localhost:4323/integrations",
+        "type": ""
+      },
+      "size": {
+        "width": 86.3125,
+        "height": 18
+      },
+      "issue": "Touch target too small: 86.3125x18px (minimum: 44x44px)",
+      "severity": "medium",
+      "wcagGuideline": "2.5.5 Target Size (Level AAA)"
+    },
+    {
+      "page": "Pricing",
+      "selector": "a",
+      "element": {
+        "tagName": "A",
+        "className": "text-gray-600 hover:text-gray-900",
+        "id": "",
+        "textContent": "Help Center",
+        "href": "http://localhost:4323/help",
+        "type": ""
+      },
+      "size": {
+        "width": 86.75,
+        "height": 18
+      },
+      "issue": "Touch target too small: 86.75x18px (minimum: 44x44px)",
+      "severity": "medium",
+      "wcagGuideline": "2.5.5 Target Size (Level AAA)"
+    },
+    {
+      "page": "Pricing",
+      "selector": "a",
+      "element": {
+        "tagName": "A",
+        "className": "text-gray-600 hover:text-gray-900",
+        "id": "",
+        "textContent": "Contact",
+        "href": "http://localhost:4323/contact",
+        "type": ""
+      },
+      "size": {
+        "width": 57.625,
+        "height": 18
+      },
+      "issue": "Touch target too small: 57.625x18px (minimum: 44x44px)",
+      "severity": "medium",
+      "wcagGuideline": "2.5.5 Target Size (Level AAA)"
+    },
+    {
+      "page": "Pricing",
+      "selector": "a",
+      "element": {
+        "tagName": "A",
+        "className": "text-gray-600 hover:text-gray-900",
+        "id": "",
+        "textContent": "Blog",
+        "href": "http://localhost:4323/blog",
+        "type": ""
+      },
+      "size": {
+        "width": 32.515625,
+        "height": 18
+      },
+      "issue": "Touch target too small: 32.515625x18px (minimum: 44x44px)",
+      "severity": "medium",
+      "wcagGuideline": "2.5.5 Target Size (Level AAA)"
+    },
+    {
+      "page": "Pricing",
+      "selector": "a",
+      "element": {
+        "tagName": "A",
+        "className": "text-gray-600 hover:text-gray-900",
+        "id": "",
+        "textContent": "About",
+        "href": "http://localhost:4323/about",
+        "type": ""
+      },
+      "size": {
+        "width": 43.65625,
+        "height": 18
+      },
+      "issue": "Touch target too small: 43.65625x18px (minimum: 44x44px)",
+      "severity": "medium",
+      "wcagGuideline": "2.5.5 Target Size (Level AAA)"
+    },
+    {
+      "page": "Pricing",
+      "selector": "a",
+      "element": {
+        "tagName": "A",
+        "className": "text-gray-500 hover:text-gray-900 text-sm mr-6",
+        "id": "",
+        "textContent": "Privacy Policy",
+        "href": "http://localhost:4323/privacy",
+        "type": ""
+      },
+      "size": {
+        "width": 100.1875,
+        "height": 18
+      },
+      "issue": "Touch target too small: 100.1875x18px (minimum: 44x44px)",
+      "severity": "medium",
+      "wcagGuideline": "2.5.5 Target Size (Level AAA)"
+    },
+    {
+      "page": "Pricing",
+      "selector": "a",
+      "element": {
+        "tagName": "A",
+        "className": "text-gray-500 hover:text-gray-900 text-sm",
+        "id": "",
+        "textContent": "Terms of Service",
+        "href": "http://localhost:4323/terms",
+        "type": ""
+      },
+      "size": {
+        "width": 121.734375,
+        "height": 18
+      },
+      "issue": "Touch target too small: 121.734375x18px (minimum: 44x44px)",
+      "severity": "medium",
+      "wcagGuideline": "2.5.5 Target Size (Level AAA)"
+    }
+  ]
+}

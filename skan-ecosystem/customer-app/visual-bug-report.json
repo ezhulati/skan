@@ -1,0 +1,181 @@
+{
+  "timestamp": "2025-09-16T05:45:33.066Z",
+  "summary": {
+    "totalIssues": 17,
+    "critical": 0,
+    "high": 0,
+    "medium": 9,
+    "low": 8,
+    "categories": {
+      "Accessibility": 1,
+      "UX": 8,
+      "Layout": 8
+    }
+  },
+  "issues": {
+    "Medium": [
+      {
+        "severity": "Medium",
+        "category": "Accessibility",
+        "page": "Homepage (Desktop)",
+        "description": "Heading hierarchy skip from H1 to H3",
+        "element": "H3.font-semibold.text-gray-900",
+        "screenshot": null,
+        "timestamp": "2025-09-16T05:45:12.396Z"
+      },
+      {
+        "severity": "Medium",
+        "category": "UX",
+        "page": "Homepage (Desktop)",
+        "description": "Interactive elements smaller than 44x44px minimum tap target",
+        "element": "A.text-gray-600.hover:text-gray-900.px-3.py-2.text-sm.font-medium.transition-colors (63x18px), A.text-gray-600.hover:text-gray-900.px-3.py-2.text-sm.font-medium.transition-colors (50x18px), A.text-gray-600.hover:text-gray-900.px-3.py-2.text-sm.font-medium.transition-colors (43x18px), A.text-gray-600.hover:text-gray-900.px-3.py-2.text-sm.font-medium.transition-colors (33x18px), A.text-gray-600.hover:text-gray-900.px-3.py-2.text-sm.font-medium.transition-colors (58x18px), A.text-gray-600.hover:text-gray-900.px-3.py-2.text-sm.font-medium.transition-colors (49x18px), A.bg-blue-600.hover:bg-blue-700.text-white.px-4.py-2.rounded-lg.text-sm.font-medium.transition-colors (70x18px), A.text-gray-600.hover:text-gray-900.block.px-3.py-2.text-base.font-medium (63x18px), A.text-gray-600.hover:text-gray-900.block.px-3.py-2.text-base.font-medium (50x18px), A.text-gray-600.hover:text-gray-900.block.px-3.py-2.text-base.font-medium (43x18px), A.text-gray-600.hover:text-gray-900.block.px-3.py-2.text-base.font-medium (33x18px), A.text-gray-600.hover:text-gray-900.block.px-3.py-2.text-base.font-medium (58x18px), A.text-gray-600.hover:text-gray-900.block.px-3.py-2.text-base.font-medium (49x18px), A.bg-blue-600.hover:bg-blue-700.text-white.block.px-3.py-2.rounded-lg.text-base.font-medium.transition-colors.mx-3.mt-2 (70x18px), A.bg-blue-600.hover:bg-blue-700.text-white.px-8.py-4.rounded-xl.text-lg.font-semibold.transition-colors.shadow-lg.hover:shadow-xl (108x18px), A.border.border-gray-300.hover:border-gray-400.text-gray-700.px-8.py-4.rounded-xl.text-lg.font-semibold.transition-colors (95x18px), BUTTON.w-full.bg-blue-600.text-white.py-3.rounded-lg.font-semibold.mt-4 (83x24px), BUTTON.bg-red-600.text-white.px-3.py-1.rounded.text-sm (32x24px), BUTTON.bg-yellow-600.text-white.px-3.py-1.rounded.text-sm (70x24px), BUTTON.bg-green-600.text-white.px-3.py-1.rounded.text-sm (45x24px), A.w-full.bg-blue-600.hover:bg-blue-700.text-white.px-8.py-4.rounded-xl.text-lg.font-semibold.transition-colors.block.text-center (106x18px), A.bg-white.hover:bg-gray-50.text-blue-600.px-8.py-4.rounded-xl.text-lg.font-semibold.transition-colors (108x18px), A.border.border-blue-400.hover:border-blue-300.text-white.px-8.py-4.rounded-xl.text-lg.font-semibold.transition-colors (158x18px), A.text-gray-600.hover:text-gray-900 (63x18px), A.text-gray-600.hover:text-gray-900 (50x18px), A.text-gray-600.hover:text-gray-900 (43x18px), A.text-gray-600.hover:text-gray-900 (86x18px), A.text-gray-600.hover:text-gray-900 (87x18px), A.text-gray-600.hover:text-gray-900 (58x18px), A.text-gray-600.hover:text-gray-900 (33x18px), A.text-gray-600.hover:text-gray-900 (44x18px), A.text-gray-500.hover:text-gray-900.text-sm.mr-6 (100x18px), A.text-gray-500.hover:text-gray-900.text-sm (122x18px)",
+        "screenshot": null,
+        "timestamp": "2025-09-16T05:45:12.423Z"
+      },
+      {
+        "severity": "Medium",
+        "category": "UX",
+        "page": "Homepage (Mobile)",
+        "description": "Interactive elements smaller than 44x44px minimum tap target",
+        "element": "A.text-gray-600.hover:text-gray-900.px-3.py-2.text-sm.font-medium.transition-colors (63x18px), A.text-gray-600.hover:text-gray-900.px-3.py-2.text-sm.font-medium.transition-colors (50x18px), A.text-gray-600.hover:text-gray-900.px-3.py-2.text-sm.font-medium.transition-colors (43x18px), A.text-gray-600.hover:text-gray-900.px-3.py-2.text-sm.font-medium.transition-colors (33x18px), A.text-gray-600.hover:text-gray-900.px-3.py-2.text-sm.font-medium.transition-colors (58x18px), A.text-gray-600.hover:text-gray-900.px-3.py-2.text-sm.font-medium.transition-colors (49x18px), A.bg-blue-600.hover:bg-blue-700.text-white.px-4.py-2.rounded-lg.text-sm.font-medium.transition-colors (70x18px), A.text-gray-600.hover:text-gray-900.block.px-3.py-2.text-base.font-medium (63x18px), A.text-gray-600.hover:text-gray-900.block.px-3.py-2.text-base.font-medium (50x18px), A.text-gray-600.hover:text-gray-900.block.px-3.py-2.text-base.font-medium (43x18px), A.text-gray-600.hover:text-gray-900.block.px-3.py-2.text-base.font-medium (33x18px), A.text-gray-600.hover:text-gray-900.block.px-3.py-2.text-base.font-medium (58x18px), A.text-gray-600.hover:text-gray-900.block.px-3.py-2.text-base.font-medium (49x18px), A.bg-blue-600.hover:bg-blue-700.text-white.block.px-3.py-2.rounded-lg.text-base.font-medium.transition-colors.mx-3.mt-2 (70x18px), A.bg-blue-600.hover:bg-blue-700.text-white.px-8.py-4.rounded-xl.text-lg.font-semibold.transition-colors.shadow-lg.hover:shadow-xl (108x18px), A.border.border-gray-300.hover:border-gray-400.text-gray-700.px-8.py-4.rounded-xl.text-lg.font-semibold.transition-colors (95x18px), BUTTON.w-full.bg-blue-600.text-white.py-3.rounded-lg.font-semibold.mt-4 (83x24px), BUTTON.bg-red-600.text-white.px-3.py-1.rounded.text-sm (32x24px), BUTTON.bg-yellow-600.text-white.px-3.py-1.rounded.text-sm (70x24px), BUTTON.bg-green-600.text-white.px-3.py-1.rounded.text-sm (45x24px), A.w-full.bg-blue-600.hover:bg-blue-700.text-white.px-8.py-4.rounded-xl.text-lg.font-semibold.transition-colors.block.text-center (106x18px), A.bg-white.hover:bg-gray-50.text-blue-600.px-8.py-4.rounded-xl.text-lg.font-semibold.transition-colors (108x18px), A.border.border-blue-400.hover:border-blue-300.text-white.px-8.py-4.rounded-xl.text-lg.font-semibold.transition-colors (158x18px), A.text-gray-600.hover:text-gray-900 (63x18px), A.text-gray-600.hover:text-gray-900 (50x18px), A.text-gray-600.hover:text-gray-900 (43x18px), A.text-gray-600.hover:text-gray-900 (86x18px), A.text-gray-600.hover:text-gray-900 (87x18px), A.text-gray-600.hover:text-gray-900 (58x18px), A.text-gray-600.hover:text-gray-900 (33x18px), A.text-gray-600.hover:text-gray-900 (44x18px), A.text-gray-500.hover:text-gray-900.text-sm.mr-6 (100x18px), A.text-gray-500.hover:text-gray-900.text-sm (122x18px)",
+        "screenshot": null,
+        "timestamp": "2025-09-16T05:45:15.188Z"
+      },
+      {
+        "severity": "Medium",
+        "category": "UX",
+        "page": "Features (Desktop)",
+        "description": "Interactive elements smaller than 44x44px minimum tap target",
+        "element": "A.text-gray-600.hover:text-gray-900.px-3.py-2.text-sm.font-medium.transition-colors (63x18px), A.text-gray-600.hover:text-gray-900.px-3.py-2.text-sm.font-medium.transition-colors (50x18px), A.text-gray-600.hover:text-gray-900.px-3.py-2.text-sm.font-medium.transition-colors (43x18px), A.text-gray-600.hover:text-gray-900.px-3.py-2.text-sm.font-medium.transition-colors (33x18px), A.text-gray-600.hover:text-gray-900.px-3.py-2.text-sm.font-medium.transition-colors (58x18px), A.text-gray-600.hover:text-gray-900.px-3.py-2.text-sm.font-medium.transition-colors (49x18px), A.bg-blue-600.hover:bg-blue-700.text-white.px-4.py-2.rounded-lg.text-sm.font-medium.transition-colors (70x18px), A.text-gray-600.hover:text-gray-900.block.px-3.py-2.text-base.font-medium (63x18px), A.text-gray-600.hover:text-gray-900.block.px-3.py-2.text-base.font-medium (50x18px), A.text-gray-600.hover:text-gray-900.block.px-3.py-2.text-base.font-medium (43x18px), A.text-gray-600.hover:text-gray-900.block.px-3.py-2.text-base.font-medium (33x18px), A.text-gray-600.hover:text-gray-900.block.px-3.py-2.text-base.font-medium (58x18px), A.text-gray-600.hover:text-gray-900.block.px-3.py-2.text-base.font-medium (49x18px), A.bg-blue-600.hover:bg-blue-700.text-white.block.px-3.py-2.rounded-lg.text-base.font-medium.transition-colors.mx-3.mt-2 (70x18px), BUTTON.w-full.bg-blue-600.text-white.py-3.rounded-lg.font-semibold (83x24px), BUTTON.bg-red-600.text-white.px-4.py-2.rounded-lg.text-sm.font-medium (32x24px), BUTTON.bg-yellow-600.text-white.px-4.py-2.rounded-lg.text-sm.font-medium (70x24px), BUTTON.bg-green-600.text-white.px-4.py-2.rounded-lg.text-sm.font-medium (45x24px), A.bg-white.hover:bg-gray-50.text-blue-600.px-8.py-4.rounded-xl.text-lg.font-semibold.transition-colors (108x18px), A.border.border-blue-400.hover:border-blue-300.text-white.px-8.py-4.rounded-xl.text-lg.font-semibold.transition-colors (82x18px), A.text-gray-600.hover:text-gray-900 (63x18px), A.text-gray-600.hover:text-gray-900 (50x18px), A.text-gray-600.hover:text-gray-900 (43x18px), A.text-gray-600.hover:text-gray-900 (86x18px), A.text-gray-600.hover:text-gray-900 (87x18px), A.text-gray-600.hover:text-gray-900 (58x18px), A.text-gray-600.hover:text-gray-900 (33x18px), A.text-gray-600.hover:text-gray-900 (44x18px), A.text-gray-500.hover:text-gray-900.text-sm.mr-6 (100x18px), A.text-gray-500.hover:text-gray-900.text-sm (122x18px)",
+        "screenshot": null,
+        "timestamp": "2025-09-16T05:45:18.480Z"
+      },
+      {
+        "severity": "Medium",
+        "category": "UX",
+        "page": "Features (Mobile)",
+        "description": "Interactive elements smaller than 44x44px minimum tap target",
+        "element": "A.text-gray-600.hover:text-gray-900.px-3.py-2.text-sm.font-medium.transition-colors (63x18px), A.text-gray-600.hover:text-gray-900.px-3.py-2.text-sm.font-medium.transition-colors (50x18px), A.text-gray-600.hover:text-gray-900.px-3.py-2.text-sm.font-medium.transition-colors (43x18px), A.text-gray-600.hover:text-gray-900.px-3.py-2.text-sm.font-medium.transition-colors (33x18px), A.text-gray-600.hover:text-gray-900.px-3.py-2.text-sm.font-medium.transition-colors (58x18px), A.text-gray-600.hover:text-gray-900.px-3.py-2.text-sm.font-medium.transition-colors (49x18px), A.bg-blue-600.hover:bg-blue-700.text-white.px-4.py-2.rounded-lg.text-sm.font-medium.transition-colors (70x18px), A.text-gray-600.hover:text-gray-900.block.px-3.py-2.text-base.font-medium (63x18px), A.text-gray-600.hover:text-gray-900.block.px-3.py-2.text-base.font-medium (50x18px), A.text-gray-600.hover:text-gray-900.block.px-3.py-2.text-base.font-medium (43x18px), A.text-gray-600.hover:text-gray-900.block.px-3.py-2.text-base.font-medium (33x18px), A.text-gray-600.hover:text-gray-900.block.px-3.py-2.text-base.font-medium (58x18px), A.text-gray-600.hover:text-gray-900.block.px-3.py-2.text-base.font-medium (49x18px), A.bg-blue-600.hover:bg-blue-700.text-white.block.px-3.py-2.rounded-lg.text-base.font-medium.transition-colors.mx-3.mt-2 (70x18px), BUTTON.w-full.bg-blue-600.text-white.py-3.rounded-lg.font-semibold (83x24px), BUTTON.bg-red-600.text-white.px-4.py-2.rounded-lg.text-sm.font-medium (32x24px), BUTTON.bg-yellow-600.text-white.px-4.py-2.rounded-lg.text-sm.font-medium (70x24px), BUTTON.bg-green-600.text-white.px-4.py-2.rounded-lg.text-sm.font-medium (45x24px), A.bg-white.hover:bg-gray-50.text-blue-600.px-8.py-4.rounded-xl.text-lg.font-semibold.transition-colors (108x18px), A.border.border-blue-400.hover:border-blue-300.text-white.px-8.py-4.rounded-xl.text-lg.font-semibold.transition-colors (82x18px), A.text-gray-600.hover:text-gray-900 (63x18px), A.text-gray-600.hover:text-gray-900 (50x18px), A.text-gray-600.hover:text-gray-900 (43x18px), A.text-gray-600.hover:text-gray-900 (86x18px), A.text-gray-600.hover:text-gray-900 (87x18px), A.text-gray-600.hover:text-gray-900 (58x18px), A.text-gray-600.hover:text-gray-900 (33x18px), A.text-gray-600.hover:text-gray-900 (44x18px), A.text-gray-500.hover:text-gray-900.text-sm.mr-6 (100x18px), A.text-gray-500.hover:text-gray-900.text-sm (122x18px)",
+        "screenshot": null,
+        "timestamp": "2025-09-16T05:45:21.254Z"
+      },
+      {
+        "severity": "Medium",
+        "category": "UX",
+        "page": "Pricing (Desktop)",
+        "description": "Interactive elements smaller than 44x44px minimum tap target",
+        "element": "A.text-gray-600.hover:text-gray-900.px-3.py-2.text-sm.font-medium.transition-colors (63x18px), A.text-gray-600.hover:text-gray-900.px-3.py-2.text-sm.font-medium.transition-colors (50x18px), A.text-gray-600.hover:text-gray-900.px-3.py-2.text-sm.font-medium.transition-colors (43x18px), A.text-gray-600.hover:text-gray-900.px-3.py-2.text-sm.font-medium.transition-colors (33x18px), A.text-gray-600.hover:text-gray-900.px-3.py-2.text-sm.font-medium.transition-colors (58x18px), A.text-gray-600.hover:text-gray-900.px-3.py-2.text-sm.font-medium.transition-colors (49x18px), A.bg-blue-600.hover:bg-blue-700.text-white.px-4.py-2.rounded-lg.text-sm.font-medium.transition-colors (70x18px), A.text-gray-600.hover:text-gray-900.block.px-3.py-2.text-base.font-medium (63x18px), A.text-gray-600.hover:text-gray-900.block.px-3.py-2.text-base.font-medium (50x18px), A.text-gray-600.hover:text-gray-900.block.px-3.py-2.text-base.font-medium (43x18px), A.text-gray-600.hover:text-gray-900.block.px-3.py-2.text-base.font-medium (33x18px), A.text-gray-600.hover:text-gray-900.block.px-3.py-2.text-base.font-medium (58x18px), A.text-gray-600.hover:text-gray-900.block.px-3.py-2.text-base.font-medium (49x18px), A.bg-blue-600.hover:bg-blue-700.text-white.block.px-3.py-2.rounded-lg.text-base.font-medium.transition-colors.mx-3.mt-2 (70x18px), A.w-full.sm:w-auto.bg-blue-600.hover:bg-blue-700.text-white.px-8.py-4.rounded-xl.text-lg.font-semibold.transition-colors (110x18px), A.w-full.sm:w-auto.border.border-gray-300.hover:border-gray-400.text-gray-700.px-8.py-4.rounded-xl.text-lg.font-semibold.transition-colors (101x18px), A.bg-white.hover:bg-gray-50.text-blue-600.px-8.py-4.rounded-xl.text-lg.font-semibold.transition-colors (110x18px), A.border.border-blue-400.hover:border-blue-300.text-white.px-8.py-4.rounded-xl.text-lg.font-semibold.transition-colors (131x18px), A.text-gray-600.hover:text-gray-900 (63x18px), A.text-gray-600.hover:text-gray-900 (50x18px), A.text-gray-600.hover:text-gray-900 (43x18px), A.text-gray-600.hover:text-gray-900 (86x18px), A.text-gray-600.hover:text-gray-900 (87x18px), A.text-gray-600.hover:text-gray-900 (58x18px), A.text-gray-600.hover:text-gray-900 (33x18px), A.text-gray-600.hover:text-gray-900 (44x18px), A.text-gray-500.hover:text-gray-900.text-sm.mr-6 (100x18px), A.text-gray-500.hover:text-gray-900.text-sm (122x18px)",
+        "screenshot": null,
+        "timestamp": "2025-09-16T05:45:24.431Z"
+      },
+      {
+        "severity": "Medium",
+        "category": "UX",
+        "page": "Pricing (Mobile)",
+        "description": "Interactive elements smaller than 44x44px minimum tap target",
+        "element": "A.text-gray-600.hover:text-gray-900.px-3.py-2.text-sm.font-medium.transition-colors (63x18px), A.text-gray-600.hover:text-gray-900.px-3.py-2.text-sm.font-medium.transition-colors (50x18px), A.text-gray-600.hover:text-gray-900.px-3.py-2.text-sm.font-medium.transition-colors (43x18px), A.text-gray-600.hover:text-gray-900.px-3.py-2.text-sm.font-medium.transition-colors (33x18px), A.text-gray-600.hover:text-gray-900.px-3.py-2.text-sm.font-medium.transition-colors (58x18px), A.text-gray-600.hover:text-gray-900.px-3.py-2.text-sm.font-medium.transition-colors (49x18px), A.bg-blue-600.hover:bg-blue-700.text-white.px-4.py-2.rounded-lg.text-sm.font-medium.transition-colors (70x18px), A.text-gray-600.hover:text-gray-900.block.px-3.py-2.text-base.font-medium (63x18px), A.text-gray-600.hover:text-gray-900.block.px-3.py-2.text-base.font-medium (50x18px), A.text-gray-600.hover:text-gray-900.block.px-3.py-2.text-base.font-medium (43x18px), A.text-gray-600.hover:text-gray-900.block.px-3.py-2.text-base.font-medium (33x18px), A.text-gray-600.hover:text-gray-900.block.px-3.py-2.text-base.font-medium (58x18px), A.text-gray-600.hover:text-gray-900.block.px-3.py-2.text-base.font-medium (49x18px), A.bg-blue-600.hover:bg-blue-700.text-white.block.px-3.py-2.rounded-lg.text-base.font-medium.transition-colors.mx-3.mt-2 (70x18px), A.w-full.sm:w-auto.bg-blue-600.hover:bg-blue-700.text-white.px-8.py-4.rounded-xl.text-lg.font-semibold.transition-colors (110x18px), A.w-full.sm:w-auto.border.border-gray-300.hover:border-gray-400.text-gray-700.px-8.py-4.rounded-xl.text-lg.font-semibold.transition-colors (101x18px), A.bg-white.hover:bg-gray-50.text-blue-600.px-8.py-4.rounded-xl.text-lg.font-semibold.transition-colors (110x18px), A.border.border-blue-400.hover:border-blue-300.text-white.px-8.py-4.rounded-xl.text-lg.font-semibold.transition-colors (131x18px), A.text-gray-600.hover:text-gray-900 (63x18px), A.text-gray-600.hover:text-gray-900 (50x18px), A.text-gray-600.hover:text-gray-900 (43x18px), A.text-gray-600.hover:text-gray-900 (86x18px), A.text-gray-600.hover:text-gray-900 (87x18px), A.text-gray-600.hover:text-gray-900 (58x18px), A.text-gray-600.hover:text-gray-900 (33x18px), A.text-gray-600.hover:text-gray-900 (44x18px), A.text-gray-500.hover:text-gray-900.text-sm.mr-6 (100x18px), A.text-gray-500.hover:text-gray-900.text-sm (122x18px)",
+        "screenshot": null,
+        "timestamp": "2025-09-16T05:45:27.186Z"
+      },
+      {
+        "severity": "Medium",
+        "category": "UX",
+        "page": "Demo (Desktop)",
+        "description": "Interactive elements smaller than 44x44px minimum tap target",
+        "element": "A.text-gray-600.hover:text-gray-900.px-3.py-2.text-sm.font-medium.transition-colors (63x18px), A.text-gray-600.hover:text-gray-900.px-3.py-2.text-sm.font-medium.transition-colors (50x18px), A.text-gray-600.hover:text-gray-900.px-3.py-2.text-sm.font-medium.transition-colors (43x18px), A.text-gray-600.hover:text-gray-900.px-3.py-2.text-sm.font-medium.transition-colors (33x18px), A.text-gray-600.hover:text-gray-900.px-3.py-2.text-sm.font-medium.transition-colors (58x18px), A.text-gray-600.hover:text-gray-900.px-3.py-2.text-sm.font-medium.transition-colors (49x18px), A.bg-blue-600.hover:bg-blue-700.text-white.px-4.py-2.rounded-lg.text-sm.font-medium.transition-colors (70x18px), A.text-gray-600.hover:text-gray-900.block.px-3.py-2.text-base.font-medium (63x18px), A.text-gray-600.hover:text-gray-900.block.px-3.py-2.text-base.font-medium (50x18px), A.text-gray-600.hover:text-gray-900.block.px-3.py-2.text-base.font-medium (43x18px), A.text-gray-600.hover:text-gray-900.block.px-3.py-2.text-base.font-medium (33x18px), A.text-gray-600.hover:text-gray-900.block.px-3.py-2.text-base.font-medium (58x18px), A.text-gray-600.hover:text-gray-900.block.px-3.py-2.text-base.font-medium (49x18px), A.bg-blue-600.hover:bg-blue-700.text-white.block.px-3.py-2.rounded-lg.text-base.font-medium.transition-colors.mx-3.mt-2 (70x18px), A.w-full.bg-blue-600.hover:bg-blue-700.text-white.px-6.py-4.rounded-xl.text-lg.font-semibold.transition-colors.block.text-center (237x18px), A.w-full.bg-green-600.hover:bg-green-700.text-white.px-6.py-4.rounded-xl.text-lg.font-semibold.transition-colors.block.text-center (213x18px), A.bg-white.hover:bg-gray-50.text-blue-600.px-8.py-4.rounded-xl.text-lg.font-semibold.transition-colors (125x18px), A.border.border-blue-400.hover:border-blue-300.text-white.px-8.py-4.rounded-xl.text-lg.font-semibold.transition-colors (82x18px), A.text-gray-600.hover:text-gray-900 (63x18px), A.text-gray-600.hover:text-gray-900 (50x18px), A.text-gray-600.hover:text-gray-900 (43x18px), A.text-gray-600.hover:text-gray-900 (86x18px), A.text-gray-600.hover:text-gray-900 (87x18px), A.text-gray-600.hover:text-gray-900 (58x18px), A.text-gray-600.hover:text-gray-900 (33x18px), A.text-gray-600.hover:text-gray-900 (44x18px), A.text-gray-500.hover:text-gray-900.text-sm.mr-6 (100x18px), A.text-gray-500.hover:text-gray-900.text-sm (122x18px)",
+        "screenshot": null,
+        "timestamp": "2025-09-16T05:45:30.294Z"
+      },
+      {
+        "severity": "Medium",
+        "category": "UX",
+        "page": "Demo (Mobile)",
+        "description": "Interactive elements smaller than 44x44px minimum tap target",
+        "element": "A.text-gray-600.hover:text-gray-900.px-3.py-2.text-sm.font-medium.transition-colors (63x18px), A.text-gray-600.hover:text-gray-900.px-3.py-2.text-sm.font-medium.transition-colors (50x18px), A.text-gray-600.hover:text-gray-900.px-3.py-2.text-sm.font-medium.transition-colors (43x18px), A.text-gray-600.hover:text-gray-900.px-3.py-2.text-sm.font-medium.transition-colors (33x18px), A.text-gray-600.hover:text-gray-900.px-3.py-2.text-sm.font-medium.transition-colors (58x18px), A.text-gray-600.hover:text-gray-900.px-3.py-2.text-sm.font-medium.transition-colors (49x18px), A.bg-blue-600.hover:bg-blue-700.text-white.px-4.py-2.rounded-lg.text-sm.font-medium.transition-colors (70x18px), A.text-gray-600.hover:text-gray-900.block.px-3.py-2.text-base.font-medium (63x18px), A.text-gray-600.hover:text-gray-900.block.px-3.py-2.text-base.font-medium (50x18px), A.text-gray-600.hover:text-gray-900.block.px-3.py-2.text-base.font-medium (43x18px), A.text-gray-600.hover:text-gray-900.block.px-3.py-2.text-base.font-medium (33x18px), A.text-gray-600.hover:text-gray-900.block.px-3.py-2.text-base.font-medium (58x18px), A.text-gray-600.hover:text-gray-900.block.px-3.py-2.text-base.font-medium (49x18px), A.bg-blue-600.hover:bg-blue-700.text-white.block.px-3.py-2.rounded-lg.text-base.font-medium.transition-colors.mx-3.mt-2 (70x18px), A.w-full.bg-blue-600.hover:bg-blue-700.text-white.px-6.py-4.rounded-xl.text-lg.font-semibold.transition-colors.block.text-center (237x18px), A.w-full.bg-green-600.hover:bg-green-700.text-white.px-6.py-4.rounded-xl.text-lg.font-semibold.transition-colors.block.text-center (213x18px), A.bg-white.hover:bg-gray-50.text-blue-600.px-8.py-4.rounded-xl.text-lg.font-semibold.transition-colors (125x18px), A.border.border-blue-400.hover:border-blue-300.text-white.px-8.py-4.rounded-xl.text-lg.font-semibold.transition-colors (82x18px), A.text-gray-600.hover:text-gray-900 (63x18px), A.text-gray-600.hover:text-gray-900 (50x18px), A.text-gray-600.hover:text-gray-900 (43x18px), A.text-gray-600.hover:text-gray-900 (86x18px), A.text-gray-600.hover:text-gray-900 (87x18px), A.text-gray-600.hover:text-gray-900 (58x18px), A.text-gray-600.hover:text-gray-900 (33x18px), A.text-gray-600.hover:text-gray-900 (44x18px), A.text-gray-500.hover:text-gray-900.text-sm.mr-6 (100x18px), A.text-gray-500.hover:text-gray-900.text-sm (122x18px)",
+        "screenshot": null,
+        "timestamp": "2025-09-16T05:45:33.050Z"
+      }
+    ],
+    "Low": [
+      {
+        "severity": "Low",
+        "category": "Layout",
+        "page": "Homepage (Desktop)",
+        "description": "Elements with excessive z-index values",
+        "element": "ASTRO-DEV-TOOLBAR (z-index: 999999)",
+        "screenshot": null,
+        "timestamp": "2025-09-16T05:45:12.420Z"
+      },
+      {
+        "severity": "Low",
+        "category": "Layout",
+        "page": "Homepage (Mobile)",
+        "description": "Elements with excessive z-index values",
+        "element": "ASTRO-DEV-TOOLBAR (z-index: 999999)",
+        "screenshot": null,
+        "timestamp": "2025-09-16T05:45:15.186Z"
+      },
+      {
+        "severity": "Low",
+        "category": "Layout",
+        "page": "Features (Desktop)",
+        "description": "Elements with excessive z-index values",
+        "element": "ASTRO-DEV-TOOLBAR (z-index: 999999)",
+        "screenshot": null,
+        "timestamp": "2025-09-16T05:45:18.479Z"
+      },
+      {
+        "severity": "Low",
+        "category": "Layout",
+        "page": "Features (Mobile)",
+        "description": "Elements with excessive z-index values",
+        "element": "ASTRO-DEV-TOOLBAR (z-index: 999999)",
+        "screenshot": null,
+        "timestamp": "2025-09-16T05:45:21.252Z"
+      },
+      {
+        "severity": "Low",
+        "category": "Layout",
+        "page": "Pricing (Desktop)",
+        "description": "Elements with excessive z-index values",
+        "element": "ASTRO-DEV-TOOLBAR (z-index: 999999)",
+        "screenshot": null,
+        "timestamp": "2025-09-16T05:45:24.429Z"
+      },
+      {
+        "severity": "Low",
+        "category": "Layout",
+        "page": "Pricing (Mobile)",
+        "description": "Elements with excessive z-index values",
+        "element": "ASTRO-DEV-TOOLBAR (z-index: 999999)",
+        "screenshot": null,
+        "timestamp": "2025-09-16T05:45:27.184Z"
+      },
+      {
+        "severity": "Low",
+        "category": "Layout",
+        "page": "Demo (Desktop)",
+        "description": "Elements with excessive z-index values",
+        "element": "ASTRO-DEV-TOOLBAR (z-index: 999999)",
+        "screenshot": null,
+        "timestamp": "2025-09-16T05:45:30.293Z"
+      },
+      {
+        "severity": "Low",
+        "category": "Layout",
+        "page": "Demo (Mobile)",
+        "description": "Elements with excessive z-index values",
+        "element": "ASTRO-DEV-TOOLBAR (z-index: 999999)",
+        "screenshot": null,
+        "timestamp": "2025-09-16T05:45:33.048Z"
+      }
+    ]
+  },
+  "recommendations": [
+    {
+      "priority": "High",
+      "description": "Accessibility compliance is crucial for legal compliance and user experience",
+      "action": "Implement WCAG 2.1 AA standards"
+    }
+  ]
+}
