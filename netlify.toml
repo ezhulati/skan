@@ -1,3 +1,4 @@
+# Netlify configuration for SKAN.AL marketing site
 [build]
   base = "skan-ecosystem/marketing-site"
   command = "npm install && npm run build"
