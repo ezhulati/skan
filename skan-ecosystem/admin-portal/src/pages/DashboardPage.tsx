@@ -22,7 +22,7 @@ const DashboardPage: React.FC = () => {
       setOrders(ordersData);
     } catch (err) {
       console.error('Error loading orders:', err);
-      setError('Failed to load orders');
+      setError('Dështoi ngarkimi i porosive');
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -59,7 +59,7 @@ const DashboardPage: React.FC = () => {
       );
     } catch (err) {
       console.error('Error updating order status:', err);
-      alert('Failed to update order status');
+      alert('Dështoi përditësimi i statusit të porosisë');
     }
   };
 
@@ -84,9 +84,9 @@ const DashboardPage: React.FC = () => {
 
   const getStatusLabel = (status: string) => {
     switch (status) {
-      case 'new': return 'Accept Order';
-      case 'preparing': return 'Mark Ready';
-      case 'ready': return 'Mark Served';
+      case 'new': return 'Prano Porosinë';
+      case 'preparing': return 'Shëno si Gati';
+      case 'ready': return 'Shëno si Shërbyer';
       default: return null;
     }
   };
@@ -114,7 +114,7 @@ const DashboardPage: React.FC = () => {
     return (
       <div className="loading-container">
         <div className="loading-spinner"></div>
-        <p>Loading orders...</p>
+        <p>Duke ngarkuar porositë...</p>
       </div>
     );
   }
@@ -123,8 +123,8 @@ const DashboardPage: React.FC = () => {
     <div className="dashboard-page">
       <header className="page-header">
         <div className="header-left">
-          <h1>Orders Dashboard</h1>
-          <p>Manage incoming orders and update their status</p>
+          <h1>Paneli i Porosive</h1>
+          <p>Menaxho porositë e ardhura dhe përditëso statusin e tyre</p>
         </div>
         <div className="header-right">
           <button 
@@ -135,7 +135,7 @@ const DashboardPage: React.FC = () => {
             }}
             disabled={refreshing}
           >
-            {refreshing ? 'Refreshing...' : 'Refresh'}
+            {refreshing ? 'Duke rifreskuar...' : 'Rifresko'}
           </button>
         </div>
       </header>
@@ -147,7 +147,7 @@ const DashboardPage: React.FC = () => {
             className={`filter-button ${selectedStatus === status ? 'active' : ''}`}
             onClick={() => setSelectedStatus(status)}
           >
-            {status === 'active' ? 'Active' : status.charAt(0).toUpperCase() + status.slice(1)}
+            {status === 'all' ? 'Të gjitha' : status === 'active' ? 'Aktive' : status === 'new' ? 'Të reja' : status === 'preparing' ? 'Duke u përgatitur' : status === 'ready' ? 'Gati' : status === 'served' ? 'Shërbyer' : status.charAt(0).toUpperCase() + status.slice(1)}
           </button>
         ))}
       </div>
@@ -161,7 +161,7 @@ const DashboardPage: React.FC = () => {
       <div className="orders-container">
         {filteredOrders.length === 0 ? (
           <div className="no-orders">
-            <p>No orders found for the selected filter.</p>
+            <p>Nuk u gjetën porosite për filtrin e zgjedhur.</p>
           </div>
         ) : (
           <div className="orders-grid">
@@ -179,11 +179,11 @@ const DashboardPage: React.FC = () => {
                 
                 <div className="order-info">
                   <div className="table-info">
-                    <strong>Table: {order.tableNumber}</strong>
+                    <strong>Tavolina: {order.tableNumber}</strong>
                   </div>
                   {order.customerName && order.customerName !== 'Anonymous' && (
                     <div className="customer-name">
-                      Customer: {order.customerName}
+                      Klienti: {order.customerName}
                     </div>
                   )}
                   <div className="order-time">
@@ -202,7 +202,7 @@ const DashboardPage: React.FC = () => {
                 </div>
                 
                 <div className="order-total">
-                  <strong>Total: €{order.totalAmount.toFixed(2)}</strong>
+                  <strong>Totali: €{order.totalAmount.toFixed(2)}</strong>
                 </div>
                 
                 {getNextStatus(order.status) && (

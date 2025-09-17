@@ -1,0 +1,86 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout 
+  title="Mesazhi u Dërgua - SKAN.AL"
+  description="Faleminderit për mesazhin tuaj. Do t'ju kontaktojmë së shpejti."
+>
+  <!-- Success Section -->
+  <section class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-20 flex items-center">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <!-- Success Icon -->
+      <div class="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-8">
+        <svg class="w-12 h-12 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+        </svg>
+      </div>
+
+      <!-- Success Message -->
+      <h1 class="text-4xl sm:text-5xl font-bold text-gray-900 mb-6" data-sq="Mesazhi u Dërgua!" data-en="Message Sent!">
+        Mesazhi u Dërgua!
+      </h1>
+      
+      <p class="text-xl text-gray-600 mb-8 max-w-2xl mx-auto" data-sq="Faleminderit për interesin tuaj për SKAN.AL. Ekipi ynë do t'ju kontaktojë së shpejti." data-en="Thank you for your interest in SKAN.AL. Our team will contact you shortly.">
+        Faleminderit për interesin tuaj për SKAN.AL. Ekipi ynë do t'ju kontaktojë së shpejti.
+      </p>
+
+      <!-- What's Next -->
+      <div class="bg-white rounded-2xl shadow-xl p-8 mb-8 text-left">
+        <h2 class="text-2xl font-bold text-gray-900 mb-6 text-center" data-sq="Çfarë ndodh tani?" data-en="What happens next?">
+          Çfarë ndodh tani?
+        </h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <!-- Step 1 -->
+          <div class="text-center">
+            <div class="w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">
+              1
+            </div>
+            <h3 class="font-semibold text-gray-900 mb-2" data-sq="Përgjigja" data-en="Response">Përgjigja</h3>
+            <p class="text-sm text-gray-600" data-sq="Do t'ju përgjigjemi brenda 24 orësh me informacion të detajuar" data-en="We'll respond within 24 hours with detailed information">Do t'ju përgjigjemi brenda 24 orësh me informacion të detajuar</p>
+          </div>
+          
+          <!-- Step 2 -->
+          <div class="text-center">
+            <div class="w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">
+              2
+            </div>
+            <h3 class="font-semibold text-gray-900 mb-2" data-sq="Demo" data-en="Demo">Demo</h3>
+            <p class="text-sm text-gray-600" data-sq="Organizojmë një demo të personalizuar për restorantin tuaj" data-en="We'll organize a personalized demo for your restaurant">Organizojmë një demo të personalizuar për restorantin tuaj</p>
+          </div>
+          
+          <!-- Step 3 -->
+          <div class="text-center">
+            <div class="w-12 h-12 bg-green-600 text-white rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">
+              ✓
+            </div>
+            <h3 class="font-semibold text-gray-900 mb-2" data-sq="Instalimi" data-en="Setup">Instalimi</h3>
+            <p class="text-sm text-gray-600" data-sq="Instalojmë sistemin dhe trajnojmë stafin tuaj brenda 24 orësh" data-en="We set up the system and train your staff within 24 hours">Instalojmë sistemin dhe trajnojmë stafin tuaj brenda 24 orësh</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
+        <a href="/demo" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl text-lg font-semibold transition-colors" data-sq="Provo Demo-n Tani" data-en="Try Demo Now">
+          Provo Demo-n Tani
+        </a>
+        <a href="/" class="border border-gray-300 hover:border-gray-400 text-gray-700 px-8 py-4 rounded-xl text-lg font-semibold transition-colors" data-sq="Kthehu në Fillim" data-en="Back to Home">
+          Kthehu në Fillim
+        </a>
+      </div>
+
+      <!-- Contact Info -->
+      <div class="bg-blue-50 rounded-xl p-6">
+        <p class="text-blue-800 font-medium mb-2" data-sq="Ke nevojë për ndihmë të menjëhershme?" data-en="Need immediate assistance?">
+          Ke nevojë për ndihmë të menjëhershme?
+        </p>
+        <p class="text-blue-700">
+          <span data-sq="Na shkruaj drejtpërdrejt në" data-en="Email us directly at">Na shkruaj drejtpërdrejt në</span>
+          <a href="mailto:info@skan.al" class="font-semibold underline hover:no-underline">info@skan.al</a>
+        </p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

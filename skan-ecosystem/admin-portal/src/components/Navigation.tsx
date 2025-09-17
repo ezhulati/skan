@@ -33,7 +33,7 @@ const Navigation: React.FC<NavigationProps> = ({ children }) => {
           </svg>
           <h1 className="mobile-brand-name">Skan.al</h1>
         </div>
-        <button className={`mobile-menu-button ${isMobileMenuOpen ? 'menu-open' : ''}`} onClick={toggleMobileMenu} aria-label={isMobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}>
+        <button className={`mobile-menu-button ${isMobileMenuOpen ? 'menu-open' : ''}`} onClick={toggleMobileMenu} aria-label={isMobileMenuOpen ? "Mbyll menunë e navigimit" : "Hap menunë e navigimit"}>
           <div className="hamburger-lines">
             <span></span>
             <span></span>
@@ -59,7 +59,7 @@ const Navigation: React.FC<NavigationProps> = ({ children }) => {
                 <rect x="14" y="12" width="7" height="9" rx="1" fill="currentColor"/>
                 <rect x="3" y="16" width="7" height="5" rx="1" fill="currentColor"/>
               </svg>
-              Orders Dashboard
+              Paneli i Porosive
             </Link>
           </li>
           <li>
@@ -74,7 +74,7 @@ const Navigation: React.FC<NavigationProps> = ({ children }) => {
                 <circle cx="8" cy="12" r="1" fill="currentColor"/>
                 <circle cx="8" cy="18" r="1" fill="currentColor"/>
               </svg>
-              Menu Management
+              Menaxhimi i Menusë
             </Link>
           </li>
           <li>
@@ -95,7 +95,7 @@ const Navigation: React.FC<NavigationProps> = ({ children }) => {
                 <rect x="13" y="17" width="2" height="2" fill="currentColor"/>
                 <rect x="17" y="17" width="4" height="4" fill="currentColor"/>
               </svg>
-              QR Codes
+              Kodet QR
             </Link>
           </li>
           <li>
@@ -110,7 +110,7 @@ const Navigation: React.FC<NavigationProps> = ({ children }) => {
                 <path d="M22 21v-2a4 4 0 0 0-3-3.87" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                 <path d="M16 3.13a4 4 0 0 1 0 7.75" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
-              User Management
+              Menaxhimi i Përdoruesve
             </Link>
           </li>
         </ul>
@@ -121,7 +121,7 @@ const Navigation: React.FC<NavigationProps> = ({ children }) => {
             <p className="user-email">{auth.user?.email}</p>
           </div>
           <button className="logout-button" onClick={logout}>
-            Logout
+            Dilni
           </button>
         </div>
       </nav>
