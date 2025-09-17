@@ -39,7 +39,7 @@
   // Language switching functionality
   let currentLang = localStorage.getItem('preferredLanguage') || 'sq'; // Default to Albanian
   
-  function switchLanguage(lang) {
+  function switchLanguage(lang: string) {
     currentLang = lang;
     localStorage.setItem('preferredLanguage', lang);
     
@@ -81,14 +81,14 @@
     
     // Close menu when clicking outside
     document.addEventListener('click', function(event) {
-      if (!toggle.contains(event.target) && !menu.contains(event.target)) {
+      if (!toggle.contains(event.target as Node) && !menu.contains(event.target as Node)) {
         menu.classList.add('hidden');
       }
     });
   });
   
   // Make switchLanguage globally available
-  window.switchLanguage = switchLanguage;
+  (window as any).switchLanguage = switchLanguage;
 </script>
 
 <style>

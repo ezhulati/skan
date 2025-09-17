@@ -142,7 +142,7 @@
     }
     
     // Set cookie with consent preferences
-    function setConsent(preferences) {
+    function setConsent(preferences: any) {
       const date = new Date();
       date.setTime(date.getTime() + (CONSENT_EXPIRY * 24 * 60 * 60 * 1000));
       const expires = "expires=" + date.toUTCString();
@@ -203,9 +203,9 @@
       
       // Load current preferences
       const consent = getConsent() || { essential: true, analytics: false, marketing: false, functional: false };
-      document.getElementById('analytics-cookies').checked = consent.analytics;
-      document.getElementById('marketing-cookies').checked = consent.marketing;
-      document.getElementById('functional-cookies').checked = consent.functional;
+      (document.getElementById('analytics-cookies') as HTMLInputElement).checked = consent.analytics;
+      (document.getElementById('marketing-cookies') as HTMLInputElement).checked = consent.marketing;
+      (document.getElementById('functional-cookies') as HTMLInputElement).checked = consent.functional;
     }
     
     function hideModal() {
@@ -263,9 +263,9 @@
       document.getElementById('cookie-save-settings').addEventListener('click', function() {
         const preferences = {
           essential: true, // Always true
-          analytics: document.getElementById('analytics-cookies').checked,
-          marketing: document.getElementById('marketing-cookies').checked,
-          functional: document.getElementById('functional-cookies').checked,
+          analytics: (document.getElementById('analytics-cookies') as HTMLInputElement).checked,
+          marketing: (document.getElementById('marketing-cookies') as HTMLInputElement).checked,
+          functional: (document.getElementById('functional-cookies') as HTMLInputElement).checked,
           timestamp: new Date().toISOString()
         };
         setConsent(preferences);

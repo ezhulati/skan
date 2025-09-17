@@ -244,7 +244,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       const errorContainer = document.getElementById('error-container');
       
       // Get form data
-      const formData = new FormData(e.target);
+      const formData = new FormData(e.target as HTMLFormElement);
       const data = {
         venueName: formData.get('venueName'),
         address: formData.get('address'),
@@ -254,14 +254,14 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         ownerName: formData.get('ownerName'),
         ownerEmail: formData.get('ownerEmail'),
         password: formData.get('password'),
-        tableCount: parseInt(formData.get('tableCount'))
+        tableCount: parseInt(formData.get('tableCount') as string)
       };
       
       // Clear previous errors
       errorContainer.innerHTML = '';
       
       // Show loading state
-      submitBtn.disabled = true;
+      (submitBtn as HTMLButtonElement).disabled = true;
       formContainer.style.display = 'none';
       loadingContainer.style.display = 'block';
       
@@ -324,7 +324,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         // Show error message
         loadingContainer.style.display = 'none';
         formContainer.style.display = 'block';
-        submitBtn.disabled = false;
+        (submitBtn as HTMLButtonElement).disabled = false;
         
         errorContainer.innerHTML = `
           <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
