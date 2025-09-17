@@ -103,7 +103,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
     
     setAuth(prev => ({ ...prev, isLoading: false }));
-  }, []);
+  }, [checkOnboardingStatus]);
 
   const checkOnboardingStatus = async () => {
     if (!auth.token) return;

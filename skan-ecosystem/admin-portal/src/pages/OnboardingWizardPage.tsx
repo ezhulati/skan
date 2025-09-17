@@ -115,7 +115,7 @@ const OnboardingWizardPage: React.FC = () => {
 
   useEffect(() => {
     fetchVenueSetup();
-  }, []);
+  }, [fetchVenueSetup]);
 
   if (loading) {
     return (

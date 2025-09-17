@@ -110,7 +110,7 @@ const UserManagementPage: React.FC = () => {
 
   useEffect(() => {
     fetchUsers();
-  }, []);
+  }, [fetchUsers]);
 
   if (loading) {
     return (
