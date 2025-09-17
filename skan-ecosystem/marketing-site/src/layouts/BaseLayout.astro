@@ -3,6 +3,8 @@ import '../styles/global.css';
 import LanguageSwitcher from '../components/LanguageSwitcher.astro';
 import CookieConsent from '../components/CookieConsent.astro';
 import { SEO } from 'astro-seo';
+import Header from '@sofidevo/astro-dynamic-header/Header';
+import type { MenuItemType } from '@sofidevo/astro-dynamic-header';
 
 export interface Props {
   title: string;
@@ -21,6 +23,14 @@ const {
 } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+
+// Menu items for the dynamic header
+const menuItems: MenuItemType[] = [
+  { link: '/features', text: 'Veçoritë' },
+  { link: '/pricing', text: 'Çmimet' },
+  { link: '/blog', text: 'Blog' },
+  { link: '/contact', text: 'Kontakti' },
+];
 ---
 
 <!DOCTYPE html>
@@ -192,67 +202,38 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 </head>
 
 <body class="font-sans antialiased bg-white text-gray-900">
-  <!-- Navigation -->
-  <nav class="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-sm border-b border-gray-100">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex justify-between items-center h-16">
-        <!-- Logo -->
-        <div class="flex items-center">
-          <a href="/" class="flex items-center space-x-2">
-            <div class="w-8 h-8 bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg flex items-center justify-center">
-              <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 200 200">
-                <path d="M75,15H35A20.06,20.06,0,0,0,15,35V75A20.06,20.06,0,0,0,35,95H75A20.06,20.06,0,0,0,95,75V35A20.06,20.06,0,0,0,75,15Zm0,60H35V35H75Zm0,30H35a20.06,20.06,0,0,0-20,20v40a20.06,20.06,0,0,0,20,20H75a20.06,20.06,0,0,0,20-20V125A20.06,20.06,0,0,0,75,105Zm0,60H35V125H75ZM165,15H125a20.06,20.06,0,0,0-20,20V75a20.06,20.06,0,0,0,20,20h40a20.06,20.06,0,0,0,20-20V35A20.06,20.06,0,0,0,165,15Zm0,60H125V35h40ZM50,65H60a5.38,5.38,0,0,0,5-5V50a5.38,5.38,0,0,0-5-5H50a5.38,5.38,0,0,0-5,5V60A5.38,5.38,0,0,0,50,65Zm0,90H60a5.38,5.38,0,0,0,5-5V140a5.38,5.38,0,0,0-5-5H50a5.38,5.38,0,0,0-5,5v10A5.38,5.38,0,0,0,50,155Zm90-90h10a5.38,5.38,0,0,0,5-5V50a5.38,5.38,0,0,0-5-5H140a5.38,5.38,0,0,0-5,5V60A5.38,5.38,0,0,0,140,65Zm-30,80h10a5.38,5.38,0,0,0,5-5V130a5.38,5.38,0,0,1,5-5h10a5.38,5.38,0,0,0,5-5V110a5.38,5.38,0,0,0-5-5H110a5.38,5.38,0,0,0-5,5v30a5.38,5.38,0,0,0,5,5Zm70-40H170a5.38,5.38,0,0,0-5,5v30a5.38,5.38,0,0,0,5,5h10a5.38,5.38,0,0,0,5-5V110A5.38,5.38,0,0,0,180,105Zm-60,60H110a5.38,5.38,0,0,0-5,5v10a5.38,5.38,0,0,0,5,5h10a5.38,5.38,0,0,0,5-5V170A5.38,5.38,0,0,0,120,165Zm60,0H170a5.38,5.38,0,0,1-5-5V150a5.38,5.38,0,0,0-5-5H130a5.38,5.38,0,0,0-5,5v10a5.38,5.38,0,0,0,5,5h10a5.38,5.38,0,0,1,5,5v10a5.38,5.38,0,0,0,5,5h30a5.38,5.38,0,0,0,5-5V170A5.38,5.38,0,0,0,180,165Z"/>
-              </svg>
-            </div>
-            <span class="font-bold text-xl text-gray-900">SKAN</span>
-          </a>
-        </div>
-        
-        <!-- Desktop Navigation -->
-        <div class="hidden md:block">
-          <div class="ml-10 flex items-baseline space-x-8">
-            <a href="/features" class="text-gray-600 hover:text-gray-900 px-6 py-4 text-sm font-medium transition-colors" data-sq="Veçoritë" data-en="Features">Veçoritë</a>
-            <a href="/pricing" class="text-gray-600 hover:text-gray-900 px-6 py-4 text-sm font-medium transition-colors" data-sq="Çmimet" data-en="Pricing">Çmimet</a>
-            <a href="/blog" class="text-gray-600 hover:text-gray-900 px-6 py-4 text-sm font-medium transition-colors" data-sq="Blog" data-en="Blog">Blog</a>
-            <a href="/contact" class="text-gray-600 hover:text-gray-900 px-6 py-4 text-sm font-medium transition-colors" data-sq="Kontakti" data-en="Contact">Kontakti</a>
-          </div>
-        </div>
-        
-        <!-- CTA Buttons -->
-        <div class="hidden md:flex items-center space-x-4">
-          <a href="https://admin.skan.al/login" class="text-gray-600 hover:text-gray-900 px-6 py-4 text-sm font-medium transition-colors whitespace-nowrap" data-sq="Hyni" data-en="Sign In">Hyni</a>
-          <a href="/demo" class="text-gray-600 hover:text-gray-900 px-6 py-4 text-sm font-medium transition-colors whitespace-nowrap" data-sq="Demo" data-en="Demo">Demo</a>
+  <!-- Dynamic Header -->
+  <Header
+    headerType="floating"
+    logoSrc="/favicon.svg"
+    logoAlt="SKAN.AL"
+    logoWidth="40px"
+    homeUrl="/"
+    menuItems={menuItems}
+    backgroundColor="#ffffff90"
+    backdropBlur="blur(20px)"
+    zIndex={50}
+  >
+    <!-- Desktop header content -->
+    <div slot="slot-desktop" class="hidden md:flex items-center space-x-4">
+      <a href="https://admin.skan.al/login" class="text-gray-600 hover:text-gray-900 px-4 py-2 text-sm font-medium transition-colors whitespace-nowrap" data-sq="Hyni" data-en="Sign In">Hyni</a>
+      <a href="/demo" class="text-gray-600 hover:text-gray-900 px-4 py-2 text-sm font-medium transition-colors whitespace-nowrap" data-sq="Demo" data-en="Demo">Demo</a>
+      <LanguageSwitcher />
+      <a href="/register" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap" data-sq="Filloni" data-en="Get Started">Filloni</a>
+    </div>
+
+    <!-- Mobile panel content -->
+    <div slot="slot-panel" class="border-t border-gray-100 pt-4 mt-4">
+      <div class="space-y-2">
+        <a href="https://admin.skan.al/login" class="text-gray-600 hover:text-gray-900 block px-6 py-3 text-base font-medium whitespace-nowrap" data-sq="Hyni" data-en="Sign In">Hyni</a>
+        <a href="/demo" class="text-gray-600 hover:text-gray-900 block px-6 py-3 text-base font-medium whitespace-nowrap" data-sq="Demo" data-en="Demo">Demo</a>
+        <div class="px-6 py-3">
           <LanguageSwitcher />
-          <a href="/register" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-lg text-sm font-medium transition-colors whitespace-nowrap" data-sq="Filloni" data-en="Get Started">Filloni</a>
         </div>
-        
-        <!-- Mobile menu button -->
-        <div class="md:hidden">
-          <button type="button" class="text-gray-600 hover:text-gray-900 p-3" id="mobile-menu-button">
-            <span class="sr-only">Open main menu</span>
-            <svg class="block h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-          </button>
-        </div>
+        <a href="/register" class="bg-blue-600 hover:bg-blue-700 text-white block px-6 py-3 rounded-lg text-base font-medium transition-colors mx-6 mt-4 text-center whitespace-nowrap" data-sq="Filloni" data-en="Get Started">Filloni</a>
       </div>
     </div>
-    
-    <!-- Mobile menu -->
-    <div class="md:hidden hidden" id="mobile-menu">
-      <div class="px-2 pt-2 pb-3 space-y-1 bg-white border-t border-gray-100">
-        <a href="/features" class="text-gray-600 hover:text-gray-900 block px-6 py-4 text-base font-medium" data-sq="Veçoritë" data-en="Features">Veçoritë</a>
-        <a href="/pricing" class="text-gray-600 hover:text-gray-900 block px-6 py-4 text-base font-medium" data-sq="Çmimet" data-en="Pricing">Çmimet</a>
-        <a href="/blog" class="text-gray-600 hover:text-gray-900 block px-6 py-4 text-base font-medium" data-sq="Blog" data-en="Blog">Blog</a>
-        <a href="/contact" class="text-gray-600 hover:text-gray-900 block px-6 py-4 text-base font-medium" data-sq="Kontakti" data-en="Contact">Kontakti</a>
-        <div class="border-t border-gray-100 pt-3">
-          <a href="https://admin.skan.al/login" class="text-gray-600 hover:text-gray-900 block px-6 py-4 text-base font-medium whitespace-nowrap" data-sq="Hyni" data-en="Sign In">Hyni</a>
-          <a href="/demo" class="text-gray-600 hover:text-gray-900 block px-6 py-4 text-base font-medium whitespace-nowrap" data-sq="Demo" data-en="Demo">Demo</a>
-          <a href="/register" class="bg-blue-600 hover:bg-blue-700 text-white block px-6 py-4 rounded-lg text-base font-medium transition-colors mx-3 mt-2 whitespace-nowrap" data-sq="Filloni" data-en="Get Started">Filloni</a>
-        </div>
-      </div>
-    </div>
-  </nav>
+  </Header>
 
   <!-- Main Content -->
   <main class="pt-16" id="swup">
@@ -335,16 +316,6 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
   <!-- Cookie Consent Banner -->
   <CookieConsent />
 
-  <!-- Mobile Menu JavaScript -->
-  <script>
-    const mobileMenuButton = document.getElementById('mobile-menu-button');
-    const mobileMenu = document.getElementById('mobile-menu');
-    
-    mobileMenuButton?.addEventListener('click', () => {
-      mobileMenu?.classList.toggle('hidden');
-    });
-  </script>
-
   <!-- Swup Page Transitions -->
   <script is:inline>
     import('swup').then(({ Swup }) => {
@@ -365,15 +336,9 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
       });
 
       // Initialize functions
-      function initializeMobileMenu() {
-        const mobileMenuButton = document.getElementById('mobile-menu-button');
-        const mobileMenu = document.getElementById('mobile-menu');
-        
-        if (mobileMenuButton && mobileMenu) {
-          mobileMenuButton.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
-          });
-        }
+      function initializeDynamicHeader() {
+        // Dynamic header component handles its own initialization
+        // No additional setup needed
       }
 
       function initializeLanguageSwitcher() {
@@ -399,13 +364,13 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
       }
 
       // Initial setup
-      initializeMobileMenu();
+      initializeDynamicHeader();
       initializeLanguageSwitcher();
       initializeSmoothScroll();
 
       // Re-initialize after page transitions
       swup.hooks.on('content:replace', () => {
-        initializeMobileMenu();
+        initializeDynamicHeader();
         initializeLanguageSwitcher();
         initializeSmoothScroll();
         
