@@ -197,26 +197,29 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
           </div>
         </div>
         
-        <!-- Quick Links -->
-        <div>
-          <h3 class="text-sm font-semibold text-gray-900 tracking-wider uppercase mb-4" data-sq="Produkti" data-en="Product">Produkti</h3>
-          <ul class="space-y-2">
-            <li><a href="/features" class="text-gray-600 hover:text-gray-900 py-2 inline-block" data-sq="Veçoritë" data-en="Features">Veçoritë</a></li>
-            <li><a href="/pricing" class="text-gray-600 hover:text-gray-900 py-2 inline-block" data-sq="Çmimet" data-en="Pricing">Çmimet</a></li>
-            <li><a href="/demo" class="text-gray-600 hover:text-gray-900 py-2 inline-block" data-sq="Demo" data-en="Demo">Demo</a></li>
-            <li><a href="/integrations" class="text-gray-600 hover:text-gray-900 py-2 inline-block" data-sq="Integrime" data-en="Integrations">Integrime</a></li>
-          </ul>
-        </div>
-        
-        <!-- Support -->
-        <div>
-          <h3 class="text-sm font-semibold text-gray-900 tracking-wider uppercase mb-4" data-sq="Mbështetje" data-en="Support">Mbështetje</h3>
-          <ul class="space-y-2">
-            <li><a href="/help" class="text-gray-600 hover:text-gray-900 py-2 inline-block" data-sq="Qendra e Ndihmës" data-en="Help Center">Qendra e Ndihmës</a></li>
-            <li><a href="/contact" class="text-gray-600 hover:text-gray-900 py-2 inline-block" data-sq="Kontakti" data-en="Contact">Kontakti</a></li>
-            <li><a href="/blog" class="text-gray-600 hover:text-gray-900 py-2 inline-block" data-sq="Blog" data-en="Blog">Blog</a></li>
-            <li><a href="/about" class="text-gray-600 hover:text-gray-900 py-2 inline-block" data-sq="Rreth nesh" data-en="About">Rreth nesh</a></li>
-          </ul>
+        <!-- Navigation Links -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
+          <!-- Product Links -->
+          <div>
+            <h3 class="text-sm font-semibold text-gray-900 tracking-wider uppercase mb-4" data-sq="Produkti" data-en="Product">Produkti</h3>
+            <ul class="space-y-2">
+              <li><a href="/features" class="text-gray-600 hover:text-gray-900 py-2 inline-block" data-sq="Veçoritë" data-en="Features">Veçoritë</a></li>
+              <li><a href="/pricing" class="text-gray-600 hover:text-gray-900 py-2 inline-block" data-sq="Çmimet" data-en="Pricing">Çmimet</a></li>
+              <li><a href="/demo" class="text-gray-600 hover:text-gray-900 py-2 inline-block" data-sq="Demo" data-en="Demo">Demo</a></li>
+              <li><a href="/integrations" class="text-gray-600 hover:text-gray-900 py-2 inline-block" data-sq="Integrime" data-en="Integrations">Integrime</a></li>
+            </ul>
+          </div>
+          
+          <!-- Support Links -->
+          <div>
+            <h3 class="text-sm font-semibold text-gray-900 tracking-wider uppercase mb-4" data-sq="Mbështetje" data-en="Support">Mbështetje</h3>
+            <ul class="space-y-2">
+              <li><a href="/help" class="text-gray-600 hover:text-gray-900 py-2 inline-block" data-sq="Qendra e Ndihmës" data-en="Help Center">Qendra e Ndihmës</a></li>
+              <li><a href="/contact" class="text-gray-600 hover:text-gray-900 py-2 inline-block" data-sq="Kontakti" data-en="Contact">Kontakti</a></li>
+              <li><a href="/blog" class="text-gray-600 hover:text-gray-900 py-2 inline-block" data-sq="Blog" data-en="Blog">Blog</a></li>
+              <li><a href="/about" class="text-gray-600 hover:text-gray-900 py-2 inline-block" data-sq="Rreth nesh" data-en="About">Rreth nesh</a></li>
+            </ul>
+          </div>
         </div>
       </div>
       
