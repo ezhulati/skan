@@ -346,7 +346,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
   </script>
 
   <!-- Swup Page Transitions -->
-  <script>
+  <script is:inline>
     import('swup').then(({ Swup }) => {
       const swup = new Swup({
         containers: ['#swup'],
