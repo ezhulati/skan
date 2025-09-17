@@ -13,7 +13,7 @@ export interface Props {
 
 const { 
   title, 
-  description = "SKAN.AL - Sistemi i Porosive me Kod QR për Restorantet Shqiptare. Thjeshtoni operacionet e restorantit tuaj me menu dixhitale dhe porosi të shkathëta.", 
+  description = "Sistemi QR për restorantet shqiptare. Menu dixhitale, porosi të shpejta dhe operacione më efikase për bizneset tuaja.", 
   ogTitle = title,
   ogDescription = description,
   ogImage = "https://skan.al/skan-al.jpg"
@@ -167,9 +167,9 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
   <!-- Footer -->
   <footer class="bg-gray-50 border-t border-gray-200">
     <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
         <!-- Logo and Description -->
-        <div class="col-span-1 md:col-span-2">
+        <div>
           <div class="flex items-center space-x-2 mb-4">
             <div class="w-8 h-8 bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg flex items-center justify-center">
               <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 200 200">
