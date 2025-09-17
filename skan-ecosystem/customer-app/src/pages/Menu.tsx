@@ -68,11 +68,13 @@ export function Menu() {
 
       {menuCategories.length > 1 && (
         <div className="bg-white border-b border-gray-200 sticky top-0 z-40">
-          <div className="max-w-md mx-auto">
-            <div className="flex overflow-x-auto py-4 px-4 space-x-2">
+          <div className="max-w-md mx-auto relative">
+            <div className="flex overflow-x-auto py-4 px-4 space-x-2 scrollbar-hide">
+              {/* Scroll indicator gradient */}
+              <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-white to-transparent pointer-events-none z-10"></div>
               <button
                 onClick={() => setActiveCategory(null)}
-                className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors min-h-[40px] ${
+                className={`px-4 py-3 rounded-full text-sm font-medium whitespace-nowrap transition-colors min-h-[48px] flex items-center ${
                   activeCategory === null
                     ? 'bg-primary-600 text-white'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -84,7 +86,7 @@ export function Menu() {
                 <button
                   key={category.id}
                   onClick={() => setActiveCategory(category.id)}
-                  className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors min-h-[40px] ${
+                  className={`px-4 py-3 rounded-full text-sm font-medium whitespace-nowrap transition-colors min-h-[48px] flex items-center ${
                     activeCategory === category.id
                       ? 'bg-primary-600 text-white'
                       : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
