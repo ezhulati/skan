@@ -53,13 +53,13 @@ const LoginPage: React.FC = () => {
             </svg>
             <h1>Skan.al</h1>
           </div>
-          <h2>Restaurant Dashboard</h2>
-          <p className="login-subtitle">Manage your restaurant operations with ease</p>
+          <h2>Paneli i Restorantit</h2>
+          <p className="login-subtitle">Menaxho operacionet e restorantit tënd me lehtësi</p>
         </div>
         
         <form className="login-form" onSubmit={handleSubmit}>
           <div className="form-group">
-            <label htmlFor="email">Email Address</label>
+            <label htmlFor="email">Adresa e Emailit</label>
             <div className="input-wrapper">
               <svg className="input-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" stroke="currentColor" strokeWidth="2"/>
@@ -71,14 +71,14 @@ const LoginPage: React.FC = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                placeholder="Enter your email"
+                placeholder="Shkruaj email-in tënd"
                 disabled={loading}
               />
             </div>
           </div>
           
           <div className="form-group">
-            <label htmlFor="password">Password</label>
+            <label htmlFor="password">Fjalëkalimi</label>
             <div className="input-wrapper">
               <svg className="input-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <rect x="3" y="11" width="18" height="11" rx="2" ry="2" stroke="currentColor" strokeWidth="2"/>
@@ -91,7 +91,7 @@ const LoginPage: React.FC = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                placeholder="Enter your password"
+                placeholder="Shkruaj fjalëkalimin tënd"
                 disabled={loading}
               />
             </div>
@@ -118,14 +118,14 @@ const LoginPage: React.FC = () => {
                 <svg className="loading-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
                 </svg>
-                Signing in...
+                Duke u futur...
               </>
             ) : (
               <>
                 <svg className="login-arrow" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M21 12H9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
-                Sign In
+                Hyr
               </>
             )}
           </button>
@@ -137,11 +137,11 @@ const LoginPage: React.FC = () => {
               <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"/>
               <path d="M12 6v6l4 2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
-            <span>Demo Environment</span>
+            <span>Mjedisi Demo</span>
           </div>
           <div className="demo-credentials">
             <p><strong>Email:</strong> manager_email1@gmail.com</p>
-            <p><strong>Password:</strong> demo123</p>
+            <p><strong>Fjalëkalimi:</strong> demo123</p>
           </div>
         </div>
       </div>

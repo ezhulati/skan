@@ -12,7 +12,7 @@ export interface Props {
 
 const { 
   title, 
-  description = "SKAN.AL - QR Code Ordering System for Albanian Restaurants. Streamline your restaurant operations with digital menus and seamless ordering.", 
+  description = "SKAN.AL - Sistemi i Porosive me Kod QR për Restorantet Shqiptare. Thjeshtoni operacionet e restorantit tuaj me menu dixhitale dhe porosi të shkathëta.", 
   ogTitle = title,
   ogDescription = description,
   ogImage = "https://skan.al/images/og-image.jpg"
@@ -130,11 +130,11 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <!-- Mobile menu -->
     <div class="md:hidden hidden" id="mobile-menu">
       <div class="px-2 pt-2 pb-3 space-y-1 bg-white border-t border-gray-100">
-        <a href="/features" class="text-gray-600 hover:text-gray-900 block px-6 py-4 text-base font-medium">Features</a>
-        <a href="/pricing" class="text-gray-600 hover:text-gray-900 block px-6 py-4 text-base font-medium">Pricing</a>
-        <a href="/demo" class="text-gray-600 hover:text-gray-900 block px-6 py-4 text-base font-medium">Demo</a>
-        <a href="/blog" class="text-gray-600 hover:text-gray-900 block px-6 py-4 text-base font-medium">Blog</a>
-        <a href="/contact" class="text-gray-600 hover:text-gray-900 block px-6 py-4 text-base font-medium">Contact</a>
+        <a href="/features" class="text-gray-600 hover:text-gray-900 block px-6 py-4 text-base font-medium" data-sq="Veçoritë" data-en="Features">Veçoritë</a>
+        <a href="/pricing" class="text-gray-600 hover:text-gray-900 block px-6 py-4 text-base font-medium" data-sq="Çmimet" data-en="Pricing">Çmimet</a>
+        <a href="/demo" class="text-gray-600 hover:text-gray-900 block px-6 py-4 text-base font-medium" data-sq="Demo" data-en="Demo">Demo</a>
+        <a href="/blog" class="text-gray-600 hover:text-gray-900 block px-6 py-4 text-base font-medium" data-sq="Blog" data-en="Blog">Blog</a>
+        <a href="/contact" class="text-gray-600 hover:text-gray-900 block px-6 py-4 text-base font-medium" data-sq="Kontakti" data-en="Contact">Kontakti</a>
         <div class="border-t border-gray-100 pt-3">
           <a href="https://admin.skan.al/login" class="text-gray-600 hover:text-gray-900 block px-6 py-4 text-base font-medium whitespace-nowrap" data-sq="Hyni" data-en="Sign In">Hyni</a>
           <a href="/demo" class="text-gray-600 hover:text-gray-900 block px-6 py-4 text-base font-medium whitespace-nowrap" data-sq="Demo" data-en="Try Demo">Demo</a>
@@ -163,8 +163,8 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
             </div>
             <span class="font-bold text-xl text-gray-900">SKAN</span>
           </div>
-          <p class="text-gray-600 mb-4 max-w-md">
-            QR code ordering system designed for Albanian restaurants. Streamline operations, reduce wait times, and enhance customer experience.
+          <p class="text-gray-600 mb-4 max-w-md" data-sq="Sistem porosish me kod QR i krijuar për restorantet shqiptare. Thjeshtoni operacionet, reduktoni kohët e pritjes, dhe përmirësoni përvojën e klientëve." data-en="QR code ordering system designed for Albanian restaurants. Streamline operations, reduce wait times, and enhance customer experience.">
+            Sistem porosish me kod QR i krijuar për restorantet shqiptare. Thjeshtoni operacionet, reduktoni kohët e pritjes, dhe përmirësoni përvojën e klientëve.
           </p>
           <div class="flex space-x-4">
             <a href="/contact" class="text-gray-400 hover:text-gray-600 p-2">
@@ -178,35 +178,35 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
         
         <!-- Quick Links -->
         <div>
-          <h3 class="text-sm font-semibold text-gray-900 tracking-wider uppercase mb-4">Product</h3>
+          <h3 class="text-sm font-semibold text-gray-900 tracking-wider uppercase mb-4" data-sq="Produkti" data-en="Product">Produkti</h3>
           <ul class="space-y-2">
-            <li><a href="/features" class="text-gray-600 hover:text-gray-900 py-2 inline-block">Features</a></li>
-            <li><a href="/pricing" class="text-gray-600 hover:text-gray-900 py-2 inline-block">Pricing</a></li>
-            <li><a href="/demo" class="text-gray-600 hover:text-gray-900 py-2 inline-block">Demo</a></li>
-            <li><a href="/integrations" class="text-gray-600 hover:text-gray-900 py-2 inline-block">Integrations</a></li>
+            <li><a href="/features" class="text-gray-600 hover:text-gray-900 py-2 inline-block" data-sq="Veçoritë" data-en="Features">Veçoritë</a></li>
+            <li><a href="/pricing" class="text-gray-600 hover:text-gray-900 py-2 inline-block" data-sq="Çmimet" data-en="Pricing">Çmimet</a></li>
+            <li><a href="/demo" class="text-gray-600 hover:text-gray-900 py-2 inline-block" data-sq="Demo" data-en="Demo">Demo</a></li>
+            <li><a href="/integrations" class="text-gray-600 hover:text-gray-900 py-2 inline-block" data-sq="Integrime" data-en="Integrations">Integrime</a></li>
           </ul>
         </div>
         
         <!-- Support -->
         <div>
-          <h3 class="text-sm font-semibold text-gray-900 tracking-wider uppercase mb-4">Support</h3>
+          <h3 class="text-sm font-semibold text-gray-900 tracking-wider uppercase mb-4" data-sq="Mbështetje" data-en="Support">Mbështetje</h3>
           <ul class="space-y-2">
-            <li><a href="/help" class="text-gray-600 hover:text-gray-900 py-2 inline-block">Help Center</a></li>
-            <li><a href="/contact" class="text-gray-600 hover:text-gray-900 py-2 inline-block">Contact</a></li>
-            <li><a href="/blog" class="text-gray-600 hover:text-gray-900 py-2 inline-block">Blog</a></li>
-            <li><a href="/about" class="text-gray-600 hover:text-gray-900 py-2 inline-block">About</a></li>
+            <li><a href="/help" class="text-gray-600 hover:text-gray-900 py-2 inline-block" data-sq="Qendra e Ndihmës" data-en="Help Center">Qendra e Ndihmës</a></li>
+            <li><a href="/contact" class="text-gray-600 hover:text-gray-900 py-2 inline-block" data-sq="Kontakti" data-en="Contact">Kontakti</a></li>
+            <li><a href="/blog" class="text-gray-600 hover:text-gray-900 py-2 inline-block" data-sq="Blog" data-en="Blog">Blog</a></li>
+            <li><a href="/about" class="text-gray-600 hover:text-gray-900 py-2 inline-block" data-sq="Rreth nesh" data-en="About">Rreth nesh</a></li>
           </ul>
         </div>
       </div>
       
       <div class="mt-8 pt-8 border-t border-gray-200">
         <div class="flex flex-col md:flex-row justify-between items-center">
-          <p class="text-gray-500 text-sm">
-            © 2024 SKAN.AL. All rights reserved.
+          <p class="text-gray-500 text-sm" data-sq="© 2024 SKAN.AL. Të gjitha të drejtat e rezervuara." data-en="© 2024 SKAN.AL. All rights reserved.">
+            © 2024 SKAN.AL. Të gjitha të drejtat e rezervuara.
           </p>
           <div class="mt-2 md:mt-0">
-            <a href="/privacy" class="text-gray-500 hover:text-gray-900 text-sm mr-6 py-2 inline-block">Privacy Policy</a>
-            <a href="/terms" class="text-gray-500 hover:text-gray-900 text-sm py-2 inline-block">Terms of Service</a>
+            <a href="/privacy" class="text-gray-500 hover:text-gray-900 text-sm mr-6 py-2 inline-block" data-sq="Politika e Privatësisë" data-en="Privacy Policy">Politika e Privatësisë</a>
+            <a href="/terms" class="text-gray-500 hover:text-gray-900 text-sm py-2 inline-block" data-sq="Kushtet e Shërbimit" data-en="Terms of Service">Kushtet e Shërbimit</a>
           </div>
         </div>
       </div>

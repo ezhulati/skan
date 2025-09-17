@@ -294,9 +294,9 @@ app.get("/v1/venue/:venueId/orders", async (req, res) => {
       
       // Filter by status if specified
       let filteredOrders = demoOrders;
-      if (status && status !== 'all') {
-        if (status === 'active') {
-          filteredOrders = demoOrders.filter(order => ['new', 'preparing', 'ready'].includes(order.status));
+      if (status && status !== "all") {
+        if (status === "active") {
+          filteredOrders = demoOrders.filter(order => ["new", "preparing", "ready"].includes(order.status));
         } else {
           filteredOrders = demoOrders.filter(order => order.status === status);
         }
