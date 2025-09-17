@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
@@ -30,7 +30,7 @@ const OnboardingWizardPage: React.FC = () => {
     onboardingCompleted: false
   });
 
-  const steps: OnboardingStep[] = [
+  const steps: OnboardingStep[] = useMemo(() => [
     {
       id: 'welcome',
       title: 'Welcome to Skan.al!',
@@ -61,9 +61,9 @@ const OnboardingWizardPage: React.FC = () => {
       description: 'Start accepting orders from customers',
       completed: venueSetup.onboardingCompleted
     }
-  ];
+  ], [venueSetup]);
 
-  const fetchVenueSetup = async () => {
+  const fetchVenueSetup = useCallback(async () => {
     try {
       setLoading(true);
       const response = await fetch(`https://api-mkazmlu7ta-ew.a.run.app/v1/venue/setup-status`, {
@@ -86,7 +86,7 @@ const OnboardingWizardPage: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [auth.token, steps]);
 
   const completeOnboarding = async () => {
     try {

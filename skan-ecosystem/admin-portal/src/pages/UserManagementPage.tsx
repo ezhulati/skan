@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 
 interface User {
@@ -31,7 +31,7 @@ const UserManagementPage: React.FC = () => {
   });
   const [inviteLoading, setInviteLoading] = useState(false);
 
-  const fetchUsers = async () => {
+  const fetchUsers = useCallback(async () => {
     try {
       setLoading(true);
       const response = await fetch(`https://api-mkazmlu7ta-ew.a.run.app/v1/users`, {
@@ -53,7 +53,7 @@ const UserManagementPage: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [auth.token]);
 
   const handleInviteUser = async (e: React.FormEvent) => {
     e.preventDefault();
