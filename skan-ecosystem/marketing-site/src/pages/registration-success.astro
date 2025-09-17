@@ -1,0 +1,228 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout 
+  title="Regjistrimi i Suksesshëm - SKAN.AL" 
+  description="Mirë se vini në SKAN.AL! Restoranti juaj është regjistruar me sukses dhe është gati për të pranuar porosi."
+>
+  <div class="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 py-12">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <!-- Success Header -->
+      <div class="text-center mb-12">
+        <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+          <svg class="w-10 h-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+          </svg>
+        </div>
+        <h1 class="text-4xl font-bold text-gray-900 mb-4">
+          🎉 Mirë se vini në SKAN.AL!
+        </h1>
+        <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+          Restoranti juaj është regjistruar me sukses dhe është gati për të pranuar porosi me kod QR.
+        </p>
+      </div>
+
+      <!-- Quick Setup Guide -->
+      <div class="bg-white rounded-2xl shadow-xl overflow-hidden mb-8">
+        <div class="bg-blue-600 px-8 py-6">
+          <h2 class="text-2xl font-bold text-white">Hapat e radhës për të filluar</h2>
+          <p class="text-blue-100 mt-2">Ndiqni këto hapa të thjeshtë për të përfunduar konfigurimin</p>
+        </div>
+        
+        <div class="p-8">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Step 1 -->
+            <div class="text-center">
+              <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span class="text-2xl font-bold text-blue-600">1</span>
+              </div>
+              <h3 class="text-lg font-semibold text-gray-900 mb-2">Shkoni në Dashboard</h3>
+              <p class="text-gray-600 mb-4">Hyni në panelin e administrimit për të menaxhuar restorantin tuaj</p>
+              <a href="https://admin.skan.al" target="_blank" class="inline-block bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors">
+                Hapni Dashboard
+              </a>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="text-center">
+              <div class="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span class="text-2xl font-bold text-yellow-600">2</span>
+              </div>
+              <h3 class="text-lg font-semibold text-gray-900 mb-2">Shtoni Menunë</h3>
+              <p class="text-gray-600 mb-4">Krijoni kategoriat dhe shtoni artikujt e menusë së restorantit tuaj</p>
+              <div class="text-sm text-gray-500 bg-gray-50 rounded-lg p-3">
+                Dashboard → Menuja → Shto Artikuj
+              </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="text-center">
+              <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span class="text-2xl font-bold text-green-600">3</span>
+              </div>
+              <h3 class="text-lg font-semibold text-gray-900 mb-2">Shkarkoni QR Codes</h3>
+              <p class="text-gray-600 mb-4">Printoni dhe vendosni kodet QR në tavolinat tuaja</p>
+              <div class="text-sm text-gray-500 bg-gray-50 rounded-lg p-3">
+                Dashboard → Tavolina → Shkarko QR
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Restaurant Details -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+        <!-- Account Details -->
+        <div class="bg-white rounded-xl shadow-lg p-6">
+          <h3 class="text-xl font-bold text-gray-900 mb-4 flex items-center">
+            <svg class="w-6 h-6 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-4m-5 0H3m2 0h4M9 7h6m-6 4h6m-6 4h6"></path>
+            </svg>
+            Detajet e Llogarisë
+          </h3>
+          <div class="space-y-4" id="venue-details">
+            <!-- Details will be populated by JavaScript -->
+          </div>
+        </div>
+
+        <!-- Quick Links -->
+        <div class="bg-white rounded-xl shadow-lg p-6">
+          <h3 class="text-xl font-bold text-gray-900 mb-4 flex items-center">
+            <svg class="w-6 h-6 text-green-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
+            </svg>
+            Lidhje të Dobishme
+          </h3>
+          <div class="space-y-3">
+            <a href="https://admin.skan.al" target="_blank" class="flex items-center p-3 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors">
+              <svg class="w-5 h-5 text-blue-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+              </svg>
+              <div>
+                <div class="font-medium text-gray-900">Dashboard Administrimi</div>
+                <div class="text-sm text-gray-500">Menaxhoni restorantin tuaj</div>
+              </div>
+            </a>
+            
+            <a href="mailto:support@skan.al" class="flex items-center p-3 bg-green-50 hover:bg-green-100 rounded-lg transition-colors">
+              <svg class="w-5 h-5 text-green-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 7.89a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+              </svg>
+              <div>
+                <div class="font-medium text-gray-900">Mbështetje në Shqip</div>
+                <div class="text-sm text-gray-500">support@skan.al</div>
+              </div>
+            </a>
+
+            <div class="flex items-center p-3 bg-gray-50 rounded-lg" id="customer-url">
+              <svg class="w-5 h-5 text-gray-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+              </svg>
+              <div>
+                <div class="font-medium text-gray-900">URL e Klientëve</div>
+                <div class="text-sm text-gray-500">URL që do të shfaqet në kodet QR</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Help Section -->
+      <div class="bg-blue-50 border border-blue-200 rounded-xl p-6">
+        <div class="flex items-start">
+          <svg class="w-6 h-6 text-blue-600 mr-3 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <div>
+            <h3 class="text-lg font-semibold text-blue-900 mb-2">Keni nevojë për ndihmë?</h3>
+            <p class="text-blue-800 mb-4">
+              Ekipi ynë është këtu për t'ju ndihmuar të konfiguroni restorantin tuaj dhe të filloni të pranoni porosi.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-3">
+              <a href="mailto:support@skan.al" class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 7.89a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                </svg>
+                Kontaktoni Mbështetjen
+              </a>
+              <a href="/" class="inline-flex items-center px-4 py-2 bg-white hover:bg-gray-50 text-blue-600 border border-blue-200 rounded-lg font-medium transition-colors">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                </svg>
+                Kthehuni në Faqen Kryesore
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Populate venue details from URL parameters or localStorage
+    document.addEventListener('DOMContentLoaded', function() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const venueDetails = document.getElementById('venue-details');
+      const customerUrl = document.getElementById('customer-url');
+      
+      // Try to get data from URL parameters first
+      let venue = null;
+      let setup = null;
+      
+      try {
+        if (urlParams.has('venue')) {
+          venue = JSON.parse(decodeURIComponent(urlParams.get('venue')));
+        }
+        if (urlParams.has('setup')) {
+          setup = JSON.parse(decodeURIComponent(urlParams.get('setup')));
+        }
+      } catch (error) {
+        console.log('Failed to parse URL parameters');
+      }
+      
+      // Fallback to localStorage
+      if (!venue) {
+        try {
+          venue = JSON.parse(localStorage.getItem('skanVenue') || '{}');
+          setup = JSON.parse(localStorage.getItem('skanSetup') || '{}');
+        } catch (error) {
+          console.log('Failed to parse localStorage data');
+        }
+      }
+      
+      if (venue && venue.name) {
+        venueDetails.innerHTML = `
+          <div class="flex justify-between py-2 border-b border-gray-100">
+            <span class="font-medium text-gray-700">Emri:</span>
+            <span class="text-gray-900">${venue.name}</span>
+          </div>
+          <div class="flex justify-between py-2 border-b border-gray-100">
+            <span class="font-medium text-gray-700">Slug:</span>
+            <span class="text-gray-900 font-mono text-sm">${venue.slug}</span>
+          </div>
+          <div class="flex justify-between py-2 border-b border-gray-100">
+            <span class="font-medium text-gray-700">Monedha:</span>
+            <span class="text-gray-900">${venue.currency || 'EUR'}</span>
+          </div>
+          <div class="flex justify-between py-2">
+            <span class="font-medium text-gray-700">Tavolina:</span>
+            <span class="text-gray-900">${setup && setup.tablesCreated ? setup.tablesCreated + ' tavolina' : 'N/A'}</span>
+          </div>
+        `;
+        
+        // Update customer URL
+        const qrUrl = setup && setup.qrCodeUrl ? setup.qrCodeUrl : `https://order.skan.al/${venue.slug}`;
+        customerUrl.querySelector('.text-gray-500').textContent = qrUrl;
+      } else {
+        venueDetails.innerHTML = `
+          <div class="text-center py-4">
+            <p class="text-gray-500">Detajet e restorantit nuk janë në dispozicion</p>
+            <p class="text-sm text-gray-400 mt-2">Ju lutemi shkoni në dashboard për më shumë informacion</p>
+          </div>
+        `;
+      }
+    });
+  </script>
+</BaseLayout>

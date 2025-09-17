@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import { useVenue } from '../contexts/VenueContext';
+import { useLanguage } from '../contexts/LanguageContext';
 import { MenuItem } from '../components/MenuItem';
 import { CartSummary } from '../components/CartSummary';
+import { CompactLanguagePicker } from '../components/LanguagePicker';
 
 export function Menu() {
   const { venue, menuCategories, isLoading, error } = useVenue();
+  const { t, language } = useLanguage();
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
 
   if (isLoading) {
@@ -12,7 +15,7 @@ export function Menu() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading menu...</p>
+          <p className="text-gray-600">{t('loading')}</p>
         </div>
       </div>
     );
@@ -52,8 +55,13 @@ export function Menu() {
   return (
     <div className="min-h-screen bg-gray-50 pb-24">
       <div className="bg-white shadow-sm">
-        <div className="max-w-md mx-auto px-4 py-6">
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">{venue.name}</h1>
+        <div className="max-w-md mx-auto px-4 py-6 relative">
+          {/* Language picker in top right */}
+          <div className="absolute top-4 right-4">
+            <CompactLanguagePicker />
+          </div>
+          
+          <h1 className="text-2xl font-bold text-gray-900 mb-2 pr-20">{venue.name}</h1>
           <p className="text-gray-600 text-sm">{venue.address}</p>
         </div>
       </div>
@@ -70,7 +78,7 @@ export function Menu() {
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                 }`}
               >
-                All Items
+                {language === 'sq' ? 'Të gjitha' : 'All Items'}
               </button>
               {menuCategories.map((category) => (
                 <button
@@ -82,7 +90,7 @@ export function Menu() {
                       : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                   }`}
                 >
-                  {category.name}
+                  {language === 'sq' && category.nameAlbanian ? category.nameAlbanian : category.name}
                 </button>
               ))}
             </div>
@@ -96,9 +104,9 @@ export function Menu() {
             <div key={category.id}>
               <div className="mb-6">
                 <h2 className="text-xl font-bold text-gray-900 mb-1">
-                  {category.name}
+                  {language === 'sq' && category.nameAlbanian ? category.nameAlbanian : category.name}
                 </h2>
-                {category.nameAlbanian && category.nameAlbanian !== category.name && (
+                {language === 'en' && category.nameAlbanian && category.nameAlbanian !== category.name && (
                   <p className="text-sm text-gray-600 italic">
                     {category.nameAlbanian}
                   </p>

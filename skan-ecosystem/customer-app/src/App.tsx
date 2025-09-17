@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { LanguageProvider, useLanguage } from './contexts/LanguageContext';
 import { VenueProvider } from './contexts/VenueContext';
 import { CartProvider } from './contexts/CartContext';
 import { QRLanding } from './pages/QRLanding';
@@ -7,6 +8,7 @@ import { Menu } from './pages/Menu';
 import { Cart } from './pages/Cart';
 import { Confirmation } from './pages/Confirmation';
 import { OrderTracking } from './pages/OrderTracking';
+import { CompactLanguagePicker } from './components/LanguagePicker';
 import './index.css';
 
 function VenueRoutes() {
@@ -89,29 +91,36 @@ function OrderTrackingWithContext() {
 }
 
 function HelpPage() {
+  const { t } = useLanguage();
+  
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center">
       <div className="max-w-md mx-auto p-6 text-center">
+        {/* Language picker in top right */}
+        <div className="absolute top-4 right-4">
+          <CompactLanguagePicker />
+        </div>
+        
         <div className="text-primary-600 mb-6">
           <svg className="w-20 h-20 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
         </div>
-        <h1 className="text-2xl font-bold text-gray-900 mb-4">Skan.al Customer Help</h1>
+        <h1 className="text-2xl font-bold text-gray-900 mb-4">Skan.al {t('help')}</h1>
         <div className="space-y-4 text-left">
           <div>
-            <h2 className="font-semibold text-gray-900 mb-2">How to order:</h2>
+            <h2 className="font-semibold text-gray-900 mb-2">{t('how_to_order')}</h2>
             <ol className="text-sm text-gray-600 space-y-1 list-decimal list-inside">
-              <li>Scan the QR code on your table</li>
-              <li>Browse the menu and add items to cart</li>
-              <li>Review your order and submit</li>
-              <li>Wait for your order to be prepared</li>
+              <li>{t('scan_qr')}</li>
+              <li>{t('browse_menu')}</li>
+              <li>{t('review_order')}</li>
+              <li>{t('wait_preparation')}</li>
             </ol>
           </div>
           <div>
-            <h2 className="font-semibold text-gray-900 mb-2">Need help?</h2>
+            <h2 className="font-semibold text-gray-900 mb-2">{t('need_help')}</h2>
             <p className="text-sm text-gray-600">
-              Please ask a member of staff for assistance with ordering or QR code scanning.
+              {t('ask_staff')}
             </p>
           </div>
         </div>
@@ -146,11 +155,13 @@ function OfflinePage() {
 
 function App() {
   return (
-    <CartProvider>
-      <Router>
-        <VenueRoutes />
-      </Router>
-    </CartProvider>
+    <LanguageProvider>
+      <CartProvider>
+        <Router>
+          <VenueRoutes />
+        </Router>
+      </CartProvider>
+    </LanguageProvider>
   );
 }
 

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { MenuItem as MenuItemType } from '../types';
 import { useCart } from '../contexts/CartContext';
+import { useLanguage } from '../contexts/LanguageContext';
 
 interface MenuItemProps {
   item: MenuItemType;
@@ -8,6 +9,7 @@ interface MenuItemProps {
 
 export function MenuItem({ item }: MenuItemProps) {
   const { addItem } = useCart();
+  const { t, language } = useLanguage();
   const [isAdding, setIsAdding] = useState(false);
 
   const handleAddToCart = async () => {
@@ -34,9 +36,9 @@ export function MenuItem({ item }: MenuItemProps) {
       <div className="space-y-3">
         <div>
           <h3 className="font-semibold text-lg text-gray-900">
-            {item.name}
+            {language === 'sq' && item.nameAlbanian ? item.nameAlbanian : item.name}
           </h3>
-          {item.nameAlbanian && (
+          {language === 'en' && item.nameAlbanian && item.nameAlbanian !== item.name && (
             <p className="text-sm text-gray-600 italic">
               {item.nameAlbanian}
             </p>
@@ -45,8 +47,8 @@ export function MenuItem({ item }: MenuItemProps) {
 
         {item.description && (
           <div className="text-sm text-gray-700">
-            <p>{item.description}</p>
-            {item.descriptionAlbanian && (
+            <p>{language === 'sq' && item.descriptionAlbanian ? item.descriptionAlbanian : item.description}</p>
+            {language === 'en' && item.descriptionAlbanian && item.descriptionAlbanian !== item.description && (
               <p className="italic text-gray-600 mt-1">
                 {item.descriptionAlbanian}
               </p>
@@ -72,7 +74,7 @@ export function MenuItem({ item }: MenuItemProps) {
             <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            {item.preparationTime} min
+            {item.preparationTime} {t('minutes')}
           </div>
         )}
 
@@ -96,10 +98,10 @@ export function MenuItem({ item }: MenuItemProps) {
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
-                Added!
+                {language === 'sq' ? 'Shtuar!' : 'Added!'}
               </div>
             ) : (
-              'Add to Cart'
+              t('add_to_cart')
             )}
           </button>
         </div>

@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import LanguageSwitcher from '../components/LanguageSwitcher.astro';
 
 export interface Props {
   title: string;
@@ -21,7 +22,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 ---
 
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="sq" class="scroll-smooth">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -98,18 +99,20 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
         <!-- Desktop Navigation -->
         <div class="hidden md:block">
           <div class="ml-10 flex items-baseline space-x-8">
-            <a href="/features" class="text-gray-600 hover:text-gray-900 px-6 py-4 text-sm font-medium transition-colors">Features</a>
-            <a href="/pricing" class="text-gray-600 hover:text-gray-900 px-6 py-4 text-sm font-medium transition-colors">Pricing</a>
-            <a href="/demo" class="text-gray-600 hover:text-gray-900 px-6 py-4 text-sm font-medium transition-colors">Demo</a>
-            <a href="/blog" class="text-gray-600 hover:text-gray-900 px-6 py-4 text-sm font-medium transition-colors">Blog</a>
-            <a href="/contact" class="text-gray-600 hover:text-gray-900 px-6 py-4 text-sm font-medium transition-colors">Contact</a>
+            <a href="/features" class="text-gray-600 hover:text-gray-900 px-6 py-4 text-sm font-medium transition-colors" data-sq="Veçoritë" data-en="Features">Veçoritë</a>
+            <a href="/pricing" class="text-gray-600 hover:text-gray-900 px-6 py-4 text-sm font-medium transition-colors" data-sq="Çmimet" data-en="Pricing">Çmimet</a>
+            <a href="/demo" class="text-gray-600 hover:text-gray-900 px-6 py-4 text-sm font-medium transition-colors" data-sq="Demo" data-en="Demo">Demo</a>
+            <a href="/blog" class="text-gray-600 hover:text-gray-900 px-6 py-4 text-sm font-medium transition-colors" data-sq="Blog" data-en="Blog">Blog</a>
+            <a href="/contact" class="text-gray-600 hover:text-gray-900 px-6 py-4 text-sm font-medium transition-colors" data-sq="Kontakti" data-en="Contact">Kontakti</a>
           </div>
         </div>
         
         <!-- CTA Buttons -->
         <div class="hidden md:flex items-center space-x-4">
-          <a href="https://admin.skan.al/login" class="text-gray-600 hover:text-gray-900 px-6 py-4 text-sm font-medium transition-colors">Sign In</a>
-          <a href="/demo" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-lg text-sm font-medium transition-colors">Try Demo</a>
+          <LanguageSwitcher />
+          <a href="https://admin.skan.al/login" class="text-gray-600 hover:text-gray-900 px-6 py-4 text-sm font-medium transition-colors whitespace-nowrap" data-sq="Hyni" data-en="Sign In">Hyni</a>
+          <a href="/demo" class="text-gray-600 hover:text-gray-900 px-6 py-4 text-sm font-medium transition-colors whitespace-nowrap" data-sq="Demo" data-en="Try Demo">Demo</a>
+          <a href="/register" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-lg text-sm font-medium transition-colors whitespace-nowrap" data-sq="Filloni" data-en="Get Started">Filloni</a>
         </div>
         
         <!-- Mobile menu button -->
@@ -133,8 +136,9 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
         <a href="/blog" class="text-gray-600 hover:text-gray-900 block px-6 py-4 text-base font-medium">Blog</a>
         <a href="/contact" class="text-gray-600 hover:text-gray-900 block px-6 py-4 text-base font-medium">Contact</a>
         <div class="border-t border-gray-100 pt-3">
-          <a href="https://admin.skan.al/login" class="text-gray-600 hover:text-gray-900 block px-6 py-4 text-base font-medium">Sign In</a>
-          <a href="/demo" class="bg-blue-600 hover:bg-blue-700 text-white block px-6 py-4 rounded-lg text-base font-medium transition-colors mx-3 mt-2">Try Demo</a>
+          <a href="https://admin.skan.al/login" class="text-gray-600 hover:text-gray-900 block px-6 py-4 text-base font-medium whitespace-nowrap" data-sq="Hyni" data-en="Sign In">Hyni</a>
+          <a href="/demo" class="text-gray-600 hover:text-gray-900 block px-6 py-4 text-base font-medium whitespace-nowrap" data-sq="Demo" data-en="Try Demo">Demo</a>
+          <a href="/register" class="bg-blue-600 hover:bg-blue-700 text-white block px-6 py-4 rounded-lg text-base font-medium transition-colors mx-3 mt-2 whitespace-nowrap" data-sq="Filloni" data-en="Get Started">Filloni</a>
         </div>
       </div>
     </div>

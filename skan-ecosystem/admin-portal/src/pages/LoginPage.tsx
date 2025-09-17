@@ -140,7 +140,7 @@ const LoginPage: React.FC = () => {
             <span>Demo Environment</span>
           </div>
           <div className="demo-credentials">
-            <p><strong>Email:</strong> manager_email@gmail.com</p>
+            <p><strong>Email:</strong> manager_email1@gmail.com</p>
             <p><strong>Password:</strong> demo123</p>
           </div>
         </div>

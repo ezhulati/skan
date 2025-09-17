@@ -1,0 +1,337 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout 
+  title="Regjistroni Restorantin Tuaj - SKAN.AL" 
+  description="Bashkohuni me SKAN.AL dhe filloni të pranoni porosi me kod QR nga klientët tuaj sot. Konfigurimi i shpejtë, nuk kërkohet pajisje."
+>
+  <div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-12">
+    <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
+      <!-- Header -->
+      <div class="text-center mb-8">
+        <h1 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+          🍽️ Bashkohuni me SKAN.AL
+        </h1>
+        <p class="text-lg text-gray-600">
+          Filloni të pranoni porosi me kod QR nga klientët tuaj sot.<br>
+          Konfigurimi i shpejtë, nuk kërkohet pajisje.
+        </p>
+      </div>
+
+      <!-- Form Container -->
+      <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
+        <div class="p-8">
+          <div id="registration-form">
+            <form id="venueRegistrationForm">
+              <!-- Venue Information -->
+              <div class="form-section mb-8">
+                <h3 class="text-xl font-semibold text-gray-900 mb-6 flex items-center">
+                  <span class="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold mr-3">1</span>
+                  Informacioni i Restorantit
+                </h3>
+                
+                <div class="space-y-6">
+                  <div>
+                    <label for="venueName" class="block text-sm font-medium text-gray-700 mb-2">
+                      Emri i Restorantit <span class="text-red-500">*</span>
+                    </label>
+                    <input 
+                      type="text" 
+                      id="venueName" 
+                      name="venueName" 
+                      required 
+                      placeholder="p.sh., Bella Vista Restaurant"
+                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900"
+                    >
+                  </div>
+                  
+                  <div>
+                    <label for="address" class="block text-sm font-medium text-gray-700 mb-2">
+                      Adresa <span class="text-red-500">*</span>
+                    </label>
+                    <textarea 
+                      id="address" 
+                      name="address" 
+                      required 
+                      placeholder="Adresa e plotë duke përfshirë qytetin dhe kodin postal"
+                      rows="3"
+                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900"
+                    ></textarea>
+                  </div>
+                  
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">
+                        Numri i Telefonit
+                      </label>
+                      <input 
+                        type="tel" 
+                        id="phone" 
+                        name="phone" 
+                        placeholder="+355 xx xxx xxx"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900"
+                      >
+                    </div>
+                    
+                    <div>
+                      <label for="currency" class="block text-sm font-medium text-gray-700 mb-2">
+                        Monedha
+                      </label>
+                      <select 
+                        id="currency" 
+                        name="currency"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900"
+                      >
+                        <option value="EUR">EUR (€)</option>
+                        <option value="ALL">ALL (L)</option>
+                        <option value="USD">USD ($)</option>
+                      </select>
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <label for="description" class="block text-sm font-medium text-gray-700 mb-2">
+                      Përshkrimi (Opsionale)
+                    </label>
+                    <textarea 
+                      id="description" 
+                      name="description" 
+                      placeholder="Përshkrim i shkurtër i restorantit tuaj"
+                      rows="3"
+                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900"
+                    ></textarea>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Owner Information -->
+              <div class="form-section mb-8">
+                <h3 class="text-xl font-semibold text-gray-900 mb-6 flex items-center">
+                  <span class="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold mr-3">2</span>
+                  Llogaria e Pronarit
+                </h3>
+                
+                <div class="space-y-6">
+                  <div>
+                    <label for="ownerName" class="block text-sm font-medium text-gray-700 mb-2">
+                      Emri Juaj i Plotë <span class="text-red-500">*</span>
+                    </label>
+                    <input 
+                      type="text" 
+                      id="ownerName" 
+                      name="ownerName" 
+                      required 
+                      placeholder="Emri juaj"
+                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900"
+                    >
+                  </div>
+                  
+                  <div>
+                    <label for="ownerEmail" class="block text-sm font-medium text-gray-700 mb-2">
+                      Adresa e Email-it <span class="text-red-500">*</span>
+                    </label>
+                    <input 
+                      type="email" 
+                      id="ownerEmail" 
+                      name="ownerEmail" 
+                      required 
+                      placeholder="email@tuaj.com"
+                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900"
+                    >
+                  </div>
+                  
+                  <div>
+                    <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
+                      Fjalëkalimi <span class="text-red-500">*</span>
+                    </label>
+                    <input 
+                      type="password" 
+                      id="password" 
+                      name="password" 
+                      required
+                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900"
+                    >
+                    <p class="text-sm text-gray-500 mt-1">Duhet të jetë të paktën 8 karaktere të gjata</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Setup Options -->
+              <div class="form-section mb-8">
+                <h3 class="text-xl font-semibold text-gray-900 mb-6 flex items-center">
+                  <span class="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold mr-3">3</span>
+                  Konfigurimi Fillestar
+                </h3>
+                
+                <div>
+                  <label for="tableCount" class="block text-sm font-medium text-gray-700 mb-2">
+                    Numri i Tavolinave
+                  </label>
+                  <select 
+                    id="tableCount" 
+                    name="tableCount"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900"
+                  >
+                    <option value="5">5 tavolina</option>
+                    <option value="10" selected>10 tavolina</option>
+                    <option value="15">15 tavolina</option>
+                    <option value="20">20 tavolina</option>
+                    <option value="25">25 tavolina</option>
+                    <option value="30">30 tavolina</option>
+                  </select>
+                </div>
+              </div>
+
+              <div id="error-container" class="mb-6"></div>
+
+              <button 
+                type="submit" 
+                class="w-full bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl text-lg font-semibold transition-colors shadow-lg hover:shadow-xl"
+                id="submitBtn"
+              >
+                Krijoni Llogarinë time të Restorantit
+              </button>
+            </form>
+          </div>
+
+          <!-- Loading State -->
+          <div id="loading" class="hidden text-center py-12">
+            <div class="inline-block w-8 h-8 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mb-4"></div>
+            <p class="text-gray-600">Duke konfiguruar llogarinë tuaj të restorantit...</p>
+          </div>
+
+          <!-- Success State -->
+          <div id="success-message" class="hidden text-center py-12">
+            <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+            </div>
+            <h3 class="text-2xl font-bold text-gray-900 mb-4">🎉 Mirë se vini në SKAN.AL!</h3>
+            <p class="text-gray-600 mb-6">Restoranti juaj është regjistruar me sukses.</p>
+            
+            <div id="success-details" class="bg-gray-50 rounded-lg p-6 text-left mb-6">
+              <!-- Success details will be populated here -->
+            </div>
+
+            <a href="#" id="loginLink" class="inline-block bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-lg font-semibold transition-colors">
+              Shkoni në Dashboard
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Back Link -->
+      <div class="text-center mt-8">
+        <a href="/" class="text-blue-600 hover:text-blue-700 font-medium">
+          ← Kthehuni në faqen kryesore
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE_URL = 'https://api-mkazmlu7ta-ew.a.run.app/v1';
+    
+    document.getElementById('venueRegistrationForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const submitBtn = document.getElementById('submitBtn');
+      const formContainer = document.getElementById('registration-form');
+      const loadingContainer = document.getElementById('loading');
+      const successContainer = document.getElementById('success-message');
+      const errorContainer = document.getElementById('error-container');
+      
+      // Get form data
+      const formData = new FormData(e.target);
+      const data = {
+        venueName: formData.get('venueName'),
+        address: formData.get('address'),
+        phone: formData.get('phone'),
+        description: formData.get('description'),
+        currency: formData.get('currency'),
+        ownerName: formData.get('ownerName'),
+        ownerEmail: formData.get('ownerEmail'),
+        password: formData.get('password'),
+        tableCount: parseInt(formData.get('tableCount'))
+      };
+      
+      // Clear previous errors
+      errorContainer.innerHTML = '';
+      
+      // Show loading state
+      submitBtn.disabled = true;
+      formContainer.style.display = 'none';
+      loadingContainer.style.display = 'block';
+      
+      try {
+        const response = await fetch(`${API_BASE_URL}/register/venue`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+        });
+        
+        const result = await response.json();
+        
+        if (!response.ok) {
+          throw new Error(result.error || 'Registration failed');
+        }
+        
+        // Show success message
+        loadingContainer.style.display = 'none';
+        successContainer.style.display = 'block';
+        
+        // Store registration data for later use
+        localStorage.setItem('skanUser', JSON.stringify(result.user));
+        localStorage.setItem('skanVenue', JSON.stringify(result.venue));
+        localStorage.setItem('skanSetup', JSON.stringify(result.setup));
+        localStorage.setItem('skanCredentials', JSON.stringify(result.credentials));
+        
+        // Auto-login the user
+        try {
+          const loginResponse = await fetch(`${API_BASE_URL}/auth/login`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              email: result.credentials.email,
+              password: result.credentials.tempPassword
+            })
+          });
+          
+          if (loginResponse.ok) {
+            const loginData = await loginResponse.json();
+            localStorage.setItem('skanAuthToken', loginData.token);
+          }
+        } catch (loginError) {
+          console.log('Auto-login failed, user will need to login manually');
+        }
+        
+        // Redirect to success page after a short delay
+        setTimeout(function() {
+          const params = new URLSearchParams({
+            venue: encodeURIComponent(JSON.stringify(result.venue)),
+            setup: encodeURIComponent(JSON.stringify(result.setup))
+          });
+          window.location.href = `/registration-success?${params.toString()}`;
+        }, 2000);
+        
+      } catch (error) {
+        // Show error message
+        loadingContainer.style.display = 'none';
+        formContainer.style.display = 'block';
+        submitBtn.disabled = false;
+        
+        errorContainer.innerHTML = `
+          <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+            ${error.message}
+          </div>
+        `;
+      }
+    });
+  </script>
+</BaseLayout>

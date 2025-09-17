@@ -5,6 +5,8 @@ import LoginPage from './pages/LoginPage';
 import DashboardPage from './pages/DashboardPage';
 import QRCodePage from './pages/QRCodePage';
 import MenuManagementPage from './pages/MenuManagementPage';
+import UserManagementPage from './pages/UserManagementPage';
+import OnboardingWizardPage from './pages/OnboardingWizardPage';
 import { AuthProvider } from './contexts/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import Navigation from './components/Navigation';
@@ -16,6 +18,14 @@ function App() {
         <div className="App">
           <Routes>
             <Route path="/login" element={<LoginPage />} />
+            <Route 
+              path="/onboarding" 
+              element={
+                <ProtectedRoute>
+                  <OnboardingWizardPage />
+                </ProtectedRoute>
+              } 
+            />
             <Route 
               path="/dashboard" 
               element={
@@ -42,6 +52,16 @@ function App() {
                 <ProtectedRoute>
                   <Navigation>
                     <MenuManagementPage />
+                  </Navigation>
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/users" 
+              element={
+                <ProtectedRoute>
+                  <Navigation>
+                    <UserManagementPage />
                   </Navigation>
                 </ProtectedRoute>
               } 

@@ -25,14 +25,19 @@ test('admin portal login functionality', async ({ page }) => {
   await passwordInput.fill('demo123');
   
   // Intercept the login API call to monitor the request/response
+  let loginApiUrl = '';
+  let loginResponse = null;
+  
   page.on('response', response => {
     if (response.url().includes('/auth/login')) {
       console.log('Login API response:', response.status(), response.statusText());
+      loginResponse = response;
     }
   });
   
   page.on('request', request => {
     if (request.url().includes('/auth/login')) {
+      loginApiUrl = request.url();
       console.log('Login API request:', request.method(), request.url());
       console.log('Request body:', request.postData());
     }
@@ -69,8 +74,16 @@ test('admin portal login functionality', async ({ page }) => {
   // Wait a bit more to see final state
   await page.waitForTimeout(2000);
   
-  // Log the current URL
+  // Log the current URL and API details
   console.log('Current URL:', page.url());
+  console.log('API URL used:', loginApiUrl);
+  
+  // Verify the API URL is not localhost
+  if (loginApiUrl.includes('localhost')) {
+    console.log('❌ FAIL: Still using localhost API URL!');
+  } else {
+    console.log('✅ SUCCESS: Using production API URL');
+  }
   
   // Log any console errors
   page.on('console', msg => {

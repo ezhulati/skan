@@ -1,0 +1,99 @@
+---
+// Language Switcher Component
+---
+
+<div class="language-switcher">
+  <button 
+    type="button" 
+    class="flex items-center space-x-2 px-3 py-2 text-sm text-gray-600 hover:text-gray-900 rounded-lg transition-colors whitespace-nowrap"
+    id="language-toggle"
+  >
+    <span class="flag" id="current-flag">🇦🇱</span>
+    <span class="text" id="current-lang">SQ</span>
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+    </svg>
+  </button>
+  
+  <div class="language-menu hidden absolute right-0 mt-2 w-32 bg-white rounded-lg shadow-lg border border-gray-200 z-50" id="language-menu">
+    <button 
+      type="button" 
+      class="w-full flex items-center space-x-2 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-t-lg transition-colors whitespace-nowrap"
+      onclick="switchLanguage('sq')"
+    >
+      <span>🇦🇱</span>
+      <span>Shqip</span>
+    </button>
+    <button 
+      type="button" 
+      class="w-full flex items-center space-x-2 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-b-lg transition-colors whitespace-nowrap"
+      onclick="switchLanguage('en')"
+    >
+      <span>🇺🇸</span>
+      <span>English</span>
+    </button>
+  </div>
+</div>
+
+<script>
+  // Language switching functionality
+  let currentLang = localStorage.getItem('preferredLanguage') || 'sq'; // Default to Albanian
+  
+  function switchLanguage(lang) {
+    currentLang = lang;
+    localStorage.setItem('preferredLanguage', lang);
+    
+    // Update all translatable elements
+    document.querySelectorAll('[data-en][data-sq]').forEach(element => {
+      const text = element.getAttribute(`data-${lang}`);
+      if (text) {
+        element.textContent = text;
+      }
+    });
+    
+    // Update language indicator
+    const currentFlag = document.getElementById('current-flag');
+    const currentLangText = document.getElementById('current-lang');
+    
+    if (lang === 'sq') {
+      currentFlag.textContent = '🇦🇱';
+      currentLangText.textContent = 'SQ';
+    } else {
+      currentFlag.textContent = '🇺🇸';
+      currentLangText.textContent = 'EN';
+    }
+    
+    // Hide menu
+    document.getElementById('language-menu').classList.add('hidden');
+  }
+  
+  // Initialize language on page load
+  document.addEventListener('DOMContentLoaded', function() {
+    switchLanguage(currentLang);
+    
+    // Set up toggle functionality
+    const toggle = document.getElementById('language-toggle');
+    const menu = document.getElementById('language-menu');
+    
+    toggle.addEventListener('click', function() {
+      menu.classList.toggle('hidden');
+    });
+    
+    // Close menu when clicking outside
+    document.addEventListener('click', function(event) {
+      if (!toggle.contains(event.target) && !menu.contains(event.target)) {
+        menu.classList.add('hidden');
+      }
+    });
+  });
+  
+  // Make switchLanguage globally available
+  window.switchLanguage = switchLanguage;
+</script>
+
+<style>
+  .language-switcher {
+    position: relative;
+    display: inline-block;
+  }
+</style>

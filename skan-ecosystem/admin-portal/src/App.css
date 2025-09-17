@@ -160,7 +160,7 @@ body {
 
 .form-group input {
   width: 100%;
-  padding: 16px 16px 16px 48px;
+  padding: 16px 16px 16px 56px;
   border: 2px solid #e1e5e9;
   border-radius: 12px;
   font-size: 1rem;
@@ -628,7 +628,7 @@ body {
   }
   
   .form-group input {
-    padding: 14px 14px 14px 44px;
+    padding: 14px 14px 14px 50px;
   }
   
   .input-icon {
