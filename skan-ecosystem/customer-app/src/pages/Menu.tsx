@@ -66,36 +66,63 @@ export function Menu() {
       </div>
 
       {menuCategories.length > 1 && (
-        <div className="bg-gray-50 border-b border-gray-100 sticky top-0 z-40">
-          <div className="max-w-md mx-auto relative">
-            <div className="flex overflow-x-auto py-2 px-4 space-x-2 scrollbar-hide">
-              {/* Scroll indicator gradient */}
-              <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-gray-50 via-gray-50/90 to-transparent pointer-events-none z-10"></div>
+        <div 
+          className="sticky top-0 z-40 bg-white border-b"
+          style={{ 
+            borderBottomColor: '#e5e7eb',
+            backgroundColor: '#ffffff'
+          }}
+        >
+          <div className="max-w-md mx-auto">
+            <div 
+              className="flex overflow-x-auto px-4 py-3"
+              style={{
+                scrollbarWidth: 'none',
+                msOverflowStyle: 'none'
+              }}
+            >
+              <style>{`
+                .nav-container::-webkit-scrollbar {
+                  display: none;
+                }
+              `}</style>
               
-              <button
-                onClick={() => setActiveCategory(null)}
-                className={`px-4 py-2 text-sm font-medium whitespace-nowrap transition-all duration-150 min-h-[36px] flex items-center ${
-                  activeCategory === null
-                    ? 'bg-gray-900 text-white rounded-lg shadow-sm'
-                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg'
-                }`}
-              >
-                {language === 'sq' ? 'Të gjitha' : 'All'}
-              </button>
-              
-              {menuCategories.map((category) => (
+              <div className="flex space-x-2 nav-container">
                 <button
-                  key={category.id}
-                  onClick={() => setActiveCategory(category.id)}
-                  className={`px-4 py-2 text-sm font-medium whitespace-nowrap transition-all duration-150 min-h-[36px] flex items-center ${
-                    activeCategory === category.id
-                      ? 'bg-gray-900 text-white rounded-lg shadow-sm'
-                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg'
+                  onClick={() => setActiveCategory(null)}
+                  className={`flex-shrink-0 px-4 py-2 text-sm font-medium whitespace-nowrap transition-all duration-200 ${
+                    activeCategory === null
+                      ? 'bg-black text-white rounded-lg'
+                      : 'text-gray-600 hover:text-black hover:bg-gray-100 rounded-lg'
                   }`}
+                  style={{
+                    minHeight: '36px',
+                    backgroundColor: activeCategory === null ? '#000000' : 'transparent',
+                    color: activeCategory === null ? '#ffffff' : '#6b7280'
+                  }}
                 >
-                  {language === 'sq' && category.nameAlbanian ? category.nameAlbanian : category.name}
+                  {language === 'sq' ? 'Të gjitha' : 'All'}
                 </button>
-              ))}
+                
+                {menuCategories.map((category) => (
+                  <button
+                    key={category.id}
+                    onClick={() => setActiveCategory(category.id)}
+                    className={`flex-shrink-0 px-4 py-2 text-sm font-medium whitespace-nowrap transition-all duration-200 ${
+                      activeCategory === category.id
+                        ? 'bg-black text-white rounded-lg'
+                        : 'text-gray-600 hover:text-black hover:bg-gray-100 rounded-lg'
+                    }`}
+                    style={{
+                      minHeight: '36px',
+                      backgroundColor: activeCategory === category.id ? '#000000' : 'transparent',
+                      color: activeCategory === category.id ? '#ffffff' : '#6b7280'
+                    }}
+                  >
+                    {language === 'sq' && category.nameAlbanian ? category.nameAlbanian : category.name}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
         </div>
