@@ -2,6 +2,8 @@
 import '../styles/global.css';
 import LanguageSwitcher from '../components/LanguageSwitcher.astro';
 import CookieConsent from '../components/CookieConsent.astro';
+import { Icon } from 'astro-icon/components';
+import { SEO } from 'astro-seo';
 
 export interface Props {
   title: string;
@@ -29,38 +31,48 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="generator" content={Astro.generator} />
   
-  <!-- Primary Meta Tags -->
-  <title>{title}</title>
-  <meta name="title" content={title} />
-  <meta name="description" content={description} />
-  <link rel="canonical" href={canonicalURL} />
-  
-  <!-- Open Graph / Facebook -->
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content={canonicalURL} />
-  <meta property="og:title" content={ogTitle} />
-  <meta property="og:description" content={ogDescription} />
-  <meta property="og:image" content={ogImage} />
-  <meta property="og:image:width" content="1200" />
-  <meta property="og:image:height" content="630" />
-  <meta property="og:image:type" content="image/jpeg" />
-  <meta property="og:site_name" content="SKAN.AL" />
-  <meta property="og:locale" content="sq_AL" />
-  
-  <!-- Twitter -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:site" content="@skan_al" />
-  <meta name="twitter:creator" content="@skan_al" />
-  <meta name="twitter:url" content={canonicalURL} />
-  <meta name="twitter:title" content={ogTitle} />
-  <meta name="twitter:description" content={ogDescription} />
-  <meta name="twitter:image" content={ogImage} />
-  <meta name="twitter:image:alt" content={ogTitle} />
-  
-  <!-- Additional Social Meta -->
-  <meta property="fb:app_id" content="skan_al_app" />
-  <meta name="robots" content="index, follow" />
-  <meta name="author" content="SKAN.AL Team" />
+  <!-- SEO Meta Tags -->
+  <SEO
+    title={title}
+    description={description}
+    canonical={canonicalURL}
+    charset="utf-8"
+    openGraph={{
+      basic: {
+        title: ogTitle,
+        type: "website",
+        image: ogImage,
+        url: canonicalURL
+      },
+      optional: {
+        description: ogDescription,
+        siteName: "SKAN.AL",
+        locale: "sq_AL"
+      },
+      image: {
+        width: 1200,
+        height: 630,
+        type: "image/jpeg",
+        alt: ogTitle
+      }
+    }}
+    twitter={{
+      card: "summary_large_image",
+      site: "@skan_al",
+      creator: "@skan_al",
+      title: ogTitle,
+      description: ogDescription,
+      image: ogImage,
+      imageAlt: ogTitle
+    }}
+    extend={{
+      meta: [
+        { property: "fb:app_id", content: "skan_al_app" },
+        { name: "robots", content: "index, follow" },
+        { name: "author", content: "SKAN.AL Team" }
+      ]
+    }}
+  />
   
   <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -184,15 +196,11 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
           <div class="flex space-x-4">
             <a href="#" class="text-gray-400 hover:text-pink-500 transition-colors p-2">
               <span class="sr-only">Instagram</span>
-              <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2m-.2 2A3.6 3.6 0 0 0 4 7.6v8.8C4 18.39 5.61 20 7.6 20h8.8a3.6 3.6 0 0 0 3.6-3.6V7.6C20 5.61 18.39 4 16.4 4H7.6m9.65 1.5a1.25 1.25 0 0 1 1.25 1.25A1.25 1.25 0 0 1 17.25 8 1.25 1.25 0 0 1 16 6.75a1.25 1.25 0 0 1 1.25-1.25M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3Z"/>
-              </svg>
+              <Icon name="mdi:instagram" class="h-6 w-6" />
             </a>
             <a href="#" class="text-gray-400 hover:text-blue-600 transition-colors p-2">
               <span class="sr-only">Facebook</span>
-              <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-              </svg>
+              <Icon name="mdi:facebook" class="h-6 w-6" />
             </a>
           </div>
         </div>
