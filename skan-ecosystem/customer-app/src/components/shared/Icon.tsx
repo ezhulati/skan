@@ -81,7 +81,7 @@ export const Icon: React.FC<IconProps> = ({
   color,
   onClick 
 }) => {
-  const IconComponent = iconMap[name];
+  const IconComponent = iconMap[name] as React.ComponentType<any>;
   
   if (!IconComponent) {
     console.warn(`Icon "${name}" not found in iconMap`);
