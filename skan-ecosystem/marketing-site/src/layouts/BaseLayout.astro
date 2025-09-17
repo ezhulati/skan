@@ -248,21 +248,30 @@ const menuItems: MenuItemType[] = [
       display: flex !important;
     }
 
-    /* Fix hamburger button size */
+    /* Fix hamburger button size and spacing */
     :global(.hamburger) {
-      padding: 12px !important;
+      padding: 8px !important;
     }
 
     :global(.hamburger-box) {
-      width: 24px !important;
-      height: 18px !important;
+      width: 20px !important;
+      height: 14px !important;
     }
 
     :global(.hamburger-inner),
     :global(.hamburger-inner::before),
     :global(.hamburger-inner::after) {
-      width: 24px !important;
-      height: 3px !important;
+      width: 20px !important;
+      height: 2px !important;
+      border-radius: 1px !important;
+    }
+
+    :global(.hamburger-inner::before) {
+      top: -6px !important;
+    }
+
+    :global(.hamburger-inner::after) {
+      bottom: -6px !important;
     }
 
     /* Mobile header container adjustments */
