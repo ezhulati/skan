@@ -14,7 +14,7 @@ const LoginPage: React.FC = () => {
   useEffect(() => {
     if (auth.isAuthenticated) {
       // Scroll to top immediately before navigation
-      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+      window.scrollTo({ top: 0, left: 0 });
       document.body.scrollTop = 0;
       document.documentElement.scrollTop = 0;
       
@@ -30,7 +30,7 @@ const LoginPage: React.FC = () => {
     try {
       await login(email, password);
       // Scroll to top immediately before navigation
-      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+      window.scrollTo({ top: 0, left: 0 });
       document.body.scrollTop = 0;
       document.documentElement.scrollTop = 0;
       

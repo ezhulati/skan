@@ -8,6 +8,7 @@ interface MenuItem {
   price: number;
   isActive: boolean;
   categoryId: string;
+  imageUrl?: string;
 }
 
 interface MenuCategory {
@@ -32,10 +33,48 @@ const MenuManagementPage: React.FC = () => {
     name: '',
     nameEn: '',
     price: '',
-    isActive: true
+    isActive: true,
+    imageUrl: ''
   });
+  const [uploadingImage, setUploadingImage] = useState<string | null>(null);
 
   const baseUrl = '/api/v1';
+
+  // Image upload helper function
+  const uploadImage = async (file: File): Promise<string> => {
+    // For now, we'll use a simple base64 approach or placeholder
+    // In production, this would upload to Firebase Storage or similar
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        resolve(e.target?.result as string);
+      };
+      reader.readAsDataURL(file);
+    });
+  };
+
+  const handleImageUpload = async (file: File, itemId?: string): Promise<string> => {
+    setUploadingImage(itemId || 'new');
+    try {
+      // Validate file type
+      if (!file.type.startsWith('image/')) {
+        throw new Error('Ju mund të ngarkoni vetëm imazhe');
+      }
+      
+      // Validate file size (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        throw new Error('Imazhi duhet të jetë më i vogël se 5MB');
+      }
+      
+      const imageUrl = await uploadImage(file);
+      return imageUrl;
+    } catch (error) {
+      setError(error instanceof Error ? error.message : 'Dështoi ngarkimi i imazhit');
+      throw error;
+    } finally {
+      setUploadingImage(null);
+    }
+  };
 
   useEffect(() => {
     loadMenu();
@@ -129,14 +168,15 @@ const MenuManagementPage: React.FC = () => {
           name: newItem.name,
           nameEn: newItem.nameEn,
           price: parseFloat(newItem.price),
-          isActive: newItem.isActive
+          isActive: newItem.isActive,
+          imageUrl: newItem.imageUrl || undefined
         })
       });
 
       if (!response.ok) throw new Error('Dështoi të shtoj artikullin');
 
       await loadMenu();
-      setNewItem({ name: '', nameEn: '', price: '', isActive: true });
+      setNewItem({ name: '', nameEn: '', price: '', isActive: true, imageUrl: '' });
       setShowAddItem(null);
     } catch (err) {
       console.error('Error adding item:', err);
@@ -355,6 +395,53 @@ const MenuManagementPage: React.FC = () => {
                       value={newItem.price}
                       onChange={(e) => setNewItem({...newItem, price: e.target.value})}
                     />
+                    <div className="form-group">
+                      <label>Imazhi i Artikullit (Opsional)</label>
+                      <div className="image-upload-container">
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={async (e) => {
+                            const file = e.target.files?.[0];
+                            if (file) {
+                              try {
+                                const imageUrl = await handleImageUpload(file);
+                                setNewItem({...newItem, imageUrl});
+                              } catch (error) {
+                                // Error already handled in handleImageUpload
+                              }
+                            }
+                          }}
+                          disabled={uploadingImage === 'new'}
+                          className="image-input"
+                        />
+                        {uploadingImage === 'new' && (
+                          <div className="upload-progress">
+                            <svg className="spinner" viewBox="0 0 24 24">
+                              <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" fill="none" strokeDasharray="32" strokeDashoffset="32">
+                                <animate attributeName="stroke-dashoffset" dur="1s" values="32;0;32" repeatCount="indefinite"/>
+                              </circle>
+                            </svg>
+                            Duke ngarkuar...
+                          </div>
+                        )}
+                        {newItem.imageUrl && (
+                          <div className="image-preview">
+                            <img src={newItem.imageUrl} alt="Preview" />
+                            <button 
+                              type="button"
+                              onClick={() => setNewItem({...newItem, imageUrl: ''})}
+                              className="remove-image-button"
+                            >
+                              <svg viewBox="0 0 24 24" fill="none">
+                                <line x1="18" y1="6" x2="6" y2="18" stroke="currentColor" strokeWidth="2"/>
+                                <line x1="6" y1="6" x2="18" y2="18" stroke="currentColor" strokeWidth="2"/>
+                              </svg>
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    </div>
                     <div className="checkbox-group">
                       <label>
                         <input
@@ -399,7 +486,18 @@ const MenuManagementPage: React.FC = () => {
                       ) : (
                         <>
                           <div className="item-info">
-                            <h4>{item.name}</h4>
+                            <div className="item-header">
+                              <h4>{item.name}</h4>
+                              {item.imageUrl && (
+                                <span className="image-indicator" title="Ka imazh">
+                                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                                    <circle cx="8.5" cy="8.5" r="1.5"/>
+                                    <polyline points="21,15 16,10 5,21"/>
+                                  </svg>
+                                </span>
+                              )}
+                            </div>
                             <p className="item-subtitle">{item.nameEn}</p>
                             <p className="item-price">{Math.round(item.price * 97)} Lek</p>
                           </div>
@@ -505,6 +603,34 @@ const ItemEditor: React.FC<{
   const [name, setName] = useState(item.name);
   const [nameEn, setNameEn] = useState(item.nameEn);
   const [price, setPrice] = useState(item.price.toString());
+  const [imageUrl, setImageUrl] = useState(item.imageUrl || '');
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
+
+  const handleImageUpload = async (file: File): Promise<void> => {
+    setIsUploadingImage(true);
+    try {
+      // Validate file type
+      if (!file.type.startsWith('image/')) {
+        throw new Error('Ju mund të ngarkoni vetëm imazhe');
+      }
+      
+      // Validate file size (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        throw new Error('Imazhi duhet të jetë më i vogël se 5MB');
+      }
+      
+      // Convert to base64
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setImageUrl(e.target?.result as string);
+      };
+      reader.readAsDataURL(file);
+    } catch (error) {
+      alert(error instanceof Error ? error.message : 'Dështoi ngarkimi i imazhit');
+    } finally {
+      setIsUploadingImage(false);
+    }
+  };
 
   return (
     <div className="item-editor">
@@ -528,6 +654,48 @@ const ItemEditor: React.FC<{
           onChange={(e) => setPrice(e.target.value)}
           placeholder="Çmimi"
         />
+        <div className="form-group">
+          <label>Imazhi i Artikullit (Opsional)</label>
+          <div className="image-upload-container">
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) {
+                  handleImageUpload(file);
+                }
+              }}
+              disabled={isUploadingImage}
+              className="image-input"
+            />
+            {isUploadingImage && (
+              <div className="upload-progress">
+                <svg className="spinner" viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" fill="none" strokeDasharray="32" strokeDashoffset="32">
+                    <animate attributeName="stroke-dashoffset" dur="1s" values="32;0;32" repeatCount="indefinite"/>
+                  </circle>
+                </svg>
+                Duke ngarkuar...
+              </div>
+            )}
+            {imageUrl && (
+              <div className="image-preview">
+                <img src={imageUrl} alt="Preview" />
+                <button 
+                  type="button"
+                  onClick={() => setImageUrl('')}
+                  className="remove-image-button"
+                >
+                  <svg viewBox="0 0 24 24" fill="none">
+                    <line x1="18" y1="6" x2="6" y2="18" stroke="currentColor" strokeWidth="2"/>
+                    <line x1="6" y1="6" x2="18" y2="18" stroke="currentColor" strokeWidth="2"/>
+                  </svg>
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
       <div className="editor-actions">
         <button onClick={onCancel} className="cancel-button">
@@ -541,7 +709,8 @@ const ItemEditor: React.FC<{
           onClick={() => onSave({ 
             name, 
             nameEn, 
-            price: parseFloat(price) 
+            price: parseFloat(price),
+            imageUrl: imageUrl || undefined
           })} 
           className="save-button"
         >

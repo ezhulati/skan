@@ -100,7 +100,7 @@ const OnboardingWizardPage: React.FC = () => {
 
       if (response.ok) {
         // Scroll to top immediately before navigation
-        window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+        window.scrollTo({ top: 0, left: 0 });
         document.body.scrollTop = 0;
         document.documentElement.scrollTop = 0;
         
@@ -115,7 +115,7 @@ const OnboardingWizardPage: React.FC = () => {
     // eslint-disable-next-line no-restricted-globals
     if (confirm('Are you sure you want to skip the setup wizard? You can always return to complete it later.')) {
       // Scroll to top immediately before navigation
-      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+      window.scrollTo({ top: 0, left: 0 });
       document.body.scrollTop = 0;
       document.documentElement.scrollTop = 0;
       
@@ -248,7 +248,7 @@ const OnboardingWizardPage: React.FC = () => {
                   className="btn-primary"
                   onClick={() => {
                     // Scroll to top immediately before navigation
-                    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+                    window.scrollTo({ top: 0, left: 0 });
                     document.body.scrollTop = 0;
                     document.documentElement.scrollTop = 0;
                     navigate('/menu');
@@ -301,7 +301,7 @@ const OnboardingWizardPage: React.FC = () => {
                   className="btn-primary"
                   onClick={() => {
                     // Scroll to top immediately before navigation
-                    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+                    window.scrollTo({ top: 0, left: 0 });
                     document.body.scrollTop = 0;
                     document.documentElement.scrollTop = 0;
                     navigate('/qr-codes');
@@ -354,7 +354,7 @@ const OnboardingWizardPage: React.FC = () => {
                   className="btn-primary"
                   onClick={() => {
                     // Scroll to top immediately before navigation
-                    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+                    window.scrollTo({ top: 0, left: 0 });
                     document.body.scrollTop = 0;
                     document.documentElement.scrollTop = 0;
                     navigate('/users');
@@ -400,7 +400,7 @@ const OnboardingWizardPage: React.FC = () => {
                   className="btn-secondary"
                   onClick={() => {
                     // Scroll to top immediately before navigation
-                    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+                    window.scrollTo({ top: 0, left: 0 });
                     document.body.scrollTop = 0;
                     document.documentElement.scrollTop = 0;
                     navigate('/qr-codes');
