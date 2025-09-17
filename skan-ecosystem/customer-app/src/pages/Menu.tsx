@@ -66,29 +66,31 @@ export function Menu() {
       </div>
 
       {menuCategories.length > 1 && (
-        <div className="bg-white border-b border-gray-200 sticky top-0 z-40">
+        <div className="bg-white border-b border-gray-200 sticky top-0 z-40 shadow-sm">
           <div className="max-w-md mx-auto relative">
-            <div className="flex overflow-x-auto py-4 px-4 space-x-2 scrollbar-hide">
+            <div className="flex overflow-x-auto py-3 px-4 space-x-3 scrollbar-hide">
               {/* Scroll indicator gradient */}
-              <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-white to-transparent pointer-events-none z-10"></div>
+              <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-white via-white/80 to-transparent pointer-events-none z-10"></div>
+              
               <button
                 onClick={() => setActiveCategory(null)}
-                className={`px-4 py-3 rounded-full text-sm font-medium whitespace-nowrap transition-colors min-h-[48px] flex items-center ${
+                className={`px-5 py-2.5 rounded-xl text-sm font-semibold whitespace-nowrap transition-all duration-200 min-h-[44px] flex items-center shadow-sm ${
                   activeCategory === null
-                    ? 'bg-primary-600 text-white'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    ? 'bg-blue-600 text-white shadow-blue-200 transform scale-105'
+                    : 'bg-white text-gray-700 hover:bg-blue-50 hover:text-blue-700 border border-gray-200 hover:border-blue-200'
                 }`}
               >
                 {language === 'sq' ? 'Të gjitha' : 'All Items'}
               </button>
+              
               {menuCategories.map((category) => (
                 <button
                   key={category.id}
                   onClick={() => setActiveCategory(category.id)}
-                  className={`px-4 py-3 rounded-full text-sm font-medium whitespace-nowrap transition-colors min-h-[48px] flex items-center ${
+                  className={`px-5 py-2.5 rounded-xl text-sm font-semibold whitespace-nowrap transition-all duration-200 min-h-[44px] flex items-center shadow-sm ${
                     activeCategory === category.id
-                      ? 'bg-primary-600 text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      ? 'bg-blue-600 text-white shadow-blue-200 transform scale-105'
+                      : 'bg-white text-gray-700 hover:bg-blue-50 hover:text-blue-700 border border-gray-200 hover:border-blue-200'
                   }`}
                 >
                   {language === 'sq' && category.nameAlbanian ? category.nameAlbanian : category.name}
