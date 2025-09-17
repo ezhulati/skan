@@ -6,20 +6,38 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   title="Politika e Privatësisë - SKAN.AL"
   description="Politika e privatësisë së SKAN.AL - si mbledhim, përdorim dhe mbrjmë të dhënat tuaja personale në sistemin tonë të porosive me kod QR."
 >
-  <div class="bg-white">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+  <div class="bg-gradient-to-br from-gray-50 to-blue-50 min-h-screen">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
       <!-- Header -->
-      <div class="text-center mb-12">
-        <h1 class="text-4xl font-bold text-gray-900 mb-4">Politika e Privatësisë</h1>
-        <p class="text-xl text-gray-600">E fundit përditësuar: {new Date().toLocaleDateString('sq-AL')}</p>
+      <div class="text-center mb-16">
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-blue-600 rounded-full mb-6">
+          <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+          </svg>
+        </div>
+        <h1 class="text-5xl font-bold text-gray-900 mb-6 leading-tight">Politika e Privatësisë</h1>
+        <div class="bg-white rounded-lg shadow-sm border px-6 py-4 inline-block">
+          <p class="text-lg text-gray-600 font-medium">E fundit përditësuar: {new Date().toLocaleDateString('sq-AL')}</p>
+        </div>
       </div>
 
-      <div class="prose prose-lg max-w-none">
-        <div class="bg-blue-50 border-l-4 border-blue-400 p-6 mb-8">
-          <div class="flex">
-            <div class="ml-3">
-              <p class="text-sm text-blue-700">
-                <strong>Përmbledhje e shkurtër:</strong> SKAN.AL respekton privatësinë tuaj. Ne mbledhim vetëm të dhënat e nevojshme për të ofruar shërbimin tonë të porosive me kod QR për restorantet. Të dhënat tuaja nuk shiten kurrë palëve të treta.
+      <div class="bg-white rounded-2xl shadow-xl border-0 overflow-hidden">
+        <div class="px-8 py-12 lg:px-12">
+          <div class="prose prose-lg max-w-none prose-headings:text-gray-900 prose-h2:text-2xl prose-h2:font-bold prose-h2:mt-12 prose-h2:mb-6 prose-h3:text-xl prose-h3:font-semibold prose-h3:mt-8 prose-h3:mb-4 prose-p:text-gray-700 prose-p:leading-relaxed prose-li:text-gray-700 prose-strong:text-gray-900">
+        <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-8 mb-12 relative overflow-hidden">
+          <div class="absolute top-0 left-0 w-2 h-full bg-gradient-to-b from-blue-500 to-indigo-600"></div>
+          <div class="flex items-start">
+            <div class="flex-shrink-0 mr-4">
+              <div class="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+            </div>
+            <div>
+              <h3 class="text-lg font-bold text-blue-900 mb-3">Përmbledhje e shkurtër</h3>
+              <p class="text-blue-800 leading-relaxed">
+                SKAN.AL respekton privatësinë tuaj. Ne mbledhim vetëm të dhënat e nevojshme për të ofruar shërbimin tonë të porosive me kod QR për restorantet. Të dhënat tuaja nuk shiten kurrë palëve të treta.
               </p>
             </div>
           </div>
