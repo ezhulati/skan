@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import LanguageSwitcher from '../components/LanguageSwitcher.astro';
+import CookieConsent from '../components/CookieConsent.astro';
 
 export interface Props {
   title: string;
@@ -220,6 +221,9 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
       </div>
     </div>
   </footer>
+
+  <!-- Cookie Consent Banner -->
+  <CookieConsent />
 
   <!-- Mobile Menu JavaScript -->
   <script>
