@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { api } from '../services/api';
 import { OrderTracking as OrderTrackingType } from '../types';
 import { useLanguage } from '../contexts/LanguageContext';
-import { CompactLanguagePicker } from '../components/LanguagePicker';
+// import { CompactLanguagePicker } from '../components/LanguagePicker';
 
 export function OrderTracking() {
   const { venueSlug, tableNumber, orderNumber } = useParams<{
@@ -181,7 +181,7 @@ export function OrderTracking() {
   }
 
   const statusConfig = getStatusConfig();
-  const currentStatus = statusConfig[order.status];
+  const currentStatus = statusConfig[order.status as keyof typeof statusConfig];
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
@@ -189,7 +189,7 @@ export function OrderTracking() {
       <div className="bg-white shadow-sm border-b">
         <div className="max-w-md mx-auto px-4 py-4 relative">
           <div className="absolute top-4 right-4">
-            <CompactLanguagePicker />
+            {/* <CompactLanguagePicker /> */}
           </div>
           <div className="flex items-center justify-between pr-20">
             <button
