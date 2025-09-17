@@ -6,7 +6,7 @@ test('login form UI styling', async ({ browser }) => {
   const page = await context.newPage();
   
   // Navigate to login page
-  await page.goto('https://skan-admin.netlify.app');
+  await page.goto('http://localhost:3003');
   
   // Wait for the login form to load
   await page.waitForSelector('input[type="email"]');

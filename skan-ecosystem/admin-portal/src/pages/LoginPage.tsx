@@ -60,41 +60,30 @@ const LoginPage: React.FC = () => {
         <form className="login-form" onSubmit={handleSubmit}>
           <div className="form-group">
             <label htmlFor="email">Adresa e Emailit</label>
-            <div className="input-wrapper">
-              <svg className="input-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" stroke="currentColor" strokeWidth="2"/>
-                <polyline points="22,6 12,13 2,6" stroke="currentColor" strokeWidth="2"/>
-              </svg>
-              <input
-                type="email"
-                id="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                placeholder="Shkruaj email-in tënd"
-                disabled={loading}
-              />
-            </div>
+            <input
+              type="email"
+              id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              placeholder="Shkruaj email-in tënd"
+              disabled={loading}
+              className="clean-input"
+            />
           </div>
           
           <div className="form-group">
             <label htmlFor="password">Fjalëkalimi</label>
-            <div className="input-wrapper">
-              <svg className="input-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="3" y="11" width="18" height="11" rx="2" ry="2" stroke="currentColor" strokeWidth="2"/>
-                <circle cx="12" cy="7" r="4" stroke="currentColor" strokeWidth="2"/>
-                <path d="M12 15.5v2.5" stroke="currentColor" strokeWidth="2"/>
-              </svg>
-              <input
-                type="password"
-                id="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                placeholder="Shkruaj fjalëkalimin tënd"
-                disabled={loading}
-              />
-            </div>
+            <input
+              type="password"
+              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              placeholder="Shkruaj fjalëkalimin tënd"
+              disabled={loading}
+              className="clean-input"
+            />
           </div>
           
           {error && (
