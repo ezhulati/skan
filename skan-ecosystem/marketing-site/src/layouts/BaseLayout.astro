@@ -198,6 +198,26 @@ const menuItems: MenuItemType[] = [
       opacity: 0;
       transform: translateY(8px);
     }
+
+    /* Custom styles for dynamic header menu items */
+    :global(.astro-dynamic-header nav a) {
+      color: #374151 !important; /* Darker gray to match "Hyni" and "Demo" */
+      font-weight: 500 !important;
+    }
+
+    :global(.astro-dynamic-header nav a:hover) {
+      color: #111827 !important; /* Even darker on hover */
+    }
+
+    /* Mobile menu items */
+    :global(.astro-dynamic-header .mobile-nav a) {
+      color: #374151 !important;
+      font-weight: 500 !important;
+    }
+
+    :global(.astro-dynamic-header .mobile-nav a:hover) {
+      color: #111827 !important;
+    }
   </style>
 </head>
 
