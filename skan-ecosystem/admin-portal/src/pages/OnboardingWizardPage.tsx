@@ -99,6 +99,11 @@ const OnboardingWizardPage: React.FC = () => {
       });
 
       if (response.ok) {
+        // Scroll to top immediately before navigation
+        window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
+        
         navigate('/dashboard');
       }
     } catch (error) {
@@ -109,6 +114,11 @@ const OnboardingWizardPage: React.FC = () => {
   const skipOnboarding = () => {
     // eslint-disable-next-line no-restricted-globals
     if (confirm('Are you sure you want to skip the setup wizard? You can always return to complete it later.')) {
+      // Scroll to top immediately before navigation
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+      document.body.scrollTop = 0;
+      document.documentElement.scrollTop = 0;
+      
       navigate('/dashboard');
     }
   };
@@ -236,7 +246,13 @@ const OnboardingWizardPage: React.FC = () => {
               <div className="step-actions">
                 <button 
                   className="btn-primary"
-                  onClick={() => navigate('/menu')}
+                  onClick={() => {
+                    // Scroll to top immediately before navigation
+                    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+                    document.body.scrollTop = 0;
+                    document.documentElement.scrollTop = 0;
+                    navigate('/menu');
+                  }}
                 >
                   Set Up Menu
                 </button>
@@ -283,7 +299,13 @@ const OnboardingWizardPage: React.FC = () => {
               <div className="step-actions">
                 <button 
                   className="btn-primary"
-                  onClick={() => navigate('/qr-codes')}
+                  onClick={() => {
+                    // Scroll to top immediately before navigation
+                    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+                    document.body.scrollTop = 0;
+                    document.documentElement.scrollTop = 0;
+                    navigate('/qr-codes');
+                  }}
                 >
                   Configure Tables
                 </button>
@@ -330,7 +352,13 @@ const OnboardingWizardPage: React.FC = () => {
               <div className="step-actions">
                 <button 
                   className="btn-primary"
-                  onClick={() => navigate('/users')}
+                  onClick={() => {
+                    // Scroll to top immediately before navigation
+                    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+                    document.body.scrollTop = 0;
+                    document.documentElement.scrollTop = 0;
+                    navigate('/users');
+                  }}
                 >
                   Invite Team
                 </button>
@@ -370,7 +398,13 @@ const OnboardingWizardPage: React.FC = () => {
                 </button>
                 <button 
                   className="btn-secondary"
-                  onClick={() => navigate('/qr-codes')}
+                  onClick={() => {
+                    // Scroll to top immediately before navigation
+                    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+                    document.body.scrollTop = 0;
+                    document.documentElement.scrollTop = 0;
+                    navigate('/qr-codes');
+                  }}
                 >
                   Print QR Codes
                 </button>

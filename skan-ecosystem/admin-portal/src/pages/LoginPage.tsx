@@ -13,6 +13,11 @@ const LoginPage: React.FC = () => {
 
   useEffect(() => {
     if (auth.isAuthenticated) {
+      // Scroll to top immediately before navigation
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+      document.body.scrollTop = 0;
+      document.documentElement.scrollTop = 0;
+      
       navigate('/dashboard', { replace: true });
     }
   }, [auth.isAuthenticated, navigate]);
@@ -24,6 +29,11 @@ const LoginPage: React.FC = () => {
 
     try {
       await login(email, password);
+      // Scroll to top immediately before navigation
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+      document.body.scrollTop = 0;
+      document.documentElement.scrollTop = 0;
+      
       navigate('/dashboard', { replace: true });
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Login failed');
