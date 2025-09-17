@@ -1,9 +1,11 @@
 import React from 'react';
 import { useCart } from '../contexts/CartContext';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useLanguage } from '../contexts/LanguageContext';
 
 export function CartSummary() {
   const { totalAmount, itemCount } = useCart();
+  const { t } = useLanguage();
   const navigate = useNavigate();
   const { venueSlug, tableNumber } = useParams<{ venueSlug: string; tableNumber: string }>();
 
@@ -26,7 +28,7 @@ export function CartSummary() {
             <div className="bg-white bg-opacity-20 rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3">
               {itemCount}
             </div>
-            <span>View Cart</span>
+            <span>{t('view_cart')}</span>
           </div>
           
           <div className="text-lg font-bold">

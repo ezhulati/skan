@@ -169,10 +169,16 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
             Sistem porosish me kod QR i krijuar për restorantet shqiptare. Thjeshtoni operacionet, reduktoni kohët e pritjes, dhe përmirësoni përvojën e klientëve.
           </p>
           <div class="flex space-x-4">
-            <a href="/contact" class="text-gray-400 hover:text-gray-600 p-2">
-              <span class="sr-only">Email</span>
+            <a href="#" class="text-gray-400 hover:text-gray-600 p-2">
+              <span class="sr-only">Instagram</span>
               <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                <path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 6.62 5.367 11.987 11.988 11.987s11.987-5.367 11.987-11.987C24.004 5.367 18.637.001 12.017.001zM8.449 16.988c-1.297 0-2.448-.49-3.328-1.297L6.468 14.3c.553.553 1.325.897 2.185.897 1.709 0 3.09-1.382 3.09-3.09s-1.382-3.09-3.09-3.09-3.09 1.382-3.09 3.09c0 .344.058.674.15.99l-1.343 1.342c-.807-.88-1.297-2.031-1.297-3.328 0-2.695 2.185-4.88 4.88-4.88s4.88 2.185 4.88 4.88c0 2.695-2.185 4.88-4.88 4.88zm7.072-5.297c0-.344-.058-.674-.15-.99l1.343-1.342c.807.88 1.297 2.031 1.297 3.328 0 2.695-2.185 4.88-4.88 4.88s-4.88-2.185-4.88-4.88c0-1.297.49-2.448 1.297-3.328l1.343 1.342c-.092.316-.15.646-.15.99 0 1.709 1.382 3.09 3.09 3.09s3.09-1.382 3.09-3.09z"/>
+              </svg>
+            </a>
+            <a href="#" class="text-gray-400 hover:text-gray-600 p-2">
+              <span class="sr-only">Facebook</span>
+              <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
               </svg>
             </a>
           </div>
@@ -203,8 +209,8 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
       
       <div class="mt-8 pt-8 border-t border-gray-200">
         <div class="flex flex-col md:flex-row justify-between items-center">
-          <p class="text-gray-500 text-sm" data-sq="© 2024 SKAN.AL. Të gjitha të drejtat e rezervuara." data-en="© 2024 SKAN.AL. All rights reserved.">
-            © 2024 SKAN.AL. Të gjitha të drejtat e rezervuara.
+          <p class="text-gray-500 text-sm" data-sq={`© ${new Date().getFullYear()} SKAN.AL. Të gjitha të drejtat e rezervuara.`} data-en={`© ${new Date().getFullYear()} SKAN.AL. All rights reserved.`}>
+            © {new Date().getFullYear()} SKAN.AL. Të gjitha të drejtat e rezervuara.
           </p>
           <div class="mt-2 md:mt-0">
             <a href="/privacy" class="text-gray-500 hover:text-gray-900 text-sm mr-6 py-2 inline-block" data-sq="Politika e Privatësisë" data-en="Privacy Policy">Politika e Privatësisë</a>

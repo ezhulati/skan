@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
 import { useCart } from '../contexts/CartContext';
 import { useVenue } from '../contexts/VenueContext';
+import { useLanguage } from '../contexts/LanguageContext';
 import { useNavigate, useParams } from 'react-router-dom';
 import { api } from '../services/api';
 import { Order } from '../types';
+import { CompactLanguagePicker } from '../components/LanguagePicker';
 
 export function Cart() {
   const { items, totalAmount, updateQuantity, removeItem, updateSpecialInstructions, clearCart } = useCart();
   const { venue } = useVenue();
+  const { t, language } = useLanguage();
   const navigate = useNavigate();
   const { venueSlug, tableNumber } = useParams<{ venueSlug: string; tableNumber: string }>();
   
@@ -99,10 +102,10 @@ export function Cart() {
                 <svg className="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                 </svg>
-                Back to Menu
+                {t('back')}
               </button>
-              <h1 className="text-lg font-semibold text-gray-900">Your Cart</h1>
-              <div className="w-20"></div>
+              <h1 className="text-lg font-semibold text-gray-900">{t('cart')}</h1>
+              <CompactLanguagePicker />
             </div>
           </div>
         </div>
@@ -114,13 +117,13 @@ export function Cart() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l-1 12H6L5 9z" />
               </svg>
             </div>
-            <h2 className="text-xl font-medium text-gray-900 mb-2">Your cart is empty</h2>
-            <p className="text-gray-600 mb-6">Add some items from the menu to get started</p>
+            <h2 className="text-xl font-medium text-gray-900 mb-2">{t('cart_empty')}</h2>
+            <p className="text-gray-600 mb-6">{t('continue_shopping')}</p>
             <button
               onClick={handleBackToMenu}
               className="bg-primary-600 hover:bg-primary-700 text-white font-medium py-3 px-6 rounded-lg transition-colors"
             >
-              Browse Menu
+              {t('menu')}
             </button>
           </div>
         </div>
@@ -141,15 +144,18 @@ export function Cart() {
               <svg className="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
               </svg>
-              Back to Menu
+              {t('back')}
             </button>
-            <h1 className="text-lg font-semibold text-gray-900">Your Cart</h1>
-            <button
-              onClick={clearCart}
-              className="text-red-600 hover:text-red-700 text-sm"
-            >
-              Clear All
-            </button>
+            <h1 className="text-lg font-semibold text-gray-900">{t('cart')}</h1>
+            <div className="flex items-center gap-2">
+              <CompactLanguagePicker />
+              <button
+                onClick={clearCart}
+                className="text-red-600 hover:text-red-700 text-sm"
+              >
+                {t('remove')}
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -161,8 +167,12 @@ export function Cart() {
             <div key={item.id} className="bg-white rounded-lg shadow-sm border p-4">
               <div className="flex justify-between items-start mb-3">
                 <div className="flex-1">
-                  <h3 className="font-medium text-gray-900">{item.name}</h3>
-                  <p className="text-sm text-gray-600">{item.nameAlbanian}</p>
+                  <h3 className="font-medium text-gray-900">
+                    {language === 'sq' && item.nameAlbanian ? item.nameAlbanian : item.name}
+                  </h3>
+                  {language === 'en' && item.nameAlbanian && item.nameAlbanian !== item.name && (
+                    <p className="text-sm text-gray-600 italic">{item.nameAlbanian}</p>
+                  )}
                   <p className="text-lg font-semibold text-primary-600 mt-1">
                     €{item.price.toFixed(2)}
                   </p>
@@ -179,7 +189,7 @@ export function Cart() {
 
               {/* Quantity Controls */}
               <div className="flex items-center justify-between mb-3">
-                <span className="text-sm text-gray-600">Quantity</span>
+                <span className="text-sm text-gray-600">{t('quantity')}</span>
                 <div className="flex items-center space-x-3">
                   <button
                     onClick={() => handleQuantityChange(item.id, item.quantity - 1)}
@@ -203,11 +213,11 @@ export function Cart() {
 
               {/* Special Instructions */}
               <div>
-                <label className="block text-sm text-gray-600 mb-1">Special instructions (optional)</label>
+                <label className="block text-sm text-gray-600 mb-1">{t('special_instructions')}</label>
                 <textarea
                   value={item.specialInstructions || ''}
                   onChange={(e) => handleSpecialInstructionsChange(item.id, e.target.value)}
-                  placeholder="e.g., no onions, extra sauce..."
+                  placeholder={t('special_instructions_placeholder')}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                   rows={2}
                 />
@@ -216,7 +226,7 @@ export function Cart() {
               {/* Item Total */}
               <div className="mt-3 pt-3 border-t border-gray-100">
                 <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Item total</span>
+                  <span className="text-sm text-gray-600">{t('total')}</span>
                   <span className="font-semibold text-gray-900">
                     €{(item.price * item.quantity).toFixed(2)}
                   </span>
@@ -228,30 +238,30 @@ export function Cart() {
 
         {/* Customer Information */}
         <div className="bg-white rounded-lg shadow-sm border p-4 mb-6">
-          <h3 className="font-medium text-gray-900 mb-4">Order Information</h3>
+          <h3 className="font-medium text-gray-900 mb-4">{t('order')}</h3>
           
           <div className="space-y-4">
             <div>
               <label className="block text-sm text-gray-600 mb-1">
-                Customer name (optional)
+                {t('customer_name')}
               </label>
               <input
                 type="text"
                 value={customerName}
                 onChange={(e) => setCustomerName(e.target.value)}
-                placeholder="Your name for the order"
+                placeholder={t('customer_name_placeholder')}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
               />
             </div>
 
             <div>
               <label className="block text-sm text-gray-600 mb-1">
-                Order notes (optional)
+                {t('special_instructions')}
               </label>
               <textarea
                 value={orderNotes}
                 onChange={(e) => setOrderNotes(e.target.value)}
-                placeholder="Any special requests for your order..."
+                placeholder={t('special_instructions_placeholder')}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                 rows={3}
               />
@@ -273,11 +283,11 @@ export function Cart() {
 
         {/* Order Summary */}
         <div className="bg-white rounded-lg shadow-sm border p-4 mb-20">
-          <h3 className="font-medium text-gray-900 mb-4">Order Summary</h3>
+          <h3 className="font-medium text-gray-900 mb-4">{t('order_summary')}</h3>
           
           <div className="space-y-2 mb-4">
             <div className="flex justify-between text-sm">
-              <span className="text-gray-600">Items ({items.reduce((sum, item) => sum + item.quantity, 0)})</span>
+              <span className="text-gray-600">{t('items')} ({items.reduce((sum, item) => sum + item.quantity, 0)})</span>
               <span className="text-gray-900">€{totalAmount.toFixed(2)}</span>
             </div>
             <div className="flex justify-between text-sm">
@@ -288,7 +298,7 @@ export function Cart() {
           
           <div className="border-t border-gray-200 pt-4">
             <div className="flex justify-between items-center">
-              <span className="text-lg font-semibold text-gray-900">Total</span>
+              <span className="text-lg font-semibold text-gray-900">{t('total')}</span>
               <span className="text-xl font-bold text-primary-600">€{totalAmount.toFixed(2)}</span>
             </div>
           </div>
@@ -309,10 +319,10 @@ export function Cart() {
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
-                Submitting Order...
+                {t('loading')}
               </>
             ) : (
-              `Place Order • €${totalAmount.toFixed(2)}`
+              `${t('submit_order')} • €${totalAmount.toFixed(2)}`
             )}
           </button>
         </div>

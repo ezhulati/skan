@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useVenue } from '../contexts/VenueContext';
+import { useLanguage } from '../contexts/LanguageContext';
+import { CompactLanguagePicker } from '../components/LanguagePicker';
 
 interface ConfirmationState {
   orderNumber: string;
@@ -13,6 +15,7 @@ export function Confirmation() {
   const navigate = useNavigate();
   const { venueSlug, tableNumber } = useParams<{ venueSlug: string; tableNumber: string }>();
   const { venue } = useVenue();
+  const { t } = useLanguage();
   
   const confirmationData = location.state as ConfirmationState;
   const [showCelebration, setShowCelebration] = useState(true);
@@ -78,8 +81,11 @@ export function Confirmation() {
 
       {/* Header */}
       <div className="bg-white shadow-sm border-b">
-        <div className="max-w-md mx-auto px-4 py-4">
-          <h1 className="text-lg font-semibold text-gray-900 text-center">Order Confirmation</h1>
+        <div className="max-w-md mx-auto px-4 py-4 relative">
+          <div className="absolute top-4 right-4">
+            <CompactLanguagePicker />
+          </div>
+          <h1 className="text-lg font-semibold text-gray-900 text-center pr-20">{t('order_confirmation')}</h1>
         </div>
       </div>
 
@@ -94,18 +100,18 @@ export function Confirmation() {
           </div>
           
           <h2 className="text-2xl font-bold text-gray-900 mb-2">
-            Order Confirmed!
+            {t('order_confirmed')}
           </h2>
           
           <p className="text-gray-600 mb-4">
-            Thank you for your order. We'll start preparing it right away.
+            {t('thank_you_preparing')}
           </p>
         </div>
 
         {/* Order Details Card */}
         <div className="bg-white rounded-lg shadow-sm border p-6 mb-6">
           <div className="text-center mb-6">
-            <div className="text-lg font-semibold text-gray-900 mb-1">Order Number</div>
+            <div className="text-lg font-semibold text-gray-900 mb-1">{t('order_number')}</div>
             <div className="text-2xl font-bold text-primary-600 font-mono tracking-wider">
               {confirmationData.orderNumber}
             </div>
@@ -113,21 +119,21 @@ export function Confirmation() {
 
           <div className="space-y-4">
             <div className="flex justify-between items-center py-2 border-b border-gray-100">
-              <span className="text-gray-600">Total Amount</span>
+              <span className="text-gray-600">{t('total_amount')}</span>
               <span className="text-xl font-bold text-gray-900">
                 €{confirmationData.totalAmount.toFixed(2)}
               </span>
             </div>
 
             <div className="flex justify-between items-center py-2 border-b border-gray-100">
-              <span className="text-gray-600">Table Number</span>
+              <span className="text-gray-600">{t('table_number')}</span>
               <span className="font-semibold text-gray-900 uppercase">
                 {tableNumber}
               </span>
             </div>
 
             <div className="flex justify-between items-center py-2">
-              <span className="text-gray-600">Estimated Ready Time</span>
+              <span className="text-gray-600">{t('estimated_ready_time')}</span>
               <span className="font-semibold text-gray-900">
                 {estimatedReadyTime}
               </span>
@@ -145,12 +151,12 @@ export function Confirmation() {
             </div>
             <div className="ml-3">
               <h3 className="text-sm font-medium text-blue-800 mb-1">
-                What happens next?
+                {t('what_happens_next')}
               </h3>
               <div className="text-sm text-blue-700 space-y-1">
-                <p>• Your order is being prepared by our kitchen</p>
-                <p>• We'll update you when it's ready</p>
-                <p>• Estimated preparation time: {estimatedTime} minutes</p>
+                <p>{t('order_being_prepared')}</p>
+                <p>{t('will_update')}</p>
+                <p>{t('estimated_prep_time').replace('{time}', estimatedTime.toString())}</p>
               </div>
             </div>
           </div>
@@ -166,12 +172,12 @@ export function Confirmation() {
             </div>
             <div className="ml-3">
               <h3 className="text-sm font-medium text-yellow-800 mb-1">
-                Please note
+                {t('please_note')}
               </h3>
               <div className="text-sm text-yellow-700 space-y-1">
-                <p>• Keep this order number for reference</p>
-                <p>• You can track your order status anytime</p>
-                <p>• Please remain at your table</p>
+                <p>{t('keep_order_number')}</p>
+                <p>{t('can_track_order')}</p>
+                <p>{t('remain_at_table')}</p>
               </div>
             </div>
           </div>
@@ -186,7 +192,7 @@ export function Confirmation() {
             <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
             </svg>
-            Track Order Status
+            {t('track_order_status')}
           </button>
 
           <button
@@ -196,17 +202,17 @@ export function Confirmation() {
             <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
             </svg>
-            Add More Items
+            {t('add_more_items')}
           </button>
         </div>
 
         {/* Customer Service */}
         <div className="text-center mt-8 pt-6 border-t border-gray-200">
           <p className="text-sm text-gray-600 mb-2">
-            Need help with your order?
+            {t('need_help_order')}
           </p>
           <p className="text-sm text-gray-500">
-            Please speak with a member of our staff
+            {t('speak_with_staff')}
           </p>
         </div>
       </div>
