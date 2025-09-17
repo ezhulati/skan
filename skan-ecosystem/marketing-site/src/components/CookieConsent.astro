@@ -2,23 +2,20 @@
 // Cookie Consent Component for GDPR compliance
 ---
 
-<div id="cookie-banner" class="fixed bottom-0 left-0 right-0 bg-gray-900 text-white p-4 z-50 shadow-lg" style="display: none;">
+<div id="cookie-banner" class="fixed bottom-0 left-0 right-0 bg-gray-900 text-white py-3 px-4 z-50 shadow-lg" style="display: none;">
   <div class="max-w-7xl mx-auto">
-    <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-      <div class="flex-1">
-        <h3 class="font-semibold mb-2" data-sq="Përdorimi i Cookies" data-en="Cookie Usage">Përdorimi i Cookies</h3>
-        <p class="text-sm text-gray-300 leading-relaxed" data-sq="Ne përdorim cookies për të përmirësuar përvojën tuaj në faqen tonë, për të analizuar trafikun, dhe për të personalizuar përmbajtjen. Disa cookies janë thelbësore për funksionimin e faqes." data-en="We use cookies to enhance your experience on our website, analyze traffic, and personalize content. Some cookies are essential for the website to function properly.">
-          Ne përdorim cookies për të përmirësuar përvojën tuaj në faqen tonë, për të analizuar trafikun, dhe për të personalizuar përmbajtjen. Disa cookies janë thelbësore për funksionimin e faqes.
+    <div class="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+      <div class="flex-1 min-w-0">
+        <p class="text-sm text-gray-200 leading-snug" data-sq="Ne përdorim cookies për të përmirësuar përvojën tuaj. " data-en="We use cookies to enhance your experience. ">
+          Ne përdorim cookies për të përmirësuar përvojën tuaj. 
+          <a href="/privacy" class="text-blue-400 hover:text-blue-300 underline" data-sq="Mësoni më shumë" data-en="Learn more">Mësoni më shumë</a>
         </p>
-        <div class="mt-2">
-          <a href="/privacy" class="text-blue-400 hover:text-blue-300 text-sm underline" data-sq="Mësoni më shumë" data-en="Learn more">Mësoni më shumë</a>
-        </div>
       </div>
       
-      <div class="flex flex-col sm:flex-row gap-3 shrink-0">
+      <div class="flex gap-2 w-full sm:w-auto">
         <button 
           id="cookie-settings" 
-          class="px-4 py-2 border border-gray-500 text-gray-300 hover:bg-gray-800 rounded-lg text-sm font-medium transition-colors"
+          class="flex-1 sm:flex-none px-3 py-2 border border-gray-500 text-gray-300 hover:bg-gray-800 rounded text-xs font-medium transition-colors"
           data-sq="Cilësimet" 
           data-en="Settings"
         >
@@ -26,15 +23,15 @@
         </button>
         <button 
           id="cookie-accept-selected" 
-          class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors"
-          data-sq="Prano të Zgjedhurit" 
-          data-en="Accept Selected"
+          class="flex-1 sm:flex-none px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded text-xs font-medium transition-colors"
+          data-sq="Thelbësore" 
+          data-en="Essential"
         >
-          Prano të Zgjedhurit
+          Thelbësore
         </button>
         <button 
           id="cookie-accept-all" 
-          class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm font-medium transition-colors"
+          class="flex-1 sm:flex-none px-3 py-2 bg-green-600 hover:bg-green-700 text-white rounded text-xs font-medium transition-colors"
           data-sq="Prano të Gjitha" 
           data-en="Accept All"
         >
