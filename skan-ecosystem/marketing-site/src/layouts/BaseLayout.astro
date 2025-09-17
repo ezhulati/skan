@@ -219,106 +219,50 @@ const menuItems: MenuItemType[] = [
       color: #111827 !important;
     }
 
-    /* Fix mobile hamburger menu visibility and styling */
-    :global(.hamburger) {
-      background-color: rgba(55, 65, 81, 0.08) !important;
-      border: 1px solid rgba(55, 65, 81, 0.2) !important;
-      border-radius: 8px !important;
-      transition: all 0.2s ease !important;
+    /* Set CSS custom properties for the dynamic header component */
+    :root {
+      --color-hamburger-lines: #374151;
+      --mobile-accent-color: #3b82f6;
     }
 
-    :global(.hamburger:hover) {
-      background-color: rgba(55, 65, 81, 0.12) !important;
-      border-color: rgba(55, 65, 81, 0.3) !important;
-    }
-
-    /* Hamburger icon lines - fix visibility by making them dark */
-    :global(.hamburger-inner),
-    :global(.hamburger-inner::before),
-    :global(.hamburger-inner::after) {
-      background-color: #374151 !important;
-    }
-
-    /* Mobile menu overlay fixes */
+    /* Mobile menu light theme override */
     :global(.mobile-header__menu) {
       background: rgba(255, 255, 255, 0.98) !important;
       backdrop-filter: blur(20px) !important;
       -webkit-backdrop-filter: blur(20px) !important;
-      border-left: 1px solid rgba(229, 231, 235, 0.8) !important;
-      box-shadow: -10px 0 25px -5px rgba(0, 0, 0, 0.1) !important;
-      width: 100vw !important;
-      padding: 6rem 2rem 2rem !important;
     }
 
-    /* Mobile menu items styling */
-    :global(.mobile-menu li a),
-    :global(.mobile-menu__link) {
-      color: #374151 !important;
-      background: transparent !important;
-      border: 1px solid rgba(229, 231, 235, 0.6) !important;
-      border-radius: 8px !important;
-      font-size: 18px !important;
-      font-weight: 500 !important;
-      height: 3.5rem !important;
-      transition: all 0.2s ease !important;
-    }
-
-    :global(.mobile-menu li a:hover),
-    :global(.mobile-menu__link:hover) {
-      background-color: rgba(59, 130, 246, 0.1) !important;
-      border-color: rgba(59, 130, 246, 0.3) !important;
-      color: #1e40af !important;
-    }
-
-    /* Mobile details/accordion styling */
-    :global(.mobile-details summary),
+    /* Mobile menu text colors for light theme */
+    :global(.mobile-header__menu a),
+    :global(.mobile-menu__link),
     :global(.menu__summary) {
       color: #374151 !important;
-      background: transparent !important;
-      border: 1px solid rgba(229, 231, 235, 0.6) !important;
-      border-radius: 8px !important;
-      font-size: 18px !important;
-      font-weight: 500 !important;
-      height: 3.5rem !important;
-      transition: all 0.2s ease !important;
     }
 
-    :global(.mobile-details summary:hover),
-    :global(.menu__summary:hover) {
-      background-color: rgba(59, 130, 246, 0.1) !important;
-      border-color: rgba(59, 130, 246, 0.3) !important;
-      color: #1e40af !important;
-    }
-
-    /* Mobile submenu styling */
-    :global(.mobile-submenu),
-    :global(.mobile-subsubmenu) {
-      border-left: 2px solid rgba(59, 130, 246, 0.3) !important;
-      padding-left: 1rem !important;
-      margin-left: 1rem !important;
-      margin-top: 0.5rem !important;
-    }
-
-    :global(.mobile-submenu li a),
-    :global(.mobile-subsubmenu li a) {
-      font-size: 16px !important;
-      height: 3rem !important;
-      color: #6b7280 !important;
-    }
-
-    :global(.mobile-submenu li a:hover),
-    :global(.mobile-subsubmenu li a:hover) {
-      color: #374151 !important;
-    }
-
-    /* Mobile accent color override */
-    :global(.mobile-header__menu) {
-      --mobile-accent-color: #3b82f6 !important;
-    }
-
-    /* Icon styling in mobile menu */
     :global(.mobile-header__menu iconify-icon) {
       color: #6b7280 !important;
+    }
+
+    /* Ensure main navigation menu items are visible */
+    :global(.mobile-menu) {
+      display: flex !important;
+    }
+
+    /* Fix hamburger button size */
+    :global(.hamburger) {
+      padding: 12px !important;
+    }
+
+    :global(.hamburger-box) {
+      width: 24px !important;
+      height: 18px !important;
+    }
+
+    :global(.hamburger-inner),
+    :global(.hamburger-inner::before),
+    :global(.hamburger-inner::after) {
+      width: 24px !important;
+      height: 3px !important;
     }
 
     /* Mobile header container adjustments */
