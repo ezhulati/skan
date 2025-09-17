@@ -98,10 +98,20 @@ body {
   margin-bottom: 16px;
 }
 
+.logo-container {
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .login-icon {
-  width: 40px;
-  height: 40px;
-  color: #007bff;
+  width: 28px;
+  height: 28px;
+  color: white;
 }
 
 .login-header h1 {
