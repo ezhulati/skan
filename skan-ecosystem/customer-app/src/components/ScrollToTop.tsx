@@ -8,8 +8,7 @@ export function ScrollToTop() {
     // Scroll to top instantly when route changes
     window.scrollTo({
       top: 0,
-      left: 0,
-      behavior: 'instant'
+      left: 0
     });
     
     // Also try document.body scroll for better browser compatibility
