@@ -202,7 +202,7 @@ PUBLIC_ADMIN_DOMAIN=https://admin.skan.al
 
 ## Security Implementation
 
-### Authentication
+### Authentication & Security
 - Firebase Auth integration
 - Password hashing using Node.js crypto.scrypt
 - Role-based access control in admin portal
@@ -281,6 +281,597 @@ skan.al/blog/
 
 ---
 
-**Last Updated**: 2024-09-16
+## API CONTRACT
+
+### Base URL
+**Production:** `https://api-mkazmlu7ta-ew.a.run.app`  
+**Development:** `https://localhost:5001`
+
+### Authentication
+Most endpoints require Bearer token authentication in the Authorization header:
+```
+Authorization: Bearer <token>
+```
+
+---
+
+### VENUE & MENU ENDPOINTS
+
+### GET `/v1/venue/:slug/menu`
+**Description:** Get venue menu by slug (public endpoint)  
+**Parameters:**
+- `slug` (path): Venue slug identifier
+
+**Response:**
+```json
+{
+  "venue": {
+    "id": "string",
+    "name": "string", 
+    "slug": "string",
+    "address": "string",
+    "phone": "string",
+    "description": "string",
+    "settings": { "currency": "EUR", "orderingEnabled": true, "estimatedPreparationTime": 15 }
+  },
+  "categories": [
+    {
+      "id": "string",
+      "name": "string",
+      "nameAlbanian": "string",
+      "sortOrder": 1,
+      "items": [
+        {
+          "id": "string",
+          "name": "string",
+          "nameAlbanian": "string", 
+          "description": "string",
+          "descriptionAlbanian": "string",
+          "price": 12.99,
+          "allergens": ["gluten", "dairy"],
+          "imageUrl": "string",
+          "preparationTime": 10,
+          "sortOrder": 1
+        }
+      ]
+    }
+  ]
+}
+```
+
+### GET `/v1/venue/:slug/tables`
+**Description:** Get venue tables for QR generation (public endpoint)  
+**Parameters:**
+- `slug` (path): Venue slug identifier
+
+**Response:**
+```json
+{
+  "tables": [
+    {
+      "id": "string",
+      "tableNumber": "T01",
+      "displayName": "Table 1",
+      "qrUrl": "https://order.skan.al/venue-slug/T01"
+    }
+  ]
+}
+```
+
+---
+
+### ORDER ENDPOINTS
+
+### POST `/v1/orders`
+**Description:** Create new order (public endpoint)  
+**Body:**
+```json
+{
+  "venueId": "string",
+  "tableNumber": "T01",
+  "customerName": "John Doe",
+  "items": [
+    {
+      "id": "string",
+      "name": "Pizza Margherita",
+      "price": 14.99,
+      "quantity": 2
+    }
+  ],
+  "specialInstructions": "No onions please"
+}
+```
+
+**Response:**
+```json
+{
+  "orderId": "string",
+  "orderNumber": "SKN-20250915-001", 
+  "status": "new",
+  "totalAmount": 29.98,
+  "message": "Order created successfully"
+}
+```
+
+### GET `/v1/venue/:venueId/orders`
+**Description:** Get orders for venue dashboard (protected)  
+**Parameters:**
+- `venueId` (path): Venue ID
+- `status` (query): Filter by status ("new", "preparing", "ready", "served", "active", "all")
+- `limit` (query): Max results (default: 50)
+
+**Response:**
+```json
+[
+  {
+    "id": "string",
+    "venueId": "string",
+    "tableNumber": "T01",
+    "orderNumber": "SKN-20250915-001",
+    "customerName": "John Doe",
+    "items": [...],
+    "totalAmount": 29.98,
+    "status": "new",
+    "specialInstructions": "string",
+    "createdAt": "2025-01-17T10:00:00.000Z",
+    "updatedAt": "2025-01-17T10:00:00.000Z"
+  }
+]
+```
+
+### PUT `/v1/orders/:orderId/status`
+**Description:** Update order status (protected)  
+**Parameters:**
+- `orderId` (path): Order ID
+
+**Body:**
+```json
+{
+  "status": "preparing"
+}
+```
+
+**Valid statuses:** `"new"`, `"preparing"`, `"ready"`, `"served"`
+
+**Response:**
+```json
+{
+  "message": "Order status updated",
+  "status": "preparing", 
+  "orderId": "string"
+}
+```
+
+### GET `/v1/orders/:orderId`
+**Description:** Get single order details (protected)  
+**Parameters:**
+- `orderId` (path): Order ID
+
+**Response:**
+```json
+{
+  "id": "string",
+  "venueId": "string",
+  "tableNumber": "T01",
+  "orderNumber": "SKN-20250915-001",
+  "customerName": "John Doe",
+  "items": [...],
+  "totalAmount": 29.98,
+  "status": "preparing",
+  "specialInstructions": "string",
+  "createdAt": "2025-01-17T10:00:00.000Z",
+  "updatedAt": "2025-01-17T10:00:00.000Z",
+  "preparedAt": "2025-01-17T10:05:00.000Z",
+  "readyAt": null,
+  "servedAt": null
+}
+```
+
+### GET `/v1/track/:orderNumber`
+**Description:** Track order by number (public endpoint)  
+**Parameters:**
+- `orderNumber` (path): Order number (e.g., "SKN-20250915-001")
+
+**Response:**
+```json
+{
+  "orderNumber": "SKN-20250915-001",
+  "status": "preparing",
+  "items": [...],
+  "totalAmount": 29.98,
+  "createdAt": "2025-01-17T10:00:00.000Z",
+  "estimatedTime": "10-15 minutes"
+}
+```
+
+---
+
+### AUTHENTICATION ENDPOINTS
+
+### POST `/v1/auth/register`
+**Description:** User registration  
+**Body:**
+```json
+{
+  "email": "manager@restaurant.com",
+  "password": "securepassword123",
+  "fullName": "John Manager",
+  "role": "manager",
+  "venueId": "venue-id-123"
+}
+```
+
+**Response:**
+```json
+{
+  "message": "User registered successfully",
+  "userId": "string",
+  "token": "string",
+  "user": {
+    "id": "string",
+    "email": "manager@restaurant.com",
+    "fullName": "John Manager", 
+    "role": "manager",
+    "venueId": "venue-id-123",
+    "emailVerified": false
+  }
+}
+```
+
+### POST `/v1/auth/login`
+**Description:** Restaurant staff login  
+**Body:**
+```json
+{
+  "email": "manager@restaurant.com",
+  "password": "securepassword123"
+}
+```
+
+**Response:**
+```json
+{
+  "message": "Login successful",
+  "user": {
+    "id": "string",
+    "email": "manager@restaurant.com",
+    "fullName": "John Manager",
+    "role": "manager", 
+    "venueId": "venue-id-123"
+  },
+  "venue": {
+    "id": "venue-id-123",
+    "name": "My Restaurant",
+    "slug": "my-restaurant"
+  },
+  "token": "string"
+}
+```
+
+### POST `/v1/auth/reset-password`
+**Description:** Request password reset  
+**Body:**
+```json
+{
+  "email": "manager@restaurant.com"
+}
+```
+
+**Response:**
+```json
+{
+  "message": "If this email exists, you will receive a password reset link",
+  "resetToken": "dev-token-here"
+}
+```
+
+### POST `/v1/auth/reset-password/confirm`
+**Description:** Confirm password reset with token  
+**Body:**
+```json
+{
+  "token": "reset-token-here",
+  "newPassword": "newpassword123"
+}
+```
+
+**Response:**
+```json
+{
+  "message": "Password reset successfully"
+}
+```
+
+---
+
+### USER MANAGEMENT ENDPOINTS (Protected)
+
+### GET `/v1/users`
+**Description:** Get all users (admin/manager only)  
+**Query Parameters:**
+- `venueId` (string): Filter by venue ID
+- `role` (string): Filter by role
+- `limit` (number): Max results (default: 50)
+
+**Response:**
+```json
+{
+  "users": [
+    {
+      "id": "string",
+      "email": "user@example.com",
+      "fullName": "User Name",
+      "role": "staff",
+      "venueId": "venue-id",
+      "isActive": true,
+      "emailVerified": true,
+      "createdAt": "2025-01-17T10:00:00.000Z",
+      "updatedAt": "2025-01-17T10:00:00.000Z"
+    }
+  ],
+  "total": 5
+}
+```
+
+### GET `/v1/users/:userId`
+**Description:** Get single user (admin/manager only)  
+**Parameters:**
+- `userId` (path): User ID
+
+### PUT `/v1/users/:userId`
+**Description:** Update user (admin/manager only)  
+**Body:**
+```json
+{
+  "fullName": "Updated Name",
+  "role": "manager",
+  "isActive": true,
+  "venueId": "venue-id"
+}
+```
+
+### POST `/v1/users/invite`
+**Description:** Invite new user (admin/manager only)  
+**Body:**
+```json
+{
+  "email": "newuser@example.com",
+  "fullName": "New User",
+  "role": "staff"
+}
+```
+
+**Response:**
+```json
+{
+  "message": "Invitation sent successfully",
+  "invitationId": "string",
+  "inviteToken": "dev-token-here"
+}
+```
+
+### POST `/v1/auth/accept-invitation`
+**Description:** Accept invitation and complete registration  
+**Body:**
+```json
+{
+  "token": "invitation-token",
+  "password": "securepassword123"
+}
+```
+
+---
+
+### VENUE MANAGEMENT ENDPOINTS (Protected)
+
+### POST `/v1/venues`
+**Description:** Create new venue (admin only)  
+**Body:**
+```json
+{
+  "name": "My Restaurant",
+  "address": "123 Main St, City",
+  "phone": "+355691234567",
+  "description": "Great Albanian food",
+  "settings": {
+    "currency": "EUR",
+    "orderingEnabled": true,
+    "estimatedPreparationTime": 15
+  }
+}
+```
+
+### GET `/v1/venues`
+**Description:** Get all venues (admin only)  
+**Query Parameters:**
+- `isActive` (boolean): Filter by active status
+- `limit` (number): Max results (default: 50)
+
+### GET `/v1/venues/:venueId`
+**Description:** Get single venue (protected)
+
+### PUT `/v1/venues/:venueId`
+**Description:** Update venue (admin/manager only)
+
+### GET `/v1/venues/:venueId/stats`
+**Description:** Get venue statistics (admin/manager only)  
+**Response:**
+```json
+{
+  "venue": {
+    "name": "My Restaurant",
+    "isActive": true
+  },
+  "orders": {
+    "total": 150,
+    "revenue": 2850.75,
+    "byStatus": {
+      "new": 5,
+      "preparing": 3,
+      "ready": 2,
+      "served": 140
+    }
+  },
+  "staff": {
+    "total": 4
+  },
+  "menu": {
+    "categories": 6,
+    "items": 25
+  },
+  "tables": {
+    "total": 12
+  }
+}
+```
+
+---
+
+### SELF-SERVICE REGISTRATION ENDPOINTS
+
+### POST `/v1/register/venue`
+**Description:** Self-service venue registration (public endpoint)  
+**Body:**
+```json
+{
+  "venueName": "My New Restaurant",
+  "address": "123 Main St, City",
+  "phone": "+355691234567",
+  "description": "Albanian cuisine",
+  "currency": "EUR",
+  "ownerName": "John Owner",
+  "ownerEmail": "owner@restaurant.com", 
+  "password": "securepassword123",
+  "tableCount": 10
+}
+```
+
+**Response:**
+```json
+{
+  "message": "Venue registered successfully",
+  "venueId": "string",
+  "venue": {
+    "id": "string",
+    "name": "My New Restaurant",
+    "slug": "my-new-restaurant",
+    "address": "123 Main St, City"
+  },
+  "user": {
+    "id": "string",
+    "email": "owner@restaurant.com",
+    "fullName": "John Owner",
+    "role": "manager",
+    "venueId": "string"
+  },
+  "credentials": {
+    "email": "owner@restaurant.com",
+    "tempPassword": "securepassword123"
+  },
+  "setup": {
+    "tablesCreated": 10,
+    "categoriesCreated": 4,
+    "qrCodeUrl": "https://order.skan.al/my-new-restaurant"
+  }
+}
+```
+
+### GET `/v1/register/status/:venueId`
+**Description:** Get venue registration status (protected)
+
+---
+
+### UTILITY ENDPOINTS
+
+### GET `/health`
+**Description:** Health check endpoint  
+**Response:**
+```json
+{
+  "status": "OK",
+  "timestamp": "2025-01-17T10:00:00.000Z",
+  "service": "skan-api",
+  "version": "1.0.0"
+}
+```
+
+### GET `/`
+**Description:** API documentation and info  
+**Response:**
+```json
+{
+  "message": "Skan.al API - QR Code Ordering System",
+  "version": "1.0.0",
+  "documentation": "https://api.skan.al/docs",
+  "endpoints": { ... },
+  "exampleUsage": { ... }
+}
+```
+
+---
+
+### ERROR RESPONSES
+
+All endpoints return consistent error responses:
+```json
+{
+  "error": "Error message description"
+}
+```
+
+**HTTP Status Codes:**
+- `200` - Success
+- `201` - Created
+- `400` - Bad Request (validation errors)
+- `401` - Unauthorized (invalid token)
+- `403` - Forbidden (insufficient permissions)
+- `404` - Not Found
+- `409` - Conflict (duplicate resource)
+- `500` - Internal Server Error
+
+---
+
+### DEMO CREDENTIALS
+
+**Demo Manager Login:**
+- Email: `manager_email1@gmail.com`
+- Password: `demo123`
+- Venue ID: `demo-venue-1`
+
+**Demo Venue:**
+- Slug: `demo-restaurant`
+- Name: `Demo Restaurant`
+
+---
+
+### NOTES
+
+1. **Authentication:** Most endpoints require Bearer token authentication
+2. **Permissions:** Three roles exist - `admin`, `manager`, `staff`
+3. **Venue Access:** Managers can only access their own venue data
+4. **Order Numbers:** Format is `SKN-YYYYMMDD-###` (e.g., `SKN-20250917-001`)
+5. **Timestamps:** All timestamps are in ISO 8601 format (UTC)
+6. **Currencies:** Default is EUR, but venues can configure other currencies
+7. **Languages:** Support for Albanian and English translations
+8. **QR URLs:** Format is `https://order.skan.al/{venue-slug}/{table-number}`
+
+### TESTING COMMANDS
+
+**Create User via API:**
+```bash
+# Located at /Users/mbp-ez/Desktop/AI Library/Apps/skan.al/create-user.cjs
+node create-user.cjs
+```
+
+**Test Login:**
+```bash
+curl -X POST https://api-mkazmlu7ta-ew.a.run.app/v1/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email": "test@skan.al", "password": "TestPassword123!"}'
+```
+
+---
+
+**Last Updated**: 2025-01-17
 **Version**: 1.0.0
 **Maintainer**: Development Team
