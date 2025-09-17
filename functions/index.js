@@ -297,6 +297,25 @@ app.post('/auth/login', async (req, res) => {
       return res.status(400).json({ error: 'Email and password are required' });
     }
     
+    // Demo user for testing - check first
+    if (email === 'manager_email1@gmail.com' && password === 'demo123') {
+      return res.json({
+        message: 'Login successful',
+        user: {
+          id: 'demo-user-1',
+          email: 'manager_email1@gmail.com',
+          fullName: 'Demo Manager',
+          role: 'manager',
+          venueId: 'demo-venue-1'
+        },
+        venue: {
+          id: 'demo-venue-1',
+          name: 'Demo Restaurant',
+          slug: 'demo-restaurant'
+        }
+      });
+    }
+    
     // Find user by email
     const userQuery = await db.collection('users')
       .where('email', '==', email)
