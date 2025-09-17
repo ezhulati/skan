@@ -22,9 +22,9 @@ export function MenuItem({ item }: MenuItemProps) {
   };
 
   return (
-    <div className="bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow p-6">
+    <div className="bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow p-4 sm:p-6">
       {item.imageUrl && (
-        <div className="w-full h-48 bg-gray-200 rounded-lg mb-4 overflow-hidden">
+        <div className="w-full aspect-w-16 aspect-h-9 bg-gray-200 rounded-lg mb-4 overflow-hidden">
           <img 
             src={item.imageUrl} 
             alt={item.name}

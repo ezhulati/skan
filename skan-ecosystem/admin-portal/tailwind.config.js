@@ -16,14 +16,10 @@ module.exports = {
       colors: {
         primary: {
           50: '#eff6ff',
-          100: '#dbeafe',
-          200: '#bfdbfe', 
-          300: '#93c5fd',
-          400: '#60a5fa',
+          100: '#dbeafe', 
           500: '#3b82f6',
           600: '#2563eb',
           700: '#1d4ed8',
-          800: '#1e40af',
           900: '#1e3a8a',
         },
         success: {
@@ -48,27 +44,16 @@ module.exports = {
           700: '#b91c1c',
         }
       },
-      fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
-      },
-      animation: {
-        'bounce-slow': 'bounce 2s infinite',
-        'pulse-slow': 'pulse 3s infinite',
-      },
       spacing: {
         '18': '4.5rem',
         '88': '22rem',
       },
       minHeight: {
-        'touch': '48px', // Minimum touch target for mobile ordering
+        'touch': '48px', // Minimum touch target
       },
       maxWidth: {
         'mobile': '480px',
         'tablet': '768px',
-      },
-      aspectRatio: {
-        '4/3': '4 / 3',
-        '16/9': '16 / 9',
       }
     },
   },

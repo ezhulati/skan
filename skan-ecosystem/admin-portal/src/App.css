@@ -435,6 +435,14 @@ body {
   margin-bottom: 20px;
 }
 
+/* Tablet-specific grid layout */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .orders-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+}
+
 /* Order Card */
 .order-card {
   background: white;
@@ -1224,8 +1232,11 @@ input:checked + .slider:before {
   }
   
   .modal {
-    padding: 24px;
-    margin: 20px;
+    width: 95%;
+    max-width: none;
+    margin: 10px;
+    padding: 20px;
+    border-radius: 16px;
   }
   
   .modal-actions, .form-actions {
