@@ -45,13 +45,13 @@ const MenuManagementPage: React.FC = () => {
     try {
       setError(null);
       const response = await fetch(`${baseUrl}/venue/beach-bar-durres/menu`);
-      if (!response.ok) throw new Error('Failed to load menu');
+      if (!response.ok) throw new Error('Dështoi të ngarkoj menunë');
       
       const data = await response.json();
       setCategories(data.menu || []);
     } catch (err) {
       console.error('Error loading menu:', err);
-      setError('Failed to load menu');
+      setError('Dështoi të ngarkoj menunë');
     } finally {
       setLoading(false);
     }
@@ -70,7 +70,7 @@ const MenuManagementPage: React.FC = () => {
         })
       });
 
-      if (!response.ok) throw new Error('Failed to add category');
+      if (!response.ok) throw new Error('Dështoi të shtoj kategorinë');
 
       await loadMenu();
       setNewCategoryName('');
@@ -78,7 +78,7 @@ const MenuManagementPage: React.FC = () => {
       setShowAddCategory(false);
     } catch (err) {
       console.error('Error adding category:', err);
-      alert('Failed to add category');
+      alert('Dështoi të shtoj kategorinë');
     }
   };
 
@@ -90,31 +90,31 @@ const MenuManagementPage: React.FC = () => {
         body: JSON.stringify({ name, nameEn })
       });
 
-      if (!response.ok) throw new Error('Failed to update category');
+      if (!response.ok) throw new Error('Dështoi të përditësoj kategorinë');
 
       await loadMenu();
       setEditingCategory(null);
     } catch (err) {
       console.error('Error updating category:', err);
-      alert('Failed to update category');
+      alert('Dështoi të përditësoj kategorinë');
     }
   };
 
   const deleteCategory = async (categoryId: string) => {
     // eslint-disable-next-line no-restricted-globals
-    if (!window.confirm('Are you sure you want to delete this category and all its items?')) return;
+    if (!window.confirm('A jeni të sigurt që doni të fshini këtë kategori dhe të gjitha artikujt e saj?')) return;
 
     try {
       const response = await fetch(`${baseUrl}/venue/${auth.user?.venueId}/categories/${categoryId}`, {
         method: 'DELETE'
       });
 
-      if (!response.ok) throw new Error('Failed to delete category');
+      if (!response.ok) throw new Error('Dështoi të fshij kategorinë');
 
       await loadMenu();
     } catch (err) {
       console.error('Error deleting category:', err);
-      alert('Failed to delete category');
+      alert('Dështoi të fshij kategorinë');
     }
   };
 
@@ -133,14 +133,14 @@ const MenuManagementPage: React.FC = () => {
         })
       });
 
-      if (!response.ok) throw new Error('Failed to add item');
+      if (!response.ok) throw new Error('Dështoi të shtoj artikullin');
 
       await loadMenu();
       setNewItem({ name: '', nameEn: '', price: '', isActive: true });
       setShowAddItem(null);
     } catch (err) {
       console.error('Error adding item:', err);
-      alert('Failed to add item');
+      alert('Dështoi të shtoj artikullin');
     }
   };
 
@@ -152,31 +152,31 @@ const MenuManagementPage: React.FC = () => {
         body: JSON.stringify(updates)
       });
 
-      if (!response.ok) throw new Error('Failed to update item');
+      if (!response.ok) throw new Error('Dështoi të përditësoj artikullin');
 
       await loadMenu();
       setEditingItem(null);
     } catch (err) {
       console.error('Error updating item:', err);
-      alert('Failed to update item');
+      alert('Dështoi të përditësoj artikullin');
     }
   };
 
   const deleteItem = async (categoryId: string, itemId: string) => {
     // eslint-disable-next-line no-restricted-globals
-    if (!window.confirm('Are you sure you want to delete this menu item?')) return;
+    if (!window.confirm('A jeni të sigurt që doni të fshini këtë artikull menuje?')) return;
 
     try {
       const response = await fetch(`${baseUrl}/venue/${auth.user?.venueId}/categories/${categoryId}/items/${itemId}`, {
         method: 'DELETE'
       });
 
-      if (!response.ok) throw new Error('Failed to delete item');
+      if (!response.ok) throw new Error('Dështoi të fshij artikullin');
 
       await loadMenu();
     } catch (err) {
       console.error('Error deleting item:', err);
-      alert('Failed to delete item');
+      alert('Dështoi të fshij artikullin');
     }
   };
 
@@ -188,7 +188,7 @@ const MenuManagementPage: React.FC = () => {
     return (
       <div className="loading-container">
         <div className="loading-spinner"></div>
-        <p>Loading menu...</p>
+        <p>Duke ngarkuar menunë...</p>
       </div>
     );
   }
@@ -197,8 +197,8 @@ const MenuManagementPage: React.FC = () => {
     <div className="menu-management-page">
       <header className="page-header">
         <div className="header-left">
-          <h1>Menu Management</h1>
-          <p>Manage your restaurant's menu categories and items</p>
+          <h1>Menaxhimi i Menusë</h1>
+          <p>Menaxhoni kategoritë dhe artikujt e menusë së restorantit tuaj</p>
         </div>
         <div className="header-right">
           <button 
@@ -209,7 +209,7 @@ const MenuManagementPage: React.FC = () => {
               <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"/>
               <path d="M12 8v8M8 12h8" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
             </svg>
-            Add Category
+            Shto Kategori
           </button>
         </div>
       </header>
@@ -234,25 +234,25 @@ const MenuManagementPage: React.FC = () => {
                   <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"/>
                   <path d="M12 8v8M8 12h8" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
                 </svg>
-                Add New Category
+                Shto Kategori të Re
               </h3>
             </div>
             <div className="form-group">
-              <label>Category Name</label>
+              <label>Emri i Kategorisë</label>
               <input
                 type="text"
                 value={newCategoryName}
                 onChange={(e) => setNewCategoryName(e.target.value)}
-                placeholder="e.g., Drinks"
+                placeholder="p.sh., Pije"
               />
             </div>
             <div className="form-group">
-              <label>Category Name (English)</label>
+              <label>Emri i Kategorisë (Anglisht)</label>
               <input
                 type="text"
                 value={newCategoryNameEn}
                 onChange={(e) => setNewCategoryNameEn(e.target.value)}
-                placeholder="e.g., Drinks"
+                placeholder="p.sh., Drinks"
               />
             </div>
             <div className="modal-actions">
@@ -261,7 +261,7 @@ const MenuManagementPage: React.FC = () => {
                   <line x1="18" y1="6" x2="6" y2="18" stroke="currentColor" strokeWidth="2"/>
                   <line x1="6" y1="6" x2="18" y2="18" stroke="currentColor" strokeWidth="2"/>
                 </svg>
-                Cancel
+                Anulo
               </button>
               <button onClick={addCategory} className="save-button">
                 <svg className="button-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -277,7 +277,7 @@ const MenuManagementPage: React.FC = () => {
       <div className="categories-container">
         {categories.length === 0 ? (
           <div className="empty-state">
-            <p>No menu categories yet. Add your first category to get started!</p>
+            <p>Nuk ka kategori menuje ende. Shtoni kategorinë tuaj të parë për të filluar!</p>
           </div>
         ) : (
           categories.map((category) => (
@@ -303,7 +303,7 @@ const MenuManagementPage: React.FC = () => {
                         <svg className="button-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                           <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                         </svg>
-                        Edit
+                        Ndrysho
                       </button>
                       <button 
                         onClick={() => setShowAddItem(category.id)}
@@ -313,7 +313,7 @@ const MenuManagementPage: React.FC = () => {
                           <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"/>
                           <path d="M12 8v8M8 12h8" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
                         </svg>
-                        Add Item
+                        Shto Artikull
                       </button>
                       <button 
                         onClick={() => deleteCategory(category.id)}
@@ -325,7 +325,7 @@ const MenuManagementPage: React.FC = () => {
                           <line x1="10" y1="11" x2="10" y2="17" stroke="currentColor" strokeWidth="2"/>
                           <line x1="14" y1="11" x2="14" y2="17" stroke="currentColor" strokeWidth="2"/>
                         </svg>
-                        Delete
+                        Fshij
                       </button>
                     </div>
                   </>
@@ -334,24 +334,24 @@ const MenuManagementPage: React.FC = () => {
 
               {showAddItem === category.id && (
                 <div className="add-item-form">
-                  <h4>Add New Item</h4>
+                  <h4>Shto Artikull të Ri</h4>
                   <div className="item-form-grid">
                     <input
                       type="text"
-                      placeholder="Item name"
+                      placeholder="Emri i artikullit"
                       value={newItem.name}
                       onChange={(e) => setNewItem({...newItem, name: e.target.value})}
                     />
                     <input
                       type="text"
-                      placeholder="Item name (English)"
+                      placeholder="Emri i artikullit (Anglisht)"
                       value={newItem.nameEn}
                       onChange={(e) => setNewItem({...newItem, nameEn: e.target.value})}
                     />
                     <input
                       type="number"
                       step="0.01"
-                      placeholder="Price"
+                      placeholder="Çmimi"
                       value={newItem.price}
                       onChange={(e) => setNewItem({...newItem, price: e.target.value})}
                     />
@@ -362,7 +362,7 @@ const MenuManagementPage: React.FC = () => {
                           checked={newItem.isActive}
                           onChange={(e) => setNewItem({...newItem, isActive: e.target.checked})}
                         />
-                        Active
+                        Aktiv
                       </label>
                     </div>
                   </div>
@@ -372,13 +372,13 @@ const MenuManagementPage: React.FC = () => {
                         <line x1="18" y1="6" x2="6" y2="18" stroke="currentColor" strokeWidth="2"/>
                         <line x1="6" y1="6" x2="18" y2="18" stroke="currentColor" strokeWidth="2"/>
                       </svg>
-                      Cancel
+                      Anulo
                     </button>
                     <button onClick={() => addItem(category.id)} className="save-button">
                       <svg className="button-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M20 6L9 17l-5-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                       </svg>
-                      Add Item
+                      Shto Artikullin
                     </button>
                   </div>
                 </div>
@@ -386,7 +386,7 @@ const MenuManagementPage: React.FC = () => {
 
               <div className="items-list">
                 {category.items.length === 0 ? (
-                  <p className="no-items">No items in this category yet.</p>
+                  <p className="no-items">Nuk ka artikuj në këtë kategori ende.</p>
                 ) : (
                   category.items.map((item) => (
                     <div key={item.id} className={`menu-item-card ${!item.isActive ? 'inactive' : ''}`}>
@@ -413,7 +413,7 @@ const MenuManagementPage: React.FC = () => {
                               <span className="slider"></span>
                             </label>
                             <span className={`status-text ${item.isActive ? 'active' : 'inactive'}`}>
-                              {item.isActive ? 'Active' : 'Inactive'}
+                              {item.isActive ? 'Aktiv' : 'Joaktiv'}
                             </span>
                           </div>
                           <div className="item-actions">
@@ -424,7 +424,7 @@ const MenuManagementPage: React.FC = () => {
                               <svg className="button-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                               </svg>
-                              Edit
+                              Ndrysho
                             </button>
                             <button 
                               onClick={() => deleteItem(category.id, item.id)}
@@ -436,7 +436,7 @@ const MenuManagementPage: React.FC = () => {
                                 <line x1="10" y1="11" x2="10" y2="17" stroke="currentColor" strokeWidth="2"/>
                                 <line x1="14" y1="11" x2="14" y2="17" stroke="currentColor" strokeWidth="2"/>
                               </svg>
-                              Delete
+                              Fshij
                             </button>
                           </div>
                         </>
@@ -469,7 +469,7 @@ const CategoryEditor: React.FC<{
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          placeholder="Category name"
+          placeholder="Emri i kategorisë"
         />
         <input
           type="text"
