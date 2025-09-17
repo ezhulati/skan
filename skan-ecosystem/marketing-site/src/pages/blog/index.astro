@@ -77,14 +77,14 @@ const blogPosts = [
   }
 ];
 
-const title = "Blog SKAN.AL - Këshilla për Restorantet Shqiptare";
+const title = "Depërtime dhe Mendime - SKAN.AL";
 const description = "Artikuj ekspertësh për sisteme QR, modernizim restorantesh dhe strategji biznesi që rrisin fitimet e restoranteve shqiptare.";
 ---
 
 <BaseLayout 
   title={title}
   description={description}
-  ogTitle="Blog SKAN.AL - Ekspertë në Teknologji Restorantesh"
+  ogTitle="Depërtime dhe Mendime - Ekspertë në Teknologji Restorantesh"
   ogDescription={description}
   ogImage="https://skan.al/skan-al-restaurant.jpg"
 >
@@ -101,8 +101,8 @@ const description = "Artikuj ekspertësh për sisteme QR, modernizim restorantes
             <span class="text-gray-900">Blog</span>
           </div>
           
-          <h1 class="text-4xl sm:text-5xl font-bold text-gray-900 mb-4" data-sq="Blog SKAN.AL" data-en="SKAN.AL Blog">
-            Blog SKAN.AL
+          <h1 class="text-4xl sm:text-5xl font-bold text-gray-900 mb-4" data-sq="Depërtime dhe Mendime" data-en="Insights and Thoughts">
+            Depërtime dhe Mendime
           </h1>
           
           <p class="text-xl text-gray-600 max-w-3xl" data-sq="Këshilla ekspertësh, strategji biznesi dhe udhëzime praktike për modernizimin e restoranteve shqiptare me teknologji QR." data-en="Expert advice, business strategies and practical guides for modernizing Albanian restaurants with QR technology.">
@@ -265,32 +265,39 @@ const description = "Artikuj ekspertësh për sisteme QR, modernizim restorantes
       </div>
     </div>
 
-    <!-- Newsletter Subscription CTA -->
+    <!-- Get Started CTA -->
     <div class="bg-blue-600">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div class="text-center">
-          <h2 class="text-3xl font-bold text-white mb-4" data-sq="Merrni Këshilla Ekskluzive" data-en="Get Exclusive Tips">
-            Merrni Këshilla Ekskluzive
+          <h2 class="text-3xl font-bold text-white mb-4" data-sq="Gati të Transformoni Restorantin Tuaj?" data-en="Ready to Transform Your Restaurant?">
+            Gati të Transformoni Restorantin Tuaj?
           </h2>
-          <p class="text-xl text-blue-100 mb-8 max-w-2xl mx-auto" data-sq="Regjistrohuni për të marrë strategji të reja, këshilla praktike dhe risi në teknologjinë e restoranteve direkt në email." data-en="Subscribe to receive new strategies, practical tips and restaurant technology innovations directly in your email.">
-            Regjistrohuni për të marrë strategji të reja, këshilla praktike dhe risi në teknologjinë e restoranteve direkt në email.
+          <p class="text-xl text-blue-100 mb-8 max-w-2xl mx-auto" data-sq="Filloni tani me SKAN.AL dhe zbuloni si sistemi ynë QR mund të rrisë efikasitetin dhe fitimet e restorantit tuaj." data-en="Start now with SKAN.AL and discover how our QR system can increase your restaurant's efficiency and profits.">
+            Filloni tani me SKAN.AL dhe zbuloni si sistemi ynë QR mund të rrisë efikasitetin dhe fitimet e restorantit tuaj.
           </p>
           
-          <div class="max-w-md mx-auto">
-            <div class="flex">
-              <input 
-                type="email" 
-                placeholder="Adresa juaj e email-it"
-                class="flex-1 px-4 py-3 rounded-l-lg border-0 focus:ring-2 focus:ring-blue-300 focus:outline-none"
-              />
-              <button class="bg-blue-700 hover:bg-blue-800 text-white px-6 py-3 rounded-r-lg font-medium transition-colors" data-sq="Regjistrohu" data-en="Subscribe">
-                Regjistrohu
-              </button>
-            </div>
-            <p class="text-blue-200 text-sm mt-2" data-sq="Pa spam, vetëm përmbajtje me vlerë për biznesin tuaj." data-en="No spam, only valuable content for your business.">
-              Pa spam, vetëm përmbajtje me vlerë për biznesin tuaj.
-            </p>
+          <div class="flex flex-col sm:flex-row items-center justify-center gap-4 max-w-md mx-auto">
+            <a 
+              href="/register" 
+              class="w-full sm:w-auto bg-white text-blue-600 hover:bg-gray-50 px-8 py-4 rounded-lg font-semibold text-lg transition-colors shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-200"
+              data-sq="🚀 Filloni Falas Sot" 
+              data-en="🚀 Start Free Today"
+            >
+              🚀 Filloni Falas Sot
+            </a>
+            <a 
+              href="/demo" 
+              class="w-full sm:w-auto border-2 border-white text-white hover:bg-white hover:text-blue-600 px-8 py-4 rounded-lg font-semibold text-lg transition-colors"
+              data-sq="Shikoni Demo" 
+              data-en="View Demo"
+            >
+              Shikoni Demo
+            </a>
           </div>
+          
+          <p class="text-blue-200 text-sm mt-4" data-sq="Pa kosto fillestare • Konfigurim 2 minutësh • Mbështetje 24/7" data-en="No setup fees • 2-minute setup • 24/7 support">
+            Pa kosto fillestare • Konfigurim 2 minutësh • Mbështetje 24/7
+          </p>
         </div>
       </div>
     </div>
