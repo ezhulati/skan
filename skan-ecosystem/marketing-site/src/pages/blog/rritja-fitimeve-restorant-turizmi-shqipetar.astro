@@ -1,0 +1,552 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import LanguageSwitcher from '../../components/LanguageSwitcher.astro';
+
+const title = "Si të Rrisni Fitimet e Restorantit gjatë Sezonit Turistik Shqiptar";
+const description = "Strategji të provuara për të maksimizuar fitimet e restorantit tuaj gjatë sezonit të verës në bregdetin shqiptar. Nga Durrësi në Sarandë, mësoni si të tërheqni më shumë turistë dhe të rrisni të ardhurat deri në 150%.";
+const publishDate = "2025-01-12";
+const author = "Alban Krasniqi";
+---
+
+<BaseLayout 
+  title={title}
+  description={description}
+  ogTitle="Strategji për Rritjen e Fitimeve gjatë Sezonit Turistik | SKAN.AL"
+  ogDescription={description}
+>
+  <article class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Header -->
+    <header class="mb-8">
+      <div class="flex justify-between items-start mb-6">
+        <div class="flex items-center space-x-2 text-sm text-gray-600">
+          <a href="/" class="hover:text-blue-600 transition-colors">Kryefaqja</a>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+          <a href="/blog" class="hover:text-blue-600 transition-colors">Blog</a>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+          <span class="text-gray-900">Artikull</span>
+        </div>
+        <LanguageSwitcher />
+      </div>
+
+      <div class="mb-6">
+        <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium mb-4 inline-block">
+          Biznes Restorantesh
+        </span>
+        
+        <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 leading-tight" 
+            data-sq="Si të Rrisni Fitimet e Restorantit gjatë Sezonit Turistik Shqiptar"
+            data-en="How to Increase Restaurant Profits During Albanian Tourism Season">
+          Si të Rrisni Fitimet e Restorantit gjatë Sezonit Turistik Shqiptar
+        </h1>
+        
+        <p class="text-xl text-gray-600 mb-6 leading-relaxed"
+           data-sq="Strategji të provuara për të maksimizuar fitimet e restorantit tuaj gjatë sezonit të verës në bregdetin shqiptar. Nga Durrësi në Sarandë, mësoni si të tërheqni më shumë turistë dhe të rrisni të ardhurat deri në 150%."
+           data-en="Proven strategies to maximize your restaurant profits during summer season on the Albanian coast. From Durrës to Sarandë, learn how to attract more tourists and increase revenue by up to 150%.">
+          Strategji të provuara për të maksimizuar fitimet e restorantit tuaj gjatë sezonit të verës në bregdetin shqiptar. Nga Durrësi në Sarandë, mësoni si të tërheqni më shumë turistë dhe të rrisni të ardhurat deri në 150%.
+        </p>
+
+        <div class="flex flex-wrap items-center text-sm text-gray-500 space-x-6">
+          <div class="flex items-center space-x-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+            </svg>
+            <span>nga {author}</span>
+          </div>
+          <div class="flex items-center space-x-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+            </svg>
+            <time datetime={publishDate}>12 Janar 2025</time>
+          </div>
+          <div class="flex items-center space-x-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <span>6 minuta lexim</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Featured Image -->
+      <div class="aspect-video bg-gradient-to-r from-green-500 to-blue-500 rounded-xl relative overflow-hidden mb-8">
+        <div class="absolute inset-0 bg-black bg-opacity-20"></div>
+        <div class="absolute inset-0 flex items-center justify-center">
+          <div class="text-center text-white">
+            <svg class="w-16 h-16 mx-auto mb-4 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+            </svg>
+            <h2 class="text-2xl font-bold">Rritja e Fitimeve</h2>
+            <p class="text-lg opacity-90">Strategji për Sezonin Turistik</p>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Content -->
+    <div class="prose prose-lg max-w-none">
+      <!-- Introduction -->
+      <div class="bg-yellow-50 border-l-4 border-yellow-500 p-6 mb-8">
+        <div class="flex">
+          <div class="flex-shrink-0">
+            <svg class="w-5 h-5 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+            </svg>
+          </div>
+          <div class="ml-3">
+            <h3 class="text-lg font-medium text-yellow-800" data-sq="Statistika Kyçe" data-en="Key Statistics">
+              Statistika Kyçe
+            </h3>
+            <div class="mt-2 text-yellow-700" data-sq="Shqipëria pritet të presë mbi 10 milionë turistë në 2025, me 85% të tyre që vizitojnë bregdetin. Restorantet që aplikojnë strategji të duhura mund të rrisin fitimet deri në 150% gjatë sezonit." data-en="Albania is expected to host over 10 million tourists in 2025, with 85% of them visiting the coast. Restaurants that apply right strategies can increase profits by up to 150% during the season.">
+              <p>Shqipëria pritet të presë mbi 10 milionë turistë në 2025, me 85% të tyre që vizitojnë bregdetin. Restorantet që aplikojnë strategji të duhura mund të rrisin fitimet deri në 150% gjatë sezonit.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div data-sq="Sezoni turistik në Shqipëri është një mundësi e artë që vjen vetëm një herë në vit. Nga maji deri në shtator, bregdeti ynë i mrekullueshëm mbushet me mijëra turistë nga mbarë Evropa që kërkojnë ushqim të mirë, shërbim cilësor dhe përvojë autentike shqiptare." data-en="Tourist season in Albania is a golden opportunity that comes only once a year. From May to September, our wonderful coast fills with thousands of tourists from all over Europe looking for good food, quality service and authentic Albanian experience.">
+        <p>Sezoni turistik në Shqipëri është një mundësi e artë që vjen vetëm një herë në vit. Nga maji deri në shtator, bregdeti ynë i mrekullueshëm mbushet me mijëra turistë nga mbarë Evropa që kërkojnë ushqim të mirë, shërbim cilësor dhe përvojë autentike shqiptare.</p>
+      </div>
+
+      <div data-sq="Por jo të gjithë restorantet arrijnë të përfitojnë maksimalisht nga kjo periudhë. Shumë prej tyre humbin mundësi të mëdha për shkak të mungesës së strategjive të duhura, teknologjisë së vjetëruar apo menaxhimit jo efikas." data-en="But not all restaurants manage to benefit maximally from this period. Many of them miss great opportunities due to lack of proper strategies, outdated technology or inefficient management.">
+        <p>Por jo të gjithë restorantet arrijnë të përfitojnë maksimalisht nga kjo periudhë. Shumë prej tyre humbin mundësi të mëdha për shkak të mungesës së strategjive të duhura, teknologjisë së vjetëruar apo menaxhimit jo efikas.</p>
+      </div>
+
+      <!-- Tourism Statistics -->
+      <h2 data-sq="Panorama e Turizmit Shqiptar 2025" data-en="Albanian Tourism Landscape 2025">
+        Panorama e Turizmit Shqiptar 2025
+      </h2>
+
+      <div class="grid md:grid-cols-3 gap-6 my-8">
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 text-center">
+          <div class="text-3xl font-bold text-blue-600 mb-2">10M+</div>
+          <div class="text-sm text-blue-800" data-sq="Turistë të pritshëm" data-en="Expected tourists">Turistë të pritshëm</div>
+        </div>
+        
+        <div class="bg-green-50 border border-green-200 rounded-lg p-4 text-center">
+          <div class="text-3xl font-bold text-green-600 mb-2">€85</div>
+          <div class="text-sm text-green-800" data-sq="Shpenzim mesatar ditor" data-en="Average daily spending">Shpenzim mesatar ditor</div>
+        </div>
+        
+        <div class="bg-purple-50 border border-purple-200 rounded-lg p-4 text-center">
+          <div class="text-3xl font-bold text-purple-600 mb-2">6.2</div>
+          <div class="text-sm text-purple-800" data-sq="Ditë qëndrim mesatar" data-en="Average stay days">Ditë qëndrim mesatar</div>
+        </div>
+      </div>
+
+      <!-- Section 1: Understanding Your Market -->
+      <h2 data-sq="Kuptoni Tregun Tuaj: Cilët janë Turistët?" data-en="Understand Your Market: Who are the Tourists?">
+        Kuptoni Tregun Tuaj: Cilët janë Turistët?
+      </h2>
+
+      <h3 data-sq="Segmentimi i Turistëve sipas Kombësive" data-en="Tourist Segmentation by Nationality">
+        Segmentimi i Turistëve sipas Kombësive
+      </h3>
+
+      <div class="overflow-x-auto my-8">
+        <table class="min-w-full bg-white border border-gray-200 rounded-lg">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider" data-sq="Kombësia" data-en="Nationality">Kombësia</th>
+              <th class="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider" data-sq="Përqindje" data-en="Percentage">Përqindje</th>
+              <th class="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider" data-sq="Shpenzim Mesatar" data-en="Average Spending">Shpenzim Mesatar</th>
+              <th class="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider" data-sq="Preferencat" data-en="Preferences">Preferencat</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-200">
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Kosovarë</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">35%</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">€60/ditë</td>
+              <td class="px-6 py-4 text-sm text-gray-500">Kuzhinë tradicionale, çmime të arsyeshme</td>
+            </tr>
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Italianë</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">20%</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">€95/ditë</td>
+              <td class="px-6 py-4 text-sm text-gray-500">Cilësi të lartë, peshk i freskët</td>
+            </tr>
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Gjermanë</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">15%</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">€110/ditë</td>
+              <td class="px-6 py-4 text-sm text-gray-500">Eficencë, menu në gjermanisht</td>
+            </tr>
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Britanikë</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">12%</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">€85/ditë</td>
+              <td class="px-6 py-4 text-sm text-gray-500">Shërbim i shpejtë, pagesa me kartë</td>
+            </tr>
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Të tjerë</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">18%</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">€75/ditë</td>
+              <td class="px-6 py-4 text-sm text-gray-500">Të ndryshme</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Section 2: Pricing Strategies -->
+      <h2 data-sq="Strategji Çmimi për Maksimizimin e Fitimeve" data-en="Pricing Strategies for Profit Maximization">
+        Strategji Çmimi për Maksimizimin e Fitimeve
+      </h2>
+
+      <h3 data-sq="Çmimi Dinamik sipas Sezonit" data-en="Dynamic Pricing by Season">
+        Çmimi Dinamik sipas Sezonit
+      </h3>
+
+      <div data-sq="Një nga gabimet më të mëdha që bëjnë restorantet shqiptare është mbajtja e çmimeve të njëjta gjatë gjithë vitit. Turistët që vijnë në Shqipëri gjatë verës janë të gatshëm të paguajnë çmime më të larta për përvojë cilësore." data-en="One of the biggest mistakes Albanian restaurants make is keeping the same prices throughout the year. Tourists who come to Albania during summer are willing to pay higher prices for quality experience.">
+        <p>Një nga gabimet më të mëdha që bëjnë restorantet shqiptare është mbajtja e çmimeve të njëjta gjatë gjithë vitit. Turistët që vijnë në Shqipëri gjatë verës janë të gatshëm të paguajnë çmime më të larta për përvojë cilësore.</p>
+      </div>
+
+      <!-- Pricing Strategy Chart -->
+      <div class="bg-gray-50 rounded-lg p-6 my-8">
+        <h4 class="text-lg font-semibold mb-6 text-center" data-sq="Strategjia e Çmimit Sezonal" data-en="Seasonal Pricing Strategy">
+          Strategjia e Çmimit Sezonal
+        </h4>
+        
+        <div class="grid md:grid-cols-4 gap-4">
+          <div class="text-center">
+            <div class="bg-blue-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-3">
+              <span class="text-blue-800 font-bold">Pre</span>
+            </div>
+            <h5 class="font-semibold mb-2" data-sq="Para-Sezon" data-en="Pre-Season">Para-Sezon</h5>
+            <p class="text-sm text-gray-600 mb-2">Maj - 15 Qershor</p>
+            <p class="font-semibold text-green-600" data-sq="Çmim bazë + 15%" data-en="Base price + 15%">Çmim bazë + 15%</p>
+          </div>
+          
+          <div class="text-center">
+            <div class="bg-red-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-3">
+              <span class="text-red-800 font-bold">Peak</span>
+            </div>
+            <h5 class="font-semibold mb-2" data-sq="Pik-Sezon" data-en="Peak Season">Pik-Sezon</h5>
+            <p class="text-sm text-gray-600 mb-2">16 Qershor - 31 Gusht</p>
+            <p class="font-semibold text-red-600" data-sq="Çmim bazë + 40%" data-en="Base price + 40%">Çmim bazë + 40%</p>
+          </div>
+          
+          <div class="text-center">
+            <div class="bg-yellow-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-3">
+              <span class="text-yellow-800 font-bold">Post</span>
+            </div>
+            <h5 class="font-semibold mb-2" data-sq="Pas-Sezon" data-en="Post-Season">Pas-Sezon</h5>
+            <p class="text-sm text-gray-600 mb-2">1-30 Shtator</p>
+            <p class="font-semibold text-yellow-600" data-sq="Çmim bazë + 20%" data-en="Base price + 20%">Çmim bazë + 20%</p>
+          </div>
+          
+          <div class="text-center">
+            <div class="bg-gray-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-3">
+              <span class="text-gray-800 font-bold">Off</span>
+            </div>
+            <h5 class="font-semibold mb-2" data-sq="Jashtë-Sezon" data-en="Off-Season">Jashtë-Sezon</h5>
+            <p class="text-sm text-gray-600 mb-2">Tetor - Prill</p>
+            <p class="font-semibold text-gray-600" data-sq="Çmim bazë" data-en="Base price">Çmim bazë</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 3: Menu Optimization -->
+      <h2 data-sq="Optimizimi i Menusë për Turistët" data-en="Menu Optimization for Tourists">
+        Optimizimi i Menusë për Turistët
+      </h2>
+
+      <h3 data-sq="Pjatat që Turistët Kërkojnë Më Shumë" data-en="Dishes Tourists Seek Most">
+        Pjatat që Turistët Kërkojnë Më Shumë
+      </h3>
+
+      <div class="grid md:grid-cols-2 gap-8 my-8">
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-6">
+          <h4 class="text-lg font-semibold text-blue-800 mb-4" data-sq="Top 5 Kërkesat e Turistëve" data-en="Top 5 Tourist Requests">
+            Top 5 Kërkesat e Turistëve
+          </h4>
+          <ol class="space-y-3 text-blue-700">
+            <li class="flex items-center">
+              <span class="bg-blue-200 text-blue-800 rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3">1</span>
+              <span data-sq="Peshk i freskët dhe fruta deti" data-en="Fresh fish and seafood">Peshk i freskët dhe fruta deti</span>
+            </li>
+            <li class="flex items-center">
+              <span class="bg-blue-200 text-blue-800 rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3">2</span>
+              <span data-sq="Byrek dhe ushqime tradicionale" data-en="Byrek and traditional foods">Byrek dhe ushqime tradicionale</span>
+            </li>
+            <li class="flex items-center">
+              <span class="bg-blue-200 text-blue-800 rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3">3</span>
+              <span data-sq="Sallatat e freskëta mediterrane" data-en="Fresh Mediterranean salads">Sallatat e freskëta mediterrane</span>
+            </li>
+            <li class="flex items-center">
+              <span class="bg-blue-200 text-blue-800 rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3">4</span>
+              <span data-sq="Mish grili dhe tavë" data-en="Grilled meat and tavë">Mish grili dhe tavë</span>
+            </li>
+            <li class="flex items-center">
+              <span class="bg-blue-200 text-blue-800 rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3">5</span>
+              <span data-sq="Birrë dhe raki lokalë" data-en="Local beer and raki">Birrë dhe raki lokalë</span>
+            </li>
+          </ol>
+        </div>
+
+        <div class="bg-green-50 border border-green-200 rounded-lg p-6">
+          <h4 class="text-lg font-semibold text-green-800 mb-4" data-sq="Strategji për Rritjen e Fitimeve" data-en="Profit Increase Strategies">
+            Strategji për Rritjen e Fitimeve
+          </h4>
+          <ul class="space-y-3 text-green-700">
+            <li class="flex items-start">
+              <svg class="w-5 h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+              </svg>
+              <span data-sq="Krijoni 'menu turistik' me çmime speciale" data-en="Create 'tourist menu' with special prices">Krijoni "menu turistik" me çmime speciale</span>
+            </li>
+            <li class="flex items-start">
+              <svg class="w-5 h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+              </svg>
+              <span data-sq="Shtoni përshkrime detajuara me foto" data-en="Add detailed descriptions with photos">Shtoni përshkrime detajuara me foto</span>
+            </li>
+            <li class="flex items-start">
+              <svg class="w-5 h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+              </svg>
+              <span data-sq="Përdorni teknologji QR për porosi të shpejta" data-en="Use QR technology for quick orders">Përdorni teknologji QR për porosi të shpejta</span>
+            </li>
+            <li class="flex items-start">
+              <svg class="w-5 h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+              </svg>
+              <span data-sq="Ofronei 'taste of Albania' experience" data-en="Offer 'taste of Albania' experience">Ofroni "taste of Albania" experience</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Section 4: Technology & Efficiency -->
+      <h2 data-sq="Teknologjia: Çelësi i Efikasitetit" data-en="Technology: The Key to Efficiency">
+        Teknologjia: Çelësi i Efikasitetit
+      </h2>
+
+      <div data-sq="Gjatë sezonit turistik, çdo minutë e humbur është fitim i humbur. Restorantet që përdorin teknologji moderne arrijnë të shërbejnë 3x më shumë klientë në të njëjtën kohë." data-en="During tourist season, every minute lost is profit lost. Restaurants using modern technology manage to serve 3x more customers in the same time.">
+        <p>Gjatë sezonit turistik, çdo minutë e humbur është fitim i humbur. Restorantet që përdorin teknologji moderne arrijnë të shërbejnë 3x më shumë klientë në të njëjtën kohë.</p>
+      </div>
+
+      <!-- Technology Benefits -->
+      <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-6 my-8">
+        <h3 class="text-xl font-semibold mb-6 text-center" data-sq="Përfitimet e Teknologjisë QR gjatë Sezonit" data-en="Benefits of QR Technology During Season">
+          Përfitimet e Teknologjisë QR gjatë Sezonit
+        </h3>
+        
+        <div class="grid md:grid-cols-2 gap-6">
+          <div class="space-y-4">
+            <div class="flex items-start">
+              <div class="bg-green-500 text-white rounded-full w-8 h-8 flex items-center justify-center mr-3 flex-shrink-0 mt-1">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                </svg>
+              </div>
+              <div>
+                <h4 class="font-semibold" data-sq="Eliminim i barrierat gjuhësore" data-en="Elimination of language barriers">Eliminim i barrierat gjuhësore</h4>
+                <p class="text-sm text-gray-600" data-sq="Menuja shfaqet në gjuhën e klientit automatikisht" data-en="Menu displays in customer's language automatically">Menuja shfaqet në gjuhën e klientit automatikisht</p>
+              </div>
+            </div>
+            
+            <div class="flex items-start">
+              <div class="bg-green-500 text-white rounded-full w-8 h-8 flex items-center justify-center mr-3 flex-shrink-0 mt-1">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                </svg>
+              </div>
+              <div>
+                <h4 class="font-semibold" data-sq="Reduktim 60% i kohës së porosisë" data-en="60% reduction in ordering time">Reduktim 60% i kohës së porosisë</h4>
+                <p class="text-sm text-gray-600" data-sq="Klientët porosisin direkt pa pritur kamarierët" data-en="Customers order directly without waiting for waiters">Klientët porosisin direkt pa pritur kamarierët</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="space-y-4">
+            <div class="flex items-start">
+              <div class="bg-green-500 text-white rounded-full w-8 h-8 flex items-center justify-center mr-3 flex-shrink-0 mt-1">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                </svg>
+              </div>
+              <div>
+                <h4 class="font-semibold" data-sq="Rritje 40% e vëllimit të porosive" data-en="40% increase in order volume">Rritje 40% e vëllimit të porosive</h4>
+                <p class="text-sm text-gray-600" data-sq="Më shumë tavolina shërbyhen njëkohësisht" data-en="More tables served simultaneously">Më shumë tavolina shërbyhen njëkohësisht</p>
+              </div>
+            </div>
+            
+            <div class="flex items-start">
+              <div class="bg-green-500 text-white rounded-full w-8 h-8 flex items-center justify-center mr-3 flex-shrink-0 mt-1">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                </svg>
+              </div>
+              <div>
+                <h4 class="font-semibold" data-sq="Upselling automatik" data-en="Automatic upselling">Upselling automatik</h4>
+                <p class="text-sm text-gray-600" data-sq="Sistemi sugjeron pjata shtesë dhe pije" data-en="System suggests additional dishes and drinks">Sistemi sugjeron pjata shtesë dhe pije</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Success Story -->
+      <div class="bg-gradient-to-r from-green-50 to-blue-50 rounded-lg p-6 my-8">
+        <h3 class="text-xl font-semibold mb-4" data-sq="Studim Rasti: Restorant 'Bregu i Artë' - Vlorë" data-en="Case Study: Restaurant 'Golden Shore' - Vlorë">
+          Studim Rasti: Restorant "Bregu i Artë" - Vlorë
+        </h3>
+        <div class="grid md:grid-cols-2 gap-6">
+          <div>
+            <h4 class="font-semibold mb-2 text-red-700" data-sq="Para Implementimit" data-en="Before Implementation">Para Implementimit</h4>
+            <ul class="space-y-1 text-sm text-red-600">
+              <li>• 12 tavolina aktive mesatarisht</li>
+              <li>• €2,400 të ardhura ditore</li>
+              <li>• 25 minuta kohë pritje mesatare</li>
+              <li>• Probleme komunikimi me turistët</li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="font-semibold mb-2 text-green-700" data-sq="Pas Implementimit" data-en="After Implementation">Pas Implementimit</h4>
+            <ul class="space-y-1 text-sm text-green-600">
+              <li>• 20 tavolina aktive mesatarisht</li>
+              <li>• €4,200 të ardhura ditore</li>
+              <li>• 8 minuta kohë pritje mesatare</li>
+              <li>• Komunikim i lehtë me 6 gjuhë</li>
+            </ul>
+          </div>
+        </div>
+        <div class="mt-4 p-4 bg-white rounded border-l-4 border-green-500">
+          <div class="text-lg font-bold text-green-800" data-sq="Rezultati: +75% rritje e të ardhurave në 2 muaj" data-en="Result: +75% revenue increase in 2 months">
+            Rezultati: +75% rritje e të ardhurave në 2 muaj
+          </div>
+          <p class="text-sm text-gray-600 mt-1">- Agron Koci, Pronar i Restorantit</p>
+        </div>
+      </div>
+
+      <!-- ROI Calculator -->
+      <h2 data-sq="Llogaritja e Fitimit tuaj Potencial" data-en="Calculating Your Potential Profit">
+        Llogaritja e Fitimit tuaj Potencial
+      </h2>
+
+      <div class="bg-blue-50 border border-blue-200 rounded-lg p-6 my-8">
+        <h3 class="text-lg font-semibold mb-4 text-center" data-sq="Kalkulatori i Fitimit Sezonal" data-en="Seasonal Profit Calculator">
+          Kalkulatori i Fitimit Sezonal
+        </h3>
+        
+        <div class="grid md:grid-cols-3 gap-6">
+          <div class="text-center">
+            <div class="bg-white rounded-lg p-4 shadow-sm">
+              <h4 class="font-semibold mb-2" data-sq="Restorant i Vogël" data-en="Small Restaurant">Restorant i Vogël</h4>
+              <p class="text-sm text-gray-600 mb-3">10-15 tavolina</p>
+              <div class="text-2xl font-bold text-blue-600 mb-2">€18,000</div>
+              <p class="text-sm" data-sq="Fitim shtesë në sezon" data-en="Additional profit in season">Fitim shtesë në sezon</p>
+            </div>
+          </div>
+          
+          <div class="text-center">
+            <div class="bg-white rounded-lg p-4 shadow-sm border-2 border-green-500">
+              <h4 class="font-semibold mb-2" data-sq="Restorant Mesatar" data-en="Medium Restaurant">Restorant Mesatar</h4>
+              <p class="text-sm text-gray-600 mb-3">20-30 tavolina</p>
+              <div class="text-2xl font-bold text-green-600 mb-2">€45,000</div>
+              <p class="text-sm" data-sq="Fitim shtesë në sezon" data-en="Additional profit in season">Fitim shtesë në sezon</p>
+              <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-medium">Rekomanduar</span>
+            </div>
+          </div>
+          
+          <div class="text-center">
+            <div class="bg-white rounded-lg p-4 shadow-sm">
+              <h4 class="font-semibold mb-2" data-sq="Restorant i Madh" data-en="Large Restaurant">Restorant i Madh</h4>
+              <p class="text-sm text-gray-600 mb-3">40+ tavolina</p>
+              <div class="text-2xl font-bold text-purple-600 mb-2">€85,000</div>
+              <p class="text-sm" data-sq="Fitim shtesë në sezon" data-en="Additional profit in season">Fitim shtesë në sezon</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="mt-6 text-center">
+          <p class="text-sm text-blue-700" data-sq="*Bazuar në të dhënat nga 150+ restorantet partnere gjatë sezonit 2024" data-en="*Based on data from 150+ partner restaurants during 2024 season">
+            *Bazuar në të dhënat nga 150+ restorantet partnere gjatë sezonit 2024
+          </p>
+        </div>
+      </div>
+
+      <!-- Conclusion -->
+      <h2 data-sq="Përfundimi: Veproni Tani për Sezonin 2025" data-en="Conclusion: Act Now for 2025 Season">
+        Përfundimi: Veproni Tani për Sezonin 2025
+      </h2>
+
+      <div data-sq="Sezoni turistik 2025 pritet të jetë më i madhi në historinë e Shqipërisë. Restorantet që përgatiten tani me strategji të duhura, teknologji moderne dhe shërbim cilësor do të jenë fituesi të mëdhenj." data-en="Tourist season 2025 is expected to be the biggest in Albania's history. Restaurants that prepare now with right strategies, modern technology and quality service will be the big winners.">
+        <p>Sezoni turistik 2025 pritet të jetë më i madhi në historinë e Shqipërisë. Restorantet që përgatiten tani me strategji të duhura, teknologji moderne dhe shërbim cilësor do të jenë fituesi të mëdhenj.</p>
+      </div>
+
+      <div data-sq="Mos lejoni që konkurrentët të marrin avantazh. Investimi në sistemin e duhur teknologjik dhe strategji marketingu mund të dyfishojë ose trefishojë fitimet tuaja gjatë muajve të verës." data-en="Don't let competitors take advantage. Investment in right technology system and marketing strategy can double or triple your profits during summer months.">
+        <p>Mos lejoni që konkurrentët të marrin avantazh. Investimi në sistemin e duhur teknologjik dhe strategji marketingu mund të dyfishojë ose trefishojë fitimet tuaja gjatë muajve të verës.</p>
+      </div>
+    </div>
+
+    <!-- Call to Action -->
+    <div class="bg-gradient-to-r from-green-600 to-blue-600 text-white rounded-xl p-8 my-12">
+      <div class="text-center">
+        <h2 class="text-2xl font-bold mb-4" data-sq="Gati për Sezonin më të Suksesshëm?" data-en="Ready for Your Most Successful Season?">
+          Gati për Sezonin më të Suksesshëm?
+        </h2>
+        <p class="text-lg mb-6 opacity-90" data-sq="Bashkohuni me 300+ restorantet që kanë zgjedhur SKAN.AL për të maksimizuar fitimet e tyre." data-en="Join 300+ restaurants that have chosen SKAN.AL to maximize their profits.">
+          Bashkohuni me 300+ restorantet që kanë zgjedhur SKAN.AL për të maksimizuar fitimet e tyre.
+        </p>
+        
+        <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+          <a href="/demo" class="bg-white text-green-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+            <span data-sq="Shikoni Sistemin në Veprim" data-en="See System in Action">Shikoni Sistemin në Veprim</span>
+          </a>
+          <a href="/contact" class="bg-green-500 hover:bg-green-400 text-white px-8 py-3 rounded-lg font-semibold transition-colors">
+            <span data-sq="Filloni Sot" data-en="Start Today">Filloni Sot</span>
+          </a>
+        </div>
+        
+        <p class="text-sm opacity-75 mt-4" data-sq="Instalim falas • Trajnim stafi • Mbështetje gjatë gjithë sezonit" data-en="Free installation • Staff training • Support throughout the season">
+          Instalim falas • Trajnim stafi • Mbështetje gjatë gjithë sezonit
+        </p>
+      </div>
+    </div>
+
+    <!-- Tags -->
+    <div class="border-t border-gray-200 pt-8">
+      <h3 class="text-sm font-medium text-gray-500 mb-4" data-sq="Etiketat" data-en="Tags">Etiketat</h3>
+      <div class="flex flex-wrap gap-2">
+        <span class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm">turizëm shqiptar</span>
+        <span class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm">fitim restorant</span>
+        <span class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm">sezon verë</span>
+        <span class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm">bregdet</span>
+        <span class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm">strategji</span>
+        <span class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm">çmimi dinamik</span>
+        <span class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm">teknologji QR</span>
+      </div>
+    </div>
+  </article>
+</BaseLayout>
+
+<script>
+// Language switching functionality
+document.addEventListener('DOMContentLoaded', function() {
+  const languageToggle = document.querySelector('.language-toggle');
+  let currentLang = 'sq'; // Default to Albanian
+  
+  if (languageToggle) {
+    languageToggle.addEventListener('click', function() {
+      currentLang = currentLang === 'sq' ? 'en' : 'sq';
+      
+      // Update all elements with language data attributes
+      document.querySelectorAll('[data-sq][data-en]').forEach(element => {
+        if (currentLang === 'en') {
+          element.textContent = element.getAttribute('data-en');
+        } else {
+          element.textContent = element.getAttribute('data-sq');
+        }
+      });
+      
+      // Update button text
+      languageToggle.textContent = currentLang === 'sq' ? 'EN' : 'SQ';
+    });
+  }
+});
+</script>

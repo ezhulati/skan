@@ -1,0 +1,326 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import LanguageSwitcher from '../../components/LanguageSwitcher.astro';
+
+// Blog posts data with Albanian SEO keywords
+const blogPosts = [
+  {
+    slug: 'sistemi-porosive-qr-restorantet-shqiptare-2025',
+    title: {
+      sq: 'Si të Revolucionizoni Restorantin Tuaj me Sisteme Porosish QR në 2025',
+      en: 'How to Revolutionize Your Albanian Restaurant with QR Ordering Systems in 2025'
+    },
+    excerpt: {
+      sq: 'Zbuloni si sistemi i porosive me kod QR mund të transformojë restorantin tuaj shqiptar, duke rritur efikasitetin dhe kënaqësinë e klientëve. Mësoni përfitimet, kostot dhe hapat për implementim.',
+      en: 'Discover how QR code ordering systems can transform your Albanian restaurant, increasing efficiency and customer satisfaction. Learn the benefits, costs, and implementation steps.'
+    },
+    publishDate: '2025-01-15',
+    readTime: '8 min',
+    category: 'Teknologji Restorantesh',
+    tags: ['QR kod', 'restorant shqiptar', 'sistem porosish', 'teknologji', 'efikasitet'],
+    image: '/blog/qr-restaurant-albania.jpg',
+    author: 'Ervin Shehu',
+    featured: true
+  },
+  {
+    slug: 'rritja-fitimeve-restorant-turizmi-shqipetar',
+    title: {
+      sq: 'Si të Rrisni Fitimet e Restorantit gjatë Sezonit Turistik Shqiptar',
+      en: 'How to Increase Restaurant Profits During Albanian Tourism Season'
+    },
+    excerpt: {
+      sq: 'Strategji të provuara për të maksimizuar fitimet e restorantit tuaj gjatë sezonit të verës në bregdetin shqiptar. Nga Durrësi në Sarandë, mësoni si të tërheqni më shumë turistë.',
+      en: 'Proven strategies to maximize your restaurant profits during summer season on the Albanian coast. From Durrës to Sarandë, learn how to attract more tourists.'
+    },
+    publishDate: '2025-01-12',
+    readTime: '6 min',
+    category: 'Biznes Restorantesh',
+    tags: ['turizëm shqiptar', 'fitim restorant', 'sezon verë', 'bregdet', 'strategji'],
+    image: '/blog/albanian-tourism-restaurant.jpg',
+    author: 'Alban Krasniqi',
+    featured: true
+  },
+  {
+    slug: 'menu-dixhitale-restorantet-tirana-durres',
+    title: {
+      sq: 'Menu Dixhitale për Restorantet në Tiranë dhe Durrës: Udhëzues Komplet',
+      en: 'Digital Menus for Restaurants in Tirana and Durrës: Complete Guide'
+    },
+    excerpt: {
+      sq: 'Udhëzues i plotë për krijimin e menuve dixhitale për restorantet në qytetet kryesore shqiptare. Mësoni si të përmirësoni përvojën e klientit dhe të reduktoni kostot.',
+      en: 'Complete guide to creating digital menus for restaurants in major Albanian cities. Learn how to enhance customer experience and reduce costs.'
+    },
+    publishDate: '2025-01-10',
+    readTime: '7 min',
+    category: 'Menu Dixhitale',
+    tags: ['menu dixhitale', 'Tiranë', 'Durrës', 'restorant modern', 'teknologji'],
+    image: '/blog/digital-menu-albania.jpg',
+    author: 'Manjola Doci',
+    featured: false
+  },
+  {
+    slug: 'modernizimi-restoranteve-tradicionale-shqiptare',
+    title: {
+      sq: 'Modernizimi i Restoranteve Tradicionale Shqiptare pa Humbur Identitetin',
+      en: 'Modernizing Traditional Albanian Restaurants Without Losing Identity'
+    },
+    excerpt: {
+      sq: 'Si të integroni teknologjinë moderne në restorantin tuaj tradicional shqiptar duke ruajtur atmosferën dhe vlerat autentike. Udhëzues praktik për pronarët e restoranteve.',
+      en: 'How to integrate modern technology into your traditional Albanian restaurant while preserving authentic atmosphere and values. Practical guide for restaurant owners.'
+    },
+    publishDate: '2025-01-08',
+    readTime: '9 min',
+    category: 'Tradicional & Modern',
+    tags: ['restorant tradicional', 'modernizim', 'identitet shqiptar', 'teknologji', 'balancë'],
+    image: '/blog/traditional-modern-albanian-restaurant.jpg',
+    author: 'Driton Haxhiu',
+    featured: false
+  }
+];
+
+const title = "Blog SKAN.AL - Këshilla dhe Udhëzime për Restorantet Shqiptare";
+const description = "Zbuloni artikuj ekspertësh për sisteme porosish QR, modernizimin e restoranteve shqiptare, strategji biznesi dhe teknologji që rrisin fitimet dhe kënaqësinë e klientëve.";
+---
+
+<BaseLayout 
+  title={title}
+  description={description}
+  ogTitle="Blog SKAN.AL - Ekspertë në Teknologji Restorantesh"
+  ogDescription={description}
+>
+  <div class="min-h-screen bg-gray-50">
+    <!-- Header -->
+    <div class="bg-white shadow-sm border-b">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="flex justify-between items-start">
+          <div class="flex-1">
+            <div class="flex items-center space-x-2 text-sm text-gray-600 mb-4">
+              <a href="/" class="hover:text-blue-600 transition-colors">Kryefaqja</a>
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+              </svg>
+              <span class="text-gray-900">Blog</span>
+            </div>
+            
+            <h1 class="text-4xl sm:text-5xl font-bold text-gray-900 mb-4" data-sq="Blog SKAN.AL" data-en="SKAN.AL Blog">
+              Blog SKAN.AL
+            </h1>
+            
+            <p class="text-xl text-gray-600 max-w-3xl" data-sq="Këshilla ekspertësh, strategji biznesi dhe udhëzime praktike për modernizimin e restoranteve shqiptare me teknologji QR." data-en="Expert advice, business strategies and practical guides for modernizing Albanian restaurants with QR technology.">
+              Këshilla ekspertësh, strategji biznesi dhe udhëzime praktike për modernizimin e restoranteve shqiptare me teknologji QR.
+            </p>
+          </div>
+          
+          <div class="ml-8">
+            <LanguageSwitcher />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Featured Articles Section -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div class="mb-12">
+        <h2 class="text-2xl font-bold text-gray-900 mb-2" data-sq="Artikuj të Rekomanduar" data-en="Featured Articles">
+          Artikuj të Rekomanduar
+        </h2>
+        <p class="text-gray-600" data-sq="Përmbajtje ekskluzive për pronarët e restoranteve shqiptare" data-en="Exclusive content for Albanian restaurant owners">
+          Përmbajtje ekskluzive për pronarët e restoranteve shqiptare
+        </p>
+      </div>
+
+      <!-- Featured Articles Grid -->
+      <div class="grid lg:grid-cols-2 gap-8 mb-16">
+        {blogPosts.filter(post => post.featured).map(post => (
+          <article class="bg-white rounded-xl shadow-sm border overflow-hidden hover:shadow-lg transition-all duration-300 group">
+            <div class="aspect-video bg-gradient-to-r from-blue-500 to-indigo-600 relative overflow-hidden">
+              <div class="absolute inset-0 bg-black bg-opacity-20"></div>
+              <div class="absolute bottom-4 left-4">
+                <span class="bg-white bg-opacity-90 text-gray-900 px-3 py-1 rounded-full text-sm font-medium">
+                  {post.category}
+                </span>
+              </div>
+            </div>
+            
+            <div class="p-6">
+              <div class="flex items-center space-x-4 text-sm text-gray-500 mb-3">
+                <time datetime={post.publishDate}>
+                  {new Date(post.publishDate).toLocaleDateString('sq-AL', { 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                  })}
+                </time>
+                <span>•</span>
+                <span>{post.readTime} lexim</span>
+                <span>•</span>
+                <span>{post.author}</span>
+              </div>
+              
+              <h3 class="text-xl font-bold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors">
+                <a href={`/blog/${post.slug}`} class="block" data-sq={post.title.sq} data-en={post.title.en}>
+                  {post.title.sq}
+                </a>
+              </h3>
+              
+              <p class="text-gray-600 mb-4" data-sq={post.excerpt.sq} data-en={post.excerpt.en}>
+                {post.excerpt.sq}
+              </p>
+              
+              <div class="flex flex-wrap gap-2 mb-4">
+                {post.tags.slice(0, 3).map(tag => (
+                  <span class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+              
+              <a 
+                href={`/blog/${post.slug}`} 
+                class="inline-flex items-center text-blue-600 hover:text-blue-700 font-medium group-hover:underline"
+              >
+                <span data-sq="Lexo më shumë" data-en="Read more">Lexo më shumë</span>
+                <svg class="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+              </a>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+
+    <!-- All Articles Section -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+      <div class="mb-8">
+        <h2 class="text-2xl font-bold text-gray-900 mb-2" data-sq="Të Gjithë Artikujt" data-en="All Articles">
+          Të Gjithë Artikujt
+        </h2>
+      </div>
+
+      <!-- Articles List -->
+      <div class="space-y-6">
+        {blogPosts.map(post => (
+          <article class="bg-white rounded-lg shadow-sm border p-6 hover:shadow-md transition-shadow group">
+            <div class="flex flex-col md:flex-row md:items-center md:space-x-6">
+              <div class="flex-1">
+                <div class="flex items-center space-x-4 text-sm text-gray-500 mb-2">
+                  <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs font-medium">
+                    {post.category}
+                  </span>
+                  <time datetime={post.publishDate}>
+                    {new Date(post.publishDate).toLocaleDateString('sq-AL', { 
+                      year: 'numeric', 
+                      month: 'long', 
+                      day: 'numeric' 
+                    })}
+                  </time>
+                  <span>•</span>
+                  <span>{post.readTime} lexim</span>
+                </div>
+                
+                <h3 class="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
+                  <a href={`/blog/${post.slug}`} data-sq={post.title.sq} data-en={post.title.en}>
+                    {post.title.sq}
+                  </a>
+                </h3>
+                
+                <p class="text-gray-600 mb-3" data-sq={post.excerpt.sq} data-en={post.excerpt.en}>
+                  {post.excerpt.sq}
+                </p>
+                
+                <div class="flex flex-wrap gap-2 mb-3">
+                  {post.tags.slice(0, 4).map(tag => (
+                    <span class="bg-gray-100 text-gray-600 px-2 py-1 rounded text-sm">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+                
+                <div class="flex items-center justify-between">
+                  <span class="text-sm text-gray-500">nga {post.author}</span>
+                  <a 
+                    href={`/blog/${post.slug}`} 
+                    class="inline-flex items-center text-blue-600 hover:text-blue-700 font-medium hover:underline"
+                  >
+                    <span data-sq="Lexo artikullin" data-en="Read article">Lexo artikullin</span>
+                    <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                  </a>
+                </div>
+              </div>
+              
+              <div class="mt-4 md:mt-0 md:w-48 md:flex-shrink-0">
+                <div class="aspect-video md:aspect-square bg-gradient-to-r from-blue-500 to-indigo-600 rounded-lg relative overflow-hidden">
+                  <div class="absolute inset-0 bg-black bg-opacity-10"></div>
+                  <div class="absolute inset-0 flex items-center justify-center">
+                    <svg class="w-8 h-8 text-white opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+
+    <!-- Newsletter Subscription CTA -->
+    <div class="bg-blue-600">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div class="text-center">
+          <h2 class="text-3xl font-bold text-white mb-4" data-sq="Merrni Këshilla Ekskluzive" data-en="Get Exclusive Tips">
+            Merrni Këshilla Ekskluzive
+          </h2>
+          <p class="text-xl text-blue-100 mb-8 max-w-2xl mx-auto" data-sq="Regjistrohuni për të marrë strategji të reja, këshilla praktike dhe risi në teknologjinë e restoranteve direkt në email." data-en="Subscribe to receive new strategies, practical tips and restaurant technology innovations directly in your email.">
+            Regjistrohuni për të marrë strategji të reja, këshilla praktike dhe risi në teknologjinë e restoranteve direkt në email.
+          </p>
+          
+          <div class="max-w-md mx-auto">
+            <div class="flex">
+              <input 
+                type="email" 
+                placeholder="Adresa juaj e email-it"
+                class="flex-1 px-4 py-3 rounded-l-lg border-0 focus:ring-2 focus:ring-blue-300 focus:outline-none"
+              />
+              <button class="bg-blue-700 hover:bg-blue-800 text-white px-6 py-3 rounded-r-lg font-medium transition-colors" data-sq="Regjistrohu" data-en="Subscribe">
+                Regjistrohu
+              </button>
+            </div>
+            <p class="text-blue-200 text-sm mt-2" data-sq="Pa spam, vetëm përmbajtje me vlerë për biznesin tuaj." data-en="No spam, only valuable content for your business.">
+              Pa spam, vetëm përmbajtje me vlerë për biznesin tuaj.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<script>
+// Language switching functionality
+document.addEventListener('DOMContentLoaded', function() {
+  const languageToggle = document.querySelector('.language-toggle');
+  let currentLang = 'sq'; // Default to Albanian
+  
+  if (languageToggle) {
+    languageToggle.addEventListener('click', function() {
+      currentLang = currentLang === 'sq' ? 'en' : 'sq';
+      
+      // Update all elements with language data attributes
+      document.querySelectorAll('[data-sq][data-en]').forEach(element => {
+        if (currentLang === 'en') {
+          element.textContent = element.getAttribute('data-en');
+        } else {
+          element.textContent = element.getAttribute('data-sq');
+        }
+      });
+      
+      // Update button text
+      languageToggle.textContent = currentLang === 'sq' ? 'EN' : 'SQ';
+    });
+  }
+});
+</script>
