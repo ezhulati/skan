@@ -2,9 +2,9 @@
 import '../styles/global.css';
 import LanguageSwitcher from '../components/LanguageSwitcher.astro';
 import CookieConsent from '../components/CookieConsent.astro';
+import Navigation from '../components/Navigation.astro';
+import MobileMenu from '../components/MobileMenu.astro';
 import { SEO } from 'astro-seo';
-import Header from '@sofidevo/astro-dynamic-header/Header';
-import type { MenuItemType } from '@sofidevo/astro-dynamic-header';
 
 export interface Props {
   title: string;
@@ -23,14 +23,6 @@ const {
 } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
-
-// Menu items for the dynamic header
-const menuItems: MenuItemType[] = [
-  { link: '/features', text: 'Veçoritë' },
-  { link: '/pricing', text: 'Çmimet' },
-  { link: '/blog', text: 'Blog' },
-  { link: '/contact', text: 'Kontakti' },
-];
 ---
 
 <!DOCTYPE html>
@@ -198,144 +190,15 @@ const menuItems: MenuItemType[] = [
       opacity: 0;
       transform: translateY(8px);
     }
-
-    /* Custom styles for dynamic header menu items */
-    :global(.menu__link) {
-      color: #374151 !important; /* Darker gray to match "Hyni" and "Demo" */
-      font-weight: 500 !important;
-    }
-
-    :global(.menu__link:hover) {
-      color: #111827 !important; /* Even darker on hover */
-    }
-
-    /* Mobile menu items */
-    :global(.mobile-menu__link) {
-      color: #374151 !important;
-      font-weight: 500 !important;
-    }
-
-    :global(.mobile-menu__link:hover) {
-      color: #111827 !important;
-    }
-
-    /* Set CSS custom properties for the dynamic header component */
-    :root {
-      --color-hamburger-lines: #374151;
-      --mobile-accent-color: #3b82f6;
-    }
-
-    /* Mobile menu light theme override */
-    :global(.mobile-header__menu) {
-      background: rgba(255, 255, 255, 0.98) !important;
-      backdrop-filter: blur(20px) !important;
-      -webkit-backdrop-filter: blur(20px) !important;
-    }
-
-    /* Mobile menu text colors for light theme */
-    :global(.mobile-header__menu a),
-    :global(.mobile-menu__link),
-    :global(.menu__summary) {
-      color: #374151 !important;
-    }
-
-    :global(.mobile-header__menu iconify-icon) {
-      color: #6b7280 !important;
-    }
-
-    /* Ensure main navigation menu items are visible */
-    :global(.mobile-menu) {
-      display: flex !important;
-    }
-
-    /* Fix hamburger button size and spacing */
-    :global(.hamburger) {
-      padding: 8px !important;
-    }
-
-    :global(.hamburger-box) {
-      width: 20px !important;
-      height: 14px !important;
-    }
-
-    :global(.hamburger-inner),
-    :global(.hamburger-inner::before),
-    :global(.hamburger-inner::after) {
-      width: 20px !important;
-      height: 2px !important;
-      border-radius: 1px !important;
-    }
-
-    :global(.hamburger-inner::before) {
-      top: -6px !important;
-    }
-
-    :global(.hamburger-inner::after) {
-      bottom: -6px !important;
-    }
-
-    /* Mobile header container adjustments */
-    @media (max-width: 768px) {
-      :global(.header__container) {
-        padding-left: 16px !important;
-        padding-right: 16px !important;
-      }
-      
-      :global(.header__brand) {
-        flex: 1 !important;
-      }
-      
-      :global(.header__actions) {
-        display: flex !important;
-        align-items: center !important;
-        gap: 8px !important;
-      }
-    }
-
-    /* Ensure proper z-index stacking */
-    :global(.dynamic-header) {
-      z-index: 1000 !important;
-    }
-
-    :global(.mobile-panel) {
-      z-index: 999 !important;
-    }
   </style>
 </head>
 
 <body class="font-sans antialiased bg-white text-gray-900">
-  <!-- Dynamic Header -->
-  <Header
-    headerType="floating"
-    logoSrc="/favicon.svg"
-    logoAlt="SKAN.AL"
-    logoWidth="40px"
-    homeUrl="/"
-    menuItems={menuItems}
-    backgroundColor="#ffffff90"
-    backdropBlur="blur(20px)"
-    zIndex={50}
-  >
-    <!-- Desktop header content -->
-    <div slot="slot-desktop" class="hidden md:flex items-center space-x-4">
-      <a href="https://admin.skan.al/login" class="text-gray-600 hover:text-gray-900 px-4 py-2 text-sm font-medium transition-colors whitespace-nowrap" data-sq="Hyni" data-en="Sign In">Hyni</a>
-      <a href="/demo" class="text-gray-600 hover:text-gray-900 px-4 py-2 text-sm font-medium transition-colors whitespace-nowrap" data-sq="Demo" data-en="Demo">Demo</a>
-      <LanguageSwitcher />
-      <a href="/register" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap" data-sq="Filloni" data-en="Get Started">Filloni</a>
-    </div>
-
-    <!-- Mobile panel content -->
-    <div slot="slot-panel" class="border-t border-gray-100 pt-4 mt-4">
-      <div class="space-y-2">
-        <a href="https://admin.skan.al/login" class="text-gray-600 hover:text-gray-900 block px-6 py-3 text-base font-medium whitespace-nowrap" data-sq="Hyni" data-en="Sign In">Hyni</a>
-        <a href="/demo" class="text-gray-600 hover:text-gray-900 block px-6 py-3 text-base font-medium whitespace-nowrap" data-sq="Demo" data-en="Demo">Demo</a>
-        <div class="px-6 py-3">
-          <LanguageSwitcher />
-        </div>
-        <a href="/register" class="bg-blue-600 hover:bg-blue-700 text-white block px-6 py-3 rounded-lg text-base font-medium transition-colors mx-6 mt-4 text-center whitespace-nowrap" data-sq="Filloni" data-en="Get Started">Filloni</a>
-      </div>
-    </div>
-  </Header>
+  <!-- Navigation -->
+  <Navigation />
+  
+  <!-- Mobile Menu -->
+  <MobileMenu />
 
   <!-- Main Content -->
   <main id="swup">
@@ -438,8 +301,8 @@ const menuItems: MenuItemType[] = [
       });
 
       // Initialize functions
-      function initializeDynamicHeader() {
-        // Dynamic header component handles its own initialization
+      function initializeNavigation() {
+        // Navigation component handles its own initialization
         // No additional setup needed
       }
 
@@ -466,13 +329,13 @@ const menuItems: MenuItemType[] = [
       }
 
       // Initial setup
-      initializeDynamicHeader();
+      initializeNavigation();
       initializeLanguageSwitcher();
       initializeSmoothScroll();
 
       // Re-initialize after page transitions
       swup.hooks.on('content:replace', () => {
-        initializeDynamicHeader();
+        initializeNavigation();
         initializeLanguageSwitcher();
         initializeSmoothScroll();
         

@@ -19,7 +19,6 @@
     "@astrojs/react": "^4.3.1",
     "@astrojs/tailwind": "^6.0.2",
     "@iconify-json/mdi": "^1.2.3",
-    "@sofidevo/astro-dynamic-header": "^1.0.26",
     "@types/react": "^19.1.13",
     "@types/react-dom": "^19.1.9",
     "astro": "^5.13.7",
