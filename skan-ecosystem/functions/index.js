@@ -40,8 +40,6 @@ app.get("/v1/venue/:slug/menu", async (req, res) => {
     // Get all menu items
     const menuItemsSnapshot = await venueDoc.ref
       .collection("menuItem")
-      .where("isAvailable", "==", true)
-      .orderBy("sortOrder", "asc")
       .get();
     
     // Organize menu items by category
@@ -56,36 +54,53 @@ app.get("/v1/venue/:slug/menu", async (req, res) => {
       };
     });
     
-    // Add items to categories
-    menuItemsSnapshot.docs.forEach(doc => {
-      const itemData = doc.data();
-      const categoryId = itemData.category || "other";
-      
-      if (!categories[categoryId]) {
-        categories[categoryId] = {
-          id: categoryId,
-          name: "Other",
-          nameAlbanian: "Të tjera",
-          items: []
-        };
-      }
-      
-      categories[categoryId].items.push({
-        id: doc.id,
-        name: itemData.name,
-        nameAlbanian: itemData.nameAlbanian,
-        description: itemData.description,
-        descriptionAlbanian: itemData.descriptionAlbanian,
-        price: itemData.price,
-        allergens: itemData.allergens || [],
-        imageUrl: itemData.imageUrl,
-        preparationTime: itemData.preparationTime || 0
+    // Add items to categories (filter available items and sort in JavaScript)
+    menuItemsSnapshot.docs
+      .filter(doc => doc.data().isAvailable !== false) // Only include available items
+      .forEach(doc => {
+        const itemData = doc.data();
+        const categoryId = itemData.category || "other";
+        
+        if (!categories[categoryId]) {
+          categories[categoryId] = {
+            id: categoryId,
+            name: "Other",
+            nameAlbanian: "Të tjera",
+            items: []
+          };
+        }
+        
+        categories[categoryId].items.push({
+          id: doc.id,
+          name: itemData.name,
+          nameAlbanian: itemData.nameAlbanian,
+          description: itemData.description,
+          descriptionAlbanian: itemData.descriptionAlbanian,
+          price: itemData.price,
+          allergens: itemData.allergens || [],
+          imageUrl: itemData.imageUrl,
+          preparationTime: itemData.preparationTime || 0,
+          sortOrder: itemData.sortOrder || 999
+        });
       });
+    
+    // Sort items within each category by sortOrder
+    Object.values(categories).forEach(category => {
+      category.items.sort((a, b) => a.sortOrder - b.sortOrder);
     });
     
-    // Convert categories object to array and filter out empty categories
+    // Convert categories object to array, filter out empty categories, and sort by sortOrder
     const menuCategories = Object.values(categories)
-      .filter(category => category.items.length > 0);
+      .filter(category => category.items.length > 0)
+      .map(category => {
+        // Find the sortOrder from the original categories data
+        const categoryDoc = categoriesSnapshot.docs.find(doc => doc.id === category.id);
+        return {
+          ...category,
+          sortOrder: categoryDoc?.data().sortOrder || 999
+        };
+      })
+      .sort((a, b) => a.sortOrder - b.sortOrder);
     
     res.json({
       venue: {
@@ -123,16 +138,17 @@ app.get("/v1/venue/:slug/tables", async (req, res) => {
     const venueDoc = venuesSnapshot.docs[0];
     const tablesSnapshot = await venueDoc.ref
       .collection("table")
-      .where("isActive", "==", true)
-      .orderBy("tableNumber", "asc")
       .get();
     
-    const tables = tablesSnapshot.docs.map(doc => ({
-      id: doc.id,
-      tableNumber: doc.data().tableNumber,
-      displayName: doc.data().displayName,
-      qrUrl: `https://order.skan.al/${slug}/${doc.data().tableNumber}`
-    }));
+    const tables = tablesSnapshot.docs
+      .filter(doc => doc.data().isActive !== false) // Only include active tables
+      .map(doc => ({
+        id: doc.id,
+        tableNumber: doc.data().tableNumber,
+        displayName: doc.data().displayName,
+        qrUrl: `https://order.skan.al/${slug}/${doc.data().tableNumber}`
+      }))
+      .sort((a, b) => a.tableNumber.localeCompare(b.tableNumber)); // Sort by table number
     
     res.json({ tables });
     
@@ -328,6 +344,104 @@ app.get("/v1/track/:orderNumber", async (req, res) => {
 });
 
 // ============================================================================
+// VENUE IMPORT ENDPOINT (TEMPORARY)
+// ============================================================================
+
+// Import venue data (temporary endpoint for setup)
+app.post("/v1/import/venue", async (req, res) => {
+  try {
+    const { venue, menuCategories, menuItems, tables } = req.body;
+    
+    if (!venue || !venue.id || !venue.slug) {
+      return res.status(400).json({ error: "Missing venue data" });
+    }
+    
+    const venueId = venue.id;
+    const venueRef = db.collection("venue").doc(venueId);
+    
+    // Add venue
+    await venueRef.set({
+      name: venue.name,
+      slug: venue.slug,
+      address: venue.address,
+      phone: venue.phone,
+      description: venue.description,
+      settings: venue.settings,
+      isActive: true,
+      createdAt: admin.firestore.FieldValue.serverTimestamp()
+    });
+    
+    let categoriesAdded = 0;
+    let itemsAdded = 0;
+    let tablesAdded = 0;
+    
+    // Add menu categories
+    if (menuCategories && Array.isArray(menuCategories)) {
+      for (const category of menuCategories) {
+        const categoryRef = venueRef.collection("menuCategory").doc(category.id);
+        await categoryRef.set({
+          name: category.name,
+          nameAlbanian: category.nameAlbanian,
+          sortOrder: category.sortOrder,
+          isActive: true
+        });
+        categoriesAdded++;
+      }
+    }
+    
+    // Add menu items
+    if (menuItems && Array.isArray(menuItems)) {
+      for (const item of menuItems) {
+        const itemRef = venueRef.collection("menuItem").doc(item.id);
+        await itemRef.set({
+          name: item.name,
+          nameAlbanian: item.nameAlbanian,
+          description: item.description,
+          descriptionAlbanian: item.descriptionAlbanian,
+          price: item.price,
+          category: item.categoryId,
+          allergens: item.allergens,
+          preparationTime: item.preparationTime,
+          isAvailable: item.isAvailable,
+          sortOrder: item.sortOrder
+        });
+        itemsAdded++;
+      }
+    }
+    
+    // Add tables
+    if (tables && Array.isArray(tables)) {
+      for (const table of tables) {
+        const tableRef = venueRef.collection("table").doc(table.id);
+        await tableRef.set({
+          tableNumber: table.id,
+          displayName: table.name,
+          capacity: table.capacity,
+          location: table.location,
+          isActive: true
+        });
+        tablesAdded++;
+      }
+    }
+    
+    res.json({
+      message: "Venue data imported successfully",
+      venueId,
+      stats: {
+        venue: 1,
+        categories: categoriesAdded,
+        items: itemsAdded,
+        tables: tablesAdded
+      }
+    });
+    
+  } catch (error) {
+    console.error("Error importing venue data:", error);
+    res.status(500).json({ error: "Failed to import venue data" });
+  }
+});
+
+// ============================================================================
 // AUTHENTICATION ENDPOINTS
 // ============================================================================
 
@@ -338,6 +452,25 @@ app.post("/v1/auth/login", async (req, res) => {
     
     if (!email || !password) {
       return res.status(400).json({ error: "Email and password required" });
+    }
+    
+    // Demo user for testing - check first
+    if (email === "manager_email1@gmail.com" && password === "demo123") {
+      return res.json({
+        message: "Login successful",
+        user: {
+          id: "demo-user-1",
+          email: "manager_email1@gmail.com",
+          fullName: "Demo Manager",
+          role: "manager",
+          venueId: "demo-venue-1"
+        },
+        venue: {
+          id: "demo-venue-1",
+          name: "Demo Restaurant",
+          slug: "demo-restaurant"
+        }
+      });
     }
     
     // Find user in users collection
