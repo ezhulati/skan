@@ -200,22 +200,22 @@ const menuItems: MenuItemType[] = [
     }
 
     /* Custom styles for dynamic header menu items */
-    :global(.astro-dynamic-header nav a) {
+    :global(.menu__link) {
       color: #374151 !important; /* Darker gray to match "Hyni" and "Demo" */
       font-weight: 500 !important;
     }
 
-    :global(.astro-dynamic-header nav a:hover) {
+    :global(.menu__link:hover) {
       color: #111827 !important; /* Even darker on hover */
     }
 
     /* Mobile menu items */
-    :global(.astro-dynamic-header .mobile-nav a) {
+    :global(.mobile-menu__link) {
       color: #374151 !important;
       font-weight: 500 !important;
     }
 
-    :global(.astro-dynamic-header .mobile-nav a:hover) {
+    :global(.mobile-menu__link:hover) {
       color: #111827 !important;
     }
   </style>
