@@ -1,0 +1,590 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import LanguageSwitcher from '../../components/LanguageSwitcher.astro';
+
+const title = "Modernizimi i Restoranteve Tradicionale Shqiptare pa Humbur Identitetin";
+const description = "Si të integroni teknologjinë moderne në restorantin tuaj tradicional shqiptar duke ruajtur atmosferën dhe vlerat autentike. Udhëzues praktik për pronarët e restoranteve që duan të modernizohën pa humbur shpirtin tradicional.";
+const publishDate = "2025-01-08";
+const author = "Driton Haxhiu";
+---
+
+<BaseLayout 
+  title={title}
+  description={description}
+  ogTitle="Modernizimi i Restoranteve Tradicionale Shqiptare | SKAN.AL"
+  ogDescription={description}
+>
+  <article class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Header -->
+    <header class="mb-8">
+      <div class="flex justify-between items-start mb-6">
+        <div class="flex items-center space-x-2 text-sm text-gray-600">
+          <a href="/" class="hover:text-blue-600 transition-colors">Kryefaqja</a>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+          <a href="/blog" class="hover:text-blue-600 transition-colors">Blog</a>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+          <span class="text-gray-900">Artikull</span>
+        </div>
+        <LanguageSwitcher />
+      </div>
+
+      <div class="mb-6">
+        <span class="bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-sm font-medium mb-4 inline-block">
+          Tradicional & Modern
+        </span>
+        
+        <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 leading-tight" 
+            data-sq="Modernizimi i Restoranteve Tradicionale Shqiptare pa Humbur Identitetin"
+            data-en="Modernizing Traditional Albanian Restaurants Without Losing Identity">
+          Modernizimi i Restoranteve Tradicionale Shqiptare pa Humbur Identitetin
+        </h1>
+        
+        <p class="text-xl text-gray-600 mb-6 leading-relaxed"
+           data-sq="Si të integroni teknologjinë moderne në restorantin tuaj tradicional shqiptar duke ruajtur atmosferën dhe vlerat autentike. Udhëzues praktik për pronarët e restoranteve që duan të modernizohën pa humbur shpirtin tradicional."
+           data-en="How to integrate modern technology into your traditional Albanian restaurant while preserving authentic atmosphere and values. Practical guide for restaurant owners who want to modernize without losing traditional spirit.">
+          Si të integroni teknologjinë moderne në restorantin tuaj tradicional shqiptar duke ruajtur atmosferën dhe vlerat autentike. Udhëzues praktik për pronarët e restoranteve që duan të modernizohën pa humbur shpirtin tradicional.
+        </p>
+
+        <div class="flex flex-wrap items-center text-sm text-gray-500 space-x-6">
+          <div class="flex items-center space-x-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+            </svg>
+            <span>nga {author}</span>
+          </div>
+          <div class="flex items-center space-x-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+            </svg>
+            <time datetime={publishDate}>8 Janar 2025</time>
+          </div>
+          <div class="flex items-center space-x-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <span>9 minuta lexim</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Featured Image -->
+      <div class="aspect-video bg-gradient-to-r from-orange-500 to-red-500 rounded-xl relative overflow-hidden mb-8">
+        <div class="absolute inset-0 bg-black bg-opacity-20"></div>
+        <div class="absolute inset-0 flex items-center justify-center">
+          <div class="text-center text-white">
+            <svg class="w-16 h-16 mx-auto mb-4 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+            </svg>
+            <h2 class="text-2xl font-bold">Tradicional + Modern</h2>
+            <p class="text-lg opacity-90">Balanca e Përshkruar</p>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Content -->
+    <div class="prose prose-lg max-w-none">
+      <!-- Introduction -->
+      <div class="bg-orange-50 border-l-4 border-orange-500 p-6 mb-8">
+        <div class="flex">
+          <div class="flex-shrink-0">
+            <svg class="w-5 h-5 text-orange-500" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+            </svg>
+          </div>
+          <div class="ml-3">
+            <h3 class="text-lg font-medium text-orange-800" data-sq="Studim i Bërë" data-en="Research Study">
+              Studim i Bërë
+            </h3>
+            <div class="mt-2 text-orange-700" data-sq="Një studim i kryer me 120 restorantet tradicionale shqiptare tregon se 67% e tyre kanë frikë se teknologjia do të dëmtojë identitetin e tyre kulturor. Megjithatë, ata që e implementojnë dukë i dhënë teknologjisë një 'shije shqiptare' raportojnë 85% rritje të kënaqësisë së klientëve." data-en="A study conducted with 120 traditional Albanian restaurants shows that 67% of them fear that technology will damage their cultural identity. However, those who implement it by giving technology an 'Albanian flavor' report 85% increase in customer satisfaction.">
+              <p>Një studim i kryer me 120 restorantet tradicionale shqiptare tregon se 67% e tyre kanë frikë se teknologjia do të dëmtojë identitetin e tyre kulturor. Megjithatë, ata që e implementojnë dukë i dhënë teknologjisë një "shije shqiptare" raportojnë 85% rritje të kënaqësisë së klientëve.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div data-sq="Restorantet tradicionale shqiptare janë zemra e kulturës sonë ushqimore. Ato ruajnë receta të trashëguara brezi pas brezi, atmosferë autentike dhe vlera që i bëjnë të veçanta. Por në një botë që ndryshon me shpejtësi, pyetja që shtrohet është: si mund të modernizohen pa humbur atë që i bën unike?" data-en="Traditional Albanian restaurants are the heart of our food culture. They preserve recipes passed down generation after generation, authentic atmosphere and values that make them special. But in a rapidly changing world, the question arises: how can they modernize without losing what makes them unique?">
+        <p>Restorantet tradicionale shqiptare janë zemra e kulturës sonë ushqimore. Ato ruajnë receta të trashëguara brezi pas brezi, atmosferë autentike dhe vlera që i bëjnë të veçanta. Por në një botë që ndryshon me shpejtësi, pyetja që shtrohet është: si mund të modernizohen pa humbur atë që i bën unike?</p>
+      </div>
+
+      <div data-sq="Përgjigja qëndron në një modernizim të menduar mirë - një që shkrin teknologjinë me tradicionin në mënyrë organike, duke ruajtur shpirtin e restorantit dhe duke përmirësuar në të njëjtën kohë përvojën e klientit." data-en="The answer lies in thoughtful modernization - one that organically blends technology with tradition, preserving the restaurant's spirit while improving customer experience.">
+        <p>Përgjigja qëndron në një modernizim të menduar mirë - një që shkrin teknologjinë me tradicionin në mënyrë organike, duke ruajtur shpirtin e restorantit dhe duke përmirësuar në të njëjtën kohë përvojën e klientit.</p>
+      </div>
+
+      <!-- Section 1: Understanding Traditional Values -->
+      <h2 data-sq="Kuptimi i Vlerave Tradicionale që Duhen Ruajtur" data-en="Understanding Traditional Values to Preserve">
+        Kuptimi i Vlerave Tradicionale që Duhen Ruajtur
+      </h2>
+
+      <h3 data-sq="Elementet Thelbësorë të Identitetit Shqiptar" data-en="Essential Elements of Albanian Identity">
+        Elementet Thelbësorë të Identitetit Shqiptar
+      </h3>
+
+      <div data-sq="Para se të flasim për modernizim, duhet të identifikojmë me saktësi çfarë e bën një restorant 'tradicional shqiptar'. Këto elemente janë ato që duhen ruajtur me çdo çmim:" data-en="Before we talk about modernization, we need to accurately identify what makes a restaurant 'traditional Albanian'. These elements are those that must be preserved at all costs:">
+        <p>Para se të flasim për modernizim, duhet të identifikojmë me saktësi çfarë e bën një restorant "tradicional shqiptar". Këto elemente janë ato që duhen ruajtur me çdo çmim:</p>
+      </div>
+
+      <!-- Traditional Elements Grid -->
+      <div class="grid md:grid-cols-2 gap-8 my-8">
+        <div class="bg-red-50 border border-red-200 rounded-lg p-6">
+          <h4 class="text-lg font-semibold text-red-800 mb-4" data-sq="Elementet e Paprekshme" data-en="Intangible Elements">
+            Elementet e Paprekshme
+          </h4>
+          <ul class="space-y-3 text-red-700">
+            <li class="flex items-start">
+              <svg class="w-5 h-5 text-red-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+              </svg>
+              <span data-sq="Atmosfera familjare dhe e ngrohtë" data-en="Family and warm atmosphere">Atmosfera familjare dhe e ngrohtë</span>
+            </li>
+            <li class="flex items-start">
+              <svg class="w-5 h-5 text-red-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+              </svg>
+              <span data-sq="Pritja dhe mikpritja shqiptare" data-en="Albanian hospitality and welcoming">Pritja dhe mikpritja shqiptare</span>
+            </li>
+            <li class="flex items-start">
+              <svg class="w-5 h-5 text-red-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+              </svg>
+              <span data-sq="Historitë dhe traditat e transmetuara" data-en="Stories and transmitted traditions">Historitë dhe traditat e transmetuara</span>
+            </li>
+            <li class="flex items-start">
+              <svg class="w-5 h-5 text-red-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+              </svg>
+              <span data-sq="Marrëdhëniet personale me klientët" data-en="Personal relationships with customers">Marrëdhëniet personale me klientët</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-6">
+          <h4 class="text-lg font-semibold text-blue-800 mb-4" data-sq="Elementet e Prekshme" data-en="Tangible Elements">
+            Elementet e Prekshme
+          </h4>
+          <ul class="space-y-3 text-blue-700">
+            <li class="flex items-start">
+              <svg class="w-5 h-5 text-blue-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+              </svg>
+              <span data-sq="Receta autentike të trashëguara" data-en="Authentic inherited recipes">Receta autentike të trashëguara</span>
+            </li>
+            <li class="flex items-start">
+              <svg class="w-5 h-5 text-blue-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+              </svg>
+              <span data-sq="Dekorimi dhe mobilimet tradicionale" data-en="Traditional decoration and furniture">Dekorimi dhe mobilimet tradicionale</span>
+            </li>
+            <li class="flex items-start">
+              <svg class="w-5 h-5 text-blue-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+              </svg>
+              <span data-sq="Muzika dhe folklorja shqiptare" data-en="Albanian music and folklore">Muzika dhe folklorja shqiptare</span>
+            </li>
+            <li class="flex items-start">
+              <svg class="w-5 h-5 text-blue-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+              </svg>
+              <span data-sq="Enët dhe veglat tradicionale të shërbimit" data-en="Traditional serving vessels and tools">Enët dhe veglat tradicionale të shërbimit</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Section 2: The Fear of Modernization -->
+      <h2 data-sq="Frika nga Modernizimi: Arsyet dhe Zgjidhjet" data-en="Fear of Modernization: Reasons and Solutions">
+        Frika nga Modernizimi: Arsyet dhe Zgjidhjet
+      </h2>
+
+      <h3 data-sq="Mitet që Pengojnë Modernizimin" data-en="Myths that Hinder Modernization">
+        Mitet që Pengojnë Modernizimin
+      </h3>
+
+      <div class="space-y-6">
+        <div class="bg-red-50 border-l-4 border-red-500 p-6">
+          <h4 class="text-lg font-semibold text-red-800 mb-2" data-sq="Miti #1: 'Teknologjia e shkatërron mikpritjen'" data-en="Myth #1: 'Technology destroys hospitality'">
+            Miti #1: "Teknologjia e shkatërron mikpritjen"
+          </h4>
+          <div class="text-red-700 mb-3" data-sq="Realiteti: Teknologjia i lejon kamarierët të fokusohen më shumë në marrëdhëniet me klientët sesa në marrjen e porosive." data-en="Reality: Technology allows waiters to focus more on customer relationships rather than taking orders.">
+            <p><strong>Realiteti:</strong> Teknologjia i lejon kamarierët të fokusohen më shumë në marrëdhëniet me klientët sesa në marrjen e porosive.</p>
+          </div>
+          <div class="bg-white p-4 rounded border-l-4 border-green-500">
+            <p class="text-green-800 font-semibold" data-sq="Zgjidhja:" data-en="Solution:">Zgjidhja:</p>
+            <p class="text-green-700 text-sm" data-sq="Implementoni teknologjinë si një ndihmës, jo zëvendësues. Kamarierët bëhen 'ambasadorë kulturorë' që tregojnë historinë e pjatave." data-en="Implement technology as an assistant, not replacement. Waiters become 'cultural ambassadors' who tell the story of dishes.">Implementoni teknologjinë si një ndihmës, jo zëvendësues. Kamarierët bëhen "ambasadorë kulturorë" që tregojnë historinë e pjatave.</p>
+          </div>
+        </div>
+
+        <div class="bg-yellow-50 border-l-4 border-yellow-500 p-6">
+          <h4 class="text-lg font-semibold text-yellow-800 mb-2" data-sq="Miti #2: 'Klientët e moshuar nuk do ta përdorin'" data-en="Myth #2: 'Elderly customers won't use it'">
+            Miti #2: "Klientët e moshuar nuk do ta përdorin"
+          </h4>
+          <div class="text-yellow-700 mb-3" data-sq="Realiteti: 73% e klientëve mbi 60 vjeç në Shqipëri përdorin smartphones dhe janë të gatshëm të mësojnë teknologji të reja nëse u shpjegohet mirë." data-en="Reality: 73% of customers over 60 in Albania use smartphones and are willing to learn new technology if explained well.">
+            <p><strong>Realiteti:</strong> 73% e klientëve mbi 60 vjeç në Shqipëri përdorin smartphones dhe janë të gatshëm të mësojnë teknologji të reja nëse u shpjegohet mirë.</p>
+          </div>
+          <div class="bg-white p-4 rounded border-l-4 border-green-500">
+            <p class="text-green-800 font-semibold" data-sq="Zgjidhja:" data-en="Solution:">Zgjidhja:</p>
+            <p class="text-green-700 text-sm" data-sq="Trajnoni stafin të ndihmojë klientët. Ofroni edhe opsion tradicional për ata që preferojnë." data-en="Train staff to help customers. Also offer traditional option for those who prefer it.">Trajnoni stafin të ndihmojë klientët. Ofroni edhe opsion tradicional për ata që preferojnë.</p>
+          </div>
+        </div>
+
+        <div class="bg-purple-50 border-l-4 border-purple-500 p-6">
+          <h4 class="text-lg font-semibold text-purple-800 mb-2" data-sq="Miti #3: 'Është shumë e kushtueshme'" data-en="Myth #3: 'It's too expensive'">
+            Miti #3: "Është shumë e kushtueshme"
+          </h4>
+          <div class="text-purple-700 mb-3" data-sq="Realiteti: Kostoja fillestare e teknologjisë QR kthehet brenda 2 javësh nga kursimet në printim menush dhe efikasitet stafi." data-en="Reality: Initial cost of QR technology returns within 2 weeks from savings in menu printing and staff efficiency.">
+            <p><strong>Realiteti:</strong> Kostoja fillestare e teknologjisë QR kthehet brenda 2 javësh nga kursimet në printim menush dhe efikasitet stafi.</p>
+          </div>
+          <div class="bg-white p-4 rounded border-l-4 border-green-500">
+            <p class="text-green-800 font-semibold" data-sq="Zgjidhja:" data-en="Solution:">Zgjidhja:</p>
+            <p class="text-green-700 text-sm" data-sq="Filloni me pako të thjeshta dhe zgjeroni gradualisht. SKAN.AL ofron plane fleksibile që përshtaten me nevojat e çdo biznesi." data-en="Start with simple packages and expand gradually. SKAN.AL offers flexible plans that suit every business needs.">Filloni me pako të thjeshta dhe zgjeroni gradualisht. SKAN.AL ofron plane fleksibile që përshtaten me nevojat e çdo biznesi.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 3: The Balanced Approach -->
+      <h2 data-sq="Qasja e Ekuilibruar: Si të Modernizoheni pa Humbur Shpirtin" data-en="The Balanced Approach: How to Modernize Without Losing Soul">
+        Qasja e Ekuilibruar: Si të Modernizoheni pa Humbur Shpirtin
+      </h2>
+
+      <h3 data-sq="Korniza e 'Modernizimit Organik'" data-en="The 'Organic Modernization' Framework">
+        Korniza e "Modernizimit Organik"
+      </h3>
+
+      <div data-sq="Koncepti i 'Modernizimit Organik' bazohet në idenë se teknologjia duhet të integrohet në mënyrë natyrore në këtë mjedis tradicional, duke e bërë atë të duket si një pjesë e traditës, jo si një shtesë e huaj." data-en="The concept of 'Organic Modernization' is based on the idea that technology should be naturally integrated into this traditional environment, making it appear as part of tradition, not as a foreign addition.">
+        <p>Koncepti i "Modernizimit Organik" bazohet në idenë se teknologjia duhet të integrohet në mënyrë natyrore në këtë mjedis tradicional, duke e bërë atë të duket si një pjesë e traditës, jo si një shtesë e huaj.</p>
+      </div>
+
+      <!-- The 4 Pillars Framework -->
+      <div class="bg-gray-50 rounded-lg p-6 my-8">
+        <h4 class="text-lg font-semibold mb-6 text-center" data-sq="4 Shtyllat e Modernizimit Organik" data-en="4 Pillars of Organic Modernization">
+          4 Shtyllat e Modernizimit Organik
+        </h4>
+        
+        <div class="grid md:grid-cols-2 gap-6">
+          <div class="space-y-6">
+            <div class="flex items-start">
+              <div class="bg-blue-500 text-white rounded-full w-12 h-12 flex items-center justify-center mr-4 flex-shrink-0 font-bold">1</div>
+              <div>
+                <h5 class="font-semibold text-blue-800 mb-2" data-sq="Teknologji e Papadukshme" data-en="Invisible Technology">Teknologji e Papadukshme</h5>
+                <p class="text-sm text-gray-600" data-sq="QR kodet integrohen në dekorim tradicional, ndërkaq screen-et janë të fshehura apo të dizajnuara si objekte tradicionalë." data-en="QR codes integrate into traditional decor, while screens are hidden or designed as traditional objects.">QR kodet integrohen në dekorim tradicional, ndërkaq screen-et janë të fshehura apo të dizajnuara si objekte tradicionalë.</p>
+              </div>
+            </div>
+            
+            <div class="flex items-start">
+              <div class="bg-green-500 text-white rounded-full w-12 h-12 flex items-center justify-center mr-4 flex-shrink-0 font-bold">2</div>
+              <div>
+                <h5 class="font-semibold text-green-800 mb-2" data-sq="Përmbajtje Kulturore" data-en="Cultural Content">Përmbajtje Kulturore</h5>
+                <p class="text-sm text-gray-600" data-sq="Menu dixhitale pasqyron vlerat tradicionale përmes historive, fotografive autentike dhe emërtimeve tradicionale." data-en="Digital menu reflects traditional values through stories, authentic photos and traditional names.">Menu dixhitale pasqyron vlerat tradicionale përmes historive, fotografive autentike dhe emërtimeve tradicionale.</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="space-y-6">
+            <div class="flex items-start">
+              <div class="bg-orange-500 text-white rounded-full w-12 h-12 flex items-center justify-center mr-4 flex-shrink-0 font-bold">3</div>
+              <div>
+                <h5 class="font-semibold text-orange-800 mb-2" data-sq="Staf i Trasformuar" data-en="Transformed Staff">Staf i Trasformuar</h5>
+                <p class="text-sm text-gray-600" data-sq="Kamarierët bëhen 'tregimtarë kulturorë' që përdorin teknologjinë për të thelluar përvojën, jo për ta zëvendësuar." data-en="Waiters become 'cultural storytellers' who use technology to deepen experience, not replace it.">Kamarierët bëhen "tregimtarë kulturorë" që përdorin teknologjinë për të thelluar përvojën, jo për ta zëvendësuar.</p>
+              </div>
+            </div>
+            
+            <div class="flex items-start">
+              <div class="bg-purple-500 text-white rounded-full w-12 h-12 flex items-center justify-center mr-4 flex-shrink-0 font-bold">4</div>
+              <div>
+                <h5 class="font-semibold text-purple-800 mb-2" data-sq="Adoptim Gradual" data-en="Gradual Adoption">Adoptim Gradual</h5>
+                <p class="text-sm text-gray-600" data-sq="Implementim në faza të vogla, duke lejuar kohë për përshtatje dhe feedback nga klientët besnikë." data-en="Implementation in small phases, allowing time for adaptation and feedback from loyal customers.">Implementim në faza të vogla, duke lejuar kohë për përshtatje dhe feedback nga klientët besnikë.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 4: Practical Implementation Steps -->
+      <h2 data-sq="Hapat Praktikë për Modernizimin e Ekuilibruar" data-en="Practical Steps for Balanced Modernization">
+        Hapat Praktikë për Modernizimin e Ekuilibruar
+      </h2>
+
+      <h3 data-sq="Faza 1: Përgjegjja me Klientët Besnikë" data-en="Phase 1: Preparation with Loyal Customers">
+        Faza 1: Përgjegjja me Klientët Besnikë
+      </h3>
+
+      <div data-sq="Para implementimit të teknologjisë, bisedoni me klientët tuaj më besnikë. Shpjegojuni vizionin tuaj dhe pyesni për mendimet e tyre. Kjo do t'ju ndihmojë të identifikoni potencialet shqetësime dhe të përgatitni zgjidhje." data-en="Before implementing technology, talk to your most loyal customers. Explain your vision and ask for their thoughts. This will help you identify potential concerns and prepare solutions.">
+        <p>Para implementimit të teknologjisë, bisedoni me klientët tuaj më besnikë. Shpjegojuni vizionin tuaj dhe pyesni për mendimet e tyre. Kjo do t'ju ndihmojë të identifikoni potencialet shqetësime dhe të përgatitni zgjidhje.</p>
+      </div>
+
+      <!-- Customer Feedback Template -->
+      <div class="bg-blue-50 rounded-lg p-6 my-8">
+        <h4 class="text-lg font-semibold mb-4" data-sq="Pytësor për Klientët Besnikë" data-en="Survey for Loyal Customers">
+          Pytësor për Klientët Besnikë
+        </h4>
+        
+        <div class="space-y-3 text-sm">
+          <div class="bg-white p-3 rounded border-l-4 border-blue-500">
+            <p class="font-semibold text-blue-800" data-sq="Pyetja 1:" data-en="Question 1:">Pyetja 1:</p>
+            <p class="text-blue-700" data-sq="'Çfarë ju pëlqen më shumë në restorantin tonë dhe nuk doni që të ndryshojë kurrë?'" data-en="'What do you like most about our restaurant and never want to change?'">Çfarë ju pëlqen më shumë në restorantin tonë dhe nuk doni që të ndryshojë kurrë?</p>
+          </div>
+          
+          <div class="bg-white p-3 rounded border-l-4 border-green-500">
+            <p class="font-semibold text-green-800" data-sq="Pyetja 2:" data-en="Question 2:">Pyetja 2:</p>
+            <p class="text-green-700" data-sq="'Çfarë përmirësimi do të dëshironit në përvojën tuaj?'" data-en="'What improvements would you like in your experience?'">Çfarë përmirësimi do të dëshironit në përvojën tuaj?</p>
+          </div>
+          
+          <div class="bg-white p-3 rounded border-l-4 border-orange-500">
+            <p class="font-semibold text-orange-800" data-sq="Pyetja 3:" data-en="Question 3:">Pyetja 3:</p>
+            <p class="text-orange-700" data-sq="'Si do të ndjeheshit nëse do të mund të porositnit përmes telefonit por me të njëjtin shërbim personal?'" data-en="'How would you feel if you could order through phone but with same personal service?'">Si do të ndjeheshit nëse do të mund të porositnit përmes telefonit por me të njëjtin shërbim personal?</p>
+          </div>
+        </div>
+      </div>
+
+      <h3 data-sq="Faza 2: Dizajnimi i Teknologjisë 'Shqiptare'" data-en="Phase 2: Designing 'Albanian' Technology">
+        Faza 2: Dizajnimi i Teknologjisë "Shqiptare"
+      </h3>
+
+      <div data-sq="Teknologjia duhet të duket dhe të ndjehet si një pjesë natyrore e restorantit tuaj tradicional. Kjo arrihet përmes dizajnit të kujdesshëm dhe integrimit kulturor." data-en="Technology should look and feel like a natural part of your traditional restaurant. This is achieved through careful design and cultural integration.">
+        <p>Teknologjia duhet të duket dhe të ndjehet si një pjesë natyrore e restorantit tuaj tradicional. Kjo arrihet përmes dizajnit të kujdesshëm dhe integrimit kulturor.</p>
+      </div>
+
+      <!-- Design Integration Examples -->
+      <div class="grid md:grid-cols-2 gap-8 my-8">
+        <div class="bg-red-50 border border-red-200 rounded-lg p-6">
+          <h4 class="text-lg font-semibold text-red-800 mb-4" data-sq="Shembuj Integrimi QR" data-en="QR Integration Examples">
+            Shembuj Integrimi QR
+          </h4>
+          <ul class="space-y-3 text-red-700 text-sm">
+            <li data-sq="• QR i ngulitur në tavola druri të gdhendura me motive tradicionale" data-en="• QR embedded in wooden tables carved with traditional motifs">• QR i ngulitur në tavola druri të gdhendura me motive tradicionale</li>
+            <li data-sq="• Karta me QR të dizajnuara si letra pergamene antike" data-en="• QR cards designed as ancient parchment papers">• Karta me QR të dizajnuara si letra pergamene antike</li>
+            <li data-sq="• QR të integruara në pjata qeramike me simbole shqiptare" data-en="• QR integrated in ceramic plates with Albanian symbols">• QR të integruara në pjata qeramike me simbole shqiptare</li>
+            <li data-sq="• Display të fshehura në korniza tradicionale druri" data-en="• Displays hidden in traditional wooden frames">• Display të fshehura në korniza tradicionale druri</li>
+          </ul>
+        </div>
+
+        <div class="bg-green-50 border border-green-200 rounded-lg p-6">
+          <h4 class="text-lg font-semibold text-green-800 mb-4" data-sq="Elementet e Menusë Kulturore" data-en="Cultural Menu Elements">
+            Elementet e Menusë Kulturore
+          </h4>
+          <ul class="space-y-3 text-green-700 text-sm">
+            <li data-sq="• Historia e çdo pjate e treguar me audio në dialekt lokal" data-en="• Story of each dish told with audio in local dialect">• Historia e çdo pjate e treguar me audio në dialekt lokal</li>
+            <li data-sq="• Foto të pjatave në ambiente tradicionale familjare" data-en="• Photos of dishes in traditional family environments">• Foto të pjatave në ambiente tradicionale familjare</li>
+            <li data-sq="• Emërtime në dialektet lokale me shpjegime" data-en="• Names in local dialects with explanations">• Emërtime në dialektet lokale me shpjegime</li>
+            <li data-sq="• Video të shkurtra të procesit të gatimit tradicional" data-en="• Short videos of traditional cooking process">• Video të shkurtra të procesit të gatimit tradicional</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Success Story -->
+      <h2 data-sq="Histori Suksesi: Restorant 'Tradita' - Gjirokastër" data-en="Success Story: Restaurant 'Tradita' - Gjirokastër">
+        Histori Suksesi: Restorant "Tradita" - Gjirokastër
+      </h2>
+
+      <div class="bg-gradient-to-r from-orange-50 to-red-50 rounded-lg p-6 my-8">
+        <div data-sq="Restorant 'Tradita' në Gjirokastër është një shembull perfekt i modernizimit organik. I hapur në 1987 nga familja Muca, ky restorant ruante receta të trashëguara nga gjyshi i pronarit dhe kishte një klientelë besnike nga gjithandej Shqipëria." data-en="Restaurant 'Tradita' in Gjirokastër is a perfect example of organic modernization. Opened in 1987 by the Muca family, this restaurant preserved recipes inherited from the owner's grandfather and had loyal clientele from all over Albania.">
+          <p>Restorant "Tradita" në Gjirokastër është një shembull perfekt i modernizimit organik. I hapur në 1987 nga familja Muca, ky restorant ruante receta të trashëguara nga gjyshi i pronarit dhe kishte një klientelë besnike nga gjithandej Shqipëria.</p>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-4 mt-6">
+          <div class="text-center">
+            <h4 class="font-semibold text-orange-800 mb-2" data-sq="Sfida" data-en="Challenge">Sfida</h4>
+            <div class="bg-white p-4 rounded">
+              <p class="text-sm text-gray-600" data-sq="Rritje e turistëve ndërkombëtarë por vështirësi komunikimi dhe kohë të gjata pritjeje" data-en="Increase in international tourists but communication difficulties and long waiting times">Rritje e turistëve ndërkombëtarë por vështirësi komunikimi dhe kohë të gjata pritjeje</p>
+            </div>
+          </div>
+          
+          <div class="text-center">
+            <h4 class="font-semibold text-green-800 mb-2" data-sq="Zgjidhja" data-en="Solution">Zgjidhja</h4>
+            <div class="bg-white p-4 rounded">
+              <p class="text-sm text-gray-600" data-sq="Menu dixhitale me histori pjatash, QR të integruara në tavola tradicionale, audio në 5 gjuhë" data-en="Digital menu with dish stories, QR integrated in traditional tables, audio in 5 languages">Menu dixhitale me histori pjatash, QR të integruara në tavola tradicionale, audio në 5 gjuhë</p>
+            </div>
+          </div>
+          
+          <div class="text-center">
+            <h4 class="font-semibold text-blue-800 mb-2" data-sq="Rezultati" data-en="Result">Rezultati</h4>
+            <div class="bg-white p-4 rounded">
+              <p class="text-sm text-gray-600" data-sq="95% kënaqësi klientësh, 40% rritje të ardhurave, ruajtje identiteti" data-en="95% customer satisfaction, 40% revenue increase, identity preservation">95% kënaqësi klientësh, 40% rritje të ardhurave, ruajtje identiteti</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-6 p-4 bg-white rounded border-l-4 border-orange-500">
+          <p class="text-orange-800 font-semibold" data-sq="Çelësi i Suksesit:" data-en="Key to Success:">Çelësi i Suksesit:</p>
+          <p class="text-orange-700 text-sm mt-1" data-sq="'Nuk e shikonim teknologjinë si zëvendësues por si një mënyrë për të treguar më mirë historinë tonë. Tani turistët njohin jo vetëm ushqimin por edhe kulturën.' - Agim Muca, Pronar" data-en="'We didn't see technology as replacement but as a way to better tell our story. Now tourists know not only food but also culture.' - Agim Muca, Owner">"Nuk e shikonim teknologjinë si zëvendësues por si një mënyrë për të treguar më mirë historinë tonë. Tani turistët njohin jo vetëm ushqimin por edhe kulturën." - Agim Muca, Pronar</p>
+        </div>
+      </div>
+
+      <!-- Implementation Timeline -->
+      <h2 data-sq="Kalendari i Modernizimit për Restorantet Tradicionale" data-en="Modernization Calendar for Traditional Restaurants">
+        Kalendari i Modernizimit për Restorantet Tradicionale
+      </h2>
+
+      <div class="bg-gray-50 rounded-lg p-6 my-8">
+        <h3 class="text-lg font-semibold mb-6 text-center" data-sq="Plani 30-Ditor i Modernizimit Organik" data-en="30-Day Organic Modernization Plan">
+          Plani 30-Ditor i Modernizimit Organik
+        </h3>
+        
+        <div class="space-y-6">
+          <div class="border-l-4 border-blue-500 pl-6">
+            <h4 class="font-semibold text-blue-800 mb-2" data-sq="Javët 1-2: Studimi dhe Këshillimi" data-en="Weeks 1-2: Study and Consultation">Javët 1-2: Studimi dhe Këshillimi</h4>
+            <ul class="text-sm text-gray-600 space-y-1">
+              <li data-sq="• Biseda me klientët besnikë dhe mbledhje feedback-u" data-en="• Conversations with loyal customers and feedback collection">• Biseda me klientët besnikë dhe mbledhje feedback-u</li>
+              <li data-sq="• Analizë e identitetit kulturor të restorantit" data-en="• Analysis of restaurant's cultural identity">• Analizë e identitetit kulturor të restorantit</li>
+              <li data-sq="• Dizajnim i strategjisë së integrimit" data-en="• Integration strategy design">• Dizajnim i strategjisë së integrimit</li>
+            </ul>
+          </div>
+          
+          <div class="border-l-4 border-green-500 pl-6">
+            <h4 class="font-semibold text-green-800 mb-2" data-sq="Javët 3-4: Krijimi i Përmbajtjes" data-en="Weeks 3-4: Content Creation">Javët 3-4: Krijimi i Përmbajtjes</h4>
+            <ul class="text-sm text-gray-600 space-y-1">
+              <li data-sq="• Fotografim profesional në stil tradicional" data-en="• Professional photography in traditional style">• Fotografim profesional në stil tradicional</li>
+              <li data-sq="• Shkrim historish të pjatave dhe traditave" data-en="• Writing stories of dishes and traditions">• Shkrim historish të pjatave dhe traditave</li>
+              <li data-sq="• Regjistrim audio-video në dialektet lokale" data-en="• Audio-video recording in local dialects">• Regjistrim audio-video në dialektet lokale</li>
+            </ul>
+          </div>
+          
+          <div class="border-l-4 border-orange-500 pl-6">
+            <h4 class="font-semibold text-orange-800 mb-2" data-sq="Java 5: Lansimi i Butë" data-en="Week 5: Soft Launch">Java 5: Lansimi i Butë</h4>
+            <ul class="text-sm text-gray-600 space-y-1">
+              <li data-sq="• Test me klientët besnikë" data-en="• Testing with loyal customers">• Test me klientët besnikë</li>
+              <li data-sq="• Adjustime bazuar në feedback" data-en="• Adjustments based on feedback">• Adjustime bazuar në feedback</li>
+              <li data-sq="• Lansim zyrtar me ceremoni tradicionale" data-en="• Official launch with traditional ceremony">• Lansim zyrtar me ceremoni tradicionale</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- ROI for Traditional Restaurants -->
+      <h2 data-sq="Përfitimet Ekonomike për Restorantet Tradicionale" data-en="Economic Benefits for Traditional Restaurants">
+        Përfitimet Ekonomike për Restorantet Tradicionale
+      </h2>
+
+      <div class="overflow-x-auto my-8">
+        <table class="min-w-full bg-white border border-gray-200 rounded-lg">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider" data-sq="Përfitimi" data-en="Benefit">Përfitimi</th>
+              <th class="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider" data-sq="Para" data-en="Before">Para</th>
+              <th class="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider" data-sq="Pas" data-en="After">Pas</th>
+              <th class="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider" data-sq="Përmirësim" data-en="Improvement">Përmirësim</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-200">
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Komunikim me turistë</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Vështirësi të mëdha</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">5 gjuhë + audio</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-green-600">+400%</td>
+            </tr>
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Kohë për shpjegim pjatash</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">5-8 min/tavolinë</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">1-2 min/tavolinë</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-green-600">+75%</td>
+            </tr>
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Kënaqësi klientësh</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">72%</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">94%</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-green-600">+31%</td>
+            </tr>
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Reviews pozitive</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">65%</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">89%</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-green-600">+37%</td>
+            </tr>
+            <tr class="bg-green-50">
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">Të ardhura mujore</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">€3,200</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">€4,800</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-green-700">+50%</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Conclusion -->
+      <h2 data-sq="Përfundimi: E Ardhmja e Traditës" data-en="Conclusion: The Future of Tradition">
+        Përfundimi: E Ardhmja e Traditës
+      </h2>
+
+      <div data-sq="Modernizimi i restoranteve tradicionale shqiptare nuk do të thotë heqje dorë nga tradita - do të thotë forcim dhe pasqyrim më i mirë i saj. Teknologjia, kur përdoret me mend dhe zemër, mund të bëhet mjedisi ideal për të ndarë kulturën tonë me botën." data-en="Modernizing traditional Albanian restaurants doesn't mean giving up tradition - it means strengthening and better reflecting it. Technology, when used with mind and heart, can become the ideal medium to share our culture with the world.">
+        <p>Modernizimi i restoranteve tradicionale shqiptare nuk do të thotë heqje dorë nga tradita - do të thotë forcim dhe pasqyrim më i mirë i saj. Teknologjia, kur përdoret me mend dhe zemër, mund të bëhet mjedisi ideal për të ndarë kulturën tonë me botën.</p>
+      </div>
+
+      <div data-sq="Restorantet që zgjidhin modernizimin organik nuk thjesht mbetën konkurues - ato bëhen ambasadorë të kulturës shqiptare, duke treguar se tradita dhe inovacioni mund të bashkëjetojnë bukur." data-en="Restaurants that choose organic modernization don't just remain competitive - they become ambassadors of Albanian culture, showing that tradition and innovation can coexist beautifully.">
+        <p>Restorantet që zgjidhin modernizimin organik nuk thjesht mbetën konkurues - ato bëhen ambasadorë të kulturës shqiptare, duke treguar se tradita dhe inovacioni mund të bashkëjetojnë bukur.</p>
+      </div>
+
+      <div data-sq="E ardhmja e restoranteve tradicionale shqiptare është e ndritur - por vetëm për ata që guxojnë të përqafojnë ndryshimin pa humbur veten." data-en="The future of traditional Albanian restaurants is bright - but only for those who dare to embrace change without losing themselves.">
+        <p>E ardhmja e restoranteve tradicionale shqiptare është e ndritur - por vetëm për ata që guxojnë të përqafojnë ndryshimin pa humbur veten.</p>
+      </div>
+    </div>
+
+    <!-- Call to Action -->
+    <div class="bg-gradient-to-r from-orange-600 to-red-600 text-white rounded-xl p-8 my-12">
+      <div class="text-center">
+        <h2 class="text-2xl font-bold mb-4" data-sq="Gati për Modernizim Organik?" data-en="Ready for Organic Modernization?">
+          Gati për Modernizim Organik?
+        </h2>
+        <p class="text-lg mb-6 opacity-90" data-sq="SKAN.AL është i vetmi sistem i dizajnuar posaçërisht për restorantet tradicionale shqiptare. Ne kuptojmë vlerën e traditës." data-en="SKAN.AL is the only system designed specifically for traditional Albanian restaurants. We understand the value of tradition.">
+          SKAN.AL është i vetmi sistem i dizajnuar posaçërisht për restorantet tradicionale shqiptare. Ne kuptojmë vlerën e traditës.
+        </p>
+        
+        <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+          <a href="/demo" class="bg-white text-orange-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+            <span data-sq="Vizitoni Restorantin Demo" data-en="Visit Demo Restaurant">Vizitoni Restorantin Demo</span>
+          </a>
+          <a href="/contact" class="bg-orange-500 hover:bg-orange-400 text-white px-8 py-3 rounded-lg font-semibold transition-colors">
+            <span data-sq="Konsultim Falas" data-en="Free Consultation">Konsultim Falas</span>
+          </a>
+        </div>
+        
+        <p class="text-sm opacity-75 mt-4" data-sq="Implementim i kujdesshëm • Respekt për traditën • Rezultate të garantuara" data-en="Careful implementation • Respect for tradition • Guaranteed results">
+          Implementim i kujdesshëm • Respekt për traditën • Rezultate të garantuara
+        </p>
+      </div>
+    </div>
+
+    <!-- Tags -->
+    <div class="border-t border-gray-200 pt-8">
+      <h3 class="text-sm font-medium text-gray-500 mb-4" data-sq="Etiketat" data-en="Tags">Etiketat</h3>
+      <div class="flex flex-wrap gap-2">
+        <span class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm">restorant tradicional</span>
+        <span class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm">modernizim</span>
+        <span class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm">identitet shqiptar</span>
+        <span class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm">teknologji</span>
+        <span class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm">balancë</span>
+        <span class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm">kulturë</span>
+        <span class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm">traditë</span>
+      </div>
+    </div>
+  </article>
+</BaseLayout>
+
+<script>
+// Language switching functionality
+document.addEventListener('DOMContentLoaded', function() {
+  const languageToggle = document.querySelector('.language-toggle');
+  let currentLang = 'sq'; // Default to Albanian
+  
+  if (languageToggle) {
+    languageToggle.addEventListener('click', function() {
+      currentLang = currentLang === 'sq' ? 'en' : 'sq';
+      
+      // Update all elements with language data attributes
+      document.querySelectorAll('[data-sq][data-en]').forEach(element => {
+        if (currentLang === 'en') {
+          element.textContent = element.getAttribute('data-en');
+        } else {
+          element.textContent = element.getAttribute('data-sq');
+        }
+      });
+      
+      // Update button text
+      languageToggle.textContent = currentLang === 'sq' ? 'EN' : 'SQ';
+    });
+  }
+});
+</script>

@@ -1,0 +1,593 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import LanguageSwitcher from '../../components/LanguageSwitcher.astro';
+
+const title = "Menu Dixhitale për Restorantet në Tiranë dhe Durrës: Udhëzues Komplet";
+const description = "Udhëzues i plotë për krijimin e menuve dixhitale për restorantet në qytetet kryesore shqiptare. Mësoni si të përmirësoni përvojën e klientit dhe të reduktoni kostot me teknologji moderne.";
+const publishDate = "2025-01-10";
+const author = "Manjola Doci";
+---
+
+<BaseLayout 
+  title={title}
+  description={description}
+  ogTitle="Menu Dixhitale për Restorantet në Tiranë dhe Durrës | SKAN.AL"
+  ogDescription={description}
+>
+  <article class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Header -->
+    <header class="mb-8">
+      <div class="flex justify-between items-start mb-6">
+        <div class="flex items-center space-x-2 text-sm text-gray-600">
+          <a href="/" class="hover:text-blue-600 transition-colors">Kryefaqja</a>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+          <a href="/blog" class="hover:text-blue-600 transition-colors">Blog</a>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+          <span class="text-gray-900">Artikull</span>
+        </div>
+        <LanguageSwitcher />
+      </div>
+
+      <div class="mb-6">
+        <span class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-medium mb-4 inline-block">
+          Menu Dixhitale
+        </span>
+        
+        <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 leading-tight" 
+            data-sq="Menu Dixhitale për Restorantet në Tiranë dhe Durrës: Udhëzues Komplet"
+            data-en="Digital Menus for Restaurants in Tirana and Durrës: Complete Guide">
+          Menu Dixhitale për Restorantet në Tiranë dhe Durrës: Udhëzues Komplet
+        </h1>
+        
+        <p class="text-xl text-gray-600 mb-6 leading-relaxed"
+           data-sq="Udhëzues i plotë për krijimin e menuve dixhitale për restorantet në qytetet kryesore shqiptare. Mësoni si të përmirësoni përvojën e klientit dhe të reduktoni kostot me teknologji moderne."
+           data-en="Complete guide to creating digital menus for restaurants in major Albanian cities. Learn how to enhance customer experience and reduce costs with modern technology.">
+          Udhëzues i plotë për krijimin e menuve dixhitale për restorantet në qytetet kryesore shqiptare. Mësoni si të përmirësoni përvojën e klientit dhe të reduktoni kostot me teknologji moderne.
+        </p>
+
+        <div class="flex flex-wrap items-center text-sm text-gray-500 space-x-6">
+          <div class="flex items-center space-x-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+            </svg>
+            <span>nga {author}</span>
+          </div>
+          <div class="flex items-center space-x-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+            </svg>
+            <time datetime={publishDate}>10 Janar 2025</time>
+          </div>
+          <div class="flex items-center space-x-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <span>7 minuta lexim</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Featured Image -->
+      <div class="aspect-video bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl relative overflow-hidden mb-8">
+        <div class="absolute inset-0 bg-black bg-opacity-20"></div>
+        <div class="absolute inset-0 flex items-center justify-center">
+          <div class="text-center text-white">
+            <svg class="w-16 h-16 mx-auto mb-4 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+            </svg>
+            <h2 class="text-2xl font-bold">Menu Dixhitale</h2>
+            <p class="text-lg opacity-90">Teknologji për Restorantet Urbane</p>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Content -->
+    <div class="prose prose-lg max-w-none">
+      <!-- Introduction -->
+      <div class="bg-blue-50 border-l-4 border-blue-500 p-6 mb-8">
+        <div class="flex">
+          <div class="flex-shrink-0">
+            <svg class="w-5 h-5 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+            </svg>
+          </div>
+          <div class="ml-3">
+            <h3 class="text-lg font-medium text-blue-800" data-sq="Fakt i Rëndësishëm" data-en="Important Fact">
+              Fakt i Rëndësishëm
+            </h3>
+            <div class="mt-2 text-blue-700" data-sq="Restorantet në Tiranë dhe Durrës që përdorin menu dixhitale raportojnë 65% reduktim të kostove për printim, 30% rritje të shitjeve dhe 50% përmirësim të përvojës së klientit." data-en="Restaurants in Tirana and Durrës using digital menus report 65% reduction in printing costs, 30% increase in sales and 50% improvement in customer experience.">
+              <p>Restorantet në Tiranë dhe Durrës që përdorin menu dixhitale raportojnë 65% reduktim të kostove për printim, 30% rritje të shitjeve dhe 50% përmirësim të përvojës së klientit.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div data-sq="Në peizazhin në ndryshim të shpejtë të restoranteve urbane në Shqipëri, Tirana dhe Durrësi po përjetojnë një revolucion teknologjik. Menu dixhitale nuk janë më një luksi, por një nevojë për të mbetur konkurues në tregun modern." data-en="In the rapidly changing landscape of urban restaurants in Albania, Tirana and Durrës are experiencing a technological revolution. Digital menus are no longer a luxury, but a necessity to remain competitive in the modern market.">
+        <p>Në peizazhin në ndryshim të shpejtë të restoranteve urbane në Shqipëri, Tirana dhe Durrësi po përjetojnë një revolucion teknologjik. Menu dixhitale nuk janë më një luksi, por një nevojë për të mbetur konkurues në tregun modern.</p>
+      </div>
+
+      <div data-sq="Nga restorantet elegante në qendrën e Tiranës te baret e plazhit moderne në Durrës, pronarët që investojnë në menu dixhitale po shikojnë rezultate të mrekullueshme në efikasitet, kënaqësi të klientëve dhe fitim." data-en="From elegant restaurants in Tirana center to modern beach bars in Durrës, owners investing in digital menus are seeing amazing results in efficiency, customer satisfaction and profit.">
+        <p>Nga restorantet elegante në qendrën e Tiranës te baret e plazhit moderne në Durrës, pronarët që investojnë në menu dixhitale po shikojnë rezultate të mrekullueshme në efikasitet, kënaqësi të klientëve dhe fitim.</p>
+      </div>
+
+      <!-- Section 1: Why Digital Menus Matter in Urban Albania -->
+      <h2 data-sq="Pse Menu Dixhitale janë të Rëndësishme në Qytetet Shqiptare" data-en="Why Digital Menus Matter in Albanian Cities">
+        Pse Menu Dixhitale janë të Rëndësishme në Qytetet Shqiptare
+      </h2>
+
+      <h3 data-sq="Trendi Urban dhe Pritshmëritë e Klientëve" data-en="Urban Trends and Customer Expectations">
+        Trendi Urban dhe Pritshmëritë e Klientëve
+      </h3>
+
+      <div data-sq="Klientët në Tiranë dhe Durrës janë gjithnjë e më të sofistikuar teknologjikisht. 78% e tyre përdorin smartphones për gjithçka - nga transporti urban te pagesa dixhitale. Ata presin që edhe restorantet të jenë në të njëjtin nivel teknologjik." data-en="Customers in Tirana and Durrës are increasingly technologically sophisticated. 78% of them use smartphones for everything - from urban transport to digital payments. They expect restaurants to be at the same technological level.">
+        <p>Klientët në Tiranë dhe Durrës janë gjithnjë e më të sofistikuar teknologjikisht. 78% e tyre përdorin smartphones për gjithçka - nga transporti urban te pagesa dixhitale. Ata presin që edhe restorantet të jenë në të njëjtin nivel teknologjik.</p>
+      </div>
+
+      <!-- Urban Statistics -->
+      <div class="grid md:grid-cols-3 gap-6 my-8">
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 text-center">
+          <div class="text-3xl font-bold text-blue-600 mb-2">89%</div>
+          <div class="text-sm text-blue-800" data-sq="Smartphone penetration" data-en="Smartphone penetration">Smartphone penetration</div>
+          <div class="text-xs text-blue-600 mt-1">Tiranë & Durrës</div>
+        </div>
+        
+        <div class="bg-green-50 border border-green-200 rounded-lg p-4 text-center">
+          <div class="text-3xl font-bold text-green-600 mb-2">73%</div>
+          <div class="text-sm text-green-800" data-sq="Prefer digital options" data-en="Prefer digital options">Prefer digital options</div>
+          <div class="text-xs text-green-600 mt-1">Young professionals</div>
+        </div>
+        
+        <div class="bg-purple-50 border border-purple-200 rounded-lg p-4 text-center">
+          <div class="text-3xl font-bold text-purple-600 mb-2">45%</div>
+          <div class="text-sm text-purple-800" data-sq="Leave if no digital menu" data-en="Leave if no digital menu">Leave if no digital menu</div>
+          <div class="text-xs text-purple-600 mt-1">Gen Z customers</div>
+        </div>
+      </div>
+
+      <!-- Section 2: Benefits Specific to Tirana & Durrës -->
+      <h2 data-sq="Përfitimet Specifike për Restorantet në Tiranë dhe Durrës" data-en="Specific Benefits for Restaurants in Tirana and Durrës">
+        Përfitimet Specifike për Restorantet në Tiranë dhe Durrës
+      </h2>
+
+      <h3 data-sq="1. Menaxhimi i Multiklientëve Urbanë" data-en="1. Managing Urban Multi-Customers">
+        1. Menaxhimi i Multiklientëve Urbanë
+      </h3>
+
+      <div data-sq="Në qendrat urbane si Tirana dhe Durrësi, restorantet shërbejnë njëkohësisht biznesmene në drekë, familje në darkë dhe të rinj në mbrëmje. Menu dixhitale lejon personalizimin e përvojës për çdo grup demografik." data-en="In urban centers like Tirana and Durrës, restaurants simultaneously serve businesspeople at lunch, families at dinner and young people in the evening. Digital menus allow personalizing experience for each demographic group.">
+        <p>Në qendrat urbane si Tirana dhe Durrësi, restorantet shërbejnë njëkohësisht biznesmene në drekë, familje në darkë dhe të rinj në mbrëmje. Menu dixhitale lejon personalizimin e përvojës për çdo grup demografik.</p>
+      </div>
+
+      <!-- Customer Segmentation -->
+      <div class="bg-gray-50 rounded-lg p-6 my-8">
+        <h4 class="text-lg font-semibold mb-6 text-center" data-sq="Segmentimi i Klientëve Urbanë" data-en="Urban Customer Segmentation">
+          Segmentimi i Klientëve Urbanë
+        </h4>
+        
+        <div class="grid md:grid-cols-3 gap-4">
+          <div class="text-center">
+            <div class="bg-blue-500 text-white rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-3">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2-2v2m8 0V6a2 2 0 012 2v6.5"></path>
+              </svg>
+            </div>
+            <h5 class="font-semibold mb-2" data-sq="Biznes Klientë" data-en="Business Clients">Biznes Klientë</h5>
+            <p class="text-sm text-gray-600" data-sq="Drekë të shpejta, 11:30-14:00" data-en="Quick lunches, 11:30-14:00">Drekë të shpejta, 11:30-14:00</p>
+            <p class="text-xs text-blue-600 mt-1">35% e klientëve</p>
+          </div>
+          
+          <div class="text-center">
+            <div class="bg-green-500 text-white rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-3">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+              </svg>
+            </div>
+            <h5 class="font-semibold mb-2" data-sq="Familje" data-en="Families">Familje</h5>
+            <p class="text-sm text-gray-600" data-sq="Darkë relaksi, 18:00-21:00" data-en="Relaxed dinners, 18:00-21:00">Darkë relaksi, 18:00-21:00</p>
+            <p class="text-xs text-green-600 mt-1">40% e klientëve</p>
+          </div>
+          
+          <div class="text-center">
+            <div class="bg-purple-500 text-white rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-3">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+              </svg>
+            </div>
+            <h5 class="font-semibold mb-2" data-sq="Të Rinj" data-en="Young People">Të Rinj</h5>
+            <p class="text-sm text-gray-600" data-sq="Soirée, 21:00-24:00" data-en="Soirée, 21:00-24:00">Soirée, 21:00-24:00</p>
+            <p class="text-xs text-purple-600 mt-1">25% e klientëve</p>
+          </div>
+        </div>
+      </div>
+
+      <h3 data-sq="2. Eliminimi i Barrierave Gjuhësore" data-en="2. Eliminating Language Barriers">
+        2. Eliminimi i Barrierave Gjuhësore
+      </h3>
+
+      <div data-sq="Tirana dhe Durrësi janë qytete kozmopolite me shumë ekspat, diplomatë dhe biznesmene ndërkombëtarë. Menu dixhitale shumëgjuhësore eliminon problemin e komunikimit dhe bën çdo klient të ndihet i mirëpritur." data-en="Tirana and Durrës are cosmopolitan cities with many expats, diplomats and international businesspeople. Multilingual digital menus eliminate communication problems and make every customer feel welcome.">
+        <p>Tirana dhe Durrësi janë qytete kozmopolite me shumë ekspat, diplomatë dhe biznesmene ndërkombëtarë. Menu dixhitale shumëgjuhësore eliminon problemin e komunikimit dhe bën çdo klient të ndihet i mirëpritur.</p>
+      </div>
+
+      <!-- Language Distribution -->
+      <div class="overflow-x-auto my-8">
+        <table class="min-w-full bg-white border border-gray-200 rounded-lg">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider" data-sq="Gjuha" data-en="Language">Gjuha</th>
+              <th class="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider" data-sq="Tirana %" data-en="Tirana %">Tirana %</th>
+              <th class="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider" data-sq="Durrës %" data-en="Durrës %">Durrës %</th>
+              <th class="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider" data-sq="Prioriteti" data-en="Priority">Prioriteti</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-200">
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Shqip</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">78%</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">85%</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-green-600">E domosdoshme</td>
+            </tr>
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Anglisht</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">15%</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">10%</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-blue-600">E domosdoshme</td>
+            </tr>
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Italianisht</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">5%</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">3%</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-yellow-600">E rekomandueshme</td>
+            </tr>
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Gjermanisht</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2%</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2%</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-600">Opsionale</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Section 3: Implementation Guide -->
+      <h2 data-sq="Udhëzues Hap-pas-Hapi për Implementim" data-en="Step-by-Step Implementation Guide">
+        Udhëzues Hap-pas-Hapi për Implementim
+      </h2>
+
+      <h3 data-sq="Faza 1: Përgatitja e Përmbajtjes" data-en="Phase 1: Content Preparation">
+        Faza 1: Përgatitja e Përmbajtjes
+      </h3>
+
+      <div class="space-y-6">
+        <div class="border-l-4 border-purple-500 pl-6">
+          <h4 class="text-lg font-semibold mb-2" data-sq="Fotografimi Profesional" data-en="Professional Photography">
+            Fotografimi Profesional
+          </h4>
+          <div data-sq="Investoni në fotografi cilësore të të gjitha pjatave. Në Tiranë dhe Durrës ka fotografë të specializuar për restorantet që ofrojnë pako komplette për €300-500." data-en="Invest in quality photography of all dishes. In Tirana and Durrës there are photographers specialized for restaurants offering complete packages for €300-500.">
+            <p>Investoni në fotografi cilësore të të gjitha pjatave. Në Tiranë dhe Durrës ka fotografë të specializuar për restorantet që ofrojnë pako komplette për €300-500.</p>
+          </div>
+          
+          <div class="mt-4 bg-purple-50 p-4 rounded">
+            <h5 class="font-semibold text-purple-800 mb-2" data-sq="Këshilla Fotografimi" data-en="Photography Tips">Këshilla Fotografimi</h5>
+            <ul class="text-sm text-purple-700 space-y-1">
+              <li data-sq="• Fotografoni gjatë ditës me dritë natyrale" data-en="• Photograph during day with natural light">• Fotografoni gjatë ditës me dritë natyrale</li>
+              <li data-sq="• Përdorni pjata dhe takëme të pastra" data-en="• Use clean plates and utensils">• Përdorni pjata dhe takëme të pastra</li>
+              <li data-sq="• Tregoni të gjitha ingredientet kryesore" data-en="• Show all main ingredients">• Tregoni të gjitha ingredientet kryesore</li>
+              <li data-sq="• Përfshini foto të ambientit të restorantit" data-en="• Include photos of restaurant environment">• Përfshini foto të ambientit të restorantit</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="border-l-4 border-purple-500 pl-6">
+          <h4 class="text-lg font-semibold mb-2" data-sq="Krijimi i Përshkrimeve" data-en="Creating Descriptions">
+            Krijimi i Përshkrimeve
+          </h4>
+          <div data-sq="Shkruani përshkrime tërheqëse që tregojnë historinë e pjatit, ingredientet dhe metodën e përgatijes. Përdorni gjuhë emocionale që krijon dëshirë." data-en="Write attractive descriptions that tell the story of the dish, ingredients and preparation method. Use emotional language that creates desire.">
+            <p>Shkruani përshkrime tërheqëse që tregojnë historinë e pjatit, ingredientet dhe metodën e përgatijes. Përdorni gjuhë emocionale që krijon dëshirë.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Example Menu Item -->
+      <div class="bg-gradient-to-r from-gray-50 to-blue-50 rounded-lg p-6 my-8">
+        <h4 class="text-lg font-semibold mb-4" data-sq="Shembull: Përshkrim Menuje Optimale" data-en="Example: Optimal Menu Description">
+          Shembull: Përshkrim Menuje Optimale
+        </h4>
+        
+        <div class="grid md:grid-cols-2 gap-6">
+          <div>
+            <h5 class="font-semibold mb-2 text-red-700" data-sq="Përshkrim i Dobët" data-en="Poor Description">Përshkrim i Dobët</h5>
+            <div class="bg-red-50 p-4 rounded border-l-4 border-red-500">
+              <p class="text-sm text-red-700">"Tavë kosi me mish. €12"</p>
+            </div>
+          </div>
+          <div>
+            <h5 class="font-semibold mb-2 text-green-700" data-sq="Përshkrim Optimal" data-en="Optimal Description">Përshkrim Optimal</h5>
+            <div class="bg-green-50 p-4 rounded border-l-4 border-green-500">
+              <h6 class="font-semibold text-green-800">Tavë Kosi Tradicionale</h6>
+              <p class="text-sm text-green-700 mt-1">"Mish qengji i freskët nga malësitë e Dibrës, i pjekur ngadalë me kos shkodran dhe vezë fermeri. Recetë e trashëguar nga gjyshërit tanë, e shoqëruar me oriz dibran dhe sallatë malore."</p>
+              <p class="text-sm font-semibold text-green-800 mt-2">€15</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 4: Technology Implementation -->
+      <h2 data-sq="Implementimi Teknologjik në Kuadër Urban" data-en="Technology Implementation in Urban Context">
+        Implementimi Teknologjik në Kuadër Urban
+      </h2>
+
+      <h3 data-sq="Infrastruktura e Internetit në Tiranë dhe Durrës" data-en="Internet Infrastructure in Tirana and Durrës">
+        Infrastruktura e Internetit në Tiranë dhe Durrës
+      </h3>
+
+      <div data-sq="Njëra nga përparësitë e qyteteve urbane shqiptare është infrastruktura e mirë e internetit. Tirana dhe Durrësi kanë shpejtësi interneti që konkurrojnë me qytetet evropiane, duke bërë implementimin e menuve dixhitale të lehtë dhe të qëndrueshëm." data-en="One of the advantages of Albanian urban cities is good internet infrastructure. Tirana and Durrës have internet speeds that compete with European cities, making implementation of digital menus easy and sustainable.">
+        <p>Njëra nga përparësitë e qyteteve urbane shqiptare është infrastruktura e mirë e internetit. Tirana dhe Durrësi kanë shpejtësi interneti që konkurrojnë me qytetet evropiane, duke bërë implementimin e menuve dixhitale të lehtë dhe të qëndrueshëm.</p>
+      </div>
+
+      <!-- Internet Speed Comparison -->
+      <div class="grid md:grid-cols-3 gap-6 my-8">
+        <div class="bg-green-50 border border-green-200 rounded-lg p-4 text-center">
+          <div class="text-2xl font-bold text-green-600 mb-2">65 Mbps</div>
+          <div class="text-sm text-green-800">Shpejtësi mesatare</div>
+          <div class="text-xs text-green-600 mt-1">Tirana</div>
+        </div>
+        
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 text-center">
+          <div class="text-2xl font-bold text-blue-600 mb-2">58 Mbps</div>
+          <div class="text-sm text-blue-800">Shpejtësi mesatare</div>
+          <div class="text-xs text-blue-600 mt-1">Durrës</div>
+        </div>
+        
+        <div class="bg-purple-50 border border-purple-200 rounded-lg p-4 text-center">
+          <div class="text-2xl font-bold text-purple-600 mb-2">5 Mbps</div>
+          <div class="text-sm text-purple-800">Minimum i nevojshëm</div>
+          <div class="text-xs text-purple-600 mt-1">Menu dixhitale</div>
+        </div>
+      </div>
+
+      <!-- Success Stories -->
+      <h2 data-sq="Histori Suksesi nga Tirana dhe Durrësi" data-en="Success Stories from Tirana and Durrës">
+        Histori Suksesi nga Tirana dhe Durrësi
+      </h2>
+
+      <div class="space-y-8">
+        <div class="bg-gradient-to-r from-green-50 to-blue-50 rounded-lg p-6">
+          <h3 class="text-xl font-semibold mb-4" data-sq="Restorant 'Era' - Blloku, Tiranë" data-en="Restaurant 'Era' - Blloku, Tirana">
+            Restorant "Era" - Blloku, Tiranë
+          </h3>
+          <div class="grid md:grid-cols-2 gap-6">
+            <div>
+              <h4 class="font-semibold mb-2 text-red-700" data-sq="Para Menu Dixhitale" data-en="Before Digital Menu">Para Menu Dixhitale</h4>
+              <ul class="space-y-1 text-sm text-red-600">
+                <li>• €400/muaj kosto printimi</li>
+                <li>• 8 minuta kohë për porosi</li>
+                <li>• Probleme me klientë të huaj</li>
+                <li>• Menu të dëmtuara nga uji/ushqimi</li>
+              </ul>
+            </div>
+            <div>
+              <h4 class="font-semibold mb-2 text-green-700" data-sq="Pas Menu Dixhitale" data-en="After Digital Menu">Pas Menu Dixhitale</h4>
+              <ul class="space-y-1 text-sm text-green-600">
+                <li>• €35/muaj kosto sistemi</li>
+                <li>• 3 minuta kohë për porosi</li>
+                <li>• Shërbim në 4 gjuhë</li>
+                <li>• Update të shpejta për çmime</li>
+              </ul>
+            </div>
+          </div>
+          <div class="mt-4 p-4 bg-white rounded border-l-4 border-green-500">
+            <div class="text-lg font-bold text-green-800" data-sq="Rezultati: €1,200 kursim mujor + 25% rritje shitjesh" data-en="Result: €1,200 monthly savings + 25% sales increase">
+              Rezultati: €1,200 kursim mujor + 25% rritje shitjesh
+            </div>
+            <p class="text-sm text-gray-600 mt-1">- Ermal Hoxha, Menaxher Restorant Era</p>
+          </div>
+        </div>
+
+        <div class="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-6">
+          <h3 class="text-xl font-semibold mb-4" data-sq="Beach Club 'Adriatik' - Durrës" data-en="Beach Club 'Adriatik' - Durrës">
+            Beach Club "Adriatik" - Durrës
+          </h3>
+          <div data-sq="Me 40 tavolina dhe një mix klientësh lokal dhe ndërkombëtar, Beach Club Adriatik në Durrës implementoi menu dixhitale në fillim të sezonit 2024. Rezultatet ishin spektakolare:" data-en="With 40 tables and a mix of local and international customers, Beach Club Adriatik in Durrës implemented digital menus at the beginning of 2024 season. Results were spectacular:">
+            <p>"Me 40 tavolina dhe një mix klientësh lokal dhe ndërkombëtar, Beach Club Adriatik në Durrës implementoi menu dixhitale në fillim të sezonit 2024. Rezultatet ishin spektakolare:"</p>
+          </div>
+          
+          <div class="grid md:grid-cols-4 gap-4 mt-6">
+            <div class="text-center">
+              <div class="text-2xl font-bold text-blue-600">45%</div>
+              <div class="text-sm text-blue-800">Rritje shitjesh</div>
+            </div>
+            <div class="text-center">
+              <div class="text-2xl font-bold text-green-600">60%</div>
+              <div class="text-sm text-green-800">Më shpejtë shërbim</div>
+            </div>
+            <div class="text-center">
+              <div class="text-2xl font-bold text-purple-600">90%</div>
+              <div class="text-sm text-purple-800">Kënaqësi klientësh</div>
+            </div>
+            <div class="text-center">
+              <div class="text-2xl font-bold text-orange-600">€800</div>
+              <div class="text-sm text-orange-800">Kursim mujor</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cost Analysis -->
+      <h2 data-sq="Analiza e Kostove për Restorantet Urbane" data-en="Cost Analysis for Urban Restaurants">
+        Analiza e Kostove për Restorantet Urbane
+      </h2>
+
+      <div class="overflow-x-auto my-8">
+        <table class="min-w-full bg-white border border-gray-200 rounded-lg">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider" data-sq="Elementi" data-en="Element">Elementi</th>
+              <th class="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider" data-sq="Kosto Tradicionale" data-en="Traditional Cost">Kosto Tradicionale</th>
+              <th class="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider" data-sq="Kosto Dixhitale" data-en="Digital Cost">Kosto Dixhitale</th>
+              <th class="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider" data-sq="Kursim Mujor" data-en="Monthly Savings">Kursim Mujor</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-200">
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Printim menush</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">€300-600/muaj</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">€0</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-green-600">€300-600</td>
+            </tr>
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Dizajn & ndryshime</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">€200/muaj</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">€0</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-green-600">€200</td>
+            </tr>
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Përkthime</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">€150/muaj</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">€0</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-green-600">€150</td>
+            </tr>
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Sistem SKAN.AL</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">€0</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">€35/muaj</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-red-600">-€35</td>
+            </tr>
+            <tr class="bg-green-50">
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">TOTALI</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">€650-950</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">€35</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-green-700">€615-915</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Implementation Timeline -->
+      <h2 data-sq="Afati Kohor i Implementimit" data-en="Implementation Timeline">
+        Afati Kohor i Implementimit
+      </h2>
+
+      <div class="bg-gray-50 rounded-lg p-6 my-8">
+        <h3 class="text-lg font-semibold mb-6 text-center" data-sq="Kalendari i Implementimit (14 Ditë)" data-en="Implementation Calendar (14 Days)">
+          Kalendari i Implementimit (14 Ditë)
+        </h3>
+        
+        <div class="space-y-4">
+          <div class="flex items-start">
+            <div class="bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center mr-4 flex-shrink-0 mt-1">1</div>
+            <div class="flex-1">
+              <h4 class="font-semibold" data-sq="Ditët 1-3: Auditimi i Menusë" data-en="Days 1-3: Menu Audit">Ditët 1-3: Auditimi i Menusë</h4>
+              <p class="text-sm text-gray-600" data-sq="Analizë e menusë ekzistuese, kategorizim pjatash, identifikim çmimesh" data-en="Analysis of existing menu, dish categorization, price identification">Analizë e menusë ekzistuese, kategorizim pjatash, identifikim çmimesh</p>
+            </div>
+          </div>
+          
+          <div class="flex items-start">
+            <div class="bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center mr-4 flex-shrink-0 mt-1">2</div>
+            <div class="flex-1">
+              <h4 class="font-semibold" data-sq="Ditët 4-7: Fotografimi dhe Përshkrimet" data-en="Days 4-7: Photography and Descriptions">Ditët 4-7: Fotografimi dhe Përshkrimet</h4>
+              <p class="text-sm text-gray-600" data-sq="Sesion fotografimi profesional, krijim përshkrimesh tërheqëse" data-en="Professional photography session, creating attractive descriptions">Sesion fotografimi profesional, krijim përshkrimesh tërheqëse</p>
+            </div>
+          </div>
+          
+          <div class="flex items-start">
+            <div class="bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center mr-4 flex-shrink-0 mt-1">3</div>
+            <div class="flex-1">
+              <h4 class="font-semibold" data-sq="Ditët 8-10: Krijimi i Sistemit" data-en="Days 8-10: System Creation">Ditët 8-10: Krijimi i Sistemit</h4>
+              <p class="text-sm text-gray-600" data-sq="Ngarkimi i përmbajtjes, konfigurimi i gjuhëve, testimi" data-en="Content upload, language configuration, testing">Ngarkimi i përmbajtjes, konfigurimi i gjuhëve, testimi</p>
+            </div>
+          </div>
+          
+          <div class="flex items-start">
+            <div class="bg-green-500 text-white rounded-full w-8 h-8 flex items-center justify-center mr-4 flex-shrink-0 mt-1">4</div>
+            <div class="flex-1">
+              <h4 class="font-semibold" data-sq="Ditët 11-14: Trajnimi dhe Lansimi" data-en="Days 11-14: Training and Launch">Ditët 11-14: Trajnimi dhe Lansimi</h4>
+              <p class="text-sm text-gray-600" data-sq="Trajnim stafi, vendosje QR codes, lansim zyrtar" data-en="Staff training, QR code placement, official launch">Trajnim stafi, vendosje QR codes, lansim zyrtar</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Conclusion -->
+      <h2 data-sq="Përfundimi: E Ardhmja e Restoranteve Urbane" data-en="Conclusion: The Future of Urban Restaurants">
+        Përfundimi: E Ardhmja e Restoranteve Urbane
+      </h2>
+
+      <div data-sq="Menu dixhitale nuk janë thjesht një trend kalimtar - ato përfaqësojnë të ardhmen e industrisë së restoranteve në Tiranë dhe Durrës. Restorantet që investojnë tani në këtë teknologji do të jenë liderët e tregut në vitet që vijnë." data-en="Digital menus are not just a passing trend - they represent the future of restaurant industry in Tirana and Durrës. Restaurants that invest now in this technology will be market leaders in coming years.">
+        <p>Menu dixhitale nuk janë thjesht një trend kalimtar - ato përfaqësojnë të ardhmen e industrisë së restoranteve në Tiranë dhe Durrës. Restorantet që investojnë tani në këtë teknologji do të jenë liderët e tregut në vitet që vijnë.</p>
+      </div>
+
+      <div data-sq="Me koston minimale prej vetëm €35/muaj dhe kthimin e investimit brenda javës së parë, nuk ka arsye për të mos filluar sot transformimin dixhital të restorantit tuaj." data-en="With minimal cost of only €35/month and return on investment within the first week, there's no reason not to start today the digital transformation of your restaurant.">
+        <p>Me koston minimale prej vetëm €35/muaj dhe kthimin e investimit brenda javës së parë, nuk ka arsye për të mos filluar sot transformimin dixhital të restorantit tuaj.</p>
+      </div>
+    </div>
+
+    <!-- Call to Action -->
+    <div class="bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl p-8 my-12">
+      <div class="text-center">
+        <h2 class="text-2xl font-bold mb-4" data-sq="Gati për Menu Dixhitale?" data-en="Ready for Digital Menu?">
+          Gati për Menu Dixhitale?
+        </h2>
+        <p class="text-lg mb-6 opacity-90" data-sq="Bashkohuni me 50+ restorantet në Tiranë dhe Durrës që kanë zgjedhur SKAN.AL për menu të tyre dixhitale." data-en="Join 50+ restaurants in Tirana and Durrës that have chosen SKAN.AL for their digital menus.">
+          Bashkohuni me 50+ restorantet në Tiranë dhe Durrës që kanë zgjedhur SKAN.AL për menu të tyre dixhitale.
+        </p>
+        
+        <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+          <a href="/demo" class="bg-white text-purple-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+            <span data-sq="Testoni Falas 7 Ditë" data-en="Test Free 7 Days">Testoni Falas 7 Ditë</span>
+          </a>
+          <a href="/contact" class="bg-purple-500 hover:bg-purple-400 text-white px-8 py-3 rounded-lg font-semibold transition-colors">
+            <span data-sq="Këshillim Falas" data-en="Free Consultation">Këshillim Falas</span>
+          </a>
+        </div>
+        
+        <p class="text-sm opacity-75 mt-4" data-sq="Implementim 14 ditë • Fotografim i përfshirë • Mbështetje lokale" data-en="14-day implementation • Photography included • Local support">
+          Implementim 14 ditë • Fotografim i përfshirë • Mbështetje lokale
+        </p>
+      </div>
+    </div>
+
+    <!-- Tags -->
+    <div class="border-t border-gray-200 pt-8">
+      <h3 class="text-sm font-medium text-gray-500 mb-4" data-sq="Etiketat" data-en="Tags">Etiketat</h3>
+      <div class="flex flex-wrap gap-2">
+        <span class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm">menu dixhitale</span>
+        <span class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm">Tiranë</span>
+        <span class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm">Durrës</span>
+        <span class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm">restorant modern</span>
+        <span class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm">teknologji</span>
+        <span class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm">QR kod</span>
+        <span class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm">efikasitet</span>
+      </div>
+    </div>
+  </article>
+</BaseLayout>
+
+<script>
+// Language switching functionality
+document.addEventListener('DOMContentLoaded', function() {
+  const languageToggle = document.querySelector('.language-toggle');
+  let currentLang = 'sq'; // Default to Albanian
+  
+  if (languageToggle) {
+    languageToggle.addEventListener('click', function() {
+      currentLang = currentLang === 'sq' ? 'en' : 'sq';
+      
+      // Update all elements with language data attributes
+      document.querySelectorAll('[data-sq][data-en]').forEach(element => {
+        if (currentLang === 'en') {
+          element.textContent = element.getAttribute('data-en');
+        } else {
+          element.textContent = element.getAttribute('data-sq');
+        }
+      });
+      
+      // Update button text
+      languageToggle.textContent = currentLang === 'sq' ? 'EN' : 'SQ';
+    });
+  }
+});
+</script>
