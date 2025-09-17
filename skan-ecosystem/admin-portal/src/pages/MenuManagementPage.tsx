@@ -475,7 +475,7 @@ const CategoryEditor: React.FC<{
           type="text"
           value={nameEn}
           onChange={(e) => setNameEn(e.target.value)}
-          placeholder="Category name (English)"
+          placeholder="Emri i kategorisë (Anglisht)"
         />
       </div>
       <div className="editor-actions">
@@ -490,7 +490,7 @@ const CategoryEditor: React.FC<{
           <svg className="button-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M20 6L9 17l-5-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
-          Save
+          Ruaj
         </button>
       </div>
     </div>
@@ -513,20 +513,20 @@ const ItemEditor: React.FC<{
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          placeholder="Item name"
+          placeholder="Emri i artikullit"
         />
         <input
           type="text"
           value={nameEn}
           onChange={(e) => setNameEn(e.target.value)}
-          placeholder="Item name (English)"
+          placeholder="Emri i artikullit (Anglisht)"
         />
         <input
           type="number"
           step="0.01"
           value={price}
           onChange={(e) => setPrice(e.target.value)}
-          placeholder="Price"
+          placeholder="Çmimi"
         />
       </div>
       <div className="editor-actions">
@@ -548,7 +548,7 @@ const ItemEditor: React.FC<{
           <svg className="button-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M20 6L9 17l-5-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
-          Save
+          Ruaj
         </button>
       </div>
     </div>

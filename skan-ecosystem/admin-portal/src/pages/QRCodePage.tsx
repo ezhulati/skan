@@ -58,7 +58,7 @@ const QRCodePage: React.FC = () => {
       setTables(qrCodes);
     } catch (error) {
       console.error('Error generating QR codes:', error);
-      alert('Failed to generate QR codes');
+      alert('Dështoi të gjeneroj kodet QR');
     } finally {
       setLoading(false);
     }
@@ -69,7 +69,7 @@ const QRCodePage: React.FC = () => {
     
     // Check if table already exists
     if (tables.some(table => table.tableNumber === newTableNumber.trim())) {
-      alert('Table number already exists');
+      alert('Numri i tavolines ekziston tashtë');
       return;
     }
 
@@ -78,7 +78,7 @@ const QRCodePage: React.FC = () => {
       setTables(prev => [...prev, qrCode]);
       setNewTableNumber('');
     } catch (error) {
-      alert('Failed to generate QR code for table');
+      alert('Dështoi të gjeneroj kodin QR për tavoliyn');
     }
   };
 
@@ -195,7 +195,7 @@ const QRCodePage: React.FC = () => {
             ">
               <img 
                 src="${table.qrCodeDataUrl}" 
-                alt="QR Code for Table ${table.tableNumber}"
+                alt="Kodi QR për Tavolinë ${table.tableNumber}"
                 style="
                   width: ${config.qrSize};
                   height: ${config.qrSize};
@@ -208,12 +208,12 @@ const QRCodePage: React.FC = () => {
                 font-weight: 700;
                 color: #2c3e50;
                 margin: 0 0 8px 0;
-              ">Table ${table.tableNumber}</h2>
+              ">Tavolinë ${table.tableNumber}</h2>
               <p style="
                 font-size: ${config.fontSize};
                 color: #7f8c8d;
                 margin: 0 0 10px 0;
-              ">Scan to Order</p>
+              ">Skanoni për të Porositur</p>
               <p style="
                 font-size: ${config.urlSize};
                 color: #95a5a6;
@@ -347,65 +347,65 @@ const QRCodePage: React.FC = () => {
 
   const copyToClipboard = (url: string) => {
     navigator.clipboard.writeText(url).then(() => {
-      alert('URL copied to clipboard!');
+      alert('URL u kopjua në clipboard!');
     }).catch(() => {
-      alert('Failed to copy URL');
+      alert('Dështoi të kopjoj URL');
     });
   };
 
   return (
     <div className="qr-code-page">
       <header className="page-header">
-        <h1>QR Code Generator</h1>
-        <p>Generate QR codes for your restaurant tables</p>
+        <h1>Gjeneruesi i Kodeve QR</h1>
+        <p>Gjeneroni kode QR për tavolat e restorantit tuaj</p>
       </header>
 
       <div className="qr-settings">
         <div className="setting-group">
-          <label htmlFor="baseUrl">Base URL:</label>
+          <label htmlFor="baseUrl">URL Bazë:</label>
           <input
             id="baseUrl"
             type="text"
             value={baseUrl}
             onChange={(e) => setBaseUrl(e.target.value)}
-            placeholder="https://yourdomain.com"
+            placeholder="https://domain-juaj.com"
           />
         </div>
 
         <div className="setting-group">
-          <label htmlFor="newTable">Add Table:</label>
+          <label htmlFor="newTable">Shto Tavolinë:</label>
           <div className="add-table-form">
             <input
               id="newTable"
               type="text"
               value={newTableNumber}
               onChange={(e) => setNewTableNumber(e.target.value)}
-              placeholder="Table number (e.g., 1, a1, patio-1)"
+              placeholder="Numri i tavolines (p.sh., 1, a1, verande-1)"
               onKeyPress={(e) => e.key === 'Enter' && addTable()}
             />
             <button onClick={addTable} disabled={loading}>
-              Add Table
+              Shto Tavolinë
             </button>
           </div>
         </div>
 
         <div className="actions">
           <button onClick={printQRCodes} className="print-button">
-            Print All QR Codes
+            Printo Të Gjitha Kodet QR
           </button>
           <button 
             onClick={() => generateQRCodes(tables.map(t => t.tableNumber))}
             disabled={loading}
             className="regenerate-button"
           >
-            {loading ? 'Generating...' : 'Regenerate All'}
+            {loading ? 'Duke gjeneruar...' : 'Rigjeneroj Të Gjitha'}
           </button>
         </div>
       </div>
 
       {loading && (
         <div className="loading">
-          <p>Generating QR codes...</p>
+          <p>Duke gjeneruar kodet QR...</p>
         </div>
       )}
 
@@ -413,11 +413,11 @@ const QRCodePage: React.FC = () => {
         {tables.map((table) => (
           <div key={table.tableNumber} className="qr-card">
             <div className="qr-header">
-              <h3>Table {table.tableNumber}</h3>
+              <h3>Tavolinë {table.tableNumber}</h3>
               <button 
                 onClick={() => removeTable(table.tableNumber)}
                 className="remove-button"
-                title="Remove table"
+                title="Hiq tavoliyn"
               >
                 ×
               </button>
@@ -432,8 +432,8 @@ const QRCodePage: React.FC = () => {
             </div>
             
             <div className="qr-info">
-              <p className="table-label">Table {table.tableNumber}</p>
-              <p className="scan-instruction">Scan to Order</p>
+              <p className="table-label">Tavolinë {table.tableNumber}</p>
+              <p className="scan-instruction">Skanoni për të Porositur</p>
               <p className="url">{table.url}</p>
             </div>
 
@@ -445,16 +445,16 @@ const QRCodePage: React.FC = () => {
                 <svg className="button-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
-                Download
+                Shkarko
               </button>
               
               <div className="print-size-selector">
-                <label className="print-size-label">Print Size:</label>
+                <label className="print-size-label">Madhësia e Printimit:</label>
                 <div className="print-size-buttons">
                   <button 
                     onClick={() => printSingleQRCode(table, 'small')}
                     className="print-size-button small"
-                    title="Small - Perfect for receipts and handouts"
+                    title="Vogël - Përfekt për faturat dhe fletushkat"
                   >
                     <svg className="button-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <polyline points="6,9 6,2 18,2 18,9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -466,7 +466,7 @@ const QRCodePage: React.FC = () => {
                   <button 
                     onClick={() => printSingleQRCode(table, 'medium')}
                     className="print-size-button medium"
-                    title="Medium - Ideal for table tents and counter displays"
+                    title="Mesatar - Ideal për stendat e tavolinave dhe ekranet e counters"
                   >
                     <svg className="button-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <polyline points="6,9 6,2 18,2 18,9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -478,7 +478,7 @@ const QRCodePage: React.FC = () => {
                   <button 
                     onClick={() => printSingleQRCode(table, 'large')}
                     className="print-size-button large"
-                    title="Large - Great for window displays and wall signage"
+                    title="I madh - I shkellëqyeshëm për ekranet e dritareve dhe panot e mureve"
                   >
                     <svg className="button-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <polyline points="6,9 6,2 18,2 18,9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -490,7 +490,7 @@ const QRCodePage: React.FC = () => {
                   <button 
                     onClick={() => printSingleQRCode(table, 'fullpage')}
                     className="print-size-button fullpage"
-                    title="Extra Large - Maximum visibility for outdoor and drive-through displays"
+                    title="Shumë i madh - Dëukim maksimal për ekranet e jashtme dhe ato drive-through"
                   >
                     <svg className="button-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <polyline points="6,9 6,2 18,2 18,9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -510,7 +510,7 @@ const QRCodePage: React.FC = () => {
                   <rect x="9" y="9" width="13" height="13" rx="2" ry="2" stroke="currentColor" strokeWidth="2"/>
                   <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" stroke="currentColor" strokeWidth="2"/>
                 </svg>
-                Copy URL
+                Kopjo URL
               </button>
             </div>
           </div>
@@ -519,7 +519,7 @@ const QRCodePage: React.FC = () => {
 
       {tables.length === 0 && !loading && (
         <div className="empty-state">
-          <p>No QR codes generated yet. Add some table numbers to get started!</p>
+          <p>Nuk janë gjeneruar kode QR ende. Shtoni disa numra tavolinash për të filluar!</p>
         </div>
       )}
 

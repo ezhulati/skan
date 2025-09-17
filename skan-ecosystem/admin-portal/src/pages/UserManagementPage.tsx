@@ -42,14 +42,14 @@ const UserManagementPage: React.FC = () => {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to fetch users');
+        throw new Error('Dështoi të ngarkoj përdoruesit');
       }
 
       const data = await response.json();
       setUsers(data.users || []);
     } catch (error) {
       console.error('Error fetching users:', error);
-      setError('Failed to load users');
+      setError('Dështoi të ngarkoj përdoruesit');
     } finally {
       setLoading(false);
     }
@@ -70,11 +70,11 @@ const UserManagementPage: React.FC = () => {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to send invitation');
+        throw new Error(errorData.error || 'Dështoi të dërgoj ftesnë');
       }
 
       const data = await response.json();
-      alert(`Invitation sent successfully! Token: ${data.inviteToken}`);
+      alert(`Ftesa u dërgua me sukses! Token: ${data.inviteToken}`);
       setShowInviteForm(false);
       setInviteForm({ email: '', fullName: '', role: 'staff' });
       fetchUsers(); // Refresh the list
@@ -98,13 +98,13 @@ const UserManagementPage: React.FC = () => {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to update user status');
+        throw new Error('Dështoi të përditësoj statusin e përdoruesit');
       }
 
       fetchUsers(); // Refresh the list
     } catch (error) {
       console.error('Error updating user status:', error);
-      setError('Failed to update user status');
+      setError('Dështoi të përditësoj statusin e përdoruesit');
     }
   };
 
@@ -115,7 +115,7 @@ const UserManagementPage: React.FC = () => {
   if (loading) {
     return (
       <div className="user-management-page">
-        <div className="loading">Loading users...</div>
+        <div className="loading">Duke ngarkuar përdoruesit...</div>
       </div>
     );
   }
@@ -123,13 +123,13 @@ const UserManagementPage: React.FC = () => {
   return (
     <div className="user-management-page">
       <div className="page-header">
-        <h1>User Management</h1>
+        <h1>Menaxhimi i Përdoruesve</h1>
         <button
           className="btn-primary"
           onClick={() => setShowInviteForm(true)}
           disabled={auth.user?.role !== 'admin' && auth.user?.role !== 'manager'}
         >
-          Invite User
+          Fto Përdorues
         </button>
       </div>
 
@@ -144,7 +144,7 @@ const UserManagementPage: React.FC = () => {
         <div className="modal-overlay">
           <div className="modal">
             <div className="modal-header">
-              <h2>Invite New User</h2>
+              <h2>Fto Përdorues të Ri</h2>
               <button onClick={() => setShowInviteForm(false)} className="close-btn">×</button>
             </div>
             <form onSubmit={handleInviteUser} className="invite-form">
@@ -159,7 +159,7 @@ const UserManagementPage: React.FC = () => {
                 />
               </div>
               <div className="form-group">
-                <label htmlFor="fullName">Full Name:</label>
+                <label htmlFor="fullName">Emri i Plotë:</label>
                 <input
                   type="text"
                   id="fullName"
@@ -169,24 +169,24 @@ const UserManagementPage: React.FC = () => {
                 />
               </div>
               <div className="form-group">
-                <label htmlFor="role">Role:</label>
+                <label htmlFor="role">Roli:</label>
                 <select
                   id="role"
                   value={inviteForm.role}
                   onChange={(e) => setInviteForm({ ...inviteForm, role: e.target.value as 'admin' | 'manager' | 'staff' })}
                   disabled={auth.user?.role === 'manager'} // Managers can't invite admins
                 >
-                  <option value="staff">Staff</option>
-                  <option value="manager">Manager</option>
-                  {auth.user?.role === 'admin' && <option value="admin">Admin</option>}
+                  <option value="staff">Staf</option>
+                  <option value="manager">Menaxher</option>
+                  {auth.user?.role === 'admin' && <option value="admin">Administrator</option>}
                 </select>
               </div>
               <div className="form-actions">
                 <button type="submit" disabled={inviteLoading} className="btn-primary">
-                  {inviteLoading ? 'Sending...' : 'Send Invitation'}
+                  {inviteLoading ? 'Duke dërguar...' : 'Dërgo Ftesnë'}
                 </button>
                 <button type="button" onClick={() => setShowInviteForm(false)} className="btn-secondary">
-                  Cancel
+                  Anulo
                 </button>
               </div>
             </form>
@@ -198,13 +198,13 @@ const UserManagementPage: React.FC = () => {
         <table className="users-table">
           <thead>
             <tr>
-              <th>Name</th>
+              <th>Emri</th>
               <th>Email</th>
-              <th>Role</th>
-              <th>Status</th>
-              <th>Email Verified</th>
-              <th>Created</th>
-              <th>Actions</th>
+              <th>Roli</th>
+              <th>Statusi</th>
+              <th>Email i Verifikuar</th>
+              <th>Krijuar</th>
+              <th>Veprimet</th>
             </tr>
           </thead>
           <tbody>
@@ -219,12 +219,12 @@ const UserManagementPage: React.FC = () => {
                 </td>
                 <td>
                   <span className={`status-badge ${user.isActive ? 'active' : 'inactive'}`}>
-                    {user.isActive ? 'Active' : 'Inactive'}
+                    {user.isActive ? 'Aktiv' : 'Joaktiv'}
                   </span>
                 </td>
                 <td>
                   <span className={`verification-badge ${user.emailVerified ? 'verified' : 'unverified'}`}>
-                    {user.emailVerified ? '✓ Verified' : '⚠ Unverified'}
+                    {user.emailVerified ? '✓ I verifikuar' : '⚠ I paverifikuar'}
                   </span>
                 </td>
                 <td>{new Date(user.createdAt).toLocaleDateString()}</td>
@@ -234,7 +234,7 @@ const UserManagementPage: React.FC = () => {
                     className={`btn-sm ${user.isActive ? 'btn-danger' : 'btn-success'}`}
                     disabled={user.id === auth.user?.id} // Can't deactivate self
                   >
-                    {user.isActive ? 'Deactivate' : 'Activate'}
+                    {user.isActive ? 'Çaktivizo' : 'Aktivizo'}
                   </button>
                 </td>
               </tr>
@@ -244,7 +244,7 @@ const UserManagementPage: React.FC = () => {
 
         {users.length === 0 && (
           <div className="empty-state">
-            <p>No users found.</p>
+            <p>Nuk u gjetën përdorues.</p>
           </div>
         )}
       </div>
