@@ -69,7 +69,7 @@ export function Cart() {
       clearCart();
       
       // Scroll to top before navigation
-      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+      window.scrollTo({ top: 0, left: 0 });
       document.body.scrollTop = 0;
       document.documentElement.scrollTop = 0;
       
@@ -92,7 +92,7 @@ export function Cart() {
 
   const handleBackToMenu = () => {
     // Scroll to top immediately before navigation
-    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    window.scrollTo({ top: 0, left: 0 });
     document.body.scrollTop = 0;
     document.documentElement.scrollTop = 0;
     

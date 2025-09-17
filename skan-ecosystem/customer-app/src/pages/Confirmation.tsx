@@ -37,7 +37,7 @@ export function Confirmation() {
 
   const handleTrackOrder = () => {
     // Scroll to top immediately before navigation
-    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    window.scrollTo({ top: 0, left: 0 });
     document.body.scrollTop = 0;
     document.documentElement.scrollTop = 0;
     
@@ -46,7 +46,7 @@ export function Confirmation() {
 
   const handleNewOrder = () => {
     // Scroll to top immediately before navigation
-    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    window.scrollTo({ top: 0, left: 0 });
     document.body.scrollTop = 0;
     document.documentElement.scrollTop = 0;
     

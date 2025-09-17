@@ -183,6 +183,287 @@ app.get("/v1/venue/:slug/tables", async (req, res) => {
 });
 
 // ============================================================================
+// MENU MANAGEMENT ENDPOINTS (Protected)
+// ============================================================================
+
+// Add new category to venue
+app.post("/v1/venue/:venueId/categories", verifyAuth, async (req, res) => {
+  try {
+    const { venueId } = req.params;
+    const { name, nameEn } = req.body;
+
+    if (!name || !nameEn) {
+      return res.status(400).json({ error: "Name and nameEn are required" });
+    }
+
+    // Verify venue exists and user has access
+    const venueRef = db.collection("venue").doc(venueId);
+    const venueDoc = await venueRef.get();
+    
+    if (!venueDoc.exists) {
+      return res.status(404).json({ error: "Venue not found" });
+    }
+
+    // Get highest sort order
+    const categoriesSnapshot = await venueRef.collection("menuCategory").get();
+    const maxSortOrder = categoriesSnapshot.docs.reduce((max, doc) => {
+      const sortOrder = doc.data().sortOrder || 0;
+      return Math.max(max, sortOrder);
+    }, 0);
+
+    // Create new category
+    const categoryRef = venueRef.collection("menuCategory").doc();
+    await categoryRef.set({
+      name: name,
+      nameAlbanian: nameEn, // Admin sends nameEn but we store as nameAlbanian
+      sortOrder: maxSortOrder + 1,
+      isActive: true,
+      createdAt: admin.firestore.FieldValue.serverTimestamp(),
+      updatedAt: admin.firestore.FieldValue.serverTimestamp()
+    });
+
+    res.status(201).json({
+      id: categoryRef.id,
+      name: name,
+      nameAlbanian: nameEn,
+      sortOrder: maxSortOrder + 1,
+      message: "Category created successfully"
+    });
+
+  } catch (error) {
+    console.error("Error creating category:", error);
+    res.status(500).json({ error: "Failed to create category" });
+  }
+});
+
+// Update category
+app.put("/v1/venue/:venueId/categories/:categoryId", verifyAuth, async (req, res) => {
+  try {
+    const { venueId, categoryId } = req.params;
+    const { name, nameEn } = req.body;
+
+    if (!name || !nameEn) {
+      return res.status(400).json({ error: "Name and nameEn are required" });
+    }
+
+    const venueRef = db.collection("venue").doc(venueId);
+    const categoryRef = venueRef.collection("menuCategory").doc(categoryId);
+    
+    const categoryDoc = await categoryRef.get();
+    if (!categoryDoc.exists) {
+      return res.status(404).json({ error: "Category not found" });
+    }
+
+    await categoryRef.update({
+      name: name,
+      nameAlbanian: nameEn,
+      updatedAt: admin.firestore.FieldValue.serverTimestamp()
+    });
+
+    res.json({
+      id: categoryId,
+      name: name,
+      nameAlbanian: nameEn,
+      message: "Category updated successfully"
+    });
+
+  } catch (error) {
+    console.error("Error updating category:", error);
+    res.status(500).json({ error: "Failed to update category" });
+  }
+});
+
+// Delete category
+app.delete("/v1/venue/:venueId/categories/:categoryId", verifyAuth, async (req, res) => {
+  try {
+    const { venueId, categoryId } = req.params;
+
+    const venueRef = db.collection("venue").doc(venueId);
+    const categoryRef = venueRef.collection("menuCategory").doc(categoryId);
+    
+    const categoryDoc = await categoryRef.get();
+    if (!categoryDoc.exists) {
+      return res.status(404).json({ error: "Category not found" });
+    }
+
+    // Check if category has items
+    const itemsSnapshot = await venueRef.collection("menuItem")
+      .where("category", "==", categoryId)
+      .limit(1)
+      .get();
+
+    if (!itemsSnapshot.empty) {
+      return res.status(400).json({ error: "Cannot delete category with items. Please delete items first." });
+    }
+
+    await categoryRef.delete();
+
+    res.json({ message: "Category deleted successfully" });
+
+  } catch (error) {
+    console.error("Error deleting category:", error);
+    res.status(500).json({ error: "Failed to delete category" });
+  }
+});
+
+// Add new menu item to category
+app.post("/v1/venue/:venueId/categories/:categoryId/items", verifyAuth, async (req, res) => {
+  try {
+    const { venueId, categoryId } = req.params;
+    const { name, nameEn, price, isActive = true, imageUrl } = req.body;
+
+    if (!name || !nameEn || price === undefined) {
+      return res.status(400).json({ error: "Name, nameEn, and price are required" });
+    }
+
+    const venueRef = db.collection("venue").doc(venueId);
+    
+    // Verify category exists
+    const categoryRef = venueRef.collection("menuCategory").doc(categoryId);
+    const categoryDoc = await categoryRef.get();
+    
+    if (!categoryDoc.exists) {
+      return res.status(404).json({ error: "Category not found" });
+    }
+
+    // Get highest sort order in category
+    const itemsSnapshot = await venueRef.collection("menuItem")
+      .where("category", "==", categoryId)
+      .get();
+    
+    const maxSortOrder = itemsSnapshot.docs.reduce((max, doc) => {
+      const sortOrder = doc.data().sortOrder || 0;
+      return Math.max(max, sortOrder);
+    }, 0);
+
+    // Create new menu item
+    const itemRef = venueRef.collection("menuItem").doc();
+    const itemData = {
+      name: name,
+      nameAlbanian: nameEn,
+      price: parseFloat(price),
+      category: categoryId,
+      sortOrder: maxSortOrder + 1,
+      isActive: isActive,
+      isAvailable: true,
+      createdAt: admin.firestore.FieldValue.serverTimestamp(),
+      updatedAt: admin.firestore.FieldValue.serverTimestamp()
+    };
+
+    if (imageUrl) {
+      itemData.imageUrl = imageUrl;
+    }
+
+    await itemRef.set(itemData);
+
+    res.status(201).json({
+      id: itemRef.id,
+      ...itemData,
+      message: "Menu item created successfully"
+    });
+
+  } catch (error) {
+    console.error("Error creating menu item:", error);
+    res.status(500).json({ error: "Failed to create menu item" });
+  }
+});
+
+// Update menu item
+app.put("/v1/venue/:venueId/categories/:categoryId/items/:itemId", verifyAuth, async (req, res) => {
+  try {
+    const { venueId, itemId } = req.params;
+    const { name, nameEn, price, isActive, imageUrl } = req.body;
+
+    const venueRef = db.collection("venue").doc(venueId);
+    const itemRef = venueRef.collection("menuItem").doc(itemId);
+    
+    const itemDoc = await itemRef.get();
+    if (!itemDoc.exists) {
+      return res.status(404).json({ error: "Menu item not found" });
+    }
+
+    const updateData = {
+      updatedAt: admin.firestore.FieldValue.serverTimestamp()
+    };
+
+    if (name !== undefined) updateData.name = name;
+    if (nameEn !== undefined) updateData.nameAlbanian = nameEn;
+    if (price !== undefined) updateData.price = parseFloat(price);
+    if (isActive !== undefined) updateData.isActive = isActive;
+    if (imageUrl !== undefined) updateData.imageUrl = imageUrl;
+
+    await itemRef.update(updateData);
+
+    res.json({
+      id: itemId,
+      message: "Menu item updated successfully"
+    });
+
+  } catch (error) {
+    console.error("Error updating menu item:", error);
+    res.status(500).json({ error: "Failed to update menu item" });
+  }
+});
+
+// Delete menu item
+app.delete("/v1/venue/:venueId/categories/:categoryId/items/:itemId", verifyAuth, async (req, res) => {
+  try {
+    const { venueId, itemId } = req.params;
+
+    const venueRef = db.collection("venue").doc(venueId);
+    const itemRef = venueRef.collection("menuItem").doc(itemId);
+    
+    const itemDoc = await itemRef.get();
+    if (!itemDoc.exists) {
+      return res.status(404).json({ error: "Menu item not found" });
+    }
+
+    await itemRef.delete();
+
+    res.json({ message: "Menu item deleted successfully" });
+
+  } catch (error) {
+    console.error("Error deleting menu item:", error);
+    res.status(500).json({ error: "Failed to delete menu item" });
+  }
+});
+
+// Toggle menu item availability (for quick enable/disable)
+app.patch("/v1/venue/:venueId/items/:itemId/toggle", verifyAuth, async (req, res) => {
+  try {
+    const { venueId, itemId } = req.params;
+    const { isActive } = req.body;
+
+    if (isActive === undefined) {
+      return res.status(400).json({ error: "isActive field is required" });
+    }
+
+    const venueRef = db.collection("venue").doc(venueId);
+    const itemRef = venueRef.collection("menuItem").doc(itemId);
+    
+    const itemDoc = await itemRef.get();
+    if (!itemDoc.exists) {
+      return res.status(404).json({ error: "Menu item not found" });
+    }
+
+    await itemRef.update({
+      isActive: isActive,
+      updatedAt: admin.firestore.FieldValue.serverTimestamp()
+    });
+
+    res.json({
+      id: itemId,
+      isActive: isActive,
+      message: "Menu item status updated successfully"
+    });
+
+  } catch (error) {
+    console.error("Error toggling menu item:", error);
+    res.status(500).json({ error: "Failed to update menu item status" });
+  }
+});
+
+// ============================================================================
 // ORDER ENDPOINTS  
 // ============================================================================
 

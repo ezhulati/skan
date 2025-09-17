@@ -38,7 +38,7 @@ const MenuManagementPage: React.FC = () => {
   });
   const [uploadingImage, setUploadingImage] = useState<string | null>(null);
 
-  const baseUrl = '/api/v1';
+  const baseUrl = process.env.REACT_APP_API_URL || 'https://api-mkazmlu7ta-ew.a.run.app/v1';
 
   // Image upload helper function
   const uploadImage = async (file: File): Promise<string> => {
@@ -83,11 +83,12 @@ const MenuManagementPage: React.FC = () => {
   const loadMenu = async () => {
     try {
       setError(null);
-      const response = await fetch(`${baseUrl}/venue/beach-bar-durres/menu`);
+      // Use venue slug for public menu endpoint as per API docs
+      const response = await fetch(`${baseUrl}/venue/demo-restaurant/menu`);
       if (!response.ok) throw new Error('Dështoi të ngarkoj menunë');
       
       const data = await response.json();
-      setCategories(data.menu || []);
+      setCategories(data.categories || []);
     } catch (err) {
       console.error('Error loading menu:', err);
       setError('Dështoi të ngarkoj menunë');
@@ -100,16 +101,32 @@ const MenuManagementPage: React.FC = () => {
     if (!newCategoryName.trim() || !newCategoryNameEn.trim()) return;
 
     try {
-      const response = await fetch(`${baseUrl}/venue/${auth.user?.venueId}/categories`, {
+      // Use demo venue ID for now - should match what user is logged in as
+      const venueId = auth.user?.venueId || 'demo-venue-1';
+      const url = `${baseUrl}/venue/${venueId}/categories`;
+      
+      const headers: HeadersInit = {
+        'Content-Type': 'application/json'
+      };
+      
+      if (auth.token) {
+        headers['Authorization'] = `Bearer ${auth.token}`;
+      }
+      
+      const response = await fetch(url, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify({
           name: newCategoryName,
           nameEn: newCategoryNameEn
         })
       });
 
-      if (!response.ok) throw new Error('Dështoi të shtoj kategorinë');
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Error response:', errorText);
+        throw new Error(`Failed to add category: ${response.status} - ${errorText}`);
+      }
 
       await loadMenu();
       setNewCategoryName('');
@@ -144,8 +161,15 @@ const MenuManagementPage: React.FC = () => {
     if (!window.confirm('A jeni të sigurt që doni të fshini këtë kategori dhe të gjitha artikujt e saj?')) return;
 
     try {
+      const headers: HeadersInit = {};
+      
+      if (auth.token) {
+        headers['Authorization'] = `Bearer ${auth.token}`;
+      }
+      
       const response = await fetch(`${baseUrl}/venue/${auth.user?.venueId}/categories/${categoryId}`, {
-        method: 'DELETE'
+        method: 'DELETE',
+        headers
       });
 
       if (!response.ok) throw new Error('Dështoi të fshij kategorinë');
@@ -161,9 +185,17 @@ const MenuManagementPage: React.FC = () => {
     if (!newItem.name.trim() || !newItem.nameEn.trim() || !newItem.price) return;
 
     try {
+      const headers: HeadersInit = {
+        'Content-Type': 'application/json'
+      };
+      
+      if (auth.token) {
+        headers['Authorization'] = `Bearer ${auth.token}`;
+      }
+      
       const response = await fetch(`${baseUrl}/venue/${auth.user?.venueId}/categories/${categoryId}/items`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify({
           name: newItem.name,
           nameEn: newItem.nameEn,
@@ -186,9 +218,17 @@ const MenuManagementPage: React.FC = () => {
 
   const updateItem = async (categoryId: string, itemId: string, updates: Partial<MenuItem>) => {
     try {
+      const headers: HeadersInit = {
+        'Content-Type': 'application/json'
+      };
+      
+      if (auth.token) {
+        headers['Authorization'] = `Bearer ${auth.token}`;
+      }
+      
       const response = await fetch(`${baseUrl}/venue/${auth.user?.venueId}/categories/${categoryId}/items/${itemId}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify(updates)
       });
 
@@ -207,8 +247,15 @@ const MenuManagementPage: React.FC = () => {
     if (!window.confirm('A jeni të sigurt që doni të fshini këtë artikull menuje?')) return;
 
     try {
+      const headers: HeadersInit = {};
+      
+      if (auth.token) {
+        headers['Authorization'] = `Bearer ${auth.token}`;
+      }
+      
       const response = await fetch(`${baseUrl}/venue/${auth.user?.venueId}/categories/${categoryId}/items/${itemId}`, {
-        method: 'DELETE'
+        method: 'DELETE',
+        headers
       });
 
       if (!response.ok) throw new Error('Dështoi të fshij artikullin');
