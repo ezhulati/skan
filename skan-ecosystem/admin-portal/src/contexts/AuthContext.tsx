@@ -42,6 +42,31 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     needsOnboarding: false
   });
 
+  const checkOnboardingStatus = async () => {
+    if (!auth.token) return;
+    
+    const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://api-mkazmlu7ta-ew.a.run.app/v1';
+    
+    try {
+      const response = await fetch(`${API_BASE_URL}/venue/setup-status`, {
+        headers: {
+          'Authorization': `Bearer ${auth.token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        setAuth(prev => ({
+          ...prev,
+          needsOnboarding: !data.setup.onboardingCompleted
+        }));
+      }
+    } catch (error) {
+      console.error('Error checking onboarding status:', error);
+    }
+  };
+
   useEffect(() => {
     // Check for existing session (standard admin login)
     const savedAuth = localStorage.getItem('restaurantAuth');
@@ -104,31 +129,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     
     setAuth(prev => ({ ...prev, isLoading: false }));
   }, [checkOnboardingStatus]);
-
-  const checkOnboardingStatus = async () => {
-    if (!auth.token) return;
-    
-    const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://api-mkazmlu7ta-ew.a.run.app/v1';
-    
-    try {
-      const response = await fetch(`${API_BASE_URL}/venue/setup-status`, {
-        headers: {
-          'Authorization': `Bearer ${auth.token}`,
-          'Content-Type': 'application/json'
-        }
-      });
-      
-      if (response.ok) {
-        const data = await response.json();
-        setAuth(prev => ({
-          ...prev,
-          needsOnboarding: !data.setup.onboardingCompleted
-        }));
-      }
-    } catch (error) {
-      console.error('Error checking onboarding status:', error);
-    }
-  };
 
   const login = async (email: string, password: string) => {
     const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://api-mkazmlu7ta-ew.a.run.app/v1';
