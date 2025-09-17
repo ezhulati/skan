@@ -131,7 +131,7 @@ export function Confirmation() {
             <div className="flex justify-between items-center py-2 border-b border-gray-100">
               <span className="text-gray-600">{t('total_amount')}</span>
               <span className="text-xl font-bold text-gray-900">
-                €{confirmationData.totalAmount.toFixed(2)}
+                {Math.round(confirmationData.totalAmount * 97)} Lek
               </span>
             </div>
 

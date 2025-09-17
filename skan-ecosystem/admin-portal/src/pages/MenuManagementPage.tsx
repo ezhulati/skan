@@ -401,7 +401,7 @@ const MenuManagementPage: React.FC = () => {
                           <div className="item-info">
                             <h4>{item.name}</h4>
                             <p className="item-subtitle">{item.nameEn}</p>
-                            <p className="item-price">€{item.price.toFixed(2)}</p>
+                            <p className="item-price">{Math.round(item.price * 97)} Lek</p>
                           </div>
                           <div className="item-status">
                             <label className="toggle-switch">

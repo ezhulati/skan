@@ -184,7 +184,7 @@ export function Cart() {
                     <p className="text-sm text-gray-600 italic">{item.nameAlbanian}</p>
                   )}
                   <p className="text-lg font-semibold text-primary-600 mt-1">
-                    €{item.price.toFixed(2)}
+                    {Math.round(item.price * 97)} Lek
                   </p>
                 </div>
                 <button
@@ -238,7 +238,7 @@ export function Cart() {
                 <div className="flex justify-between items-center">
                   <span className="text-sm text-gray-600">{t('total')}</span>
                   <span className="font-semibold text-gray-900">
-                    €{(item.price * item.quantity).toFixed(2)}
+                    {Math.round(item.price * item.quantity * 97)} Lek
                   </span>
                 </div>
               </div>
@@ -298,18 +298,18 @@ export function Cart() {
           <div className="space-y-2 mb-4">
             <div className="flex justify-between text-sm">
               <span className="text-gray-600">{t('items')} ({items.reduce((sum, item) => sum + item.quantity, 0)})</span>
-              <span className="text-gray-900">€{totalAmount.toFixed(2)}</span>
+              <span className="text-gray-900">{Math.round(totalAmount * 97)} Lek</span>
             </div>
             <div className="flex justify-between text-sm">
               <span className="text-gray-600">Service fee</span>
-              <span className="text-gray-900">€0.00</span>
+              <span className="text-gray-900">0 Lek</span>
             </div>
           </div>
           
           <div className="border-t border-gray-200 pt-4">
             <div className="flex justify-between items-center">
               <span className="text-lg font-semibold text-gray-900">{t('total')}</span>
-              <span className="text-xl font-bold text-primary-600">€{totalAmount.toFixed(2)}</span>
+              <span className="text-xl font-bold text-primary-600">{Math.round(totalAmount * 97)} Lek</span>
             </div>
           </div>
         </div>
@@ -332,7 +332,7 @@ export function Cart() {
                 {t('loading')}
               </>
             ) : (
-              `${t('submit_order')} • €${totalAmount.toFixed(2)}`
+              `${t('submit_order')} • ${Math.round(totalAmount * 97)} Lek`
             )}
           </button>
         </div>

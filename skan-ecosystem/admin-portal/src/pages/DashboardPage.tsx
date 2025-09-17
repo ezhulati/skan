@@ -196,13 +196,13 @@ const DashboardPage: React.FC = () => {
                     <div key={index} className="order-item">
                       <span className="item-quantity">{item.quantity}x</span>
                       <span className="item-name">{item.name}</span>
-                      <span className="item-price">€{(item.price * item.quantity).toFixed(2)}</span>
+                      <span className="item-price">{Math.round(item.price * item.quantity * 97)} Lek</span>
                     </div>
                   ))}
                 </div>
                 
                 <div className="order-total">
-                  <strong>Totali: €{order.totalAmount.toFixed(2)}</strong>
+                  <strong>Totali: {Math.round(order.totalAmount * 97)} Lek</strong>
                 </div>
                 
                 {getNextStatus(order.status) && (

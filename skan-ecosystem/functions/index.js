@@ -1132,7 +1132,7 @@ app.post("/v1/venues", verifyAuth, async (req, res) => {
       phone: phone?.trim() || null,
       description: description?.trim() || "",
       settings: {
-        currency: settings?.currency || "EUR",
+        currency: settings?.currency || "ALL",
         orderingEnabled: settings?.orderingEnabled !== false,
         estimatedPreparationTime: settings?.estimatedPreparationTime || 15
       },
@@ -1362,7 +1362,7 @@ app.post("/v1/register/venue", async (req, res) => {
       address, 
       phone, 
       description,
-      currency = "EUR",
+      currency = "ALL",
       
       // Owner information
       ownerName,

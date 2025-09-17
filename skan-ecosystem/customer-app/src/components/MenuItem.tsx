@@ -80,7 +80,7 @@ export function MenuItem({ item }: MenuItemProps) {
 
         <div className="flex items-center justify-between pt-4 border-t border-gray-100">
           <div className="text-xl font-bold text-gray-900">
-            €{item.price.toFixed(2)}
+            {Math.round(item.price * 97)} Lek
           </div>
           
           <button

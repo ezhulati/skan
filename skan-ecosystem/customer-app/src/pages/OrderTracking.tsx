@@ -318,10 +318,10 @@ export function OrderTracking() {
                 </div>
                 <div className="ml-4 text-right">
                   <div className="font-medium text-gray-900">
-                    {item.quantity}x €{item.price.toFixed(2)}
+                    {item.quantity}x {Math.round(item.price * 97)} Lek
                   </div>
                   <div className="text-sm text-gray-600">
-                    €{(item.quantity * item.price).toFixed(2)}
+                    {Math.round(item.quantity * item.price * 97)} Lek
                   </div>
                 </div>
               </div>
@@ -331,7 +331,7 @@ export function OrderTracking() {
               <div className="flex justify-between items-center">
                 <span className="text-lg font-semibold text-gray-900">Total</span>
                 <span className="text-xl font-bold text-primary-600">
-                  €{order.totalAmount.toFixed(2)}
+                  {Math.round(order.totalAmount * 97)} Lek
                 </span>
               </div>
             </div>

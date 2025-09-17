@@ -37,7 +37,7 @@ export function CartSummary() {
           </div>
           
           <div className="text-lg font-bold">
-            €{totalAmount.toFixed(2)}
+            {Math.round(totalAmount * 97)} Lek
           </div>
         </button>
       </div>
