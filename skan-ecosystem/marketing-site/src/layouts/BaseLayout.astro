@@ -2,7 +2,6 @@
 import '../styles/global.css';
 import LanguageSwitcher from '../components/LanguageSwitcher.astro';
 import CookieConsent from '../components/CookieConsent.astro';
-import { Icon } from 'astro-icon/components';
 import { SEO } from 'astro-seo';
 
 export interface Props {
@@ -106,6 +105,90 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
       ]
     }
   </script>
+
+  <!-- Swup Transition Styles -->
+  <style>
+    /* Base transition classes */
+    .transition-fade {
+      transition: opacity 0.3s ease-in-out;
+    }
+    
+    html.is-changing .transition-fade {
+      opacity: 0;
+    }
+    
+    /* Main content transitions */
+    #swup {
+      transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+    }
+    
+    html.is-animating #swup {
+      opacity: 0;
+      transform: translateY(15px);
+    }
+    
+    /* Page-specific transitions */
+    .page-hero {
+      transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+    }
+    
+    html.is-animating .page-hero {
+      opacity: 0;
+      transform: translateY(20px) scale(0.98);
+    }
+    
+    /* Blog post transitions */
+    .blog-content {
+      transition: opacity 0.35s ease-in-out, transform 0.35s ease-in-out;
+    }
+    
+    html.is-animating .blog-content {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    
+    /* Card animations */
+    .feature-card, .pricing-card, .blog-card {
+      transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+    }
+    
+    html.is-animating .feature-card,
+    html.is-animating .pricing-card,
+    html.is-animating .blog-card {
+      opacity: 0;
+      transform: translateY(10px) scale(0.99);
+    }
+    
+    /* Navigation smooth transitions */
+    nav {
+      transition: backdrop-filter 0.2s ease-in-out, background-color 0.2s ease-in-out;
+    }
+    
+    /* Loading state */
+    html.is-loading {
+      cursor: wait;
+    }
+    
+    html.is-loading * {
+      pointer-events: none;
+    }
+    
+    /* Smooth scroll enhancement */
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    /* Stagger animations for lists */
+    .stagger-item {
+      transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+      transition-delay: calc(var(--stagger-delay, 0) * 0.1s);
+    }
+    
+    html.is-animating .stagger-item {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+  </style>
 </head>
 
 <body class="font-sans antialiased bg-white text-gray-900">
@@ -172,7 +255,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
   </nav>
 
   <!-- Main Content -->
-  <main class="pt-16">
+  <main class="pt-16" id="swup">
     <slot />
   </main>
 
@@ -196,11 +279,15 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
           <div class="flex space-x-4">
             <a href="#" class="text-gray-400 hover:text-pink-500 transition-colors p-2">
               <span class="sr-only">Instagram</span>
-              <Icon name="mdi:instagram" class="h-6 w-6" />
+              <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+              </svg>
             </a>
             <a href="#" class="text-gray-400 hover:text-blue-600 transition-colors p-2">
               <span class="sr-only">Facebook</span>
-              <Icon name="mdi:facebook" class="h-6 w-6" />
+              <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+              </svg>
             </a>
           </div>
         </div>
@@ -255,6 +342,104 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     
     mobileMenuButton?.addEventListener('click', () => {
       mobileMenu?.classList.toggle('hidden');
+    });
+  </script>
+
+  <!-- Swup Page Transitions -->
+  <script>
+    import('swup').then(({ Swup }) => {
+      const swup = new Swup({
+        containers: ['#swup'],
+        animateHistoryBrowsing: true,
+        cache: true,
+        preload: true,
+        timeout: 5000,
+        ignoreVisit: (url, { el }) => {
+          // Ignore external links and certain file types
+          return url.includes('admin.skan.al') || 
+                 url.includes('order.skan.al') ||
+                 el?.hasAttribute('data-no-swup') ||
+                 url.match(/\.(pdf|zip|doc|docx)$/);
+        },
+        linkSelector: 'a[href]:not([data-no-swup]):not([href^="mailto:"]):not([href^="tel:"]):not([href^="https://admin"]):not([href^="https://order"]):not([href^="http://"]):not([target="_blank"])'
+      });
+
+      // Initialize functions
+      function initializeMobileMenu() {
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        if (mobileMenuButton && mobileMenu) {
+          mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+          });
+        }
+      }
+
+      function initializeLanguageSwitcher() {
+        // Re-initialize any language switching functionality
+        const langElements = document.querySelectorAll('[data-sq]');
+        // Language functionality will be handled by the LanguageSwitcher component
+      }
+
+      function initializeSmoothScroll() {
+        // Enhance scroll behavior for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+          anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+              target.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+              });
+            }
+          });
+        });
+      }
+
+      // Initial setup
+      initializeMobileMenu();
+      initializeLanguageSwitcher();
+      initializeSmoothScroll();
+
+      // Re-initialize after page transitions
+      swup.hooks.on('content:replace', () => {
+        initializeMobileMenu();
+        initializeLanguageSwitcher();
+        initializeSmoothScroll();
+        
+        // Scroll to top for new pages
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+
+      // Add loading states
+      swup.hooks.on('visit:start', () => {
+        document.documentElement.classList.add('is-loading');
+      });
+
+      swup.hooks.on('content:replace', () => {
+        document.documentElement.classList.remove('is-loading');
+      });
+
+      // Handle failed requests
+      swup.hooks.on('fetch:error', () => {
+        document.documentElement.classList.remove('is-loading');
+        console.warn('Swup: Failed to load page, falling back to regular navigation');
+      });
+
+      // Debug mode for development
+      if (import.meta.env.DEV) {
+        swup.hooks.on('visit:start', (visit) => {
+          console.log('Swup: Navigating to', visit.to.url);
+        });
+        
+        swup.hooks.on('content:replace', () => {
+          console.log('Swup: Content replaced');
+        });
+      }
+    }).catch(error => {
+      console.warn('Swup failed to load, falling back to regular navigation:', error);
     });
   </script>
 </body>
