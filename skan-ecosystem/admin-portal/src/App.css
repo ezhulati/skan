@@ -150,7 +150,7 @@ body {
 
 .input-icon {
   position: absolute;
-  left: 20px;
+  left: 30px;
   width: 20px;
   height: 20px;
   color: #666;
@@ -160,7 +160,7 @@ body {
 
 .form-group input {
   width: 100%;
-  padding: 16px 16px 16px 80px;
+  padding: 16px 16px 16px 120px;
   border: 2px solid #e1e5e9;
   border-radius: 12px;
   font-size: 1rem;
@@ -628,11 +628,11 @@ body {
   }
   
   .form-group input {
-    padding: 14px 14px 14px 70px;
+    padding: 14px 14px 14px 100px;
   }
   
   .input-icon {
-    left: 18px;
+    left: 25px;
     width: 18px;
     height: 18px;
   }
