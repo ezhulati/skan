@@ -14,6 +14,11 @@ export function CartSummary() {
   }
 
   const handleViewCart = () => {
+    // Scroll to top immediately before navigation
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+    
     navigate(`/${venueSlug}/${tableNumber}/cart`);
   };
 

@@ -68,6 +68,11 @@ export function Cart() {
       // Clear cart after successful order
       clearCart();
       
+      // Scroll to top before navigation
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+      document.body.scrollTop = 0;
+      document.documentElement.scrollTop = 0;
+      
       // Navigate to confirmation page
       navigate(`/${venueSlug}/${tableNumber}/confirmation`, {
         state: {
@@ -86,6 +91,11 @@ export function Cart() {
   };
 
   const handleBackToMenu = () => {
+    // Scroll to top immediately before navigation
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+    
     navigate(`/${venueSlug}/${tableNumber}/menu`);
   };
 

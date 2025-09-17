@@ -88,6 +88,11 @@ export function OrderTracking() {
   }, [order]);
 
   const handleBackToMenu = () => {
+    // Scroll to top immediately before navigation
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+    
     navigate(`/${venueSlug}/${tableNumber}/menu`);
   };
 

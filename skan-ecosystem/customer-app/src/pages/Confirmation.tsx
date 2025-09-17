@@ -36,10 +36,20 @@ export function Confirmation() {
   }, [confirmationData, navigate]);
 
   const handleTrackOrder = () => {
+    // Scroll to top immediately before navigation
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+    
     navigate(`/${venueSlug}/${tableNumber}/track/${confirmationData.orderNumber}`);
   };
 
   const handleNewOrder = () => {
+    // Scroll to top immediately before navigation
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+    
     navigate(`/${venueSlug}/${tableNumber}/menu`);
   };
 

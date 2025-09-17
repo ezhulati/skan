@@ -9,6 +9,7 @@ import { Cart } from './pages/Cart';
 import { Confirmation } from './pages/Confirmation';
 import { OrderTracking } from './pages/OrderTracking';
 import { CompactLanguagePicker } from './components/LanguagePicker';
+import ScrollToTop from './components/ScrollToTop';
 import './index.css';
 
 function VenueRoutes() {
@@ -158,6 +159,7 @@ function App() {
     <LanguageProvider>
       <CartProvider>
         <Router>
+          <ScrollToTop />
           <VenueRoutes />
         </Router>
       </CartProvider>
