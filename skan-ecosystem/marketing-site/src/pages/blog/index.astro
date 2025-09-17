@@ -1,6 +1,5 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import LanguageSwitcher from '../../components/LanguageSwitcher.astro';
 
 // Blog posts data with Albanian SEO keywords
 const blogPosts = [
@@ -93,28 +92,22 @@ const description = "Zbuloni artikuj ekspertësh për sisteme porosish QR, moder
     <!-- Header -->
     <div class="bg-white shadow-sm border-b">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div class="flex justify-between items-start">
-          <div class="flex-1">
-            <div class="flex items-center space-x-2 text-sm text-gray-600 mb-4">
-              <a href="/" class="hover:text-blue-600 transition-colors">Kryefaqja</a>
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-              </svg>
-              <span class="text-gray-900">Blog</span>
-            </div>
-            
-            <h1 class="text-4xl sm:text-5xl font-bold text-gray-900 mb-4" data-sq="Blog SKAN.AL" data-en="SKAN.AL Blog">
-              Blog SKAN.AL
-            </h1>
-            
-            <p class="text-xl text-gray-600 max-w-3xl" data-sq="Këshilla ekspertësh, strategji biznesi dhe udhëzime praktike për modernizimin e restoranteve shqiptare me teknologji QR." data-en="Expert advice, business strategies and practical guides for modernizing Albanian restaurants with QR technology.">
-              Këshilla ekspertësh, strategji biznesi dhe udhëzime praktike për modernizimin e restoranteve shqiptare me teknologji QR.
-            </p>
+        <div>
+          <div class="flex items-center space-x-2 text-sm text-gray-600 mb-4">
+            <a href="/" class="hover:text-blue-600 transition-colors">Kryefaqja</a>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
+            <span class="text-gray-900">Blog</span>
           </div>
           
-          <div class="ml-8">
-            <LanguageSwitcher />
-          </div>
+          <h1 class="text-4xl sm:text-5xl font-bold text-gray-900 mb-4" data-sq="Blog SKAN.AL" data-en="SKAN.AL Blog">
+            Blog SKAN.AL
+          </h1>
+          
+          <p class="text-xl text-gray-600 max-w-3xl" data-sq="Këshilla ekspertësh, strategji biznesi dhe udhëzime praktike për modernizimin e restoranteve shqiptare me teknologji QR." data-en="Expert advice, business strategies and practical guides for modernizing Albanian restaurants with QR technology.">
+            Këshilla ekspertësh, strategji biznesi dhe udhëzime praktike për modernizimin e restoranteve shqiptare me teknologji QR.
+          </p>
         </div>
       </div>
     </div>
