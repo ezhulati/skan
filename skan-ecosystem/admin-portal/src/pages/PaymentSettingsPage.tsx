@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { calculateSplit, getSubscriptionUrls, VERIFONE_CONFIG } from '../config/verifone';
 
 interface PaymentSettings {
-  stripeConnectEnabled: boolean;
-  stripeAccountId?: string;
-  subscriptionTier: 'free' | 'paid';
+  digitalPaymentsEnabled: boolean;
+  checkoutAccountId?: string;
+  subscriptionTier: 'digital' | 'premium';
   monthlyRevenue: number;
   transactionFees: number;
   totalOrders: number;
@@ -12,8 +13,8 @@ interface PaymentSettings {
 const PaymentSettingsPage: React.FC = () => {
   // Note: useAuth will be used for venue-specific API calls in production
   const [settings, setSettings] = useState<PaymentSettings>({
-    stripeConnectEnabled: false,
-    subscriptionTier: 'paid',
+    digitalPaymentsEnabled: false,
+    subscriptionTier: 'premium',
     monthlyRevenue: 0,
     transactionFees: 0,
     totalOrders: 0
@@ -31,8 +32,8 @@ const PaymentSettingsPage: React.FC = () => {
     try {
       // Mock data for demo - in production, this would call the API
       setSettings({
-        stripeConnectEnabled: false,
-        subscriptionTier: 'paid',
+        digitalPaymentsEnabled: false,
+        subscriptionTier: 'premium',
         monthlyRevenue: 2480,
         transactionFees: 72,
         totalOrders: 156
@@ -42,13 +43,13 @@ const PaymentSettingsPage: React.FC = () => {
     }
   };
 
-  const handleToggleStripe = async () => {
+  const handleToggleDigitalPayments = async () => {
     setIsLoading(true);
     try {
-      const newSubscriptionTier: 'free' | 'paid' = !settings.stripeConnectEnabled ? 'free' : 'paid';
+      const newSubscriptionTier: 'digital' | 'premium' = !settings.digitalPaymentsEnabled ? 'digital' : 'premium';
       const newSettings: PaymentSettings = {
         ...settings,
-        stripeConnectEnabled: !settings.stripeConnectEnabled,
+        digitalPaymentsEnabled: !settings.digitalPaymentsEnabled,
         subscriptionTier: newSubscriptionTier
       };
       
@@ -65,24 +66,24 @@ const PaymentSettingsPage: React.FC = () => {
     }
   };
 
-  const handleStripeConnect = () => {
-    // Demo mode - show success message instead of real Stripe Connect
-    alert('🎉 Demo Mode: Stripe Connect u lidh me sukses!\n\nNë versionin real, kjo do të ju drejtojë në platformën Stripe për të lidhur llogarinë tuaj.');
+  const handleCheckoutConnect = () => {
+    // Demo mode - show success message instead of real Verifone Connect
+    alert('🎉 Demo Mode: Verifone u lidh me sukses!\n\nNë versionin real, kjo do të ju drejtojë në platformën Verifone për të lidhur llogarinë tuaj.');
     
     // Simulate successful connection in demo mode
     setSettings(prev => ({
       ...prev,
-      stripeAccountId: 'acct_demo_stripe_account'
+      checkoutAccountId: 'acct_demo_2checkout_account'
     }));
-    setSuccessMessage('Llogaria Stripe u lidh me sukses në demo mode!');
+    setSuccessMessage('Llogaria 2Checkout u lidh me sukses në demo mode!');
     setTimeout(() => setSuccessMessage(''), 3000);
   };
 
   const calculateMonthlySavings = () => {
     const avgOrderValue = settings.monthlyRevenue / settings.totalOrders || 25;
-    const monthlyStripeFees = settings.totalOrders * avgOrderValue * 0.029;
-    const subscriptionCost = 35;
-    return Math.max(0, monthlyStripeFees - subscriptionCost);
+    const monthlyCommissionFees = settings.totalOrders * avgOrderValue * VERIFONE_CONFIG.platformCommissionRate;
+    const subscriptionCost = VERIFONE_CONFIG.subscriptionPlans.premium.price;
+    return Math.max(0, monthlyCommissionFees - subscriptionCost);
   };
 
   return (
@@ -115,17 +116,17 @@ const PaymentSettingsPage: React.FC = () => {
         <div className="plan-card current-plan">
           <div className="plan-header">
             <div className="plan-icon">
-              {settings.subscriptionTier === 'free' ? '💳' : '💵'}
+              {settings.subscriptionTier === 'digital' ? '💳' : '💵'}
             </div>
             <div>
               <h3>Plani Aktual</h3>
               <p className="plan-name">
-                {settings.subscriptionTier === 'free' ? 'FALAS me Stripe Connect' : 'PAGUAR - Vetëm Kesh'}
+                {settings.subscriptionTier === 'digital' ? 'DIGITAL me 2Checkout' : 'PREMIUM - Vetëm Kesh'}
               </p>
             </div>
           </div>
           <div className="plan-cost">
-            {settings.subscriptionTier === 'free' ? (
+            {settings.subscriptionTier === 'digital' ? (
               <div>
                 <span className="cost-amount">2.9%</span>
                 <span className="cost-period">për transaksion</span>
@@ -162,15 +163,15 @@ const PaymentSettingsPage: React.FC = () => {
           <div className="method-header">
             <div className="method-icon stripe-icon">💳</div>
             <div className="method-info">
-              <h3>Pagesa me Kartë (Stripe Connect)</h3>
+              <h3>Pagesa me Kartë (Verifone)</h3>
               <p>Pagesa të sigurta dhe të menjëhershme me kartë</p>
             </div>
             <div className="method-toggle">
               <label className="toggle-switch">
                 <input
                   type="checkbox"
-                  checked={settings.stripeConnectEnabled}
-                  onChange={handleToggleStripe}
+                  checked={settings.digitalPaymentsEnabled}
+                  onChange={handleToggleDigitalPayments}
                   disabled={isLoading}
                 />
                 <span className="toggle-slider"></span>
@@ -178,28 +179,28 @@ const PaymentSettingsPage: React.FC = () => {
             </div>
           </div>
           
-          {settings.stripeConnectEnabled && !settings.stripeAccountId && (
-            <div className="stripe-connect-section">
+          {settings.digitalPaymentsEnabled && !settings.checkoutAccountId && (
+            <div className="checkout-connect-section">
               <div className="connect-prompt">
-                <p>Për të aktivizuar pagesat me kartë, lidhuni me Stripe Connect:</p>
+                <p>Për të aktivizuar pagesat me kartë, lidhuni me Verifone:</p>
                 <button 
-                  className="stripe-connect-btn"
-                  onClick={handleStripeConnect}
+                  className="checkout-connect-btn"
+                  onClick={handleCheckoutConnect}
                 >
-                  <span className="stripe-logo">stripe</span>
-                  Lidhu me Stripe
+                  <span className="checkout-logo">Verifone</span>
+                  Lidhu me Verifone
                 </button>
               </div>
             </div>
           )}
 
-          {settings.stripeConnectEnabled && settings.stripeAccountId && (
-            <div className="stripe-connected">
+          {settings.digitalPaymentsEnabled && settings.checkoutAccountId && (
+            <div className="checkout-connected">
               <div className="connected-status">
                 <svg className="check-icon" viewBox="0 0 24 24" fill="none">
                   <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
-                Llogaria Stripe e lidhur me sukses
+                Llogaria Verifone e lidhur me sukses
               </div>
             </div>
           )}
@@ -241,7 +242,7 @@ const PaymentSettingsPage: React.FC = () => {
         <h2>Krahasimi i Kostos</h2>
         <div className="cost-comparison">
           <div className="comparison-card">
-            <h3>Plan FALAS (Stripe Connect)</h3>
+            <h3>Plan DIGITAL (Verifone)</h3>
             <div className="cost-breakdown">
               <div className="cost-item">
                 <span>Abonimi Mujor</span>
@@ -259,7 +260,7 @@ const PaymentSettingsPage: React.FC = () => {
           </div>
 
           <div className="comparison-card">
-            <h3>Plan PAGUAR (Kesh)</h3>
+            <h3>Plan PREMIUM (Kesh)</h3>
             <div className="cost-breakdown">
               <div className="cost-item">
                 <span>Abonimi Mujor</span>
@@ -283,7 +284,7 @@ const PaymentSettingsPage: React.FC = () => {
               <path d="M12 2v20m8-18H4a2 2 0 00-2 2v12a2 2 0 002 2h16a2 2 0 002-2V6a2 2 0 00-2-2z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
             <div>
-              <h4>Rekomandim: Kaloni në planin PAGUAR</h4>
+              <h4>Rekomandim: Kaloni në planin PREMIUM</h4>
               <p>Mund të kurseni €{Math.round(calculateMonthlySavings())} në muaj duke kaluar në planin cash-only</p>
             </div>
           </div>
@@ -541,7 +542,7 @@ const PaymentSettingsPage: React.FC = () => {
           transform: translateX(26px);
         }
 
-        .stripe-connect-section {
+        .checkout-connect-section {
           margin-top: 16px;
           padding-top: 16px;
           border-top: 1px solid #e2e8f0;
@@ -552,8 +553,8 @@ const PaymentSettingsPage: React.FC = () => {
           color: #4a5568;
         }
 
-        .stripe-connect-btn {
-          background: #635bff;
+        .checkout-connect-btn {
+          background: #0066cc;
           color: white;
           border: none;
           padding: 12px 24px;
@@ -566,18 +567,18 @@ const PaymentSettingsPage: React.FC = () => {
           gap: 8px;
         }
 
-        .stripe-connect-btn:hover {
-          background: #5a54d9;
+        .checkout-connect-btn:hover {
+          background: #0052a3;
           transform: translateY(-1px);
         }
 
-        .stripe-logo {
+        .checkout-logo {
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
           font-weight: 700;
           letter-spacing: -0.5px;
         }
 
-        .stripe-connected {
+        .checkout-connected {
           margin-top: 16px;
           padding-top: 16px;
           border-top: 1px solid #e2e8f0;

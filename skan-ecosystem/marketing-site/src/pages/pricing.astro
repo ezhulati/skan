@@ -4,7 +4,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
 <BaseLayout 
   title="Çmimet - Sistemi i Porosive me QR SKAN.AL"
-  description="Zgjidhni planin tuaj: FALAS me Stripe Connect (2.9% komision) ose €35/muaj vetëm kesh. Të dyja planet përfshijnë sistem të plotë QR porosish për restorantet shqiptare."
+  description="Zgjidhni planin tuaj: FALAS me Verifone (2.9% komision) ose €35/muaj vetëm kesh. Të dyja planet përfshijnë sistem të plotë QR porosish për restorantet shqiptare."
 >
   <!-- Hero Section -->
   <section class="bg-gradient-to-br from-blue-50 to-indigo-100 py-20">
@@ -12,8 +12,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       <h1 class="text-4xl sm:text-5xl font-bold text-gray-900 mb-6" data-sq="Zgjidhni Planin Tuaj Ideal" data-en="Choose Your Perfect Plan">
         Zgjidhni Planin Tuaj Ideal
       </h1>
-      <p class="text-xl text-gray-600 max-w-3xl mx-auto" data-sq="FALAS me Stripe ose €35/muaj vetëm kesh. Të dyja planet përfshijnë sistem të plotë QR porosish për restorantet shqiptare" data-en="FREE with Stripe or €35/month cash-only. Both plans include complete QR ordering system for Albanian restaurants">
-        FALAS me Stripe ose €35/muaj vetëm kesh. Të dyja planet përfshijnë sistem të plotë QR porosish për restorantet shqiptare
+      <p class="text-xl text-gray-600 max-w-3xl mx-auto" data-sq="FALAS me Verifone ose €35/muaj vetëm kesh. Të dyja planet përfshijnë sistem të plotë QR porosish për restorantet shqiptare" data-en="FREE with Verifone or €35/month cash-only. Both plans include complete QR ordering system for Albanian restaurants">
+        FALAS me Verifone ose €35/muaj vetëm kesh. Të dyja planet përfshijnë sistem të plotë QR porosish për restorantet shqiptare
       </p>
     </div>
   </section>
@@ -148,7 +148,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
                 <span class="text-6xl font-bold text-green-600">FALAS</span>
               </div>
               <div class="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
-                <p class="text-green-800 font-semibold mb-2" data-sq="💳 Me Stripe Connect" data-en="💳 With Stripe Connect">💳 Me Stripe Connect</p>
+                <p class="text-green-800 font-semibold mb-2" data-sq="💳 Me Verifone" data-en="💳 With Verifone">💳 Me Verifone</p>
                 <p class="text-green-700 text-sm" data-sq="2.9% komision për çdo pagesë kartë" data-en="2.9% commission on each card payment">2.9% komision për çdo pagesë kartë</p>
                 <p class="text-green-700 text-sm" data-sq="Klientët paguajnë direkt me kartë" data-en="Customers pay directly by card">Klientët paguajnë direkt me kartë</p>
               </div>
@@ -477,24 +477,84 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       </div>
       
       <div class="space-y-8">
+        <!-- Technology Fears -->
+        <div class="bg-gradient-to-r from-green-50 to-blue-50 rounded-lg p-6 border border-green-200">
+          <h3 class="text-lg font-semibold text-gray-900 mb-2" data-sq="A është e vështirë për stafin tim që nuk di shumë për teknologji?" data-en="Is this difficult for my staff who aren't tech-savvy?">A është e vështirë për stafin tim që nuk di shumë për teknologji?</h3>
+          <p class="text-gray-600 mb-3" data-sq="Jo! Shumica e stafit mësojnë brenda 15 minutash. Trajnimi ynë përfshin:" data-en="No! Most staff learn within 15 minutes. Our training includes:">Jo! Shumica e stafit mësojnë brenda 15 minutash. Trajnimi ynë përfshin:</p>
+          <ul class="text-gray-600 space-y-1 ml-4">
+            <li data-sq="✓ Video tutorial në shqip me hapa të thjeshtë" data-en="✓ Simple step-by-step Albanian video tutorials">✓ Video tutorial në shqip me hapa të thjeshtë</li>
+            <li data-sq="✓ Trajnim personal për çdo anëtar stafi" data-en="✓ Personal training for every staff member">✓ Trajnim personal për çdo anëtar stafi</li>
+            <li data-sq="✓ Karta me udhëzime të shkurtra pranë kasës" data-en="✓ Quick reference cards by the register">✓ Karta me udhëzime të shkurtra pranë kasës</li>
+            <li data-sq="✓ Mbështetje telefoni gjatë javës së parë" data-en="✓ Phone support during the first week">✓ Mbështetje telefoni gjatë javës së parë</li>
+          </ul>
+        </div>
+
         <div class="bg-white rounded-lg p-6 shadow-sm">
           <h3 class="text-lg font-semibold text-gray-900 mb-2" data-sq="A ka tarifë instalimi ose kontratë afatgjatë?" data-en="Is there a setup fee or long-term contract?">A ka tarifë instalimi ose kontratë afatgjatë?</h3>
           <p class="text-gray-600" data-sq="Pa tarifa instalimi dhe pa kontrata afatgjata. Mund të anuloni kur të doni me njoftim 30 ditë. Përfshijmë instalim falas dhe trajnim stafi për t'ju nisur shpejt." data-en="No setup fees and no long-term contracts. You can cancel anytime with 30 days notice. We include free setup and staff training to get you started quickly.">Pa tarifa instalimi dhe pa kontrata afatgjata. Mund të anuloni kur të doni me njoftim 30 ditë. Përfshijmë instalim falas dhe trajnim stafi për t'ju nisur shpejt.</p>
+        </div>
+
+        <!-- Data & Ownership -->
+        <div class="bg-yellow-50 rounded-lg p-6 border border-yellow-200">
+          <h3 class="text-lg font-semibold text-gray-900 mb-2" data-sq="Kush i zotëron të dhënat e klientëve të mi?" data-en="Who owns my customer data?">Kush i zotëron të dhënat e klientëve të mi?</h3>
+          <p class="text-gray-600 mb-3" data-sq="JU i zotëroni plotësisht të dhënat tuaja! Ne garantojmë:" data-en="YOU completely own your data! We guarantee:">JU i zotëroni plotësisht të dhënat tuaja! Ne garantojmë:</p>
+          <ul class="text-gray-600 space-y-1 ml-4">
+            <li data-sq="✓ Eksport i plotë i të dhënave në çdo kohë" data-en="✓ Full data export anytime">✓ Eksport i plotë i të dhënave në çdo kohë</li>
+            <li data-sq="✓ Nuk i shesim kurrë të dhënat tuaja" data-en="✓ We never sell your data">✓ Nuk i shesim kurrë të dhënat tuaja</li>
+            <li data-sq="✓ Ruhen në servera europian (GDPR)" data-en="✓ Stored on European servers (GDPR)">✓ Ruhen në servera europian (GDPR)</li>
+            <li data-sq="✓ Fshirje e plotë nëse anuloni" data-en="✓ Complete deletion if you cancel">✓ Fshirje e plotë nëse anuloni</li>
+          </ul>
         </div>
         
         <div class="bg-white rounded-lg p-6 shadow-sm">
           <h3 class="text-lg font-semibold text-gray-900 mb-2" data-sq="Çfarë ndodh nëse interneti më bie?" data-en="What happens if my internet goes down?">Çfarë ndodh nëse interneti më bie?</h3>
           <p class="text-gray-600" data-sq="Aplikacioni i porositjes së klientëve funksionon offline, kështu që klientët mund të shohin ende menutë dhe të bëjnë porosi. Porosit sinkronizohen automatikisht kur lidha rikthehet." data-en="The customer ordering app works offline, so customers can still view menus and place orders. Orders sync automatically when connection is restored.">Aplikacioni i porositjes së klientëve funksionon offline, kështu që klientët mund të shohin ende menutë dhe të bëjnë porosi. Porosit sinkronizohen automatikisht kur lidha rikthehet.</p>
         </div>
+
+        <!-- Payment Concerns -->
+        <div class="bg-blue-50 rounded-lg p-6 border border-blue-200">
+          <h3 class="text-lg font-semibold text-gray-900 mb-2" data-sq="Si funksionojnë pagesat me karta? A është e sigurt?" data-en="How do card payments work? Is it secure?">Si funksionojnë pagesat me karta? A është e sigurt?</h3>
+          <p class="text-gray-600 mb-3" data-sq="Përdorim Verifone, platformën më të sigurt në botë:" data-en="We use Verifone, the world's most secure platform:">Përdorim Verifone, platformën më të sigurt në botë:</p>
+          <ul class="text-gray-600 space-y-1 ml-4">
+            <li data-sq="✓ E njëjta siguri si Netflix, Spotify, Amazon" data-en="✓ Same security as Netflix, Spotify, Amazon">✓ E njëjta siguri si Netflix, Spotify, Amazon</li>
+            <li data-sq="✓ NUK kemi qasje në të dhënat e kartës" data-en="✓ We have NO access to card data">✓ NUK kemi qasje në të dhënat e kartës</li>
+            <li data-sq="✓ Paratë vijnë direkt në llogarinë tuaj bankare" data-en="✓ Money goes directly to your bank account">✓ Paratë vijnë direkt në llogarinë tuaj bankare</li>
+            <li data-sq="✓ Certifikim PCI Level 1 (më i lartë)" data-en="✓ PCI Level 1 certification (highest)">✓ Certifikim PCI Level 1 (më i lartë)</li>
+          </ul>
+        </div>
         
         <div class="bg-white rounded-lg p-6 shadow-sm">
           <h3 class="text-lg font-semibold text-gray-900 mb-2" data-sq="Mund të integrohem me sistemin tim ekzistues POS?" data-en="Can I integrate with my existing POS system?">Mund të integrohem me sistemin tim ekzistues POS?</h3>
           <p class="text-gray-600" data-sq="SKAN.AL funksionon krahas konfigurimit tuaj aktual. Mund të eksportoni të dhënat e porosive për t'u integruar me shumicën e sistemeve POS. Po punojmë gjithashtu në integrime të drejtpërdrejta për sistemet e njohura." data-en="SKAN.AL works alongside your current setup. You can export order data to integrate with most POS systems. We're also working on direct integrations for popular systems.">SKAN.AL funksionon krahas konfigurimit tuaj aktual. Mund të eksportoni të dhënat e porosive për t'u integruar me shumicën e sistemeve POS. Po punojmë gjithashtu në integrime të drejtpërdrejta për sistemet e njohura.</p>
         </div>
+
+        <!-- Customer Adoption -->
+        <div class="bg-green-50 rounded-lg p-6 border border-green-200">
+          <h3 class="text-lg font-semibold text-gray-900 mb-2" data-sq="A do ta përdorin klientët e mi këtë sistem?" data-en="Will my customers actually use this system?">A do ta përdorin klientët e mi këtë sistem?</h3>
+          <p class="text-gray-600 mb-3" data-sq="Po! Statistikat tregojnë:" data-en="Yes! Statistics show:">Po! Statistikat tregojnë:</p>
+          <ul class="text-gray-600 space-y-1 ml-4">
+            <li data-sq="✓ 89% e klientëve e përdorin menjëherë" data-en="✓ 89% of customers use it immediately">✓ 89% e klientëve e përdorin menjëherë</li>
+            <li data-sq="✓ Pa nevojë për aplikacion - vetëm skanim QR" data-en="✓ No app needed - just scan QR code">✓ Pa nevojë për aplikacion - vetëm skanim QR</li>
+            <li data-sq="✓ Turistët e pëlqejnë shumë (menu në anglisht)" data-en="✓ Tourists love it (English menu)">✓ Turistët e pëlqejnë shumë (menu në anglisht)</li>
+            <li data-sq="✓ Opsion traditional menu për klientë të moshuar" data-en="✓ Traditional menu option for older customers">✓ Opsion traditional menu për klientë të moshuar</li>
+          </ul>
+        </div>
         
         <div class="bg-white rounded-lg p-6 shadow-sm">
           <h3 class="text-lg font-semibold text-gray-900 mb-2" data-sq="Sa shpejt mundemi të fillojmë ta përdorim sistemin?" data-en="How quickly can we start using the system?">Sa shpejt mundemi të fillojmë ta përdorim sistemin?</h3>
           <p class="text-gray-600" data-sq="Shumica e restoranteve janë gati dhe funksionojnë brenda 24 orësh. Ne menaxhojmë konfigurimin teknik dhe ofrojmë trajnim për stafin tuaj të njëjtën ditë." data-en="Most restaurants are up and running within 24 hours. We handle the technical setup and provide training for your staff on the same day.">Shumica e restoranteve janë gati dhe funksionojnë brenda 24 orësh. Ne menaxhojmë konfigurimin teknik dhe ofrojmë trajnim për stafin tuaj të njëjtën ditë.</p>
+        </div>
+
+        <!-- Cancellation Process -->
+        <div class="bg-red-50 rounded-lg p-6 border border-red-200">
+          <h3 class="text-lg font-semibold text-gray-900 mb-2" data-sq="Si mund të anulon nëse nuk jam i kënaqur?" data-en="How can I cancel if I'm not satisfied?">Si mund të anulon nëse nuk jam i kënaqur?</h3>
+          <p class="text-gray-600 mb-3" data-sq="Shumë e thjeshtë:" data-en="Very simple:">Shumë e thjeshtë:</p>
+          <ul class="text-gray-600 space-y-1 ml-4">
+            <li data-sq="📞 Telefono +355 69 123 4567" data-en="📞 Call +355 69 123 4567">📞 Telefono +355 69 123 4567</li>
+            <li data-sq="⏰ 30 ditë njoftim për planin Premium" data-en="⏰ 30 days notice for Premium plan">⏰ 30 ditë njoftim për planin Premium</li>
+            <li data-sq="💾 Eksportojmë të gjitha të dhënat tuaja" data-en="💾 We export all your data">💾 Eksportojmë të gjitha të dhënat tuaja</li>
+            <li data-sq="🗑️ Fshirje të plotë nga sistemet tona" data-en="🗑️ Complete deletion from our systems">🗑️ Fshirje të plotë nga sistemet tona</li>
+          </ul>
         </div>
         
         <div class="bg-white rounded-lg p-6 shadow-sm">
