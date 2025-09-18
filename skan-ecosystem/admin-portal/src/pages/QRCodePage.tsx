@@ -17,7 +17,7 @@ const QRCodePage: React.FC = () => {
   const [baseUrl, setBaseUrl] = useState('https://order.skan.al');
   const printRef = useRef<HTMLDivElement>(null);
 
-  const venueSlug = 'demo-restaurant'; // This could be dynamic based on venue
+  const venueSlug = 'beach-bar-durres'; // This could be dynamic based on venue
 
   useEffect(() => {
     // Generate some default table QR codes
