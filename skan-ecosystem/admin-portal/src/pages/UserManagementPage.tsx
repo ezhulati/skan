@@ -30,79 +30,85 @@ const UserManagementPage: React.FC = () => {
     role: 'staff'
   });
   const [inviteLoading, setInviteLoading] = useState(false);
+  const [editingUser, setEditingUser] = useState<User | null>(null);
+  const [editLoading, setEditLoading] = useState(false);
 
   const fetchUsers = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
       
-      // Mock data for demo - realistic restaurant staff
-      const mockUsers: User[] = [
-        {
-          id: '1',
-          email: 'manager@beachbar.com',
-          fullName: 'Elena Krasniqi',
-          role: 'manager',
-          venueId: 'beach-bar-durres',
-          isActive: true,
-          emailVerified: true,
-          createdAt: '2024-01-15T10:30:00Z'
-        },
-        {
-          id: '2',
-          email: 'maria.server@beachbar.com',
-          fullName: 'Maria Hasani',
-          role: 'staff',
-          venueId: 'beach-bar-durres',
-          isActive: true,
-          emailVerified: true,
-          createdAt: '2024-02-20T14:15:00Z'
-        },
-        {
-          id: '3',
-          email: 'alex.cook@beachbar.com',
-          fullName: 'Aleksandër Gjoni',
-          role: 'staff',
-          venueId: 'beach-bar-durres',
-          isActive: true,
-          emailVerified: false,
-          createdAt: '2024-03-10T09:45:00Z'
-        },
-        {
-          id: '4',
-          email: 'ana.hostess@beachbar.com',
-          fullName: 'Ana Berberi',
-          role: 'staff',
-          venueId: 'beach-bar-durres',
-          isActive: false,
-          emailVerified: true,
-          createdAt: '2024-01-08T16:20:00Z'
-        }
-      ];
-
-      // Simulate network delay for realistic demo
-      await new Promise(resolve => setTimeout(resolve, 800));
+      // Real API call to fetch users
+      const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://api-mkazmlu7ta-ew.a.run.app/v1';
       
-      setUsers(mockUsers);
+      const headers: HeadersInit = {
+        'Content-Type': 'application/json'
+      };
+      
+      if (auth.token) {
+        headers['Authorization'] = `Bearer ${auth.token}`;
+      }
+      
+      // Filter by venue ID for venue-specific user management
+      const venueId = 'beach-bar-durres'; // Use same venue as menu management
+      const response = await fetch(`${API_BASE_URL}/users?venueId=${venueId}`, {
+        headers
+      });
+      
+      if (!response.ok) {
+        throw new Error(`Failed to fetch users: ${response.status}`);
+      }
+      
+      const data = await response.json();
+      setUsers(data.users || []);
     } catch (error) {
       console.error('Error fetching users:', error);
       setError('Dështoi të ngarkoj përdoruesit');
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [auth.token]);
 
   const handleInviteUser = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       setInviteLoading(true);
       
-      // Demo mode - simulate invitation process
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      // Real API call to invite user
+      const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://api-mkazmlu7ta-ew.a.run.app/v1';
       
-      alert(`📧 DEMO MODE: Në përdorim real, një ftesë do t'i dërgohej "${inviteForm.fullName}" në ${inviteForm.email} me rolin "${inviteForm.role}". Ata do të mund të regjistrohen dhe të fillojnë të punojnë menjëherë!`);
+      const headers: HeadersInit = {
+        'Content-Type': 'application/json'
+      };
+      
+      if (auth.token) {
+        headers['Authorization'] = `Bearer ${auth.token}`;
+      }
+      
+      const response = await fetch(`${API_BASE_URL}/users/invite`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({
+          email: inviteForm.email,
+          fullName: inviteForm.fullName,
+          role: inviteForm.role,
+          venueId: 'beach-bar-durres'
+        })
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to invite user');
+      }
+      
+      const data = await response.json();
+      alert(`✅ Ftesa u dërgua me sukses! Tokeni i ftesës: ${data.inviteToken} (në dev mode)`);
+      
       setShowInviteForm(false);
       setInviteForm({ email: '', fullName: '', role: 'staff' });
+      
+      // Refresh user list
+      await fetchUsers();
     } catch (error: any) {
       console.error('Error inviting user:', error);
       setError(error.message);
@@ -113,7 +119,30 @@ const UserManagementPage: React.FC = () => {
 
   const toggleUserStatus = async (userId: string, currentStatus: boolean) => {
     try {
-      // Demo mode - simulate status change locally
+      const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://api-mkazmlu7ta-ew.a.run.app/v1';
+      
+      const headers: HeadersInit = {
+        'Content-Type': 'application/json'
+      };
+      
+      if (auth.token) {
+        headers['Authorization'] = `Bearer ${auth.token}`;
+      }
+      
+      const response = await fetch(`${API_BASE_URL}/users/${userId}`, {
+        method: 'PUT',
+        headers,
+        body: JSON.stringify({
+          isActive: !currentStatus
+        })
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to update user status');
+      }
+      
+      // Update local state
       const user = users.find(u => u.id === userId);
       if (user) {
         const action = currentStatus ? 'çaktivizuar' : 'aktivizuar';
@@ -122,14 +151,56 @@ const UserManagementPage: React.FC = () => {
         );
         setUsers(newUsers);
         
-        // Show demo notification
-        setTimeout(() => {
-          alert(`✅ DEMO MODE: Përdoruesi "${user.fullName}" u ${action} me sukses! Në përdorim real, ata ${currentStatus ? 'nuk do të mund të hynë' : 'do të mund të hynë'} në sistem.`);
-        }, 300);
+        alert(`✅ Përdoruesi "${user.fullName}" u ${action} me sukses!`);
       }
     } catch (error) {
       console.error('Error updating user status:', error);
       setError('Dështoi të përditësoj statusin e përdoruesit');
+    }
+  };
+
+  const handleEditUser = async (updatedRole: string) => {
+    if (!editingUser) return;
+    
+    setEditLoading(true);
+    try {
+      const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://api-mkazmlu7ta-ew.a.run.app/v1';
+      
+      const headers: HeadersInit = {
+        'Content-Type': 'application/json'
+      };
+      
+      if (auth.token) {
+        headers['Authorization'] = `Bearer ${auth.token}`;
+      }
+      
+      const response = await fetch(`${API_BASE_URL}/users/${editingUser.id}`, {
+        method: 'PUT',
+        headers,
+        body: JSON.stringify({
+          role: updatedRole
+        })
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to update user role');
+      }
+      
+      // Update local state
+      const newUsers = users.map(u => 
+        u.id === editingUser.id ? { ...u, role: updatedRole as 'admin' | 'manager' | 'staff' } : u
+      );
+      setUsers(newUsers);
+      
+      alert(`✅ Roli i përdoruesit "${editingUser.fullName}" u ndryshua në "${updatedRole}" me sukses!`);
+      setEditingUser(null);
+      
+    } catch (error: any) {
+      console.error('Error updating user role:', error);
+      setError(error.message);
+    } finally {
+      setEditLoading(false);
     }
   };
 
@@ -225,6 +296,56 @@ const UserManagementPage: React.FC = () => {
         </div>
       )}
 
+      {editingUser && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <div className="modal-header">
+              <h3>Ndrysho Rolin e Përdoruesit</h3>
+              <button onClick={() => setEditingUser(null)} className="close-btn">×</button>
+            </div>
+            <div className="edit-user-content">
+              <div className="user-info-display">
+                <p><strong>Emri:</strong> {editingUser.fullName}</p>
+                <p><strong>Email:</strong> {editingUser.email}</p>
+                <p><strong>Roli Aktual:</strong> <span className={`role-badge role-${editingUser.role}`}>
+                  {editingUser.role === 'admin' ? 'Administrator' :
+                   editingUser.role === 'manager' ? 'Menaxher' : 'Staf'}
+                </span></p>
+              </div>
+              
+              <div className="role-selection">
+                <h4>Zgjidh rolin e ri:</h4>
+                <div className="role-options">
+                  {['staff', 'manager', 'admin'].map(role => (
+                    <button
+                      key={role}
+                      onClick={() => handleEditUser(role)}
+                      disabled={editLoading || role === editingUser.role}
+                      className={`role-option ${role === editingUser.role ? 'current' : ''}`}
+                    >
+                      {editLoading ? 'Duke ndryshuar...' : (
+                        role === 'admin' ? '👑 Administrator' :
+                        role === 'manager' ? '👔 Menaxher' : '👤 Staf'
+                      )}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="modal-actions">
+                <button 
+                  onClick={() => setEditingUser(null)} 
+                  className="btn-secondary"
+                  disabled={editLoading}
+                >
+                  Anulo
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="users-table-container">
         <table className="users-table">
           <thead>
@@ -260,13 +381,24 @@ const UserManagementPage: React.FC = () => {
                 </td>
                 <td>{new Date(user.createdAt).toLocaleDateString()}</td>
                 <td>
-                  <button
-                    onClick={() => toggleUserStatus(user.id, user.isActive)}
-                    className={`btn-sm ${user.isActive ? 'btn-danger' : 'btn-success'}`}
-                    disabled={user.id === auth.user?.id} // Can't deactivate self
-                  >
-                    {user.isActive ? 'Çaktivizo' : 'Aktivizo'}
-                  </button>
+                  <div className="user-actions">
+                    {(auth.user?.role === 'admin' || auth.user?.role === 'manager') && (
+                      <button
+                        onClick={() => setEditingUser(user)}
+                        className="btn-sm btn-edit"
+                        title="Ndrysho rolin"
+                      >
+                        ✏️
+                      </button>
+                    )}
+                    <button
+                      onClick={() => toggleUserStatus(user.id, user.isActive)}
+                      className={`btn-sm ${user.isActive ? 'btn-danger' : 'btn-success'}`}
+                      disabled={user.id === auth.user?.id} // Can't deactivate self
+                    >
+                      {user.isActive ? 'Çaktivizo' : 'Aktivizo'}
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}
@@ -678,6 +810,103 @@ const UserManagementPage: React.FC = () => {
             margin: 20px;
           }
         }
+        
+        .user-actions {
+          display: flex;
+          gap: 8px;
+          align-items: center;
+        }
+
+        .btn-edit {
+          background: #f39c12;
+          color: white;
+          font-size: 12px;
+          padding: 4px 8px;
+          min-width: 32px;
+        }
+
+        .btn-edit:hover {
+          background: #e67e22;
+        }
+
+        .edit-user-content {
+          padding: 20px 0;
+        }
+
+        .user-info-display {
+          background: #f8f9fa;
+          padding: 16px;
+          border-radius: 8px;
+          margin-bottom: 20px;
+        }
+
+        .user-info-display p {
+          margin: 8px 0;
+          color: #2c3e50;
+        }
+
+        .role-selection h4 {
+          margin: 0 0 16px 0;
+          color: #2c3e50;
+          font-size: 16px;
+        }
+
+        .role-options {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+          gap: 12px;
+          margin-bottom: 20px;
+        }
+
+        .role-option {
+          padding: 12px 16px;
+          border: 2px solid #e9ecef;
+          border-radius: 8px;
+          background: white;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          font-size: 14px;
+          font-weight: 500;
+          text-align: center;
+        }
+
+        .role-option:hover:not(:disabled) {
+          border-color: #3498db;
+          background: #f8f9fa;
+          transform: translateY(-1px);
+        }
+
+        .role-option.current {
+          border-color: #2ecc71;
+          background: #d5f4e6;
+          color: #27ae60;
+        }
+
+        .role-option:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+          transform: none;
+        }
+
+        .modal-actions {
+          display: flex;
+          justify-content: flex-end;
+          gap: 12px;
+          padding-top: 16px;
+          border-top: 1px solid #e9ecef;
+        }
+
+        @media (max-width: 768px) {
+          .role-options {
+            grid-template-columns: 1fr;
+          }
+          
+          .user-actions {
+            flex-direction: column;
+            gap: 4px;
+          }
+        }
+
       `}</style>
     </div>
   );

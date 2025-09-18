@@ -1,0 +1,723 @@
+import React, { useState, useEffect } from 'react';
+import { useAuth } from '../contexts/AuthContext';
+
+interface ProfileData {
+  id: string;
+  email: string;
+  fullName: string;
+  role: string;
+  venueId: string;
+  isActive: boolean;
+  emailVerified: boolean;
+  createdAt: string;
+}
+
+interface PasswordChangeForm {
+  currentPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+}
+
+const UserProfilePage: React.FC = () => {
+  const { auth } = useAuth();
+  const [profile, setProfile] = useState<ProfileData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [changingPassword, setChangingPassword] = useState(false);
+  const [error, setError] = useState('');
+  const [message, setMessage] = useState('');
+  
+  const [editMode, setEditMode] = useState(false);
+  const [editForm, setEditForm] = useState({
+    fullName: '',
+    email: ''
+  });
+  
+  const [passwordForm, setPasswordForm] = useState<PasswordChangeForm>({
+    currentPassword: '',
+    newPassword: '',
+    confirmPassword: ''
+  });
+
+  const fetchProfile = async () => {
+    try {
+      setLoading(true);
+      setError('');
+      
+      const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://api-mkazmlu7ta-ew.a.run.app/v1';
+      
+      const headers: HeadersInit = {
+        'Content-Type': 'application/json'
+      };
+      
+      if (auth.token) {
+        headers['Authorization'] = `Bearer ${auth.token}`;
+      }
+      
+      // Use current user's ID from auth context
+      const userId = auth.user?.id;
+      if (!userId) {
+        throw new Error('User ID not found');
+      }
+      
+      const response = await fetch(`${API_BASE_URL}/users/${userId}`, {
+        headers
+      });
+      
+      if (!response.ok) {
+        throw new Error(`Failed to fetch profile: ${response.status}`);
+      }
+      
+      const data = await response.json();
+      setProfile(data);
+      setEditForm({
+        fullName: data.fullName || '',
+        email: data.email || ''
+      });
+    } catch (err: any) {
+      console.error('Error fetching profile:', err);
+      setError('Dështoi të ngarkoj profilin');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleUpdateProfile = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSaving(true);
+    setError('');
+    setMessage('');
+
+    try {
+      const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://api-mkazmlu7ta-ew.a.run.app/v1';
+      
+      const headers: HeadersInit = {
+        'Content-Type': 'application/json'
+      };
+      
+      if (auth.token) {
+        headers['Authorization'] = `Bearer ${auth.token}`;
+      }
+      
+      const userId = auth.user?.id;
+      if (!userId) {
+        throw new Error('User ID not found');
+      }
+      
+      const response = await fetch(`${API_BASE_URL}/users/${userId}`, {
+        method: 'PUT',
+        headers,
+        body: JSON.stringify({
+          fullName: editForm.fullName,
+          email: editForm.email
+        })
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to update profile');
+      }
+      
+      setMessage('✅ Profili u përditësua me sukses!');
+      setEditMode(false);
+      await fetchProfile(); // Refresh profile data
+      
+      setTimeout(() => setMessage(''), 3000);
+    } catch (err: any) {
+      console.error('Error updating profile:', err);
+      setError(err.message);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleChangePassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setChangingPassword(true);
+    setError('');
+    setMessage('');
+
+    // Validate passwords match
+    if (passwordForm.newPassword !== passwordForm.confirmPassword) {
+      setError('Fjalëkalimet e reja nuk përputhen');
+      setChangingPassword(false);
+      return;
+    }
+
+    // Validate password strength
+    if (passwordForm.newPassword.length < 8) {
+      setError('Fjalëkalimi i ri duhet të jetë së paku 8 karaktere');
+      setChangingPassword(false);
+      return;
+    }
+
+    try {
+      const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://api-mkazmlu7ta-ew.a.run.app/v1';
+      
+      const headers: HeadersInit = {
+        'Content-Type': 'application/json'
+      };
+      
+      if (auth.token) {
+        headers['Authorization'] = `Bearer ${auth.token}`;
+      }
+      
+      // For password change, we'll use a dedicated endpoint
+      const response = await fetch(`${API_BASE_URL}/auth/change-password`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({
+          currentPassword: passwordForm.currentPassword,
+          newPassword: passwordForm.newPassword
+        })
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to change password');
+      }
+      
+      setMessage('✅ Fjalëkalimi u ndryshua me sukses!');
+      setPasswordForm({
+        currentPassword: '',
+        newPassword: '',
+        confirmPassword: ''
+      });
+      
+      setTimeout(() => setMessage(''), 3000);
+    } catch (err: any) {
+      console.error('Error changing password:', err);
+      setError(err.message);
+    } finally {
+      setChangingPassword(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchProfile();
+  }, [auth.user?.id]);
+
+  if (loading) {
+    return (
+      <div className="profile-page">
+        <div className="loading-container">
+          <div className="loading-spinner large"></div>
+          <p>Duke ngarkuar profilin...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!profile) {
+    return (
+      <div className="profile-page">
+        <div className="error-container">
+          <h2>Profili nuk u gjet</h2>
+          <button onClick={fetchProfile} className="retry-button">
+            Provoni Përsëri
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="profile-page">
+      <div className="page-header">
+        <h1>Profili i Përdoruesit</h1>
+        <p>Menaxhoni informacionet e llogarisë suaj</p>
+      </div>
+
+      {error && (
+        <div className="alert alert-error">
+          <svg className="alert-icon" viewBox="0 0 24 24" fill="none">
+            <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+          {error}
+        </div>
+      )}
+
+      {message && (
+        <div className="alert alert-success">
+          <svg className="alert-icon" viewBox="0 0 24 24" fill="none">
+            <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+          {message}
+        </div>
+      )}
+
+      {/* Profile Information Section */}
+      <div className="profile-section">
+        <div className="section-header">
+          <h2>Informacionet Personale</h2>
+          {!editMode && (
+            <button 
+              className="edit-button"
+              onClick={() => setEditMode(true)}
+            >
+              <svg className="edit-icon" viewBox="0 0 24 24" fill="none">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+              Ndrysho
+            </button>
+          )}
+        </div>
+
+        {editMode ? (
+          <form onSubmit={handleUpdateProfile} className="profile-form">
+            <div className="form-grid">
+              <div className="form-group">
+                <label htmlFor="fullName">Emri i Plotë</label>
+                <input
+                  type="text"
+                  id="fullName"
+                  value={editForm.fullName}
+                  onChange={(e) => setEditForm({...editForm, fullName: e.target.value})}
+                  required
+                  disabled={saving}
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="email">Email</label>
+                <input
+                  type="email"
+                  id="email"
+                  value={editForm.email}
+                  onChange={(e) => setEditForm({...editForm, email: e.target.value})}
+                  required
+                  disabled={saving}
+                />
+              </div>
+            </div>
+
+            <div className="form-actions">
+              <button 
+                type="button" 
+                className="cancel-button"
+                onClick={() => {
+                  setEditMode(false);
+                  setEditForm({
+                    fullName: profile.fullName,
+                    email: profile.email
+                  });
+                }}
+                disabled={saving}
+              >
+                Anulo
+              </button>
+              <button 
+                type="submit" 
+                className="save-button"
+                disabled={saving}
+              >
+                {saving ? (
+                  <>
+                    <div className="loading-spinner"></div>
+                    Duke ruajtur...
+                  </>
+                ) : (
+                  'Ruaj Ndryshimet'
+                )}
+              </button>
+            </div>
+          </form>
+        ) : (
+          <div className="profile-info">
+            <div className="info-grid">
+              <div className="info-item">
+                <label>Emri i Plotë</label>
+                <p>{profile.fullName}</p>
+              </div>
+              <div className="info-item">
+                <label>Email</label>
+                <p>{profile.email}</p>
+              </div>
+              <div className="info-item">
+                <label>Roli</label>
+                <p className={`role-badge role-${profile.role}`}>
+                  {profile.role === 'admin' ? 'Administrator' :
+                   profile.role === 'manager' ? 'Menaxher' : 'Staf'}
+                </p>
+              </div>
+              <div className="info-item">
+                <label>Statusi</label>
+                <p className={`status-badge ${profile.isActive ? 'active' : 'inactive'}`}>
+                  {profile.isActive ? 'Aktiv' : 'Joaktiv'}
+                </p>
+              </div>
+              <div className="info-item">
+                <label>Email i Verifikuar</label>
+                <p className={`verification-badge ${profile.emailVerified ? 'verified' : 'unverified'}`}>
+                  {profile.emailVerified ? '✅ E verifikuar' : '❌ E paverifikuar'}
+                </p>
+              </div>
+              <div className="info-item">
+                <label>Anëtarësuar në</label>
+                <p>{new Date(profile.createdAt).toLocaleDateString('sq-AL')}</p>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Password Change Section */}
+      <div className="profile-section">
+        <div className="section-header">
+          <h2>Ndrysho Fjalëkalimin</h2>
+        </div>
+
+        <form onSubmit={handleChangePassword} className="password-form">
+          <div className="form-group">
+            <label htmlFor="currentPassword">Fjalëkalimi Aktual</label>
+            <input
+              type="password"
+              id="currentPassword"
+              value={passwordForm.currentPassword}
+              onChange={(e) => setPasswordForm({...passwordForm, currentPassword: e.target.value})}
+              required
+              disabled={changingPassword}
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="newPassword">Fjalëkalimi i Ri</label>
+            <input
+              type="password"
+              id="newPassword"
+              value={passwordForm.newPassword}
+              onChange={(e) => setPasswordForm({...passwordForm, newPassword: e.target.value})}
+              required
+              disabled={changingPassword}
+              minLength={8}
+            />
+            <small className="password-hint">Së paku 8 karaktere</small>
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="confirmPassword">Konfirmo Fjalëkalimin</label>
+            <input
+              type="password"
+              id="confirmPassword"
+              value={passwordForm.confirmPassword}
+              onChange={(e) => setPasswordForm({...passwordForm, confirmPassword: e.target.value})}
+              required
+              disabled={changingPassword}
+            />
+          </div>
+
+          <button 
+            type="submit" 
+            className="change-password-button"
+            disabled={changingPassword || !passwordForm.currentPassword || !passwordForm.newPassword || !passwordForm.confirmPassword}
+          >
+            {changingPassword ? (
+              <>
+                <div className="loading-spinner"></div>
+                Duke ndryshuar...
+              </>
+            ) : (
+              'Ndrysho Fjalëkalimin'
+            )}
+          </button>
+        </form>
+      </div>
+
+      <style>{`
+        .profile-page {
+          padding: 32px;
+          max-width: 800px;
+          margin: 0 auto;
+        }
+
+        .page-header {
+          margin-bottom: 32px;
+        }
+
+        .page-header h1 {
+          font-size: 32px;
+          font-weight: 700;
+          color: #1a202c;
+          margin: 0 0 8px 0;
+        }
+
+        .page-header p {
+          font-size: 16px;
+          color: #718096;
+          margin: 0;
+        }
+
+        .loading-container, .error-container {
+          text-align: center;
+          padding: 40px;
+        }
+
+        .loading-spinner {
+          width: 20px;
+          height: 20px;
+          border: 2px solid rgba(102, 126, 234, 0.3);
+          border-radius: 50%;
+          border-top-color: #667eea;
+          animation: spin 1s ease-in-out infinite;
+          display: inline-block;
+        }
+
+        .loading-spinner.large {
+          width: 40px;
+          height: 40px;
+          margin-bottom: 16px;
+        }
+
+        @keyframes spin {
+          to { transform: rotate(360deg); }
+        }
+
+        .alert {
+          display: flex;
+          align-items: center;
+          padding: 16px;
+          border-radius: 12px;
+          margin-bottom: 24px;
+          font-weight: 500;
+        }
+
+        .alert-error {
+          background: #fed7d7;
+          color: #c53030;
+          border: 1px solid #feb2b2;
+        }
+
+        .alert-success {
+          background: #c6f6d5;
+          color: #25543e;
+          border: 1px solid #9ae6b4;
+        }
+
+        .alert-icon {
+          width: 20px;
+          height: 20px;
+          margin-right: 12px;
+          flex-shrink: 0;
+        }
+
+        .profile-section {
+          background: white;
+          border-radius: 16px;
+          padding: 24px;
+          margin-bottom: 24px;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+          border: 1px solid #e2e8f0;
+        }
+
+        .section-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 24px;
+        }
+
+        .section-header h2 {
+          margin: 0;
+          font-size: 20px;
+          font-weight: 600;
+          color: #1a202c;
+        }
+
+        .edit-button {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          background: #667eea;
+          color: white;
+          border: none;
+          padding: 8px 16px;
+          border-radius: 8px;
+          font-size: 14px;
+          font-weight: 500;
+          cursor: pointer;
+          transition: all 0.2s ease;
+        }
+
+        .edit-button:hover {
+          background: #764ba2;
+          transform: translateY(-1px);
+        }
+
+        .edit-icon {
+          width: 16px;
+          height: 16px;
+        }
+
+        .profile-form, .password-form {
+          display: flex;
+          flex-direction: column;
+          gap: 20px;
+        }
+
+        .form-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+          gap: 20px;
+        }
+
+        .form-group {
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+        }
+
+        .form-group label {
+          font-weight: 600;
+          color: #374151;
+          font-size: 14px;
+        }
+
+        .form-group input {
+          padding: 12px 16px;
+          border: 2px solid #e5e7eb;
+          border-radius: 8px;
+          font-size: 16px;
+          transition: all 0.2s ease;
+        }
+
+        .form-group input:focus {
+          outline: none;
+          border-color: #667eea;
+          box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group input:disabled {
+          background: #f9fafb;
+          cursor: not-allowed;
+        }
+
+        .password-hint {
+          color: #6b7280;
+          font-size: 12px;
+        }
+
+        .form-actions {
+          display: flex;
+          gap: 12px;
+          justify-content: flex-end;
+        }
+
+        .cancel-button, .save-button, .change-password-button, .retry-button {
+          padding: 12px 24px;
+          border-radius: 8px;
+          font-size: 14px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          border: none;
+        }
+
+        .cancel-button {
+          background: #f3f4f6;
+          color: #374151;
+        }
+
+        .cancel-button:hover:not(:disabled) {
+          background: #e5e7eb;
+        }
+
+        .save-button, .change-password-button, .retry-button {
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          color: white;
+        }
+
+        .save-button:hover:not(:disabled), 
+        .change-password-button:hover:not(:disabled),
+        .retry-button:hover:not(:disabled) {
+          transform: translateY(-1px);
+          box-shadow: 0 10px 20px rgba(102, 126, 234, 0.2);
+        }
+
+        .save-button:disabled, 
+        .change-password-button:disabled,
+        .cancel-button:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+          transform: none;
+        }
+
+        .profile-info {
+          margin-top: 8px;
+        }
+
+        .info-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+          gap: 20px;
+        }
+
+        .info-item {
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+        }
+
+        .info-item label {
+          font-weight: 600;
+          color: #6b7280;
+          font-size: 12px;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+        }
+
+        .info-item p {
+          margin: 0;
+          color: #1a202c;
+          font-size: 16px;
+          font-weight: 500;
+        }
+
+        .role-badge, .status-badge, .verification-badge {
+          display: inline-block;
+          padding: 4px 12px;
+          border-radius: 20px;
+          font-size: 12px;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+        }
+
+        .role-admin { background: #fecaca; color: #dc2626; }
+        .role-manager { background: #ddd6fe; color: #7c3aed; }
+        .role-staff { background: #bfdbfe; color: #2563eb; }
+
+        .status-badge.active { background: #dcfce7; color: #16a34a; }
+        .status-badge.inactive { background: #fee2e2; color: #dc2626; }
+
+        .verification-badge.verified { background: #dcfce7; color: #16a34a; }
+        .verification-badge.unverified { background: #fef3c7; color: #d97706; }
+
+        @media (max-width: 768px) {
+          .profile-page {
+            padding: 16px;
+          }
+
+          .form-grid, .info-grid {
+            grid-template-columns: 1fr;
+          }
+
+          .form-actions {
+            flex-direction: column;
+          }
+
+          .section-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 16px;
+          }
+        }
+      `}</style>
+    </div>
+  );
+};
+
+export default UserProfilePage;

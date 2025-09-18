@@ -133,6 +133,17 @@ const Navigation: React.FC<NavigationProps> = ({ children }) => {
             <p className="user-name">{auth.user?.fullName}</p>
             <p className="user-email">{auth.user?.email}</p>
           </div>
+          <Link 
+            to="/profile" 
+            className="profile-link"
+            onClick={closeMobileMenu}
+          >
+            <svg className="profile-icon" viewBox="0 0 24 24" fill="none">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              <circle cx="12" cy="7" r="4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+            Profili im
+          </Link>
           <button className="logout-button" onClick={logout}>
             Dilni
           </button>
@@ -431,6 +442,30 @@ const Navigation: React.FC<NavigationProps> = ({ children }) => {
           margin: 0;
           color: #bdc3c7;
           font-size: 12px;
+        }
+
+        .profile-link {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          width: 100%;
+          padding: 8px 16px;
+          background: #3498db;
+          color: white;
+          text-decoration: none;
+          border-radius: 4px;
+          transition: all 0.3s ease;
+          font-size: 14px;
+          margin-bottom: 8px;
+        }
+
+        .profile-link:hover {
+          background: #2980b9;
+        }
+
+        .profile-icon {
+          width: 16px;
+          height: 16px;
         }
 
         .logout-button {

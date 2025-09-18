@@ -2,10 +2,13 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import './App.css';
 import LoginPage from './pages/LoginPage';
+import ForgotPasswordPage from './pages/ForgotPasswordPage';
+import ResetPasswordPage from './pages/ResetPasswordPage';
 import DashboardPage from './pages/DashboardPage';
 import QRCodePage from './pages/QRCodePage';
 import MenuManagementPage from './pages/MenuManagementPage';
 import UserManagementPage from './pages/UserManagementPage';
+import UserProfilePage from './pages/UserProfilePage';
 import PaymentSettingsPage from './pages/PaymentSettingsPage';
 import OnboardingWizardPage from './pages/OnboardingWizardPage';
 import { AuthProvider } from './contexts/AuthContext';
@@ -21,6 +24,8 @@ function App() {
         <div className="App">
           <Routes>
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+            <Route path="/reset-password" element={<ResetPasswordPage />} />
             <Route 
               path="/onboarding" 
               element={
@@ -75,6 +80,16 @@ function App() {
                 <ProtectedRoute>
                   <Navigation>
                     <PaymentSettingsPage />
+                  </Navigation>
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/profile" 
+              element={
+                <ProtectedRoute>
+                  <Navigation>
+                    <UserProfilePage />
                   </Navigation>
                 </ProtectedRoute>
               } 

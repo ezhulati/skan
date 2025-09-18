@@ -130,6 +130,27 @@ const LoginPage: React.FC = () => {
           </button>
         </form>
         
+        <div className="forgot-password-link" style={{
+          textAlign: 'center',
+          marginTop: '16px',
+          marginBottom: '16px'
+        }}>
+          <a 
+            href="/forgot-password"
+            style={{
+              color: '#667eea',
+              textDecoration: 'none',
+              fontSize: '14px',
+              fontWeight: '500',
+              transition: 'color 0.2s ease'
+            }}
+            onMouseEnter={(e) => e.target.style.color = '#764ba2'}
+            onMouseLeave={(e) => e.target.style.color = '#667eea'}
+          >
+            Keni harruar fjalëkalimin?
+          </a>
+        </div>
+        
         <div className="login-footer">
           <div className="demo-badge">
             <svg className="demo-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
