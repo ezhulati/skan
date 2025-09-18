@@ -14,9 +14,9 @@ const db = admin.firestore();
 const app = express();
 
 // Security Configuration
-const JWT_SECRET = process.env.JWT_SECRET || 'your-super-secret-jwt-key-change-in-production';
-const JWT_EXPIRE = '15m'; // Access token expires in 15 minutes
-const REFRESH_TOKEN_EXPIRE = '7d'; // Refresh token expires in 7 days
+const JWT_SECRET = process.env.JWT_SECRET || "your-super-secret-jwt-key-change-in-production";
+const JWT_EXPIRE = "15m"; // Access token expires in 15 minutes
+const REFRESH_TOKEN_EXPIRE = "7d"; // Refresh token expires in 7 days
 
 // Security Middleware
 app.use(helmet({
@@ -37,17 +37,17 @@ app.use(helmet({
 }));
 
 app.use(cors({ 
-  origin: process.env.NODE_ENV === 'production' 
-    ? ['https://admin.skan.al', 'https://order.skan.al', 'https://skan.al']
+  origin: process.env.NODE_ENV === "production" 
+    ? ["https://admin.skan.al", "https://order.skan.al", "https://skan.al"]
     : true,
   credentials: true
 }));
-app.use(express.json({ limit: '1mb' })); // Reduced limit for security
+app.use(express.json({ limit: "1mb" })); // Reduced limit for security
 
 // HTTPS Enforcement (production only)
 app.use((req, res, next) => {
-  if (process.env.NODE_ENV === 'production' && req.header('x-forwarded-proto') !== 'https') {
-    return res.redirect(`https://${req.header('host')}${req.url}`);
+  if (process.env.NODE_ENV === "production" && req.header("x-forwarded-proto") !== "https") {
+    return res.redirect(`https://${req.header("host")}${req.url}`);
   }
   next();
 });
@@ -57,13 +57,13 @@ app.use(generalLimiter);
 
 // Input sanitization middleware
 app.use((req, res, next) => {
-  if (req.body && typeof req.body === 'object') {
+  if (req.body && typeof req.body === "object") {
     req.body = sanitizeObject(req.body);
   }
-  if (req.query && typeof req.query === 'object') {
+  if (req.query && typeof req.query === "object") {
     req.query = sanitizeObject(req.query);
   }
-  if (req.params && typeof req.params === 'object') {
+  if (req.params && typeof req.params === "object") {
     req.params = sanitizeObject(req.params);
   }
   next();
@@ -88,23 +88,23 @@ const generateTokens = (user) => {
     email: user.email,
     role: user.role,
     venueId: user.venueId,
-    type: 'access'
+    type: "access"
   };
   
   const accessToken = jwt.sign(payload, JWT_SECRET, { 
     expiresIn: JWT_EXPIRE,
-    issuer: 'skan.al',
-    audience: 'skan-api'
+    issuer: "skan.al",
+    audience: "skan-api"
   });
   
   const refreshToken = jwt.sign({
     uid: user.id,
-    type: 'refresh',
+    type: "refresh",
     jti: uuidv4() // Unique token ID for blacklisting
   }, JWT_SECRET, { 
     expiresIn: REFRESH_TOKEN_EXPIRE,
-    issuer: 'skan.al',
-    audience: 'skan-api'
+    issuer: "skan.al",
+    audience: "skan-api"
   });
   
   return { accessToken, refreshToken };
@@ -113,34 +113,34 @@ const generateTokens = (user) => {
 const verifyToken = (token) => {
   try {
     return jwt.verify(token, JWT_SECRET, {
-      issuer: 'skan.al',
-      audience: 'skan-api'
+      issuer: "skan.al",
+      audience: "skan-api"
     });
   } catch (error) {
-    throw new Error('Invalid token');
+    throw new Error("Invalid token");
   }
 };
 
 // Audit Logging
-const auditLog = async (action, userId, details = {}, ip = 'unknown') => {
+const auditLog = async (action, userId, details = {}, ip = "unknown") => {
   try {
-    await db.collection('audit_logs').add({
+    await db.collection("audit_logs").add({
       action,
       userId,
       details,
       ip,
       timestamp: admin.firestore.FieldValue.serverTimestamp(),
-      userAgent: details.userAgent || 'unknown'
+      userAgent: details.userAgent || "unknown"
     });
   } catch (error) {
-    console.error('Audit log failed:', error);
+    console.error("Audit log failed:", error);
   }
 };
 
 // Account Lockout Management
 const accountLockout = {
   async checkLockout(email) {
-    const lockoutDoc = await db.collection('account_lockouts').doc(email).get();
+    const lockoutDoc = await db.collection("account_lockouts").doc(email).get();
     if (!lockoutDoc.exists) return false;
     
     const data = lockoutDoc.data();
@@ -151,7 +151,7 @@ const accountLockout = {
   },
   
   async recordFailedAttempt(email, ip) {
-    const docRef = db.collection('account_lockouts').doc(email);
+    const docRef = db.collection("account_lockouts").doc(email);
     const doc = await docRef.get();
     
     if (!doc.exists) {
@@ -183,18 +183,18 @@ const accountLockout = {
   },
   
   async clearFailedAttempts(email) {
-    await db.collection('account_lockouts').doc(email).delete();
+    await db.collection("account_lockouts").doc(email).delete();
   }
 };
 
 // Input Sanitization
-const xss = require('xss');
+const xss = require("xss");
 
 const sanitizeInput = (input) => {
-  if (typeof input === 'string') {
+  if (typeof input === "string") {
     return xss(input.trim().slice(0, 1000)); // Limit length and sanitize
   }
-  if (typeof input === 'number') {
+  if (typeof input === "number") {
     return isNaN(input) ? 0 : Math.max(-999999, Math.min(999999, input));
   }
   return input;
@@ -203,7 +203,7 @@ const sanitizeInput = (input) => {
 const sanitizeObject = (obj) => {
   const sanitized = {};
   for (const [key, value] of Object.entries(obj)) {
-    if (typeof value === 'object' && value !== null) {
+    if (typeof value === "object" && value !== null) {
       sanitized[key] = sanitizeObject(value);
     } else {
       sanitized[key] = sanitizeInput(value);
@@ -221,10 +221,10 @@ const createRateLimiter = (windowMs, max, message) => {
     standardHeaders: true,
     legacyHeaders: false,
     handler: async (req, res) => {
-      await auditLog('RATE_LIMIT_EXCEEDED', req.user?.uid || null, {
+      await auditLog("RATE_LIMIT_EXCEEDED", req.user?.uid || null, {
         ip: req.ip,
         endpoint: req.path,
-        userAgent: req.headers['user-agent']
+        userAgent: req.headers["user-agent"]
       }, req.ip);
       res.status(429).json({ error: message });
     }
@@ -232,8 +232,6 @@ const createRateLimiter = (windowMs, max, message) => {
 };
 
 // Different rate limits for different endpoint types
-const strictLimiter = createRateLimiter(15 * 60 * 1000, 5, "Too many attempts. Please try again later.");
-const moderateLimiter = createRateLimiter(15 * 60 * 1000, 20, "Too many requests. Please slow down.");
 const generalLimiter = createRateLimiter(15 * 60 * 1000, 100, "Rate limit exceeded. Please try again later.");
 
 // ============================================================================
@@ -246,7 +244,7 @@ const verifyAuth = async (req, res, next) => {
     const token = req.headers.authorization?.replace("Bearer ", "");
     
     if (!token) {
-      await auditLog('AUTH_FAILED', null, { reason: 'No token provided' }, req.ip);
+      await auditLog("AUTH_FAILED", null, { reason: "No token provided" }, req.ip);
       return res.status(401).json({ error: "No token provided" });
     }
     
@@ -265,7 +263,7 @@ const verifyAuth = async (req, res, next) => {
     if (token.startsWith("temp_")) {
       const parts = token.split("_");
       if (parts.length !== 3) {
-        await auditLog('AUTH_FAILED', null, { reason: 'Invalid temp token format' }, req.ip);
+        await auditLog("AUTH_FAILED", null, { reason: "Invalid temp token format" }, req.ip);
         return res.status(401).json({ error: "Invalid token format" });
       }
       
@@ -274,20 +272,20 @@ const verifyAuth = async (req, res, next) => {
       
       // Check token age (expire after 24 hours)
       if (Date.now() - timestamp > 24 * 60 * 60 * 1000) {
-        await auditLog('AUTH_FAILED', userId, { reason: 'Token expired' }, req.ip);
+        await auditLog("AUTH_FAILED", userId, { reason: "Token expired" }, req.ip);
         return res.status(401).json({ error: "Token expired" });
       }
       
       // Verify user exists and is active
       const userDoc = await db.collection("users").doc(userId).get();
       if (!userDoc.exists) {
-        await auditLog('AUTH_FAILED', userId, { reason: 'User not found' }, req.ip);
+        await auditLog("AUTH_FAILED", userId, { reason: "User not found" }, req.ip);
         return res.status(401).json({ error: "User not found" });
       }
       
       const userData = userDoc.data();
       if (!userData.isActive) {
-        await auditLog('AUTH_FAILED', userId, { reason: 'User inactive' }, req.ip);
+        await auditLog("AUTH_FAILED", userId, { reason: "User inactive" }, req.ip);
         return res.status(401).json({ error: "User account is inactive" });
       }
       
@@ -304,21 +302,21 @@ const verifyAuth = async (req, res, next) => {
     try {
       const decoded = verifyToken(token);
       
-      if (decoded.type !== 'access') {
-        await auditLog('AUTH_FAILED', decoded.uid, { reason: 'Invalid token type' }, req.ip);
+      if (decoded.type !== "access") {
+        await auditLog("AUTH_FAILED", decoded.uid, { reason: "Invalid token type" }, req.ip);
         return res.status(401).json({ error: "Invalid token type" });
       }
       
       // Verify user still exists and is active
       const userDoc = await db.collection("users").doc(decoded.uid).get();
       if (!userDoc.exists) {
-        await auditLog('AUTH_FAILED', decoded.uid, { reason: 'User not found' }, req.ip);
+        await auditLog("AUTH_FAILED", decoded.uid, { reason: "User not found" }, req.ip);
         return res.status(401).json({ error: "User not found" });
       }
       
       const userData = userDoc.data();
       if (!userData.isActive) {
-        await auditLog('AUTH_FAILED', decoded.uid, { reason: 'User inactive' }, req.ip);
+        await auditLog("AUTH_FAILED", decoded.uid, { reason: "User inactive" }, req.ip);
         return res.status(401).json({ error: "User account is inactive" });
       }
       
@@ -332,14 +330,14 @@ const verifyAuth = async (req, res, next) => {
         req.user = decodedToken;
         next();
       } catch (firebaseError) {
-        await auditLog('AUTH_FAILED', null, { reason: 'Invalid token', error: firebaseError.message }, req.ip);
+        await auditLog("AUTH_FAILED", null, { reason: "Invalid token", error: firebaseError.message }, req.ip);
         console.error("Auth verification error:", firebaseError);
         res.status(401).json({ error: "Invalid token" });
       }
     }
     
   } catch (error) {
-    await auditLog('AUTH_FAILED', null, { reason: 'Auth middleware error', error: error.message }, req.ip);
+    await auditLog("AUTH_FAILED", null, { reason: "Auth middleware error", error: error.message }, req.ip);
     console.error("Auth verification error:", error);
     res.status(401).json({ error: "Authentication failed" });
   }
@@ -352,12 +350,12 @@ const asyncHandler = (fn) => (req, res, next) => {
 
 // Security monitoring endpoint (admin only)
 app.get("/v1/security/audit", verifyAuth, asyncHandler(async (req, res) => {
-  if (req.user.role !== 'admin') {
+  if (req.user.role !== "admin") {
     return res.status(403).json({ error: "Admin access required" });
   }
   
-  const logs = await db.collection('audit_logs')
-    .orderBy('timestamp', 'desc')
+  const logs = await db.collection("audit_logs")
+    .orderBy("timestamp", "desc")
     .limit(100)
     .get();
   
@@ -372,7 +370,7 @@ app.get("/health", (req, res) => {
     timestamp: new Date().toISOString(),
     service: "skan-api",
     version: "2.0.0",
-    environment: process.env.NODE_ENV || 'development'
+    environment: process.env.NODE_ENV || "development"
   });
 });
 
@@ -400,7 +398,7 @@ app.get("/", (req, res) => {
 // Request ID middleware for tracing
 app.use((req, res, next) => {
   req.requestId = uuidv4();
-  res.setHeader('X-Request-ID', req.requestId);
+  res.setHeader("X-Request-ID", req.requestId);
   next();
 });
 
@@ -1720,15 +1718,15 @@ const authLimiter = rateLimit({
 app.post("/v1/auth/login", 
   authLimiter,
   [
-    body('email').isEmail().normalizeEmail(),
-    body('password').isLength({ min: 8 }).trim()
+    body("email").isEmail().normalizeEmail(),
+    body("password").isLength({ min: 8 }).trim()
   ],
   async (req, res) => {
   try {
     // Validate request
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      await auditLog('LOGIN_FAILED', null, { reason: 'Validation failed', errors: errors.array() }, req.ip);
+      await auditLog("LOGIN_FAILED", null, { reason: "Validation failed", errors: errors.array() }, req.ip);
       return res.status(400).json({ error: "Invalid input", details: errors.array() });
     }
     
@@ -1737,7 +1735,7 @@ app.post("/v1/auth/login",
     
     // Check account lockout
     if (await accountLockout.checkLockout(email)) {
-      await auditLog('LOGIN_BLOCKED', null, { email, reason: 'Account locked' }, clientIP);
+      await auditLog("LOGIN_BLOCKED", null, { email, reason: "Account locked" }, clientIP);
       return res.status(423).json({ error: "Account temporarily locked due to too many failed attempts" });
     }
     
@@ -1795,12 +1793,12 @@ app.post("/v1/auth/login",
       
       if (!isValid) {
         await accountLockout.recordFailedAttempt(email, clientIP);
-        await auditLog('LOGIN_FAILED', userDoc.id, { email, reason: 'Invalid password' }, clientIP);
+        await auditLog("LOGIN_FAILED", userDoc.id, { email, reason: "Invalid password" }, clientIP);
         return res.status(401).json({ error: "Invalid credentials" });
       }
     } else {
       await accountLockout.recordFailedAttempt(email, clientIP);
-      await auditLog('LOGIN_FAILED', userDoc.id, { email, reason: 'No password hash' }, clientIP);
+      await auditLog("LOGIN_FAILED", userDoc.id, { email, reason: "No password hash" }, clientIP);
       return res.status(401).json({ error: "Invalid credentials" });
     }
     
@@ -1832,17 +1830,17 @@ app.post("/v1/auth/login",
     const { accessToken, refreshToken } = generateTokens(user);
     
     // Store refresh token in database
-    await db.collection('refresh_tokens').doc(userDoc.id).set({
+    await db.collection("refresh_tokens").doc(userDoc.id).set({
       token: refreshToken,
       userId: userDoc.id,
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
       expiresAt: admin.firestore.Timestamp.fromDate(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)),
       ip: clientIP,
-      userAgent: req.headers['user-agent'] || 'unknown'
+      userAgent: req.headers["user-agent"] || "unknown"
     });
     
     // Audit successful login
-    await auditLog('LOGIN_SUCCESS', userDoc.id, { 
+    await auditLog("LOGIN_SUCCESS", userDoc.id, { 
       email, 
       role: userData.role, 
       venueId: userData.venueId 
@@ -1859,7 +1857,7 @@ app.post("/v1/auth/login",
     });
     
   } catch (error) {
-    await auditLog('LOGIN_ERROR', null, { reason: 'Server error', error: error.message }, req.ip);
+    await auditLog("LOGIN_ERROR", null, { reason: "Server error", error: error.message }, req.ip);
     console.error("Error during login:", error);
     res.status(500).json({ error: "Login failed" });
   }
@@ -1876,28 +1874,28 @@ app.post("/v1/auth/refresh", authLimiter, async (req, res) => {
     
     // Verify refresh token
     const decoded = verifyToken(refreshToken);
-    if (decoded.type !== 'refresh') {
+    if (decoded.type !== "refresh") {
       return res.status(401).json({ error: "Invalid refresh token" });
     }
     
     // Check if refresh token exists in database
-    const tokenDoc = await db.collection('refresh_tokens').doc(decoded.uid).get();
+    const tokenDoc = await db.collection("refresh_tokens").doc(decoded.uid).get();
     if (!tokenDoc.exists || tokenDoc.data().token !== refreshToken) {
-      await auditLog('REFRESH_FAILED', decoded.uid, { reason: 'Token not found' }, req.ip);
+      await auditLog("REFRESH_FAILED", decoded.uid, { reason: "Token not found" }, req.ip);
       return res.status(401).json({ error: "Refresh token not found" });
     }
     
     // Check if token is expired
     if (tokenDoc.data().expiresAt.toDate() < new Date()) {
-      await db.collection('refresh_tokens').doc(decoded.uid).delete();
-      await auditLog('REFRESH_FAILED', decoded.uid, { reason: 'Token expired' }, req.ip);
+      await db.collection("refresh_tokens").doc(decoded.uid).delete();
+      await auditLog("REFRESH_FAILED", decoded.uid, { reason: "Token expired" }, req.ip);
       return res.status(401).json({ error: "Refresh token expired" });
     }
     
     // Get user data
     const userDoc = await db.collection("users").doc(decoded.uid).get();
     if (!userDoc.exists || !userDoc.data().isActive) {
-      await auditLog('REFRESH_FAILED', decoded.uid, { reason: 'User inactive' }, req.ip);
+      await auditLog("REFRESH_FAILED", decoded.uid, { reason: "User inactive" }, req.ip);
       return res.status(401).json({ error: "User account is inactive" });
     }
     
@@ -1914,14 +1912,14 @@ app.post("/v1/auth/refresh", authLimiter, async (req, res) => {
     const { accessToken, refreshToken: newRefreshToken } = generateTokens(user);
     
     // Update refresh token in database
-    await db.collection('refresh_tokens').doc(decoded.uid).update({
+    await db.collection("refresh_tokens").doc(decoded.uid).update({
       token: newRefreshToken,
       updatedAt: admin.firestore.FieldValue.serverTimestamp(),
       ip: req.ip,
-      userAgent: req.headers['user-agent'] || 'unknown'
+      userAgent: req.headers["user-agent"] || "unknown"
     });
     
-    await auditLog('TOKEN_REFRESHED', decoded.uid, {}, req.ip);
+    await auditLog("TOKEN_REFRESHED", decoded.uid, {}, req.ip);
     
     res.json({
       accessToken,
@@ -1930,7 +1928,7 @@ app.post("/v1/auth/refresh", authLimiter, async (req, res) => {
     });
     
   } catch (error) {
-    await auditLog('REFRESH_ERROR', null, { error: error.message }, req.ip);
+    await auditLog("REFRESH_ERROR", null, { error: error.message }, req.ip);
     console.error("Error refreshing token:", error);
     res.status(401).json({ error: "Invalid refresh token" });
   }
@@ -1940,9 +1938,9 @@ app.post("/v1/auth/refresh", authLimiter, async (req, res) => {
 app.post("/v1/auth/logout", verifyAuth, async (req, res) => {
   try {
     // Remove refresh token from database
-    await db.collection('refresh_tokens').doc(req.user.uid).delete();
+    await db.collection("refresh_tokens").doc(req.user.uid).delete();
     
-    await auditLog('LOGOUT', req.user.uid, {}, req.ip);
+    await auditLog("LOGOUT", req.user.uid, {}, req.ip);
     
     res.json({ message: "Logged out successfully" });
     
@@ -2537,10 +2535,10 @@ app.post("/v1/register/venue", async (req, res) => {
       return res.status(400).json({ error: "Password must be at least 8 characters with uppercase, lowercase, and number" });
     }
     
-    // Sanitize string inputs
-    const sanitizedVenueName = venueName.trim().slice(0, 100);
-    const sanitizedAddress = address.trim().slice(0, 200);
-    const sanitizedOwnerName = ownerName.trim().slice(0, 100);
+    // Sanitize string inputs (for future use)
+    // const sanitizedVenueName = venueName.trim().slice(0, 100);
+    // const sanitizedAddress = address.trim().slice(0, 200);
+    // const sanitizedOwnerName = ownerName.trim().slice(0, 100);
     
     
     // Check if email already exists
@@ -3991,20 +3989,20 @@ app.post("/v1/venue/complete-onboarding", verifyAuth, async (req, res) => {
 });
 
 // Global error handler (must be last)
-app.use((error, req, res, next) => {
+app.use((error, req, res, _next) => {
   console.error(`[${req.requestId}] Error:`, error);
   
   // Log error for monitoring
-  auditLog('SERVER_ERROR', req.user?.uid || null, {
+  auditLog("SERVER_ERROR", req.user?.uid || null, {
     error: error.message,
-    stack: process.env.NODE_ENV === 'development' ? error.stack : undefined,
+    stack: process.env.NODE_ENV === "development" ? error.stack : undefined,
     requestId: req.requestId,
     endpoint: req.path,
     method: req.method
   }, req.ip);
   
   // Don't leak error details in production
-  if (process.env.NODE_ENV === 'production') {
+  if (process.env.NODE_ENV === "production") {
     res.status(500).json({
       error: "Internal server error",
       requestId: req.requestId
@@ -4019,7 +4017,7 @@ app.use((error, req, res, next) => {
 });
 
 // 404 handler
-app.use('*', (req, res) => {
+app.use("*", (req, res) => {
   res.status(404).json({
     error: "Endpoint not found",
     path: req.originalUrl,
@@ -4028,16 +4026,16 @@ app.use('*', (req, res) => {
 });
 
 // Environment validation
-const requiredEnvVars = ['JWT_SECRET'];
+const requiredEnvVars = ["JWT_SECRET"];
 const missingVars = requiredEnvVars.filter(varName => !process.env[varName]);
 
-if (missingVars.length > 0 && process.env.NODE_ENV === 'production') {
-  console.error('Missing required environment variables:', missingVars);
+if (missingVars.length > 0 && process.env.NODE_ENV === "production") {
+  console.error("Missing required environment variables:", missingVars);
   process.exit(1);
 }
 
-if (process.env.NODE_ENV === 'production' && process.env.JWT_SECRET === 'your-super-secret-jwt-key-change-in-production') {
-  console.error('Default JWT secret detected in production! This is a security risk.');
+if (process.env.NODE_ENV === "production" && process.env.JWT_SECRET === "your-super-secret-jwt-key-change-in-production") {
+  console.error("Default JWT secret detected in production! This is a security risk.");
   process.exit(1);
 }
 
