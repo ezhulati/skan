@@ -1724,8 +1724,8 @@ app.post("/v1/auth/login",
   [
     body("email").isEmail().normalizeEmail(),
     body("password").custom((value, { req }) => {
-      // Allow demo password in non-production environments
-      if (process.env.NODE_ENV !== "production" && 
+      // Allow demo password when explicitly enabled
+      if (process.env.ALLOW_DEMO_CREDENTIALS === "true" && 
           req.body.email === "manager_email1@gmail.com" && 
           value === "demo123") {
         return true;
@@ -1755,8 +1755,8 @@ app.post("/v1/auth/login",
       return res.status(423).json({ error: "Account temporarily locked due to too many failed attempts" });
     }
     
-    // Demo user for development/testing only - remove in production
-    if (process.env.NODE_ENV !== "production" && email === "manager_email1@gmail.com" && password === "demo123") {
+    // Demo user when explicitly enabled
+    if (process.env.ALLOW_DEMO_CREDENTIALS === "true" && email === "manager_email1@gmail.com" && password === "demo123") {
       return res.json({
         message: "Login successful",
         user: {
