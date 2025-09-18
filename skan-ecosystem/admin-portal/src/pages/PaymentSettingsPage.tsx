@@ -66,8 +66,16 @@ const PaymentSettingsPage: React.FC = () => {
   };
 
   const handleStripeConnect = () => {
-    // In production, this would redirect to Stripe Connect onboarding
-    window.open('https://connect.stripe.com/oauth/authorize?response_type=code&client_id=demo&scope=read_write', '_blank');
+    // Demo mode - show success message instead of real Stripe Connect
+    alert('🎉 Demo Mode: Stripe Connect u lidh me sukses!\n\nNë versionin real, kjo do të ju drejtojë në platformën Stripe për të lidhur llogarinë tuaj.');
+    
+    // Simulate successful connection in demo mode
+    setSettings(prev => ({
+      ...prev,
+      stripeAccountId: 'acct_demo_stripe_account'
+    }));
+    setSuccessMessage('Llogaria Stripe u lidh me sukses në demo mode!');
+    setTimeout(() => setSuccessMessage(''), 3000);
   };
 
   const calculateMonthlySavings = () => {
