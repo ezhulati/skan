@@ -79,8 +79,12 @@ const MenuManagementPage: React.FC = () => {
   const loadMenu = useCallback(async () => {
     try {
       setError(null);
-      // Use venue slug for public menu endpoint as per API docs
-      const response = await fetch(`${baseUrl}/venue/demo-restaurant/menu`);
+      
+      // Use venue slug from authenticated user, fallback to demo venue
+      const venueSlug = auth.venue?.slug || 'beach-bar-durres';
+      
+      // Use venue slug from authenticated user
+      const response = await fetch(`${baseUrl}/venue/${venueSlug}/menu`);
       if (!response.ok) throw new Error('Dështoi të ngarkoj menunë');
       
       const data = await response.json();
@@ -91,7 +95,7 @@ const MenuManagementPage: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  }, [baseUrl]);
+  }, [baseUrl, auth.venue?.slug]);
 
   useEffect(() => {
     loadMenu();
