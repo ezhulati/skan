@@ -758,11 +758,49 @@ const ItemEditor: React.FC<{
   onSave: (updates: Partial<MenuItem>) => void;
   onCancel: () => void;
 }> = ({ item, onSave, onCancel }) => {
+  const { auth } = useAuth();
   const [name, setName] = useState(item.name);
   const [nameAlbanian, setNameAlbanian] = useState(item.nameAlbanian);
   const [price, setPrice] = useState(item.price.toString());
   const [imageUrl, setImageUrl] = useState(item.imageUrl || '');
   const [isUploadingImage, setIsUploadingImage] = useState(false);
+  const [translating, setTranslating] = useState<string | null>(null);
+
+  const translateText = async (text: string, context: string = 'edit-item'): Promise<string> => {
+    if (!text?.trim()) {
+      throw new Error('Teksti është i zbrazët');
+    }
+
+    try {
+      setTranslating(context);
+
+      const response = await fetch(`${baseUrl}/translate/menu-item`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${auth.token}`
+        },
+        body: JSON.stringify({
+          text: text.trim(),
+          fromLang: 'sq',
+          toLang: 'en'
+        })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Përkthimi dështoi');
+      }
+
+      const data = await response.json();
+      return data.translatedText;
+    } catch (error) {
+      console.error('Translation error:', error);
+      throw error;
+    } finally {
+      setTranslating(null);
+    }
+  };
 
   const handleImageUpload = async (file: File): Promise<void> => {
     setIsUploadingImage(true);
@@ -799,12 +837,47 @@ const ItemEditor: React.FC<{
           onChange={(e) => setName(e.target.value)}
           placeholder="Emri i artikullit"
         />
-        <input
-          type="text"
-          value={nameAlbanian}
-          onChange={(e) => setNameAlbanian(e.target.value)}
-          placeholder="Emri i artikullit (Anglisht)"
-        />
+        <div className="name-input-with-translate">
+          <input
+            type="text"
+            value={nameAlbanian}
+            onChange={(e) => setNameAlbanian(e.target.value)}
+            placeholder="Emri i artikullit (Anglisht)"
+          />
+          <button
+            type="button"
+            className="translate-button"
+            onClick={async () => {
+              if (!name.trim()) {
+                alert('Ju lutem shkruani emrin shqip fillimisht');
+                return;
+              }
+              
+              try {
+                const translated = await translateText(name, 'edit-item');
+                setNameAlbanian(translated);
+              } catch (error) {
+                alert(error instanceof Error ? error.message : 'Përkthimi dështoi');
+              }
+            }}
+            disabled={translating === 'edit-item' || !name.trim()}
+            title="Përkthe nga shqipja në anglisht"
+          >
+            {translating === 'edit-item' ? (
+              <svg className="spin" width="16" height="16" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" fill="none" strokeDasharray="31.416" strokeDashoffset="31.416">
+                  <animate attributeName="stroke-dasharray" dur="2s" values="0 31.416;15.708 15.708;0 31.416" repeatCount="indefinite"/>
+                  <animate attributeName="stroke-dashoffset" dur="2s" values="0;-15.708;-31.416" repeatCount="indefinite"/>
+                </circle>
+              </svg>
+            ) : (
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M2 12h20M9 5l7 7-7 7"/>
+              </svg>
+            )}
+            AI Përkthe
+          </button>
+        </div>
         <input
           type="number"
           step="0.01"
