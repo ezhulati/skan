@@ -146,8 +146,8 @@ const CustomerMenuPreviewModal: React.FC<CustomerMenuPreviewModalProps> = ({
       <div className="customer-menu-modal" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
           <div className="header-content">
-            <h2>Customer Menu Preview</h2>
-            <p>See how your menu appears to customers</p>
+            <h2>{language === 'albanian' ? 'Parashikimi i Menusë së Klientit' : 'Customer Menu Preview'}</h2>
+            <p>{language === 'albanian' ? 'Shihni si u shfaqet menuja klientëve tuaj' : 'See how your menu appears to customers'}</p>
           </div>
           <div className="header-controls">
             <div className="language-toggle">
@@ -407,7 +407,7 @@ const CustomerMenuPreviewModal: React.FC<CustomerMenuPreviewModalProps> = ({
             width: 32px;
             height: 32px;
             border: 3px solid #f3f4f6;
-            border-top: 3px solid #4472c4;
+            border-top: 3px solid #2563eb;
             border-radius: 50%;
             animation: spin 1s linear infinite;
             margin-bottom: 16px;
@@ -555,8 +555,8 @@ const CustomerMenuPreviewModal: React.FC<CustomerMenuPreviewModalProps> = ({
           }
 
           .qty-btn.plus {
-            background: #4472c4;
-            border-color: #4472c4;
+            background: #2563eb;
+            border-color: #2563eb;
             color: white;
           }
 
@@ -601,7 +601,7 @@ const CustomerMenuPreviewModal: React.FC<CustomerMenuPreviewModalProps> = ({
           }
 
           .order-btn {
-            background: #4472c4;
+            background: #2563eb;
             color: white;
             border: none;
             padding: 12px 24px;
