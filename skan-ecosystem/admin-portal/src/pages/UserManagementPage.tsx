@@ -50,7 +50,7 @@ const UserManagementPage: React.FC = () => {
       }
       
       // Filter by venue ID for venue-specific user management
-      const venueId = 'beach-bar-durres'; // Use same venue as menu management
+      const venueId = auth.venue?.id || auth.user?.venueId || 'demo-venue-1';
       const response = await fetch(`${API_BASE_URL}/users?venueId=${venueId}`, {
         headers
       });
@@ -92,7 +92,7 @@ const UserManagementPage: React.FC = () => {
           email: inviteForm.email,
           fullName: inviteForm.fullName,
           role: inviteForm.role,
-          venueId: 'beach-bar-durres'
+          venueId: auth.venue?.id || auth.user?.venueId || 'demo-venue-1'
         })
       });
       

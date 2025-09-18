@@ -1980,6 +1980,66 @@ app.get("/v1/users", verifyAuth, async (req, res) => {
     
     const { venueId, role, limit = 50 } = req.query;
     
+    // Return demo users for demo venue
+    if (venueId === "demo-venue-1") {
+      const demoUsers = [
+        {
+          id: "demo-user-1",
+          email: "manager_email1@gmail.com",
+          fullName: "Demo Manager",
+          role: "manager",
+          venueId: "demo-venue-1",
+          isActive: true,
+          emailVerified: true,
+          createdAt: new Date("2024-01-15T10:00:00Z").toISOString(),
+          updatedAt: new Date("2024-01-15T10:00:00Z").toISOString()
+        },
+        {
+          id: "demo-user-2", 
+          email: "staff1@demo.com",
+          fullName: "Ana Kelmendi",
+          role: "staff",
+          venueId: "demo-venue-1",
+          isActive: true,
+          emailVerified: true,
+          createdAt: new Date("2024-02-10T14:30:00Z").toISOString(),
+          updatedAt: new Date("2024-02-10T14:30:00Z").toISOString()
+        },
+        {
+          id: "demo-user-3",
+          email: "staff2@demo.com", 
+          fullName: "Marko Vuković",
+          role: "staff",
+          venueId: "demo-venue-1",
+          isActive: true,
+          emailVerified: false,
+          createdAt: new Date("2024-03-05T09:15:00Z").toISOString(),
+          updatedAt: new Date("2024-03-05T09:15:00Z").toISOString()
+        },
+        {
+          id: "demo-user-4",
+          email: "waiter@demo.com",
+          fullName: "Elvira Hoxha", 
+          role: "staff",
+          venueId: "demo-venue-1",
+          isActive: false,
+          emailVerified: true,
+          createdAt: new Date("2024-01-20T16:45:00Z").toISOString(),
+          updatedAt: new Date("2024-04-12T11:20:00Z").toISOString()
+        }
+      ];
+      
+      // Filter by role if specified
+      const filteredUsers = role 
+        ? demoUsers.filter(user => user.role === role)
+        : demoUsers;
+      
+      return res.json({ 
+        users: filteredUsers.slice(0, parseInt(limit)), 
+        total: filteredUsers.length 
+      });
+    }
+    
     let query = db.collection("users");
     
     // Filter by venue if user is a manager (not admin)

@@ -152,16 +152,39 @@ const LoginPage: React.FC = () => {
         </div>
         
         <div className="login-footer">
-          <div className="demo-badge">
-            <svg className="demo-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"/>
-              <path d="M12 6v6l4 2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-            <span>Mjedisi Demo</span>
-          </div>
-          <div className="demo-credentials">
-            <p><strong>Email:</strong> manager_email1@gmail.com</p>
-            <p><strong>Fjalëkalimi:</strong> demo123</p>
+          <div className="demo-request">
+            <p className="demo-info">Nuk keni llogari? Kërkoni akses demo për të testuar platformën.</p>
+            <Link 
+              to="/demo-request"
+              className="demo-request-button"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+                backgroundColor: '#f8fafc',
+                color: '#667eea',
+                padding: '12px 24px',
+                borderRadius: '8px',
+                textDecoration: 'none',
+                fontSize: '14px',
+                fontWeight: '500',
+                border: '1px solid #e2e8f0',
+                transition: 'all 0.2s ease'
+              }}
+              onMouseEnter={(e) => {
+                (e.target as HTMLElement).style.backgroundColor = '#667eea';
+                (e.target as HTMLElement).style.color = 'white';
+              }}
+              onMouseLeave={(e) => {
+                (e.target as HTMLElement).style.backgroundColor = '#f8fafc';
+                (e.target as HTMLElement).style.color = '#667eea';
+              }}
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.51 4.04 3 5.5l7 7z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+              Kërko Akses Demo
+            </Link>
           </div>
         </div>
       </div>
