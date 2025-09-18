@@ -46,19 +46,17 @@ const Navigation: React.FC<NavigationProps> = ({ children }) => {
       <nav className={`sidebar ${isMobileMenuOpen ? 'open' : ''}`}>
         <div className="nav-header">
           <a href="https://skan.al" className="logo-link" target="_blank" rel="noopener noreferrer">
-            <div className="logo-container">
-              <svg className="skan-logo" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                  <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" style={{stopColor:"#2563eb"}}/>
-                    <stop offset="100%" style={{stopColor:"#1d4ed8"}}/>
-                  </linearGradient>
-                </defs>
-                <rect width="200" height="200" rx="40" fill="url(#logoGradient)"/>
-                <path d="M75,15H35A20.06,20.06,0,0,0,15,35V75A20.06,20.06,0,0,0,35,95H75A20.06,20.06,0,0,0,95,75V35A20.06,20.06,0,0,0,75,15Zm0,60H35V35H75Zm0,30H35a20.06,20.06,0,0,0-20,20v40a20.06,20.06,0,0,0,20,20H75a20.06,20.06,0,0,0,20-20V125A20.06,20.06,0,0,0,75,105Zm0,60H35V125H75ZM165,15H125a20.06,20.06,0,0,0-20,20V75a20.06,20.06,0,0,0,20,20h40a20.06,20.06,0,0,0,20-20V35A20.06,20.06,0,0,0,165,15Zm0,60H125V35h40ZM50,65H60a5.38,5.38,0,0,0,5-5V50a5.38,5.38,0,0,0-5-5H50a5.38,5.38,0,0,0-5,5V60A5.38,5.38,0,0,0,50,65Zm0,90H60a5.38,5.38,0,0,0,5-5V140a5.38,5.38,0,0,0-5-5H50a5.38,5.38,0,0,0-5,5v10A5.38,5.38,0,0,0,50,155Zm90-90h10a5.38,5.38,0,0,0,5-5V50a5.38,5.38,0,0,0-5-5H140a5.38,5.38,0,0,0-5,5V60A5.38,5.38,0,0,0,140,65Zm-30,80h10a5.38,5.38,0,0,0,5-5V130a5.38,5.38,0,0,1,5-5h10a5.38,5.38,0,0,0,5-5V110a5.38,5.38,0,0,0-5-5H110a5.38,5.38,0,0,0-5,5v30a5.38,5.38,0,0,0,5,5Zm70-40H170a5.38,5.38,0,0,0-5,5v30a5.38,5.38,0,0,0,5,5h10a5.38,5.38,0,0,0,5-5V110A5.38,5.38,0,0,0,180,105Zm-60,60H110a5.38,5.38,0,0,0-5,5v10a5.38,5.38,0,0,0,5,5h10a5.38,5.38,0,0,0,5-5V170A5.38,5.38,0,0,0,120,165Zm60,0H170a5.38,5.38,0,0,0-5,5V150a5.38,5.38,0,0,0-5-5H130a5.38,5.38,0,0,0-5,5v10a5.38,5.38,0,0,0,5,5h10a5.38,5.38,0,0,0,5,5v10a5.38,5.38,0,0,0,5,5h30a5.38,5.38,0,0,0,5-5V170A5.38,5.38,0,0,0,180,165Z" fill="white"/>
-              </svg>
-              <span className="logo-text">SKAN.AL</span>
-            </div>
+            <svg className="skan-logo" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style={{stopColor:"#2563eb"}}/>
+                  <stop offset="100%" style={{stopColor:"#1d4ed8"}}/>
+                </linearGradient>
+              </defs>
+              <rect width="200" height="200" rx="40" fill="url(#logoGradient)"/>
+              <path d="M75,15H35A20.06,20.06,0,0,0,15,35V75A20.06,20.06,0,0,0,35,95H75A20.06,20.06,0,0,0,95,75V35A20.06,20.06,0,0,0,75,15Zm0,60H35V35H75Zm0,30H35a20.06,20.06,0,0,0-20,20v40a20.06,20.06,0,0,0,20,20H75a20.06,20.06,0,0,0,20-20V125A20.06,20.06,0,0,0,75,105Zm0,60H35V125H75ZM165,15H125a20.06,20.06,0,0,0-20,20V75a20.06,20.06,0,0,0,20,20h40a20.06,20.06,0,0,0,20-20V35A20.06,20.06,0,0,0,165,15Zm0,60H125V35h40ZM50,65H60a5.38,5.38,0,0,0,5-5V50a5.38,5.38,0,0,0-5-5H50a5.38,5.38,0,0,0-5,5V60A5.38,5.38,0,0,0,50,65Zm0,90H60a5.38,5.38,0,0,0,5-5V140a5.38,5.38,0,0,0-5-5H50a5.38,5.38,0,0,0-5,5v10A5.38,5.38,0,0,0,50,155Zm90-90h10a5.38,5.38,0,0,0,5-5V50a5.38,5.38,0,0,0-5-5H140a5.38,5.38,0,0,0-5,5V60A5.38,5.38,0,0,0,140,65Zm-30,80h10a5.38,5.38,0,0,0,5-5V130a5.38,5.38,0,0,1,5-5h10a5.38,5.38,0,0,0,5-5V110a5.38,5.38,0,0,0-5-5H110a5.38,5.38,0,0,0-5,5v30a5.38,5.38,0,0,0,5,5Zm70-40H170a5.38,5.38,0,0,0-5,5v30a5.38,5.38,0,0,0,5,5h10a5.38,5.38,0,0,0,5-5V110A5.38,5.38,0,0,0,180,105Zm-60,60H110a5.38,5.38,0,0,0-5,5v10a5.38,5.38,0,0,0,5,5h10a5.38,5.38,0,0,0,5-5V170A5.38,5.38,0,0,0,120,165Zm60,0H170a5.38,5.38,0,0,0-5,5V150a5.38,5.38,0,0,0-5-5H130a5.38,5.38,0,0,0-5,5v10a5.38,5.38,0,0,0,5,5h10a5.38,5.38,0,0,0,5,5v10a5.38,5.38,0,0,0,5,5h30a5.38,5.38,0,0,0,5-5V170A5.38,5.38,0,0,0,180,165Z" fill="white"/>
+            </svg>
+            <span className="logo-text">SKAN.AL</span>
           </a>
           <h2>{auth.venue?.name || 'Restaurant'}</h2>
         </div>
@@ -366,50 +364,36 @@ const Navigation: React.FC<NavigationProps> = ({ children }) => {
         }
 
         .nav-header {
-          padding: 24px 20px 20px 20px;
+          padding: 20px;
           border-bottom: 1px solid #34495e;
           position: relative;
         }
 
         .logo-link {
-          display: block;
-          margin-bottom: 24px;
-          transition: all 0.3s ease;
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          margin-bottom: 16px;
+          transition: transform 0.3s ease;
           text-decoration: none;
-          padding: 12px 16px;
-          border-radius: 16px;
-          background: rgba(255, 255, 255, 0.03);
-          border: 1px solid rgba(255, 255, 255, 0.08);
         }
 
         .logo-link:hover {
-          transform: translateY(-2px);
-          background: rgba(255, 255, 255, 0.08);
-          border-color: rgba(37, 99, 235, 0.3);
-          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-        }
-
-        .logo-container {
-          display: flex;
-          align-items: center;
-          gap: 16px;
+          transform: scale(1.05);
         }
 
         .skan-logo {
-          width: 40px;
-          height: 40px;
-          border-radius: 10px;
-          transition: all 0.3s ease;
+          width: 32px;
+          height: 32px;
+          border-radius: 8px;
           flex-shrink: 0;
         }
 
         .logo-text {
           color: #ffffff;
-          font-size: 24px;
-          font-weight: 800;
-          letter-spacing: -0.8px;
-          text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
-          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+          font-size: 18px;
+          font-weight: 600;
+          letter-spacing: -0.3px;
         }
 
 
