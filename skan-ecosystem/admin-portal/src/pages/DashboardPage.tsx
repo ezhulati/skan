@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { restaurantApiService, Order } from '../services/api';
+import WelcomeHeader from '../components/WelcomeHeader';
 
 const DashboardPage: React.FC = () => {
   const { auth } = useAuth();
@@ -97,6 +98,23 @@ const DashboardPage: React.FC = () => {
     return order.status === selectedStatus;
   });
 
+  // Calculate statistics for WelcomeHeader
+  const todayOrders = orders.filter(order => {
+    const orderDate = new Date(order.createdAt);
+    const today = new Date();
+    return orderDate.toDateString() === today.toDateString();
+  });
+
+  const activeOrders = orders.filter(order => 
+    ['new', 'preparing', 'ready'].includes(order.status)
+  );
+
+  const todayRevenue = todayOrders.reduce((total, order) => {
+    return total + order.items.reduce((orderTotal, item) => {
+      return orderTotal + (item.price * item.quantity);
+    }, 0);
+  }, 0);
+
   const formatTime = (dateString: string) => {
     const date = new Date(dateString);
     const now = new Date();
@@ -121,24 +139,28 @@ const DashboardPage: React.FC = () => {
 
   return (
     <div className="dashboard-page">
-      <header className="page-header">
-        <div className="header-left">
-          <h1>Paneli i Porosive</h1>
+      <WelcomeHeader 
+        ordersCount={todayOrders.length}
+        todayRevenue={todayRevenue}
+        activeOrders={activeOrders.length}
+      />
+
+      <div className="orders-section-header">
+        <div className="section-title">
+          <h2>Paneli i Porosive</h2>
           <p>Menaxho porositë e ardhura dhe përditëso statusin e tyre</p>
         </div>
-        <div className="header-right">
-          <button 
-            className="refresh-button"
-            onClick={() => {
-              setRefreshing(true);
-              loadOrders();
-            }}
-            disabled={refreshing}
-          >
-            {refreshing ? 'Duke rifreskuar...' : 'Rifresko'}
-          </button>
-        </div>
-      </header>
+        <button 
+          className="refresh-button"
+          onClick={() => {
+            setRefreshing(true);
+            loadOrders();
+          }}
+          disabled={refreshing}
+        >
+          {refreshing ? 'Duke rifreskuar...' : 'Rifresko'}
+        </button>
+      </div>
 
       <div className="status-filters">
         {['all', 'active', 'new', 'preparing', 'ready', 'served'].map(status => (

@@ -1,6 +1,7 @@
 ---
 // Custom Navigation Component with mobile-first design
 import LanguageSwitcher from './LanguageSwitcher.astro';
+import MobileLanguageSwitcher from './MobileLanguageSwitcher.astro';
 ---
 
 <header id="main-header" class="main-header">
@@ -35,12 +36,17 @@ import LanguageSwitcher from './LanguageSwitcher.astro';
       <a href="/register" class="cta-button" data-sq="Filloni" data-en="Get Started">Filloni</a>
     </div>
 
-    <!-- Mobile Hamburger -->
-    <button id="mobile-hamburger" class="mobile-hamburger" aria-label="Open menu">
-      <span class="hamburger-line"></span>
-      <span class="hamburger-line"></span>
-      <span class="hamburger-line"></span>
-    </button>
+    <!-- Mobile Language Picker + Hamburger -->
+    <div class="mobile-header-right">
+      <div class="mobile-language-wrapper">
+        <MobileLanguageSwitcher />
+      </div>
+      <button id="mobile-hamburger" class="mobile-hamburger" aria-label="Open menu">
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+      </button>
+    </div>
   </div>
 </header>
 
@@ -184,6 +190,16 @@ import LanguageSwitcher from './LanguageSwitcher.astro';
     background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
   }
 
+  .mobile-header-right {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .mobile-language-wrapper {
+    display: block;
+  }
+
   .mobile-hamburger {
     display: flex;
     flex-direction: column;
@@ -236,7 +252,7 @@ import LanguageSwitcher from './LanguageSwitcher.astro';
       display: flex;
     }
 
-    .mobile-hamburger {
+    .mobile-header-right {
       display: none;
     }
 

@@ -1,0 +1,99 @@
+---
+// Mobile-only Language Switcher Component
+---
+
+<div class="mobile-language-switcher">
+  <button 
+    type="button" 
+    class="flex items-center space-x-1 px-2 py-2 text-sm text-gray-600 hover:text-gray-900 rounded-lg transition-colors whitespace-nowrap"
+    id="mobile-language-toggle"
+  >
+    <span class="flag" id="mobile-current-flag">🇦🇱</span>
+    <span class="text" id="mobile-current-lang">SQ</span>
+    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+    </svg>
+  </button>
+  
+  <div class="mobile-language-menu hidden absolute right-0 mt-2 w-28 bg-white rounded-lg shadow-lg border border-gray-200 z-50" id="mobile-language-menu">
+    <button 
+      type="button" 
+      class="w-full flex items-center space-x-2 px-2 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-t-lg transition-colors whitespace-nowrap"
+      onclick="switchLanguage('sq')"
+    >
+      <span>🇦🇱</span>
+      <span>SQ</span>
+    </button>
+    <button 
+      type="button" 
+      class="w-full flex items-center space-x-2 px-2 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-b-lg transition-colors whitespace-nowrap"
+      onclick="switchLanguage('en')"
+    >
+      <span>🇺🇸</span>
+      <span>EN</span>
+    </button>
+  </div>
+</div>
+
+<script>
+  // Mobile language switcher functionality
+  document.addEventListener('DOMContentLoaded', function() {
+    const currentLang = localStorage.getItem('preferredLanguage') || 'sq';
+    
+    // Update mobile language indicator
+    function updateMobileLanguageIndicator(lang) {
+      const mobileCurrentFlag = document.getElementById('mobile-current-flag');
+      const mobileCurrentLangText = document.getElementById('mobile-current-lang');
+      
+      if (mobileCurrentFlag && mobileCurrentLangText) {
+        if (lang === 'sq') {
+          mobileCurrentFlag.textContent = '🇦🇱';
+          mobileCurrentLangText.textContent = 'SQ';
+        } else {
+          mobileCurrentFlag.textContent = '🇺🇸';
+          mobileCurrentLangText.textContent = 'EN';
+        }
+      }
+    }
+    
+    // Initialize with current language
+    updateMobileLanguageIndicator(currentLang);
+    
+    // Set up mobile toggle functionality
+    const mobileToggle = document.getElementById('mobile-language-toggle');
+    const mobileMenu = document.getElementById('mobile-language-menu');
+    
+    if (mobileToggle && mobileMenu) {
+      mobileToggle.addEventListener('click', function() {
+        mobileMenu.classList.toggle('hidden');
+      });
+      
+      // Close menu when clicking outside
+      document.addEventListener('click', function(event) {
+        if (!mobileToggle.contains(event.target) && !mobileMenu.contains(event.target)) {
+          mobileMenu.classList.add('hidden');
+        }
+      });
+    }
+    
+    // Listen for language changes from the main language switcher
+    window.addEventListener('storage', function(e) {
+      if (e.key === 'preferredLanguage') {
+        updateMobileLanguageIndicator(e.newValue || 'sq');
+      }
+    });
+    
+    // Also listen for custom language change events
+    document.addEventListener('languageChanged', function(e) {
+      updateMobileLanguageIndicator(e.detail.language);
+      mobileMenu?.classList.add('hidden');
+    });
+  });
+</script>
+
+<style>
+  .mobile-language-switcher {
+    position: relative;
+    display: inline-block;
+  }
+</style>

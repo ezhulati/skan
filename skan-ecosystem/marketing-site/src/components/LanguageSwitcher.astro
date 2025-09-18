@@ -55,16 +55,26 @@
     const currentFlag = document.getElementById('current-flag');
     const currentLangText = document.getElementById('current-lang');
     
-    if (lang === 'sq') {
-      currentFlag.textContent = '🇦🇱';
-      currentLangText.textContent = 'SQ';
-    } else {
-      currentFlag.textContent = '🇺🇸';
-      currentLangText.textContent = 'EN';
+    if (currentFlag && currentLangText) {
+      if (lang === 'sq') {
+        currentFlag.textContent = '🇦🇱';
+        currentLangText.textContent = 'SQ';
+      } else {
+        currentFlag.textContent = '🇺🇸';
+        currentLangText.textContent = 'EN';
+      }
     }
     
     // Hide menu
-    document.getElementById('language-menu').classList.add('hidden');
+    const menu = document.getElementById('language-menu');
+    if (menu) {
+      menu.classList.add('hidden');
+    }
+    
+    // Dispatch custom event to notify mobile language switcher
+    document.dispatchEvent(new CustomEvent('languageChanged', {
+      detail: { language: lang }
+    }));
   }
   
   // Initialize language on page load

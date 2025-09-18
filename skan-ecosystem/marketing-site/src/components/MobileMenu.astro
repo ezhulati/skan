@@ -24,6 +24,7 @@
       <div class="mobile-menu-section">
         <a href="/features" class="mobile-menu-item" data-sq="Veçoritë" data-en="Features">Veçoritë</a>
         <a href="/pricing" class="mobile-menu-item" data-sq="Çmimet" data-en="Pricing">Çmimet</a>
+        <a href="/about" class="mobile-menu-item" data-sq="Rreth Nesh" data-en="About">Rreth Nesh</a>
         <a href="/blog" class="mobile-menu-item" data-sq="Blog" data-en="Blog">Blog</a>
         <a href="/contact" class="mobile-menu-item" data-sq="Kontakti" data-en="Contact">Kontakti</a>
       </div>
@@ -31,16 +32,6 @@
       <div class="mobile-menu-section">
         <a href="https://admin.skan.al/login" class="mobile-menu-item" data-sq="Hyni" data-en="Sign In">Hyni</a>
         <a href="/demo" class="mobile-menu-item" data-sq="Demo" data-en="Demo">Demo</a>
-      </div>
-
-      <div class="mobile-menu-section">
-        <div class="mobile-menu-language">
-          <span class="text-sm text-gray-500 mb-2 block" data-sq="Gjuha" data-en="Language">Gjuha</span>
-          <div class="flex space-x-2">
-            <button class="language-btn active" data-lang="sq">🇦🇱 SQ</button>
-            <button class="language-btn" data-lang="en">🇺🇸 EN</button>
-          </div>
-        </div>
       </div>
 
       <div class="mobile-menu-section">
@@ -188,35 +179,6 @@
     background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
   }
 
-  .mobile-menu-language {
-    padding: 1rem;
-    background: #f8fafc;
-    border-radius: 12px;
-    border: 1px solid #e5e7eb;
-  }
-
-  .language-btn {
-    padding: 0.5rem 1rem;
-    border: 1px solid #e5e7eb;
-    border-radius: 8px;
-    background: white;
-    color: #6b7280;
-    font-size: 0.9rem;
-    font-weight: 500;
-    transition: all 0.2s ease;
-    cursor: pointer;
-  }
-
-  .language-btn:hover {
-    background: #f3f4f6;
-    border-color: #d1d5db;
-  }
-
-  .language-btn.active {
-    background: #3b82f6;
-    color: white;
-    border-color: #3b82f6;
-  }
 
   /* Prevent body scroll when menu is open */
   body.mobile-menu-open {
@@ -309,20 +271,6 @@
       }
     });
 
-    // Language switcher functionality - use global switchLanguage function
-    const languageBtns = document.querySelectorAll('.language-btn');
-    languageBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        languageBtns.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        
-        const lang = btn.dataset.lang;
-        // Use the global switchLanguage function from LanguageSwitcher component
-        if (typeof (window as any).switchLanguage === 'function') {
-          (window as any).switchLanguage(lang);
-        }
-      });
-    });
 
     // Menu item click handler (close menu after navigation)
     const menuItems = document.querySelectorAll('.mobile-menu-item, .mobile-menu-cta');
@@ -342,24 +290,9 @@
     if (overlay) {
       overlay.classList.add('open');
       body.classList.add('mobile-menu-open');
-      
-      // Sync mobile language buttons with current language
-      syncMobileLanguageButtons();
     }
   }
 
-  // Function to sync mobile language buttons with current language
-  function syncMobileLanguageButtons() {
-    const currentLang = localStorage.getItem('preferredLanguage') || 'sq';
-    const languageBtns = document.querySelectorAll('.language-btn');
-    
-    languageBtns.forEach(btn => {
-      btn.classList.remove('active');
-      if (btn.dataset.lang === currentLang) {
-        btn.classList.add('active');
-      }
-    });
-  }
 
   // Initialize on page load
   document.addEventListener('DOMContentLoaded', initializeMobileMenu);
