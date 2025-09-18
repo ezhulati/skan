@@ -276,8 +276,8 @@ const MenuManagementPage: React.FC = () => {
         method: 'POST',
         headers,
         body: JSON.stringify({
-          name: newItem.name,
-          nameAlbanian: newItem.nameAlbanian,
+          name: newItem.nameAlbanian,
+          nameEn: newItem.name,
           price: parseFloat(newItem.price),
           isActive: newItem.isActive,
           imageUrl: newItem.imageUrl || undefined
@@ -715,7 +715,7 @@ const MenuManagementPage: React.FC = () => {
                               )}
                             </div>
                             <p className="item-subtitle">{item.name}</p>
-                            <p className="item-price">{Math.round(item.price * 97)} Lek</p>
+                            <p className="item-price">{item.price} Lek</p>
                           </div>
                           <div className="item-status">
                             <label className="toggle-switch">
