@@ -26,7 +26,7 @@ const QRCodePage: React.FC = () => {
   }, []);
 
   const generateQRCode = useCallback(async (tableNumber: string): Promise<TableQR> => {
-    const url = `${baseUrl}/${venueSlug}/${tableNumber}`;
+    const url = `${baseUrl}/${venueSlug}/${tableNumber}/menu`;
     
     try {
       const qrCodeDataUrl = await QRCode.toDataURL(url, {
