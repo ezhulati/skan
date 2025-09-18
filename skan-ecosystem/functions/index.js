@@ -250,8 +250,8 @@ const verifyAuth = async (req, res, next) => {
       return res.status(401).json({ error: "No token provided" });
     }
     
-    // Handle demo tokens (development only)
-    if (process.env.NODE_ENV !== "production" && token.startsWith("demo_token_")) {
+    // Handle demo tokens (when demo credentials are enabled)
+    if (process.env.ALLOW_DEMO_CREDENTIALS === "true" && token.startsWith("demo_token_")) {
       req.user = {
         uid: "demo-user-1",
         email: "manager_email1@gmail.com",
