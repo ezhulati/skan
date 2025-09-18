@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import CustomerMenuPreviewModal from './CustomerMenuPreviewModal';
 
 interface NavigationProps {
   children: React.ReactNode;
@@ -10,6 +11,7 @@ const Navigation: React.FC<NavigationProps> = ({ children }) => {
   const { auth, logout } = useAuth();
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
+  const [isCustomerPreviewOpen, setIsCustomerPreviewOpen] = React.useState(false);
 
   const isActive = (path: string) => location.pathname === path;
 
@@ -99,6 +101,21 @@ const Navigation: React.FC<NavigationProps> = ({ children }) => {
             </Link>
           </li>
           <li>
+            <button 
+              className="nav-link preview-button"
+              onClick={() => {
+                setIsCustomerPreviewOpen(true);
+                closeMobileMenu();
+              }}
+            >
+              <svg className="nav-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" stroke="currentColor" strokeWidth="2"/>
+                <circle cx="12" cy="12" r="3" stroke="currentColor" strokeWidth="2"/>
+              </svg>
+              Shiko si Klient
+            </button>
+          </li>
+          <li>
             <Link 
               to="/users" 
               className={`nav-link ${isActive('/users') ? 'active' : ''}`}
@@ -154,6 +171,11 @@ const Navigation: React.FC<NavigationProps> = ({ children }) => {
       <main className="main-content">
         {children}
       </main>
+
+      <CustomerMenuPreviewModal 
+        isOpen={isCustomerPreviewOpen}
+        onClose={() => setIsCustomerPreviewOpen(false)}
+      />
 
       <style>{`
         .navigation-layout {
@@ -410,6 +432,24 @@ const Navigation: React.FC<NavigationProps> = ({ children }) => {
 
         .nav-link.active::before {
           opacity: 1;
+        }
+
+        .nav-link.preview-button {
+          border: none;
+          cursor: pointer;
+          background: rgba(255, 255, 255, 0.05);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          width: 100%;
+          text-align: left;
+          font-family: inherit;
+          font-size: 15px;
+        }
+
+        .nav-link.preview-button:hover {
+          background: rgba(255, 255, 255, 0.1);
+          color: white;
+          transform: translateX(4px);
+          border-color: rgba(52, 152, 219, 0.3);
         }
 
         .nav-icon {
