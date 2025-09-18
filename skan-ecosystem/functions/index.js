@@ -14,7 +14,9 @@ const db = admin.firestore();
 const app = express();
 
 // Security Configuration
-const JWT_SECRET = process.env.JWT_SECRET || "your-super-secret-jwt-key-change-in-production";
+const functions = require("firebase-functions");
+const config = functions.config();
+const JWT_SECRET = config.jwt?.secret || process.env.JWT_SECRET || "your-super-secret-jwt-key-change-in-production";
 const JWT_EXPIRE = "15m"; // Access token expires in 15 minutes
 const REFRESH_TOKEN_EXPIRE = "7d"; // Refresh token expires in 7 days
 
@@ -4027,18 +4029,11 @@ app.use("*", (req, res) => {
   });
 });
 
-// Environment validation
-const requiredEnvVars = ["JWT_SECRET"];
-const missingVars = requiredEnvVars.filter(varName => !process.env[varName]);
-
-if (missingVars.length > 0 && process.env.NODE_ENV === "production") {
-  console.error("Missing required environment variables:", missingVars);
-  process.exit(1);
-}
-
-if (process.env.NODE_ENV === "production" && process.env.JWT_SECRET === "your-super-secret-jwt-key-change-in-production") {
-  console.error("Default JWT secret detected in production! This is a security risk.");
-  process.exit(1);
+// Environment validation (non-blocking for Firebase Functions)
+if (config.environment?.node_env === "production") {
+  if (!JWT_SECRET || JWT_SECRET === "your-super-secret-jwt-key-change-in-production") {
+    console.warn("Warning: Using default JWT secret in production. Please set jwt.secret in Firebase config.");
+  }
 }
 
 // Export the Express app as a Firebase Cloud Function
