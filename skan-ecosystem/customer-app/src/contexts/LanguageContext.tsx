@@ -58,6 +58,24 @@ const translations = {
     'special_instructions_placeholder': 'Ndonjë kërkesë speciale për kuzhinën...',
     'submit_order': 'Dërgo Porosinë',
     'order_summary': 'Përmbledhja e Porosisë',
+    'proceed_to_payment': 'Vazhdo tek Pagesa',
+    
+    // Payment
+    'payment_method': 'Mënyra e Pagesës',
+    'pay_with_card': 'Paguaj me Kartë',
+    'pay_with_cash': 'Paguaj me Para në Dorë',
+    'secure_instant_payment': 'Pagesë e sigurt dhe e menjëhershme',
+    'pay_when_served': 'Paguaj kur të shërbehet',
+    'secure': 'E Sigurt',
+    'instant': 'E Menjëhershme',
+    'traditional': 'Tradicionale',
+    'payment': 'Pagesa',
+    'payment_details': 'Detajet e Pagesës',
+    'card_details': 'Detajet e Kartës',
+    'pay_now': 'Paguaj Tani',
+    'processing_payment': 'Duke përpunuar pagesën...',
+    'payment_secure': 'Pagesa juaj është e sigurt dhe e enkriptuar',
+    'loading_payment': 'Duke ngarkuar pagesën...',
     
     // Confirmation
     'order_confirmed': 'Porosia u Konfirmua!',
@@ -169,6 +187,24 @@ const translations = {
     'special_instructions_placeholder': 'Any special requests for the kitchen...',
     'submit_order': 'Submit Order',
     'order_summary': 'Order Summary',
+    'proceed_to_payment': 'Proceed to Payment',
+    
+    // Payment
+    'payment_method': 'Payment Method',
+    'pay_with_card': 'Pay with Card',
+    'pay_with_cash': 'Pay with Cash',
+    'secure_instant_payment': 'Secure & instant payment',
+    'pay_when_served': 'Pay when served',
+    'secure': 'Secure',
+    'instant': 'Instant',
+    'traditional': 'Traditional',
+    'payment': 'Payment',
+    'payment_details': 'Payment Details',
+    'card_details': 'Card Details',
+    'pay_now': 'Pay Now',
+    'processing_payment': 'Processing payment...',
+    'payment_secure': 'Your payment is secure and encrypted',
+    'loading_payment': 'Loading payment...',
     
     // Confirmation
     'order_confirmed': 'Order Confirmed!',

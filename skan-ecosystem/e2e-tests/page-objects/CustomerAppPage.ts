@@ -30,6 +30,15 @@ export class CustomerAppPage {
   readonly orderStatus: Locator;
   readonly orderNumber: Locator;
 
+  // Payment elements
+  readonly paymentMethodSection: Locator;
+  readonly cashPaymentOption: Locator;
+  readonly cardPaymentOption: Locator;
+  readonly cashRadio: Locator;
+  readonly cardRadio: Locator;
+  readonly submitOrderButton: Locator;
+  readonly proceedToPaymentButton: Locator;
+
   constructor(public page: Page) {
     this.helpers = new TestHelpers(page);
     
@@ -57,6 +66,15 @@ export class CustomerAppPage {
     this.orderConfirmation = page.getByTestId(TEST_IDS.CUSTOMER.ORDER_CONFIRMATION);
     this.orderStatus = page.getByTestId(TEST_IDS.CUSTOMER.ORDER_STATUS);
     this.orderNumber = page.locator('.order-number, [data-order-number]');
+
+    // Payment elements
+    this.paymentMethodSection = page.locator('text=Payment Method').or(page.locator('text=Metoda e Pagesës'));
+    this.cashPaymentOption = page.locator('label:has(input[value="cash"])');
+    this.cardPaymentOption = page.locator('label:has(input[value="stripe"])');
+    this.cashRadio = page.locator('input[value="cash"]');
+    this.cardRadio = page.locator('input[value="stripe"]');
+    this.submitOrderButton = page.locator('button:has-text("Submit Order")').or(page.locator('button:has-text("Dërgo Porosinë")'));
+    this.proceedToPaymentButton = page.locator('button:has-text("Proceed to Payment")').or(page.locator('button:has-text("Vazhdo në Pagesë")'));
   }
 
   /**
@@ -278,6 +296,140 @@ export class CustomerAppPage {
     await this.helpers.verifyText('[data-testid="' + TEST_IDS.CUSTOMER.ORDER_STATUS + '"]', expectedStatus);
   }
 
+  // Payment-specific methods
+
+  /**
+   * Verify payment method selector is visible
+   */
+  async verifyPaymentMethodSelectorVisible() {
+    await this.paymentMethodSection.waitFor({ state: 'visible', timeout: TIMEOUTS.MEDIUM });
+    await expect(this.cashPaymentOption).toBeVisible();
+  }
+
+  /**
+   * Verify payment method selector shows card option when Stripe is enabled
+   */
+  async verifyCardPaymentOptionVisible() {
+    await expect(this.cardPaymentOption).toBeVisible();
+  }
+
+  /**
+   * Verify payment method selector hides card option when Stripe is disabled
+   */
+  async verifyCardPaymentOptionHidden() {
+    await expect(this.cardPaymentOption).not.toBeVisible();
+  }
+
+  /**
+   * Select payment method
+   */
+  async selectPaymentMethod(method: 'cash' | 'stripe') {
+    if (method === 'cash') {
+      await this.cashPaymentOption.click();
+    } else {
+      await this.cardPaymentOption.click();
+    }
+    await this.page.waitForTimeout(300);
+  }
+
+  /**
+   * Verify payment method is selected
+   */
+  async verifyPaymentMethodSelected(method: 'cash' | 'stripe') {
+    if (method === 'cash') {
+      await expect(this.cashRadio).toBeChecked();
+    } else {
+      await expect(this.cardRadio).toBeChecked();
+    }
+  }
+
+  /**
+   * Verify submit button text based on payment method
+   */
+  async verifySubmitButtonText(expectedText: string) {
+    const submitButton = this.submitOrderButton.or(this.proceedToPaymentButton);
+    await expect(submitButton).toContainText(expectedText);
+  }
+
+  /**
+   * Submit order with current payment method
+   */
+  async submitOrderWithPaymentMethod() {
+    const submitButton = this.submitOrderButton.or(this.proceedToPaymentButton);
+    await submitButton.click();
+    await this.page.waitForTimeout(1000);
+  }
+
+  /**
+   * Verify navigation to payment page
+   */
+  async verifyNavigationToPaymentPage() {
+    await this.page.waitForURL('**/payment', { timeout: TIMEOUTS.MEDIUM });
+  }
+
+  /**
+   * Verify navigation to confirmation page
+   */
+  async verifyNavigationToConfirmationPage() {
+    await this.page.waitForURL('**/confirmation', { timeout: TIMEOUTS.MEDIUM });
+  }
+
+  /**
+   * Fill cart form completely
+   */
+  async fillCartForm(customerName: string, orderNotes?: string) {
+    const customerNameInput = this.page.locator('input[type="text"]').first();
+    await customerNameInput.fill(customerName);
+    
+    if (orderNotes) {
+      const orderNotesInput = this.page.locator('textarea').last();
+      await orderNotesInput.fill(orderNotes);
+    }
+  }
+
+  /**
+   * Verify error message display
+   */
+  async verifyErrorMessage(expectedMessage?: string) {
+    const errorMessage = this.page.locator('.bg-red-50, [role="alert"], .error-message');
+    await expect(errorMessage).toBeVisible({ timeout: TIMEOUTS.MEDIUM });
+    
+    if (expectedMessage) {
+      await expect(errorMessage).toContainText(expectedMessage);
+    }
+  }
+
+  /**
+   * Verify payment method translations
+   */
+  async verifyPaymentMethodTranslations(language: 'en' | 'sq') {
+    if (language === 'sq') {
+      await expect(this.page.locator('text=Metoda e Pagesës')).toBeVisible();
+      await expect(this.page.locator('text=Paguaj me Para në Dorë')).toBeVisible();
+    } else {
+      await expect(this.page.locator('text=Payment Method')).toBeVisible();
+      await expect(this.page.locator('text=Pay with Cash')).toBeVisible();
+    }
+  }
+
+  /**
+   * Switch language
+   */
+  async switchLanguage(language: 'en' | 'sq') {
+    const currentLanguageButton = this.page.locator('button:has-text("EN")').or(this.page.locator('button:has-text("SQ")'));
+    await currentLanguageButton.click();
+    
+    if (language === 'sq') {
+      const albanianOption = this.page.locator('button:has-text("SQ")').or(this.page.locator('text=Shqip'));
+      await albanianOption.click();
+    } else {
+      const englishOption = this.page.locator('button:has-text("EN")').or(this.page.locator('text=English'));
+      await englishOption.click();
+    }
+    
+    await this.page.waitForTimeout(500);
+  }
+
   /**
    * Complete full ordering flow
    */
@@ -316,6 +468,40 @@ export class CustomerAppPage {
     
     // 8. Verify confirmation
     return await this.verifyOrderConfirmation();
+  }
+
+  /**
+   * Complete cash payment flow
+   */
+  async completeCashPaymentFlow(customerName: string, orderNotes?: string) {
+    // Fill form
+    await this.fillCartForm(customerName, orderNotes);
+    
+    // Ensure cash is selected
+    await this.selectPaymentMethod('cash');
+    
+    // Submit order
+    await this.submitOrderWithPaymentMethod();
+    
+    // Verify navigation to confirmation
+    await this.verifyNavigationToConfirmationPage();
+  }
+
+  /**
+   * Complete card payment flow up to payment page
+   */
+  async completeCardPaymentFlow(customerName: string, orderNotes?: string) {
+    // Fill form
+    await this.fillCartForm(customerName, orderNotes);
+    
+    // Select card payment
+    await this.selectPaymentMethod('stripe');
+    
+    // Submit (should navigate to payment page)
+    await this.submitOrderWithPaymentMethod();
+    
+    // Verify navigation to payment page
+    await this.verifyNavigationToPaymentPage();
   }
 
   /**

@@ -1,7 +1,7 @@
 export const URLs = {
   MARKETING_SITE: 'http://localhost:4321',
   CUSTOMER_APP: 'http://localhost:3000',
-  ADMIN_PORTAL: 'http://localhost:3002',
+  ADMIN_PORTAL: 'http://localhost:3001',
 } as const;
 
 export const TEST_IDS = {
@@ -32,6 +32,11 @@ export const TEST_IDS = {
     PLACE_ORDER: 'place-order',
     ORDER_CONFIRMATION: 'order-confirmation',
     ORDER_STATUS: 'order-status',
+    PAYMENT_METHOD_SELECTOR: 'payment-method-selector',
+    CASH_PAYMENT_OPTION: 'cash-payment-option',
+    CARD_PAYMENT_OPTION: 'card-payment-option',
+    SUBMIT_ORDER_BUTTON: 'submit-order-button',
+    PROCEED_TO_PAYMENT_BUTTON: 'proceed-to-payment-button',
   },
   
   // Admin Portal
@@ -57,9 +62,27 @@ export const TEST_DATA = {
   },
   
   SAMPLE_VENUE: {
-    id: 'test-venue-123',
-    name: 'Test Restaurant',
+    id: 'beach-bar-durres',
+    name: 'Beach Bar Durrës',
     address: '123 Test Street, Test City',
+  },
+  
+  SAMPLE_VENUE_WITH_STRIPE: {
+    id: 'beach-bar-durres',
+    name: 'Beach Bar Durrës',
+    address: '123 Test Street, Test City',
+    settings: {
+      stripeConnectEnabled: true,
+    },
+  },
+  
+  SAMPLE_VENUE_WITHOUT_STRIPE: {
+    id: 'beach-bar-durres',
+    name: 'Beach Bar Durrës',
+    address: '123 Test Street, Test City',
+    settings: {
+      stripeConnectEnabled: false,
+    },
   },
   
   SAMPLE_MENU_ITEMS: [
@@ -84,6 +107,13 @@ export const TEST_DATA = {
       price: 14.99,
       category: 'Pizza',
     },
+    {
+      id: 'beer',
+      name: 'Albanian Beer',
+      description: 'Local beer',
+      price: 3.50,
+      category: 'Drinks',
+    },
   ],
   
   SAMPLE_ORDER: {
@@ -96,6 +126,14 @@ export const TEST_DATA = {
     status: 'pending',
     customerName: 'Test Customer',
     orderTime: new Date().toISOString(),
+    paymentMethod: 'cash',
+    paymentStatus: 'pending',
+  },
+
+  PAYMENT_TEST_DATA: {
+    CUSTOMER_NAMES: ['Test Customer', 'John Doe', 'Jane Smith'],
+    ORDER_NOTES: ['No onions please', 'Extra sauce', 'Gluten-free'],
+    TABLE_NUMBERS: ['a1', 't1', 't2', 't3'],
   },
 } as const;
 

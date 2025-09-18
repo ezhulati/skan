@@ -6,6 +6,7 @@ import DashboardPage from './pages/DashboardPage';
 import QRCodePage from './pages/QRCodePage';
 import MenuManagementPage from './pages/MenuManagementPage';
 import UserManagementPage from './pages/UserManagementPage';
+import PaymentSettingsPage from './pages/PaymentSettingsPage';
 import OnboardingWizardPage from './pages/OnboardingWizardPage';
 import { AuthProvider } from './contexts/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -64,6 +65,16 @@ function App() {
                 <ProtectedRoute>
                   <Navigation>
                     <UserManagementPage />
+                  </Navigation>
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/payment-settings" 
+              element={
+                <ProtectedRoute>
+                  <Navigation>
+                    <PaymentSettingsPage />
                   </Navigation>
                 </ProtectedRoute>
               } 
