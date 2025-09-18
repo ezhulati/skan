@@ -57,17 +57,6 @@ export const api = {
     return apiRequest<OrderTracking>(`/orders/${orderId}`);
   },
 
-  async createPaymentIntent(data: {
-    amount: number;
-    currency: string;
-    venueId?: string;
-    tableNumber?: string;
-  }): Promise<{ clientSecret: string; amount: number }> {
-    return apiRequest<{ clientSecret: string; amount: number }>('/payment/create-intent', {
-      method: 'POST',
-      body: JSON.stringify(data),
-    });
-  }
 };
 
 export { ApiError };

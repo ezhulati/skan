@@ -9,9 +9,7 @@ export interface Venue {
     currency: string;
     orderingEnabled: boolean;
     estimatedPreparationTime: number;
-    stripeConnectEnabled?: boolean;
-    stripeAccountId?: string;
-    subscriptionTier?: 'free' | 'paid';
+    subscriptionTier: 'basic';
   };
 }
 
@@ -67,9 +65,8 @@ export interface Order {
   totalAmount: number;
   specialInstructions?: string;
   status: 'new' | 'preparing' | 'ready' | 'served';
-  paymentMethod?: 'stripe' | 'cash';
-  paymentIntentId?: string;
-  paymentStatus?: 'pending' | 'paid' | 'failed';
+  paymentMethod: 'pay_waiter';
+  paymentStatus: 'pending';
   createdAt?: string;
   updatedAt?: string;
 }

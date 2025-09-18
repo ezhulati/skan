@@ -6,7 +6,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { api } from '../services/api';
 import { Order } from '../types';
 import { CompactLanguagePicker } from '../components/LanguagePicker';
-import { PaymentMethodSelector } from '../components/PaymentMethodSelector';
 
 export function Cart() {
   const { items, totalAmount, updateQuantity, removeItem, updateSpecialInstructions, clearCart } = useCart();
@@ -19,7 +18,6 @@ export function Cart() {
   const [orderNotes, setOrderNotes] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [paymentMethod, setPaymentMethod] = useState<'stripe' | 'cash'>('cash');
 
   const handleQuantityChange = (itemId: string, newQuantity: number) => {
     if (newQuantity <= 0) {
@@ -44,18 +42,7 @@ export function Cart() {
       return;
     }
 
-    // If Stripe payment is selected, navigate to payment page
-    if (paymentMethod === 'stripe') {
-      navigate(`/${venueSlug}/${tableNumber}/payment`, {
-        state: {
-          customerName: customerName.trim() || undefined,
-          orderNotes: orderNotes.trim() || undefined
-        }
-      });
-      return;
-    }
-
-    // Handle cash payment - create order directly
+    // Create order - customer pays waiter when served
     setIsSubmitting(true);
     setError(null);
 
@@ -75,7 +62,7 @@ export function Cart() {
         totalAmount,
         specialInstructions: orderNotes.trim() || undefined,
         status: 'new',
-        paymentMethod: 'cash',
+        paymentMethod: 'pay_waiter',
         paymentStatus: 'pending'
       };
 
@@ -95,7 +82,7 @@ export function Cart() {
           orderNumber: response.orderNumber,
           orderId: response.orderId,
           totalAmount: response.totalAmount,
-          paymentMethod: 'cash'
+          paymentMethod: 'pay_waiter'
         }
       });
 
@@ -296,13 +283,18 @@ export function Cart() {
           </div>
         </div>
 
-        {/* Payment Method Selection */}
+        {/* Payment Information */}
         <div className="bg-white rounded-lg shadow-sm border p-4 mb-6">
-          <PaymentMethodSelector
-            selectedMethod={paymentMethod}
-            onMethodChange={setPaymentMethod}
-            stripeEnabled={venue?.settings?.stripeConnectEnabled || false}
-          />
+          <h3 className="font-medium text-gray-900 mb-3">{t('payment_method')}</h3>
+          <div className="flex items-center p-3 bg-blue-50 border border-blue-200 rounded-lg">
+            <div className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white text-xl mr-3">
+              👤
+            </div>
+            <div className="flex-1">
+              <div className="font-medium text-gray-900">{t('pay_waiter_when_served')}</div>
+              <div className="text-sm text-gray-600">{t('cash_or_card_with_waiter')}</div>
+            </div>
+          </div>
         </div>
 
         {/* Error Message */}
@@ -357,8 +349,6 @@ export function Cart() {
                 </svg>
                 {t('loading')}
               </>
-            ) : paymentMethod === 'stripe' ? (
-              `${t('proceed_to_payment')} • ${Math.round(totalAmount * 97)} Lek`
             ) : (
               `${t('submit_order')} • ${Math.round(totalAmount * 97)} Lek`
             )}
