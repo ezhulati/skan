@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 
 const LoginPage: React.FC = () => {
@@ -135,8 +135,8 @@ const LoginPage: React.FC = () => {
           marginTop: '16px',
           marginBottom: '16px'
         }}>
-          <a 
-            href="/forgot-password"
+          <Link 
+            to="/forgot-password"
             style={{
               color: '#667eea',
               textDecoration: 'none',
@@ -148,7 +148,7 @@ const LoginPage: React.FC = () => {
             onMouseLeave={(e) => (e.target as HTMLElement).style.color = '#667eea'}
           >
             Keni harruar fjalëkalimin?
-          </a>
+          </Link>
         </div>
         
         <div className="login-footer">

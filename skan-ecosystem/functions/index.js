@@ -974,15 +974,15 @@ app.post("/v1/auth/reset-password/confirm", async (req, res) => {
       return res.status(400).json({ error: "Reset token has expired" });
     }
     
-    // Generate new password hash
+    // Generate new password hash (consistent with login format)
     const crypto = require("crypto");
-    const salt = crypto.randomBytes(32);
-    const hashedPassword = crypto.scryptSync(newPassword, salt, 64);
+    const salt = crypto.randomBytes(16).toString("hex");
+    const hash = crypto.scryptSync(newPassword, salt, 64).toString("hex");
+    const newPasswordHash = `${salt}:${hash}`;
     
     // Update user with new password and clear reset token
     await userDoc.ref.update({
-      passwordHash: hashedPassword.toString("hex"),
-      salt: salt.toString("hex"),
+      passwordHash: newPasswordHash,
       resetToken: admin.firestore.FieldValue.delete(),
       resetTokenExpiry: admin.firestore.FieldValue.delete(),
       updatedAt: admin.firestore.FieldValue.serverTimestamp()
@@ -993,6 +993,56 @@ app.post("/v1/auth/reset-password/confirm", async (req, res) => {
   } catch (error) {
     console.error("Error confirming password reset:", error);
     res.status(500).json({ error: "Password reset confirmation failed" });
+  }
+});
+
+// Change password for authenticated users
+app.post("/v1/auth/change-password", verifyAuth, async (req, res) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+    
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({ error: "Current password and new password are required" });
+    }
+    
+    // Get user from database
+    const usersSnapshot = await db.collection("users")
+      .where("email", "==", req.user.email)
+      .limit(1)
+      .get();
+    
+    if (usersSnapshot.empty) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    
+    const userDoc = usersSnapshot.docs[0];
+    const userData = userDoc.data();
+    
+    // Verify current password
+    const crypto = require("crypto");
+    const [salt, hash] = userData.passwordHash.split(":");
+    const currentHash = crypto.scryptSync(currentPassword, salt, 64).toString("hex");
+    
+    if (currentHash !== hash) {
+      return res.status(400).json({ error: "Current password is incorrect" });
+    }
+    
+    // Hash new password
+    const newSalt = crypto.randomBytes(16).toString("hex");
+    const newHash = crypto.scryptSync(newPassword, newSalt, 64).toString("hex");
+    const newPasswordHash = `${newSalt}:${newHash}`;
+    
+    // Update password in database
+    await userDoc.ref.update({
+      passwordHash: newPasswordHash,
+      updatedAt: admin.firestore.FieldValue.serverTimestamp()
+    });
+    
+    res.json({ message: "Password changed successfully" });
+    
+  } catch (error) {
+    console.error("Error changing password:", error);
+    res.status(500).json({ error: "Password change failed" });
   }
 });
 
@@ -1020,7 +1070,8 @@ app.post("/v1/auth/login", async (req, res) => {
           id: "demo-venue-1",
           name: "Demo Restaurant",
           slug: "demo-restaurant"
-        }
+        },
+        token: `demo_token_${Date.now()}`
       });
     }
     
@@ -1038,13 +1089,25 @@ app.post("/v1/auth/login", async (req, res) => {
     const userDoc = usersSnapshot.docs[0];
     const userData = userDoc.data();
     
-    // Validate password
-    if (userData.passwordHash && userData.salt) {
+    // Validate password (support both old and new hash formats)
+    if (userData.passwordHash) {
       const crypto = require("crypto");
-      const salt = Buffer.from(userData.salt, "hex");
-      const hashedPassword = crypto.scryptSync(password, salt, 64);
+      let isValid = false;
       
-      if (hashedPassword.toString("hex") !== userData.passwordHash) {
+      // Check new format: "salt:hash"
+      if (userData.passwordHash.includes(":") && !userData.salt) {
+        const [salt, storedHash] = userData.passwordHash.split(":");
+        const computedHash = crypto.scryptSync(password, salt, 64).toString("hex");
+        isValid = computedHash === storedHash;
+      }
+      // Check old format: separate salt and hash fields
+      else if (userData.salt) {
+        const salt = Buffer.from(userData.salt, "hex");
+        const hashedPassword = crypto.scryptSync(password, salt, 64);
+        isValid = hashedPassword.toString("hex") === userData.passwordHash;
+      }
+      
+      if (!isValid) {
         return res.status(401).json({ error: "Invalid credentials" });
       }
     } else {
