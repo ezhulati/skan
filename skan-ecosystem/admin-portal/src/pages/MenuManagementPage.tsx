@@ -81,27 +81,19 @@ const MenuManagementPage: React.FC = () => {
       setError(null);
       
       // Use venue slug from authenticated user, fallback to demo venue
-      console.log('Auth venue slug:', auth.venue?.slug);
-      console.log('Auth venue object:', auth.venue);
       // Force use beach-bar-durres since demo-restaurant doesn't exist in API
       const venueSlug = (auth.venue?.slug && auth.venue.slug !== 'demo-restaurant') 
         ? auth.venue.slug 
         : 'beach-bar-durres';
-      console.log('Final venue slug to use:', venueSlug);
-      console.log('API URL:', `${baseUrl}/venue/${venueSlug}/menu`);
       
       // Use venue slug from authenticated user
       const response = await fetch(`${baseUrl}/venue/${venueSlug}/menu`);
-      console.log('Response status:', response.status);
       
       if (!response.ok) {
-        const errorText = await response.text();
-        console.error('API Error:', errorText);
         throw new Error('Dështoi të ngarkoj menunë');
       }
       
       const data = await response.json();
-      console.log('Menu data:', data);
       setCategories(data.categories || []);
     } catch (err) {
       console.error('Error loading menu:', err);
@@ -112,7 +104,6 @@ const MenuManagementPage: React.FC = () => {
   }, [baseUrl, auth.venue]);
 
   useEffect(() => {
-    console.log('MenuManagementPage: Auth state changed:', auth);
     loadMenu();
   }, [loadMenu, auth]);
 
@@ -120,8 +111,9 @@ const MenuManagementPage: React.FC = () => {
     if (!newCategoryName.trim() || !newCategoryNameEn.trim()) return;
 
     try {
-      // Use demo venue ID for now - should match what user is logged in as
-      const venueId = auth.user?.venueId || 'demo-venue-1';
+      // Use the same venue that we're displaying the menu from
+      // For demo, this needs to match beach-bar-durres venue ID
+      const venueId = 'beach-bar-durres'; // TODO: Get actual venue ID from slug
       const url = `${baseUrl}/venue/${venueId}/categories`;
       
       const headers: HeadersInit = {
@@ -159,7 +151,7 @@ const MenuManagementPage: React.FC = () => {
 
   const updateCategory = async (categoryId: string, name: string, nameEn: string) => {
     try {
-      const response = await fetch(`${baseUrl}/venue/${auth.user?.venueId}/categories/${categoryId}`, {
+      const response = await fetch(`${baseUrl}/venue/${beach-bar-durres}/categories/${categoryId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, nameEn })
@@ -186,7 +178,7 @@ const MenuManagementPage: React.FC = () => {
         headers['Authorization'] = `Bearer ${auth.token}`;
       }
       
-      const response = await fetch(`${baseUrl}/venue/${auth.user?.venueId}/categories/${categoryId}`, {
+      const response = await fetch(`${baseUrl}/venue/${beach-bar-durres}/categories/${categoryId}`, {
         method: 'DELETE',
         headers
       });
@@ -212,7 +204,7 @@ const MenuManagementPage: React.FC = () => {
         headers['Authorization'] = `Bearer ${auth.token}`;
       }
       
-      const response = await fetch(`${baseUrl}/venue/${auth.user?.venueId}/categories/${categoryId}/items`, {
+      const response = await fetch(`${baseUrl}/venue/${beach-bar-durres}/categories/${categoryId}/items`, {
         method: 'POST',
         headers,
         body: JSON.stringify({
@@ -245,7 +237,7 @@ const MenuManagementPage: React.FC = () => {
         headers['Authorization'] = `Bearer ${auth.token}`;
       }
       
-      const response = await fetch(`${baseUrl}/venue/${auth.user?.venueId}/categories/${categoryId}/items/${itemId}`, {
+      const response = await fetch(`${baseUrl}/venue/${beach-bar-durres}/categories/${categoryId}/items/${itemId}`, {
         method: 'PUT',
         headers,
         body: JSON.stringify(updates)
@@ -272,7 +264,7 @@ const MenuManagementPage: React.FC = () => {
         headers['Authorization'] = `Bearer ${auth.token}`;
       }
       
-      const response = await fetch(`${baseUrl}/venue/${auth.user?.venueId}/categories/${categoryId}/items/${itemId}`, {
+      const response = await fetch(`${baseUrl}/venue/${beach-bar-durres}/categories/${categoryId}/items/${itemId}`, {
         method: 'DELETE',
         headers
       });
