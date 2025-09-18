@@ -149,10 +149,13 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
       const data = await response.json();
       
+      // Handle both demo tokens and real access tokens
+      const token = data.token || data.accessToken;
+      
       const newAuth = {
         user: data.user,
         venue: data.venue,
-        token: data.token,
+        token: token,
         isAuthenticated: true,
         isLoading: false,
         needsOnboarding: false
@@ -162,7 +165,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       localStorage.setItem('restaurantAuth', JSON.stringify({
         user: data.user,
         venue: data.venue,
-        token: data.token
+        token: token
       }));
       
       // Check onboarding status after login
