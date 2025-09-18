@@ -34,50 +34,75 @@ const UserManagementPage: React.FC = () => {
   const fetchUsers = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await fetch(`https://api-mkazmlu7ta-ew.a.run.app/v1/users`, {
-        headers: {
-          'Authorization': `Bearer ${auth.token}`,
-          'Content-Type': 'application/json'
+      setError(null);
+      
+      // Mock data for demo - realistic restaurant staff
+      const mockUsers: User[] = [
+        {
+          id: '1',
+          email: 'manager@beachbar.com',
+          fullName: 'Elena Krasniqi',
+          role: 'manager',
+          venueId: 'beach-bar-durres',
+          isActive: true,
+          emailVerified: true,
+          createdAt: '2024-01-15T10:30:00Z'
+        },
+        {
+          id: '2',
+          email: 'maria.server@beachbar.com',
+          fullName: 'Maria Hasani',
+          role: 'staff',
+          venueId: 'beach-bar-durres',
+          isActive: true,
+          emailVerified: true,
+          createdAt: '2024-02-20T14:15:00Z'
+        },
+        {
+          id: '3',
+          email: 'alex.cook@beachbar.com',
+          fullName: 'Aleksandër Gjoni',
+          role: 'staff',
+          venueId: 'beach-bar-durres',
+          isActive: true,
+          emailVerified: false,
+          createdAt: '2024-03-10T09:45:00Z'
+        },
+        {
+          id: '4',
+          email: 'ana.hostess@beachbar.com',
+          fullName: 'Ana Berberi',
+          role: 'staff',
+          venueId: 'beach-bar-durres',
+          isActive: false,
+          emailVerified: true,
+          createdAt: '2024-01-08T16:20:00Z'
         }
-      });
+      ];
 
-      if (!response.ok) {
-        throw new Error('Dështoi të ngarkoj përdoruesit');
-      }
-
-      const data = await response.json();
-      setUsers(data.users || []);
+      // Simulate network delay for realistic demo
+      await new Promise(resolve => setTimeout(resolve, 800));
+      
+      setUsers(mockUsers);
     } catch (error) {
       console.error('Error fetching users:', error);
       setError('Dështoi të ngarkoj përdoruesit');
     } finally {
       setLoading(false);
     }
-  }, [auth.token]);
+  }, []);
 
   const handleInviteUser = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       setInviteLoading(true);
-      const response = await fetch(`https://api-mkazmlu7ta-ew.a.run.app/v1/users/invite`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${auth.token}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(inviteForm)
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Dështoi të dërgoj ftesnë');
-      }
-
-      const data = await response.json();
-      alert(`Ftesa u dërgua me sukses! Token: ${data.inviteToken}`);
+      
+      // Demo mode - simulate invitation process
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      alert(`📧 DEMO MODE: Në përdorim real, një ftesë do t'i dërgohej "${inviteForm.fullName}" në ${inviteForm.email} me rolin "${inviteForm.role}". Ata do të mund të regjistrohen dhe të fillojnë të punojnë menjëherë!`);
       setShowInviteForm(false);
       setInviteForm({ email: '', fullName: '', role: 'staff' });
-      fetchUsers(); // Refresh the list
     } catch (error: any) {
       console.error('Error inviting user:', error);
       setError(error.message);
@@ -88,20 +113,20 @@ const UserManagementPage: React.FC = () => {
 
   const toggleUserStatus = async (userId: string, currentStatus: boolean) => {
     try {
-      const response = await fetch(`https://api-mkazmlu7ta-ew.a.run.app/v1/users/${userId}`, {
-        method: 'PUT',
-        headers: {
-          'Authorization': `Bearer ${auth.token}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ isActive: !currentStatus })
-      });
-
-      if (!response.ok) {
-        throw new Error('Dështoi të përditësoj statusin e përdoruesit');
+      // Demo mode - simulate status change locally
+      const user = users.find(u => u.id === userId);
+      if (user) {
+        const action = currentStatus ? 'çaktivizuar' : 'aktivizuar';
+        const newUsers = users.map(u => 
+          u.id === userId ? { ...u, isActive: !currentStatus } : u
+        );
+        setUsers(newUsers);
+        
+        // Show demo notification
+        setTimeout(() => {
+          alert(`✅ DEMO MODE: Përdoruesi "${user.fullName}" u ${action} me sukses! Në përdorim real, ata ${currentStatus ? 'nuk do të mund të hynë' : 'do të mund të hynë'} në sistem.`);
+        }, 300);
       }
-
-      fetchUsers(); // Refresh the list
     } catch (error) {
       console.error('Error updating user status:', error);
       setError('Dështoi të përditësoj statusin e përdoruesit');
@@ -123,7 +148,13 @@ const UserManagementPage: React.FC = () => {
   return (
     <div className="user-management-page">
       <div className="page-header">
-        <h1>Menaxhimi i Përdoruesve</h1>
+        <div className="header-title">
+          <h1>Menaxhimi i Përdoruesve</h1>
+          <div className="demo-badge">
+            <span>🎭 DEMO MODE</span>
+            <span className="demo-tooltip">Këto janë të dhëna shembull - në përdorim real do të shihni stafin tuaj aktual</span>
+          </div>
+        </div>
         <button
           className="btn-primary"
           onClick={() => setShowInviteForm(true)}
@@ -263,11 +294,89 @@ const UserManagementPage: React.FC = () => {
           padding-bottom: 20px;
         }
 
+        .header-title {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+        }
+
         .page-header h1 {
           margin: 0;
           color: #2c3e50;
           font-size: 28px;
           font-weight: 600;
+        }
+
+        .demo-badge {
+          position: relative;
+          display: inline-flex;
+          align-items: center;
+          background: linear-gradient(135deg, #ff6b6b 0%, #ffa500 100%);
+          color: white;
+          padding: 6px 12px;
+          border-radius: 20px;
+          font-size: 12px;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
+          cursor: help;
+          animation: pulse 2s infinite;
+          width: fit-content;
+        }
+
+        .demo-badge .demo-tooltip {
+          position: absolute;
+          top: 100%;
+          left: 0;
+          margin-top: 8px;
+          background: #2c3e50;
+          color: white;
+          padding: 8px 12px;
+          border-radius: 6px;
+          font-size: 11px;
+          font-weight: 400;
+          text-transform: none;
+          letter-spacing: normal;
+          white-space: nowrap;
+          opacity: 0;
+          visibility: hidden;
+          transition: all 0.3s ease;
+          z-index: 1000;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .demo-badge:hover .demo-tooltip {
+          opacity: 1;
+          visibility: visible;
+          transform: translateY(2px);
+        }
+
+        .demo-badge .demo-tooltip::before {
+          content: '';
+          position: absolute;
+          top: -5px;
+          left: 20px;
+          width: 0;
+          height: 0;
+          border-left: 5px solid transparent;
+          border-right: 5px solid transparent;
+          border-bottom: 5px solid #2c3e50;
+        }
+
+        @keyframes pulse {
+          0% {
+            transform: scale(1);
+            box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
+          }
+          50% {
+            transform: scale(1.05);
+            box-shadow: 0 4px 16px rgba(255, 107, 107, 0.5);
+          }
+          100% {
+            transform: scale(1);
+            box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
+          }
         }
 
         .loading {
