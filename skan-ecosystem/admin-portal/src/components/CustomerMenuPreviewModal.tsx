@@ -220,7 +220,9 @@ const CustomerMenuPreviewModal: React.FC<CustomerMenuPreviewModalProps> = ({
                             </p>
                             {item.allergens && item.allergens.length > 0 && (
                               <div className="allergens">
-                                <span className="allergens-label">Allergens:</span>
+                                <span className="allergens-label">
+                                  {language === 'albanian' ? 'Alergjene:' : 'Allergens:'}
+                                </span>
                                 <span className="allergens-list">
                                   {item.allergens.join(', ')}
                                 </span>
