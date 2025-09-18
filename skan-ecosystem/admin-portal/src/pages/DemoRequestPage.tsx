@@ -9,13 +9,26 @@ const DemoRequestPage: React.FC = () => {
     businessName: '',
     demoType: 'both'
   });
+  const [loginData, setLoginData] = useState({
+    email: 'manager_email1@gmail.com',
+    password: ''
+  });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showLoginForm, setShowLoginForm] = useState(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleLoginInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setLoginData(prev => ({
       ...prev,
       [name]: value
     }));
@@ -43,6 +56,35 @@ const DemoRequestPage: React.FC = () => {
       }
     } catch (err) {
       console.error('Form submission error:', err);
+      setError('Ka ndodhur një gabim. Ju lutemi provoni përsëri.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setError(null);
+
+    try {
+      const response = await fetch('https://api-mkazmlu7ta-ew.a.run.app/v1/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(loginData)
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        localStorage.setItem('token', result.token);
+        localStorage.setItem('user', JSON.stringify(result.user));
+        window.location.href = '/dashboard';
+      } else {
+        const errorResult = await response.json();
+        setError(errorResult.error || 'Invalid credentials. Please check your password.');
+      }
+    } catch (err) {
+      console.error('Login error:', err);
       setError('Ka ndodhur një gabim. Ju lutemi provoni përsëri.');
     } finally {
       setIsSubmitting(false);
@@ -131,9 +173,78 @@ const DemoRequestPage: React.FC = () => {
             </div>
             <h1>Skan.al</h1>
           </div>
-          <h2>Kërko Akses Demo</h2>
-          <p className="login-subtitle">Plotësoni të dhënat tuaja për të marrë kredencialet e demo-s</p>
+          <h2>{showLoginForm ? 'Hyr në Demo' : 'Kërko Akses Demo'}</h2>
+          <p className="login-subtitle">
+            {showLoginForm 
+              ? 'Vendosni kredencialet tuaja të demo-s' 
+              : 'Plotësoni të dhënat tuaja për të marrë kredencialet e demo-s'
+            }
+          </p>
         </div>
+        
+        {/* Toggle between forms */}
+        <div style={{ textAlign: 'center', marginBottom: '24px' }}>
+          <div style={{
+            display: 'inline-flex',
+            backgroundColor: '#f3f4f6',
+            borderRadius: '8px',
+            padding: '4px',
+            gap: '2px'
+          }}>
+            <button
+              type="button"
+              onClick={() => {
+                setShowLoginForm(false);
+                setError(null);
+              }}
+              style={{
+                padding: '8px 16px',
+                borderRadius: '6px',
+                border: 'none',
+                backgroundColor: !showLoginForm ? '#667eea' : 'transparent',
+                color: !showLoginForm ? 'white' : '#667eea',
+                fontSize: '14px',
+                fontWeight: '500',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease'
+              }}
+            >
+              Kërko Demo
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setShowLoginForm(true);
+                setError(null);
+              }}
+              style={{
+                padding: '8px 16px',
+                borderRadius: '6px',
+                border: 'none',
+                backgroundColor: showLoginForm ? '#667eea' : 'transparent',
+                color: showLoginForm ? 'white' : '#667eea',
+                fontSize: '14px',
+                fontWeight: '500',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease'
+              }}
+            >
+              Kam Kredenciale
+            </button>
+          </div>
+        </div>
+
+        {/* Error message display for both forms */}
+        {error && (
+          <div className="error-message" style={{ marginBottom: '24px' }}>
+            <svg className="error-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"/>
+              <line x1="15" y1="9" x2="9" y2="15" stroke="currentColor" strokeWidth="2"/>
+              <line x1="9" y1="9" x2="15" y2="15" stroke="currentColor" strokeWidth="2"/>
+            </svg>
+            {error}
+          </div>
+        )}
         
         {/* Hidden form for Netlify to detect */}
         <form name="demo-request" data-netlify="true" style={{ display: 'none' }}>
@@ -145,13 +256,14 @@ const DemoRequestPage: React.FC = () => {
           <input type="email" name="admin-email" />
         </form>
 
-        <form 
-          name="demo-request"
-          method="POST"
-          data-netlify="true"
-          className="login-form" 
-          onSubmit={handleSubmit}
-        >
+        {!showLoginForm ? (
+          <form 
+            name="demo-request"
+            method="POST"
+            data-netlify="true"
+            className="login-form" 
+            onSubmit={handleSubmit}
+          >
           <input type="hidden" name="form-name" value="demo-request" />
           <input type="hidden" name="admin-email" value="enrizhulati@gmail.com" />
           <input type="hidden" name="demoType" value={formData.demoType} />
@@ -216,18 +328,6 @@ const DemoRequestPage: React.FC = () => {
             />
           </div>
           
-          
-          {error && (
-            <div className="error-message">
-              <svg className="error-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"/>
-                <line x1="15" y1="9" x2="9" y2="15" stroke="currentColor" strokeWidth="2"/>
-                <line x1="9" y1="9" x2="15" y2="15" stroke="currentColor" strokeWidth="2"/>
-              </svg>
-              {error}
-            </div>
-          )}
-          
           <button 
             type="submit" 
             className="login-button"
@@ -250,6 +350,69 @@ const DemoRequestPage: React.FC = () => {
             )}
           </button>
         </form>
+        ) : (
+          <form className="login-form" onSubmit={handleLogin}>
+            <div className="form-group">
+              <label htmlFor="loginEmail">Email</label>
+              <input
+                type="email"
+                id="loginEmail"
+                name="email"
+                value={loginData.email}
+                onChange={handleLoginInputChange}
+                required
+                disabled={true}
+                className="clean-input"
+                style={{ backgroundColor: '#f9fafb', color: '#6b7280' }}
+              />
+              <small style={{ color: '#6b7280', fontSize: '12px' }}>
+                Email është i paracaktuar për demo-n
+              </small>
+            </div>
+            
+            <div className="form-group">
+              <label htmlFor="loginPassword">Fjalëkalimi</label>
+              <input
+                type="password"
+                id="loginPassword"
+                name="password"
+                value={loginData.password}
+                onChange={handleLoginInputChange}
+                required
+                placeholder="Vendosni fjalëkalimin e demo-s"
+                disabled={isSubmitting}
+                className="clean-input"
+              />
+              <small style={{ color: '#6b7280', fontSize: '12px' }}>
+                Vendosni: admin123
+              </small>
+            </div>
+            
+            <button 
+              type="submit" 
+              className="login-button"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? (
+                <>
+                  <svg className="loading-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                  </svg>
+                  Duke u futur...
+                </>
+              ) : (
+                <>
+                  <svg className="login-arrow" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    <polyline points="10,17 15,12 10,7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    <line x1="15" y1="12" x2="3" y2="12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                  Hyr në Demo
+                </>
+              )}
+            </button>
+          </form>
+        )}
         
         <div style={{ textAlign: 'center', marginTop: '24px' }}>
           <Link 
