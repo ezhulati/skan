@@ -13,10 +13,8 @@ const db = admin.firestore();
 
 const app = express();
 
-// Security Configuration
-const functions = require("firebase-functions");
-const config = functions.config();
-const JWT_SECRET = config.jwt?.secret || process.env.JWT_SECRET || "your-super-secret-jwt-key-change-in-production";
+// Security Configuration (Firebase Functions v2 compatible)
+const JWT_SECRET = process.env.JWT_SECRET || "your-super-secret-jwt-key-change-in-production";
 const JWT_EXPIRE = "15m"; // Access token expires in 15 minutes
 const REFRESH_TOKEN_EXPIRE = "7d"; // Refresh token expires in 7 days
 
@@ -381,14 +379,16 @@ app.get("/health", (req, res) => {
 // API Info endpoint
 app.get("/", (req, res) => {
   res.json({
-    message: "Skan.al API - Secure QR Code Ordering System",
+    message: "Skan.al API - Enterprise Secure QR Code Ordering System",
     version: "2.0.0",
     security: {
       jwt: "enabled",
-      rateLimit: "enabled",
+      rateLimit: "enabled", 
       auditLog: "enabled",
       inputSanitization: "enabled",
-      helmet: "enabled"
+      helmet: "enabled",
+      accountLockout: "enabled",
+      xssProtection: "enabled"
     },
     endpoints: {
       auth: ["/v1/auth/login", "/v1/auth/refresh", "/v1/auth/logout"],
@@ -4030,9 +4030,9 @@ app.use("*", (req, res) => {
 });
 
 // Environment validation (non-blocking for Firebase Functions)
-if (config.environment?.node_env === "production") {
+if (process.env.NODE_ENV === "production") {
   if (!JWT_SECRET || JWT_SECRET === "your-super-secret-jwt-key-change-in-production") {
-    console.warn("Warning: Using default JWT secret in production. Please set jwt.secret in Firebase config.");
+    console.warn("Warning: Using default JWT secret in production. Please set JWT_SECRET environment variable.");
   }
 }
 
