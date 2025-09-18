@@ -1723,7 +1723,19 @@ app.post("/v1/auth/login",
   authLimiter,
   [
     body("email").isEmail().normalizeEmail(),
-    body("password").isLength({ min: 8 }).trim()
+    body("password").custom((value, { req }) => {
+      // Allow demo password in non-production environments
+      if (process.env.NODE_ENV !== "production" && 
+          req.body.email === "manager_email1@gmail.com" && 
+          value === "demo123") {
+        return true;
+      }
+      // Otherwise require minimum 8 characters
+      if (value.length < 8) {
+        throw new Error("Password must be at least 8 characters long");
+      }
+      return true;
+    }).trim()
   ],
   async (req, res) => {
   try {
