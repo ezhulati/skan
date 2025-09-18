@@ -2085,6 +2085,21 @@ app.get("/v1/users/:userId", verifyAuth, async (req, res) => {
   try {
     const { userId } = req.params;
     
+    // Handle demo users
+    if (userId === "demo-user-1") {
+      return res.json({
+        id: "demo-user-1",
+        email: "manager_email1@gmail.com",
+        fullName: "Demo Manager",
+        role: "manager",
+        venueId: "demo-venue-1",
+        isActive: true,
+        emailVerified: true,
+        createdAt: new Date("2024-01-15T10:00:00Z").toISOString(),
+        updatedAt: new Date("2024-01-15T10:00:00Z").toISOString()
+      });
+    }
+    
     const userDoc = await db.collection("users").doc(userId).get();
     
     if (!userDoc.exists) {
@@ -2121,6 +2136,23 @@ app.put("/v1/users/:userId", verifyAuth, async (req, res) => {
   try {
     const { userId } = req.params;
     const { fullName, role, isActive, venueId } = req.body;
+    
+    // Handle demo users - simulate successful update
+    if (userId === "demo-user-1") {
+      return res.json({
+        message: "Demo user profile updated successfully",
+        user: {
+          id: "demo-user-1",
+          email: "manager_email1@gmail.com", 
+          fullName: fullName || "Demo Manager",
+          role: role || "manager",
+          venueId: "demo-venue-1",
+          isActive: isActive !== undefined ? isActive : true,
+          emailVerified: true,
+          updatedAt: new Date().toISOString()
+        }
+      });
+    }
     
     const userDoc = await db.collection("users").doc(userId).get();
     

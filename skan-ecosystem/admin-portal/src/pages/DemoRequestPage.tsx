@@ -6,7 +6,8 @@ const DemoRequestPage: React.FC = () => {
     firstName: '',
     lastName: '',
     email: '',
-    businessName: ''
+    businessName: '',
+    demoType: 'both'
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -140,6 +141,7 @@ const DemoRequestPage: React.FC = () => {
           <input type="text" name="lastName" />
           <input type="email" name="email" />
           <input type="text" name="businessName" />
+          <input type="text" name="demoType" />
           <input type="email" name="admin-email" />
         </form>
 
@@ -152,6 +154,7 @@ const DemoRequestPage: React.FC = () => {
         >
           <input type="hidden" name="form-name" value="demo-request" />
           <input type="hidden" name="admin-email" value="enrizhulati@gmail.com" />
+          <input type="hidden" name="demoType" value={formData.demoType} />
           
           <div className="form-group">
             <label htmlFor="firstName">Emri</label>
