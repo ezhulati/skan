@@ -247,7 +247,7 @@ const DemoRequestPage: React.FC = () => {
         )}
         
         {/* Hidden form for Netlify to detect */}
-        <form name="demo-request" netlify style={{ display: 'none' }}>
+        <form name="demo-request" data-netlify="true" style={{ display: 'none' }}>
           <input type="text" name="firstName" />
           <input type="text" name="lastName" />
           <input type="email" name="email" />
@@ -260,7 +260,7 @@ const DemoRequestPage: React.FC = () => {
           <form 
             name="demo-request"
             method="POST"
-            netlify
+            data-netlify="true"
             className="login-form" 
             onSubmit={handleSubmit}
           >
