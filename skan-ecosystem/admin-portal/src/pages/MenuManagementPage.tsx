@@ -151,7 +151,7 @@ const MenuManagementPage: React.FC = () => {
 
   const updateCategory = async (categoryId: string, name: string, nameEn: string) => {
     try {
-      const response = await fetch(`${baseUrl}/venue/${beach-bar-durres}/categories/${categoryId}`, {
+      const response = await fetch(`${baseUrl}/venue/${'beach-bar-durres'}/categories/${categoryId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, nameEn })
@@ -178,7 +178,7 @@ const MenuManagementPage: React.FC = () => {
         headers['Authorization'] = `Bearer ${auth.token}`;
       }
       
-      const response = await fetch(`${baseUrl}/venue/${beach-bar-durres}/categories/${categoryId}`, {
+      const response = await fetch(`${baseUrl}/venue/${'beach-bar-durres'}/categories/${categoryId}`, {
         method: 'DELETE',
         headers
       });
@@ -204,7 +204,7 @@ const MenuManagementPage: React.FC = () => {
         headers['Authorization'] = `Bearer ${auth.token}`;
       }
       
-      const response = await fetch(`${baseUrl}/venue/${beach-bar-durres}/categories/${categoryId}/items`, {
+      const response = await fetch(`${baseUrl}/venue/${'beach-bar-durres'}/categories/${categoryId}/items`, {
         method: 'POST',
         headers,
         body: JSON.stringify({
@@ -237,7 +237,7 @@ const MenuManagementPage: React.FC = () => {
         headers['Authorization'] = `Bearer ${auth.token}`;
       }
       
-      const response = await fetch(`${baseUrl}/venue/${beach-bar-durres}/categories/${categoryId}/items/${itemId}`, {
+      const response = await fetch(`${baseUrl}/venue/${'beach-bar-durres'}/categories/${categoryId}/items/${itemId}`, {
         method: 'PUT',
         headers,
         body: JSON.stringify(updates)
@@ -264,7 +264,7 @@ const MenuManagementPage: React.FC = () => {
         headers['Authorization'] = `Bearer ${auth.token}`;
       }
       
-      const response = await fetch(`${baseUrl}/venue/${beach-bar-durres}/categories/${categoryId}/items/${itemId}`, {
+      const response = await fetch(`${baseUrl}/venue/${'beach-bar-durres'}/categories/${categoryId}/items/${itemId}`, {
         method: 'DELETE',
         headers
       });

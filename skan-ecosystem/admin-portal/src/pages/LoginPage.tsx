@@ -144,8 +144,8 @@ const LoginPage: React.FC = () => {
               fontWeight: '500',
               transition: 'color 0.2s ease'
             }}
-            onMouseEnter={(e) => e.target.style.color = '#764ba2'}
-            onMouseLeave={(e) => e.target.style.color = '#667eea'}
+            onMouseEnter={(e) => (e.target as HTMLElement).style.color = '#764ba2'}
+            onMouseLeave={(e) => (e.target as HTMLElement).style.color = '#667eea'}
           >
             Keni harruar fjalëkalimin?
           </a>
