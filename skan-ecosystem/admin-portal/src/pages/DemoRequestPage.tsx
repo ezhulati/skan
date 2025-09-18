@@ -11,8 +11,14 @@ const DemoRequestPage: React.FC = () => {
   const [showLoginForm, setShowLoginForm] = useState(false);
   
   // Check if form was successfully submitted via URL params
-  const urlParams = new URLSearchParams(window.location.search);
-  const isSubmitted = urlParams.get('success') === 'true';
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  
+  React.useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('success') === 'true') {
+      setIsSubmitted(true);
+    }
+  }, []);
 
   const handleLoginInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -212,7 +218,7 @@ const DemoRequestPage: React.FC = () => {
             method="POST"
             data-netlify="true"
             data-netlify-honeypot="bot-field"
-            action="/demo-request?success=true"
+            action="/demo-request"
             className="login-form"
           >
           {/* Honeypot field for spam protection */}
