@@ -63,15 +63,31 @@ const CustomerMenuPreviewModal: React.FC<CustomerMenuPreviewModalProps> = ({
     setError(null);
 
     try {
-      const response = await fetch(
-        `https://api-mkazmlu7ta-ew.a.run.app/v1/venue/${auth.venue.slug}/menu`
+      let venueSlug = auth.venue.slug;
+      let response = await fetch(
+        `https://api-mkazmlu7ta-ew.a.run.app/v1/venue/${venueSlug}/menu`
       );
+
+      // If demo venue fails, fallback to beach-bar-durres for preview
+      if (!response.ok && venueSlug === 'demo-restaurant') {
+        console.log('Demo venue menu not found, using fallback venue for preview');
+        venueSlug = 'beach-bar-durres';
+        response = await fetch(
+          `https://api-mkazmlu7ta-ew.a.run.app/v1/venue/${venueSlug}/menu`
+        );
+      }
 
       if (!response.ok) {
         throw new Error('Failed to load menu');
       }
 
       const data = await response.json();
+      
+      // If using fallback, update venue name to indicate it's a demo
+      if (venueSlug === 'beach-bar-durres' && auth.venue.slug === 'demo-restaurant') {
+        data.venue.name = auth.venue.name + ' (Demo Menu)';
+      }
+      
       setMenuData(data);
     } catch (err) {
       console.error('Error loading menu:', err);
@@ -79,7 +95,7 @@ const CustomerMenuPreviewModal: React.FC<CustomerMenuPreviewModalProps> = ({
     } finally {
       setLoading(false);
     }
-  }, [auth.venue?.slug]);
+  }, [auth.venue?.slug, auth.venue?.name]);
 
   useEffect(() => {
     if (isOpen && auth.venue?.slug) {
