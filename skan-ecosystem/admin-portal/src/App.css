@@ -46,6 +46,9 @@
   --space-lg: 24px;
   --space-xl: 32px;
   --space-2xl: 48px;
+
+  /* Z-Index */
+  --z-toast: 9999;
 }
 
 html, body {
@@ -1508,4 +1511,133 @@ input:checked + .slider:before {
 .image-indicator svg {
   width: 16px;
   height: 16px;
+}
+
+/* Undo Toast Notification */
+.undo-toast {
+  position: fixed;
+  bottom: var(--space-lg);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: var(--z-toast);
+  min-width: 300px;
+  max-width: 90vw;
+  background: var(--primary-dark);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-hero);
+  overflow: hidden;
+  animation: toastSlideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes toastSlideIn {
+  from {
+    transform: translateX(-50%) translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
+}
+
+.undo-toast-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-md);
+  gap: var(--space-md);
+}
+
+.undo-toast-message {
+  color: white;
+  font-size: var(--text-body);
+  font-weight: 500;
+  flex: 1;
+}
+
+.undo-toast-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.undo-button {
+  background: var(--primary-blue);
+  color: white;
+  border: none;
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-small);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.undo-button:hover {
+  background: #2980b9;
+  transform: translateY(-1px);
+}
+
+.dismiss-button {
+  background: transparent;
+  color: white;
+  border: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: bold;
+  transition: all 0.2s ease;
+  opacity: 0.7;
+}
+
+.dismiss-button:hover {
+  background: rgba(255, 255, 255, 0.1);
+  opacity: 1;
+}
+
+.undo-toast-progress {
+  position: relative;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.undo-toast-progress-bar {
+  height: 100%;
+  background: var(--primary-blue);
+  width: 100%;
+  animation: progressShrink linear;
+  transform-origin: left;
+}
+
+@keyframes progressShrink {
+  from {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(0);
+  }
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .undo-toast {
+    bottom: var(--space-md);
+    left: var(--space-md);
+    right: var(--space-md);
+    transform: none;
+    min-width: auto;
+  }
+  
+  .undo-toast-content {
+    padding: var(--space-sm) var(--space-md);
+  }
+  
+  .undo-toast-message {
+    font-size: var(--text-small);
+  }
 }

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { restaurantApiService, Order } from '../services/api';
 import WelcomeHeader from '../components/WelcomeHeader';
+import UndoToast from '../components/UndoToast';
 
 const DashboardPage: React.FC = () => {
   const { auth } = useAuth();
@@ -11,6 +12,15 @@ const DashboardPage: React.FC = () => {
   const [selectedStatus, setSelectedStatus] = useState<string>('all');
   const [refreshing, setRefreshing] = useState(false);
   const [usingMockData, setUsingMockData] = useState(false);
+  
+  // Undo functionality state
+  interface UndoOperation {
+    orderId: string;
+    previousStatus: string;
+    newStatus: string;
+    orderNumber: string;
+  }
+  const [undoOperation, setUndoOperation] = useState<UndoOperation | null>(null);
 
   const loadOrders = useCallback(async () => {
     if (!auth.user?.venueId) return;
@@ -105,8 +115,47 @@ const DashboardPage: React.FC = () => {
     return () => clearInterval(interval);
   }, [auth.user?.venueId, selectedStatus, loadOrders]);
 
+  // Handle undo operation
+  const handleUndo = async () => {
+    if (!undoOperation) return;
+    
+    console.log('Undoing status change:', undoOperation);
+    
+    // Revert the status change
+    if (usingMockData || true) { // Always use local update for undo to be instant
+      setOrders(prevOrders => 
+        prevOrders.map(order => 
+          order.id === undoOperation.orderId 
+            ? { ...order, status: undoOperation.previousStatus as any, updatedAt: new Date().toISOString() }
+            : order
+        )
+      );
+    } else {
+      // In production, also call API to revert
+      try {
+        if (auth.token) {
+          restaurantApiService.setToken(auth.token);
+          await restaurantApiService.updateOrderStatus(undoOperation.orderId, undoOperation.previousStatus);
+        }
+      } catch (err) {
+        console.error('Error reverting order status:', err);
+      }
+    }
+    
+    setUndoOperation(null);
+  };
+
   const handleStatusUpdate = async (orderId: string, newStatus: string) => {
     console.log('Button clicked! Order ID:', orderId, 'New Status:', newStatus);
+    
+    // Find the current order to get its current status for undo
+    const currentOrder = orders.find(order => order.id === orderId);
+    if (!currentOrder) {
+      console.error('Order not found for status update');
+      return;
+    }
+    
+    const previousStatus = currentOrder.status;
     
     // If using mock data, handle the update locally
     if (usingMockData) {
@@ -118,6 +167,15 @@ const DashboardPage: React.FC = () => {
             : order
         )
       );
+      
+      // Show undo toast
+      setUndoOperation({
+        orderId,
+        previousStatus,
+        newStatus,
+        orderNumber: currentOrder.orderNumber
+      });
+      
       console.log('Mock order status updated successfully!');
       return;
     }
@@ -144,6 +202,15 @@ const DashboardPage: React.FC = () => {
             : order
         )
       );
+      
+      // Show undo toast for successful API call
+      setUndoOperation({
+        orderId,
+        previousStatus,
+        newStatus,
+        orderNumber: currentOrder.orderNumber
+      });
+      
       console.log('Order status updated successfully!');
     } catch (err) {
       console.error('Error updating order status:', err);
@@ -158,6 +225,15 @@ const DashboardPage: React.FC = () => {
               : order
           )
         );
+        
+        // Show undo toast for demo fallback
+        setUndoOperation({
+          orderId,
+          previousStatus,
+          newStatus,
+          orderNumber: currentOrder.orderNumber
+        });
+        
         console.log('Demo order status updated locally!');
         return;
       }
@@ -191,6 +267,16 @@ const DashboardPage: React.FC = () => {
       case 'preparing': return 'Shëno si Gati';
       case 'ready': return 'Shëno si Shërbyer';
       default: return null;
+    }
+  };
+
+  const getStatusDisplayName = (status: string) => {
+    switch (status) {
+      case 'new': return 'E Re';
+      case 'preparing': return 'Duke u Përgatitur';
+      case 'ready': return 'Gati';
+      case 'served': return 'Shërbyer';
+      default: return status;
     }
   };
 
@@ -343,6 +429,15 @@ const DashboardPage: React.FC = () => {
           </div>
         )}
       </div>
+
+      {/* Undo Toast */}
+      {undoOperation && (
+        <UndoToast
+          message={`Porosia ${undoOperation.orderNumber} u ndryshua në "${getStatusDisplayName(undoOperation.newStatus)}"`}
+          onUndo={handleUndo}
+          onDismiss={() => setUndoOperation(null)}
+        />
+      )}
     </div>
   );
 };
