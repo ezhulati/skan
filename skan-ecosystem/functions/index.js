@@ -1668,6 +1668,16 @@ app.post("/v1/auth/change-password", verifyAuth, async (req, res) => {
       return res.status(400).json({ error: "Current password and new password are required" });
     }
     
+    // Handle demo user password change
+    if (req.user.email === "manager_email1@gmail.com") {
+      // Simulate password validation - demo accepts "demo123" as current password
+      if (currentPassword !== "demo123") {
+        return res.status(400).json({ error: "Current password is incorrect" });
+      }
+      
+      return res.json({ message: "Password changed successfully" });
+    }
+    
     // Get user from database
     const usersSnapshot = await db.collection("users")
       .where("email", "==", req.user.email)
