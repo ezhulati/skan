@@ -41,8 +41,18 @@ const MenuManagementPage: React.FC = () => {
   });
   const [uploadingImage, setUploadingImage] = useState<string | null>(null);
   const [translating, setTranslating] = useState<string | null>(null);
+  const [hasLocalChanges, setHasLocalChanges] = useState(false); // Track if we have local changes
 
   const baseUrl = process.env.REACT_APP_API_URL || 'https://api-mkazmlu7ta-ew.a.run.app/v1';
+
+  // Reset demo function
+  const resetDemo = async () => {
+    setHasLocalChanges(false);
+    setMessage('Duke rifreskuar nga API...');
+    await loadMenu();
+    setMessage('Demo u rifreskua me sukses!');
+    setTimeout(() => setMessage(null), 3000);
+  };
 
   // Image upload helper function
   const uploadImage = async (file: File): Promise<string> => {
@@ -145,8 +155,11 @@ const MenuManagementPage: React.FC = () => {
   }, [baseUrl, auth.venue]);
 
   useEffect(() => {
-    loadMenu();
-  }, [loadMenu, auth]);
+    // Only load menu on first visit, not when auth changes if we have local changes
+    if (!hasLocalChanges) {
+      loadMenu();
+    }
+  }, [loadMenu, auth, hasLocalChanges]);
 
   const addCategory = async () => {
     if (!newCategoryName.trim() || !newCategoryNameAlbanian.trim()) return;
@@ -284,6 +297,29 @@ const MenuManagementPage: React.FC = () => {
 
   const updateItem = async (categoryId: string, itemId: string, updates: Partial<MenuItem>) => {
     try {
+      // Update local state for demo purposes
+      setCategories(prevCategories => 
+        prevCategories.map(category => 
+          category.id === categoryId 
+            ? {
+                ...category,
+                items: category.items.map(item => 
+                  item.id === itemId 
+                    ? { ...item, ...updates }
+                    : item
+                )
+              }
+            : category
+        )
+      );
+      
+      setEditingItem(null);
+      setHasLocalChanges(true); // Mark that we have local changes
+      setMessage('Artikulli u përditësua me sukses!');
+      setTimeout(() => setMessage(null), 3000);
+      
+      // Uncomment when API endpoint is available:
+      /*
       const headers: HeadersInit = {
         'Content-Type': 'application/json'
       };
@@ -299,9 +335,8 @@ const MenuManagementPage: React.FC = () => {
       });
 
       if (!response.ok) throw new Error('Dështoi të përditësoj artikullin');
-
       await loadMenu();
-      setEditingItem(null);
+      */
     } catch (err) {
       console.error('Error updating item:', err);
       alert('Dështoi të përditësoj artikullin');
@@ -366,6 +401,33 @@ const MenuManagementPage: React.FC = () => {
           </button>
         </div>
       </header>
+
+      {/* Demo Mode Banner */}
+      {hasLocalChanges && (
+        <div className="demo-banner">
+          <div className="demo-banner-content">
+            <div className="demo-info">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M12 16v-4M12 8h.01"/>
+              </svg>
+              <div>
+                <strong>Demo Mode</strong>
+                <p>Ju keni bërë ndryshime lokale. Ato ruhen deri sa të rifreskoni nga API.</p>
+              </div>
+            </div>
+            <button onClick={resetDemo} className="reset-demo-button">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/>
+                <path d="M21 3v5h-5"/>
+                <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/>
+                <path d="M3 21v-5h5"/>
+              </svg>
+              Rifresko nga API
+            </button>
+          </div>
+        </div>
+      )}
 
       {error && (
         <div className="error-message">
@@ -502,34 +564,34 @@ const MenuManagementPage: React.FC = () => {
                     <input
                       type="text"
                       placeholder="Emri i artikullit (Shqip)"
-                      value={newItem.name}
-                      onChange={(e) => setNewItem({...newItem, name: e.target.value})}
+                      value={newItem.nameAlbanian}
+                      onChange={(e) => setNewItem({...newItem, nameAlbanian: e.target.value})}
                     />
                     <div className="name-input-with-translate">
                       <input
                         type="text"
                         placeholder="Emri i artikullit (Anglisht)"
-                        value={newItem.nameAlbanian}
-                        onChange={(e) => setNewItem({...newItem, nameAlbanian: e.target.value})}
+                        value={newItem.name}
+                        onChange={(e) => setNewItem({...newItem, name: e.target.value})}
                       />
                       <button
                         type="button"
                         className="translate-button"
                         onClick={async () => {
-                          if (!newItem.name.trim()) {
+                          if (!newItem.nameAlbanian.trim()) {
                             alert('Shkruani emrin në shqip së pari');
                             return;
                           }
                           try {
-                            const translated = await translateText(newItem.name, 'new-item');
-                            setNewItem({...newItem, nameAlbanian: translated});
+                            const translated = await translateText(newItem.nameAlbanian, 'new-item');
+                            setNewItem({...newItem, name: translated});
                             setMessage('Përkthimi u bë me sukses!');
                             setTimeout(() => setMessage(null), 3000);
                           } catch (error) {
                             alert(error instanceof Error ? error.message : 'Përkthimi dështoi');
                           }
                         }}
-                        disabled={translating === 'new-item' || !newItem.name.trim()}
+                        disabled={translating === 'new-item' || !newItem.nameAlbanian.trim()}
                         title="Përkthe automatikisht nga shqip në anglisht"
                       >
                         {translating === 'new-item' ? (
@@ -835,34 +897,34 @@ const ItemEditor: React.FC<{
       <div className="editor-inputs">
         <input
           type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="Emri i artikullit"
+          value={nameAlbanian}
+          onChange={(e) => setNameAlbanian(e.target.value)}
+          placeholder="Emri i artikullit (Shqip)"
         />
         <div className="name-input-with-translate">
           <input
             type="text"
-            value={nameAlbanian}
-            onChange={(e) => setNameAlbanian(e.target.value)}
+            value={name}
+            onChange={(e) => setName(e.target.value)}
             placeholder="Emri i artikullit (Anglisht)"
           />
           <button
             type="button"
             className="translate-button"
             onClick={async () => {
-              if (!name.trim()) {
+              if (!nameAlbanian.trim()) {
                 alert('Ju lutem shkruani emrin shqip fillimisht');
                 return;
               }
               
               try {
-                const translated = await translateText(name, 'edit-item');
-                setNameAlbanian(translated);
+                const translated = await translateText(nameAlbanian, 'edit-item');
+                setName(translated);
               } catch (error) {
                 alert(error instanceof Error ? error.message : 'Përkthimi dështoi');
               }
             }}
-            disabled={translating === 'edit-item' || !name.trim()}
+            disabled={translating === 'edit-item' || !nameAlbanian.trim()}
             title="Përkthe nga shqipja në anglisht"
           >
             {translating === 'edit-item' ? (
