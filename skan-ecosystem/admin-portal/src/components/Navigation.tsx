@@ -366,47 +366,50 @@ const Navigation: React.FC<NavigationProps> = ({ children }) => {
         }
 
         .nav-header {
-          padding: 20px;
+          padding: 24px 20px 20px 20px;
           border-bottom: 1px solid #34495e;
           position: relative;
         }
 
         .logo-link {
           display: block;
-          margin-bottom: 16px;
-          transition: transform 0.3s ease;
+          margin-bottom: 24px;
+          transition: all 0.3s ease;
           text-decoration: none;
+          padding: 12px 16px;
+          border-radius: 16px;
+          background: rgba(255, 255, 255, 0.03);
+          border: 1px solid rgba(255, 255, 255, 0.08);
         }
 
         .logo-link:hover {
-          transform: scale(1.05);
+          transform: translateY(-2px);
+          background: rgba(255, 255, 255, 0.08);
+          border-color: rgba(37, 99, 235, 0.3);
+          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
         }
 
         .logo-container {
           display: flex;
           align-items: center;
-          gap: 12px;
+          gap: 16px;
         }
 
         .skan-logo {
-          width: 48px;
-          height: 48px;
-          border-radius: 12px;
-          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-          transition: box-shadow 0.3s ease;
+          width: 40px;
+          height: 40px;
+          border-radius: 10px;
+          transition: all 0.3s ease;
           flex-shrink: 0;
-        }
-
-        .skan-logo:hover {
-          box-shadow: 0 6px 30px rgba(37, 99, 235, 0.4);
         }
 
         .logo-text {
           color: #ffffff;
-          font-size: 20px;
-          font-weight: 700;
-          letter-spacing: -0.5px;
-          text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+          font-size: 24px;
+          font-weight: 800;
+          letter-spacing: -0.8px;
+          text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
 
 
