@@ -139,7 +139,7 @@ const DemoRequestPage: React.FC = () => {
               
               <div className="credentials-grid" style={{
                 display: 'grid',
-                gridTemplateColumns: '1fr 1fr',
+                gridTemplateColumns: '1fr',
                 gap: '16px',
                 textAlign: 'left'
               }}>
