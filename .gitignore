@@ -173,3 +173,5 @@ Screenshot*.png
 # Development files
 login-form-fixed.png
 test-results/
+# Local Netlify folder
+.netlify
