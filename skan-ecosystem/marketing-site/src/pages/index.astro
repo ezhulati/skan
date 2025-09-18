@@ -3,8 +3,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
 <BaseLayout 
-  title="SKAN.AL - Sistemi QR për Restorantet Shqiptare"
-  description="Transformoni restorantin tuaj me sisteme porosish QR. Menu dixhitale, porosi të shpejta dhe operacione më efikase për bizneset shqiptare."
+  title="SKAN.AL - Sistemi QR me Pagesa për Restorantet Shqiptare | FALAS ose €35/muaj"
+  description="Sistemi FALAS me pagesa Stripe ose €35/muaj pa komision. Menu dixhitale QR, porosi të shpejta, pagesa kartë/kesh për restorantet shqiptare në Tiranë, Durrës, Vlorë."
 >
   <!-- Hero Section - Updated layout -->
   <section class="page-hero relative overflow-hidden bg-gradient-to-br from-blue-50 to-indigo-100">
@@ -19,8 +19,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
             Tuaj Me Porosi QR
           </span>
         </h1>
-        <p class="text-xl text-gray-600 mb-8 max-w-3xl mx-auto" data-sq="Pa shkarkime aplikacioni. Klientët skanojnë dhe porosisin drejtpërdrejt nga tavolina, paguajnë stafin tuaj. Rritni efikasitetin, reduktoni kohët e pritjes dhe shtoni të ardhurat." data-en="No app download required. Customers scan and order directly from their table, pay your staff. Increase efficiency, reduce wait times, and boost revenue.">
-          Pa shkarkime aplikacioni. Klientët skanojnë dhe porosisin drejtpërdrejt nga tavolina, paguajnë stafin tuaj. Rritni efikasitetin, reduktoni kohët e pritjes dhe shtoni të ardhurat.
+        <p class="text-xl text-gray-600 mb-8 max-w-3xl mx-auto" data-sq="Pa shkarkime aplikacioni. Klientët skanojnë, porosisin dhe paguajnë në mënyra të shumta - kesh ose karta. Zgjedhni planin tuaj: FALAS me pagesa Stripe apo €35/muaj vetëm kesh." data-en="No app download required. Customers scan, order and pay multiple ways - cash or card. Choose your plan: FREE with Stripe payments or €35/month cash-only.">
+          Pa shkarkime aplikacioni. Klientët skanojnë, porosisin dhe paguajnë në mënyra të shumta - kesh ose karta. Zgjedhni planin tuaj: FALAS me pagesa Stripe apo €35/muaj vetëm kesh.
         </p>
         <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
           <a href="/register" class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white px-10 py-5 rounded-xl text-lg font-semibold transition-colors shadow-lg hover:shadow-xl flex items-center justify-center gap-2 min-h-touch" data-sq="🚀 Filloni Falas Sot" data-en="🚀 Start Free Today">
@@ -241,6 +241,126 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           </div>
           <h3 class="text-xl font-semibold text-gray-900 mb-2" data-sq="500€ Në Ditë Që Humben" data-en="€500 Per Day You're Losing">500€ Në Ditë Që Humben</h3>
           <p class="text-gray-600" data-sq="Çdo tavolinë që qëndron bosh 30 minuta shtesë sepse procesi është i ngadaltë ju kushton 25-50€ në të ardhura" data-en="Every table that sits empty an extra 30 minutes because the process is slow costs you €25-50 in revenue">Çdo tavolinë që qëndron bosh 30 minuta shtesë sepse procesi është i ngadaltë ju kushton 25-50€ në të ardhura</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Payment Revolution Section -->
+  <section class="py-20 bg-blue-600">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4" data-sq="Revolucioni i Pagesave: Klientët Zgjedhin Si të Paguajnë" data-en="Payment Revolution: Customers Choose How to Pay">
+          Revolucioni i Pagesave: Klientët Zgjedhin Si të Paguajnë
+        </h2>
+        <p class="text-xl text-blue-100 max-w-3xl mx-auto" data-sq="SKAN.AL është sistemi i parë në Shqipëri që u lejon klientëve të paguajnë si duan - me karta ose kesh. Ju zgjidhni sa të fitoni." data-en="SKAN.AL is the first system in Albania that lets customers pay how they want - with cards or cash. You choose how much to earn.">
+          SKAN.AL është sistemi i parë në Shqipëri që u lejon klientëve të paguajnë si duan - me karta ose kesh. Ju zgjidhni sa të fitoni.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        <!-- FREE Plan -->
+        <div class="bg-white rounded-2xl shadow-xl p-8 transform hover:scale-105 transition-transform">
+          <div class="text-center mb-6">
+            <div class="inline-block bg-green-100 text-green-800 px-4 py-2 rounded-full text-sm font-semibold mb-4">
+              <span data-sq="PLAN FALAS" data-en="FREE PLAN">PLAN FALAS</span>
+            </div>
+            <h3 class="text-2xl font-bold text-gray-900 mb-2" data-sq="Pagesa me Stripe Connect" data-en="Stripe Connect Payments">Pagesa me Stripe Connect</h3>
+            <div class="text-5xl font-bold text-blue-600 mb-2">€0<span class="text-xl text-gray-500">/muaj</span></div>
+            <p class="text-gray-600" data-sq="Klientët paguajnë me karta, ju merrni €$ menjëherë" data-en="Customers pay with cards, you get money instantly">Klientët paguajnë me karta, ju merrni para menjëherë</p>
+          </div>
+          
+          <div class="space-y-4 mb-8">
+            <div class="flex items-center">
+              <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+              </svg>
+              <span data-sq="✨ Totalisht FALAS për ju" data-en="✨ Completely FREE for you">✨ Totalisht FALAS për ju</span>
+            </div>
+            <div class="flex items-center">
+              <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+              </svg>
+              <span data-sq="💳 Klientët paguajnë me Visa/Mastercard" data-en="💳 Customers pay with Visa/Mastercard">💳 Klientët paguajnë me Visa/Mastercard</span>
+            </div>
+            <div class="flex items-center">
+              <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+              </svg>
+              <span data-sq="⚡ Para në llogari brenda 2 ditësh" data-en="⚡ Money in account within 2 days">⚡ Para në llogari brenda 2 ditësh</span>
+            </div>
+            <div class="flex items-center">
+              <svg class="w-5 h-5 text-blue-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+              </svg>
+              <span class="text-sm text-gray-600" data-sq="Stripe merr 2.9% nga çdo pagesë" data-en="Stripe takes 2.9% from each payment">Stripe merr 2.9% nga çdo pagesë</span>
+            </div>
+          </div>
+          
+          <div class="bg-green-50 p-4 rounded-lg mb-6">
+            <p class="text-green-800 font-semibold text-center" data-sq="Perfekt për: Restorantet që duan pagesa dixhitale pa kosto shtesë" data-en="Perfect for: Restaurants wanting digital payments with no extra costs">
+              Perfekt për: Restorantet që duan pagesa dixhitale pa kosto shtesë
+            </p>
+          </div>
+        </div>
+
+        <!-- PREMIUM Plan -->
+        <div class="bg-white rounded-2xl shadow-xl p-8 transform hover:scale-105 transition-transform border-4 border-yellow-400">
+          <div class="text-center mb-6">
+            <div class="inline-block bg-yellow-100 text-yellow-800 px-4 py-2 rounded-full text-sm font-semibold mb-4">
+              <span data-sq="PLAN PREMIUM" data-en="PREMIUM PLAN">PLAN PREMIUM</span>
+            </div>
+            <h3 class="text-2xl font-bold text-gray-900 mb-2" data-sq="Vetëm Pagesa Kesh" data-en="Cash-Only Payments">Vetëm Pagesa Kesh</h3>
+            <div class="text-5xl font-bold text-yellow-600 mb-2">€35<span class="text-xl text-gray-500">/muaj</span></div>
+            <p class="text-gray-600" data-sq="Klientët paguajnë kesh, ju mbani 100% të fitimit" data-en="Customers pay cash, you keep 100% profit">Klientët paguajnë kesh, ju mbani 100% të fitimit</p>
+          </div>
+          
+          <div class="space-y-4 mb-8">
+            <div class="flex items-center">
+              <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+              </svg>
+              <span data-sq="💰 100% e fitimit mbetet tek ju" data-en="💰 100% of profit stays with you">💰 100% e fitimit mbetet tek ju</span>
+            </div>
+            <div class="flex items-center">
+              <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+              </svg>
+              <span data-sq="🏪 Kontrolli i plotë i cash flow-it" data-en="🏪 Complete cash flow control">🏪 Kontrolli i plotë i cash flow-it</span>
+            </div>
+            <div class="flex items-center">
+              <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+              </svg>
+              <span data-sq="🔒 Asnjë tarife transaksioni" data-en="🔒 No transaction fees">🔒 Asnjë tarifë transaksioni</span>
+            </div>
+            <div class="flex items-center">
+              <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+              </svg>
+              <span data-sq="📊 Analitika të detajuara" data-en="📊 Detailed analytics">📊 Analitika të detajuara</span>
+            </div>
+          </div>
+          
+          <div class="bg-yellow-50 p-4 rounded-lg mb-6">
+            <p class="text-yellow-800 font-semibold text-center" data-sq="Perfekt për: Restorantet që preferojnë kesh dhe duan kontrollin maksimal" data-en="Perfect for: Restaurants preferring cash and wanting maximum control">
+              Perfekt për: Restorantet që preferojnë kesh dhe duan kontrollin maksimal
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="text-center mt-12">
+        <p class="text-blue-100 text-lg mb-6" data-sq="💡 Mundësi unike: Ndryshoni planin në çdo kohë bazuar në nevojat tuaja!" data-en="💡 Unique opportunity: Switch plans anytime based on your needs!">
+          💡 Mundësi unike: Ndryshoni planin në çdo kohë bazuar në nevojat tuaja!
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a href="/register" class="bg-white hover:bg-gray-50 text-blue-600 px-8 py-4 rounded-xl text-lg font-semibold transition-colors" data-sq="Filloni me Planin FALAS" data-en="Start with FREE Plan">
+            Filloni me Planin FALAS
+          </a>
+          <a href="/pricing" class="border border-blue-400 hover:border-blue-300 text-white px-8 py-4 rounded-xl text-lg font-semibold transition-colors" data-sq="Krahasoni të Gjitha Planett" data-en="Compare All Plans">
+            Krahasoni të Gjitha Planett
+          </a>
         </div>
       </div>
     </div>
@@ -472,76 +592,305 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     </div>
   </section>
 
-  <!-- Pricing Section -->
+  <!-- Pricing Comparison Section -->
   <section class="py-20 bg-gray-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center mb-16">
-        <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-4" data-sq="Provoni Falas për 30 Ditë" data-en="Try Free for 30 Days">
-          Provoni Falas për 30 Ditë
+        <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-4" data-sq="Çmimi që Ju Meritoni: FALAS ose €35/muaj" data-en="Pricing You Deserve: FREE or €35/month">
+          Çmimi që Ju Meritoni: FALAS ose €35/muaj
         </h2>
-        <p class="text-xl text-gray-600 max-w-3xl mx-auto" data-sq="Zero risk. Karta juaj nuk ngarkohet për 30 ditë. Nëse nuk jeni të kënaqur, anuloni pa pagesë." data-en="Zero risk. Your card won't be charged for 30 days. If you're not satisfied, cancel with no charge.">
-          Zero risk. Karta juaj nuk ngarkohet për 30 ditë. Nëse nuk jeni të kënaqur, anuloni pa pagesë.
+        <p class="text-xl text-gray-600 max-w-3xl mx-auto" data-sq="Filloni FALAS sot dhe vendosni më vonë nëse doni planin premium. Asnjë kontratë, asnjë surprizë." data-en="Start FREE today and decide later if you want the premium plan. No contracts, no surprises.">
+          Filloni FALAS sot dhe vendosni më vonë nëse doni planin premium. Asnjë kontratë, asnjë surprizë.
         </p>
       </div>
       
-      <div class="max-w-md mx-auto">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
+        <!-- FREE Plan -->
         <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
           <div class="px-8 py-12">
-            <div class="text-center">
-              <h3 class="text-2xl font-bold text-gray-900 mb-4" data-sq="Sistem i Plotë" data-en="Complete System">Sistem i Plotë</h3>
+            <div class="text-center mb-8">
+              <div class="inline-block bg-green-100 text-green-800 px-4 py-2 rounded-full text-sm font-semibold mb-4">
+                <span data-sq="POPULLI" data-en="POPULAR">POPULLI</span>
+              </div>
+              <h3 class="text-3xl font-bold text-gray-900 mb-4" data-sq="Plan FALAS" data-en="FREE Plan">Plan FALAS</h3>
               <div class="flex items-center justify-center mb-4">
-                <span class="text-5xl font-bold text-gray-900">€35</span>
-                <span class="text-xl text-gray-600 ml-2">/month</span>
+                <span class="text-6xl font-bold text-green-600">€0</span>
+                <span class="text-xl text-gray-600 ml-2">/muaj</span>
               </div>
-              <div class="bg-green-50 text-green-800 px-4 py-2 rounded-lg mb-4 font-medium" data-sq="30 Ditë Falas - Pastaj €35/muaj" data-en="30 Days Free - Then €35/month">
-                30 Ditë Falas - Pastaj €35/muaj
-              </div>
-              <p class="text-gray-600 mb-8" data-sq="Gjithçka që ju nevojitet për të filluar" data-en="Everything you need to get started">Gjithçka që ju nevojitet për të filluar</p>
-              
-              <ul class="space-y-4 text-left mb-8">
-                <li class="flex items-center">
-                  <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                  </svg>
-                  <span data-sq="Kode QR dhe tavolina të pakufizuara" data-en="Unlimited QR codes and tables">Kode QR dhe tavolina të pakufizuara</span>
-                </li>
-                <li class="flex items-center">
-                  <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                  </svg>
-                  <span data-sq="Menaxhim porosish në kohë reale" data-en="Real-time order management">Menaxhim porosish në kohë reale</span>
-                </li>
-                <li class="flex items-center">
-                  <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                  </svg>
-                  <span data-sq="Përkthime shqip/anglisht" data-en="Albanian/English translations">Përkthime shqip/anglisht</span>
-                </li>
-                <li class="flex items-center">
-                  <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                  </svg>
-                  <span data-sq="Analitika dhe raportim" data-en="Analytics and reporting">Analitika dhe raportim</span>
-                </li>
-                <li class="flex items-center">
-                  <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                  </svg>
-                  <span data-sq="Instalimi dhe trajnimi përfshirë" data-en="Setup and training included">Instalimi dhe trajnimi përfshirë</span>
-                </li>
-                <li class="flex items-center">
-                  <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                  </svg>
-                  <span data-sq="Mbështetje 24/7 në shqip" data-en="24/7 support in Albanian">Mbështetje 24/7 në shqip</span>
-                </li>
-              </ul>
-              
-              <a href="/register" class="w-full bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl text-lg font-semibold transition-colors block text-center" data-sq="Filloni Provën Falas 30-Ditore" data-en="Start 30-Day Free Trial">
-                Filloni Provën Falas 30-Ditore
-              </a>
-              <p class="text-sm text-gray-500 mt-4" data-sq="Karta nuk ngarkohet për 30 ditë • Anuloni në çdo kohë" data-en="Card not charged for 30 days • Cancel anytime">Karta nuk ngarkohet për 30 ditë • Anuloni në çdo kohë</p>
+              <p class="text-gray-600" data-sq="Për restorantet që preferojnë pagesa me karta" data-en="For restaurants preferring card payments">Për restorantet që preferojnë pagesa me karta</p>
             </div>
+            
+            <ul class="space-y-4 mb-8">
+              <li class="flex items-center">
+                <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                </svg>
+                <span data-sq="✨ Sistema 100% FALAS për ju" data-en="✨ System 100% FREE for you">✨ Sistema 100% FALAS për ju</span>
+              </li>
+              <li class="flex items-center">
+                <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                </svg>
+                <span data-sq="💳 Pagesa me Visa/Mastercard" data-en="💳 Visa/Mastercard payments">💳 Pagesa me Visa/Mastercard</span>
+              </li>
+              <li class="flex items-center">
+                <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                </svg>
+                <span data-sq="⚡ Para në llogari brenda 2 ditësh" data-en="⚡ Money in account within 2 days">⚡ Para në llogari brenda 2 ditësh</span>
+              </li>
+              <li class="flex items-center">
+                <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                </svg>
+                <span data-sq="📱 Tavolina dhe kode QR të pakufizuara" data-en="📱 Unlimited tables and QR codes">📱 Tavolina dhe kode QR të pakufizuara</span>
+              </li>
+              <li class="flex items-center">
+                <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                </svg>
+                <span data-sq="🔧 Instalimi dhe trajnimi falas" data-en="🔧 Free setup and training">🔧 Instalimi dhe trajnimi falas</span>
+              </li>
+              <li class="flex items-center text-sm text-gray-600">
+                <svg class="w-5 h-5 text-blue-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+                </svg>
+                <span data-sq="Stripe merr 2.9% nga çdo pagesë me kartë" data-en="Stripe takes 2.9% from each card payment">Stripe merr 2.9% nga çdo pagesë me kartë</span>
+              </li>
+            </ul>
+            
+            <a href="/register" class="w-full bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-xl text-lg font-semibold transition-colors block text-center" data-sq="Filloni FALAS Tani" data-en="Start FREE Now">
+              Filloni FALAS Tani
+            </a>
+          </div>
+        </div>
+
+        <!-- PREMIUM Plan -->
+        <div class="bg-white rounded-2xl shadow-xl overflow-hidden border-2 border-yellow-400">
+          <div class="px-8 py-12">
+            <div class="text-center mb-8">
+              <div class="inline-block bg-yellow-100 text-yellow-800 px-4 py-2 rounded-full text-sm font-semibold mb-4">
+                <span data-sq="PREMIUM" data-en="PREMIUM">PREMIUM</span>
+              </div>
+              <h3 class="text-3xl font-bold text-gray-900 mb-4" data-sq="Plan €35/muaj" data-en="€35/month Plan">Plan €35/muaj</h3>
+              <div class="flex items-center justify-center mb-4">
+                <span class="text-6xl font-bold text-yellow-600">€35</span>
+                <span class="text-xl text-gray-600 ml-2">/muaj</span>
+              </div>
+              <p class="text-gray-600" data-sq="Për restorantet që preferojnë kesh dhe kontroll total" data-en="For restaurants preferring cash and total control">Për restorantet që preferojnë kesh dhe kontroll total</p>
+            </div>
+            
+            <ul class="space-y-4 mb-8">
+              <li class="flex items-center">
+                <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                </svg>
+                <span data-sq="💰 100% e fitimit mbetet tek ju" data-en="💰 100% of profit stays with you">💰 100% e fitimit mbetet tek ju</span>
+              </li>
+              <li class="flex items-center">
+                <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                </svg>
+                <span data-sq="🏪 Vetëm pagesa kesh - kontroll total" data-en="🏪 Cash-only payments - total control">🏪 Vetëm pagesa kesh - kontroll total</span>
+              </li>
+              <li class="flex items-center">
+                <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                </svg>
+                <span data-sq="🔒 Zero tarifa transaksioni" data-en="🔒 Zero transaction fees">🔒 Zero tarifa transaksioni</span>
+              </li>
+              <li class="flex items-center">
+                <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                </svg>
+                <span data-sq="📊 Analitika dhe raporte të detajuara" data-en="📊 Detailed analytics and reports">📊 Analitika dhe raporte të detajuara</span>
+              </li>
+              <li class="flex items-center">
+                <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                </svg>
+                <span data-sq="⭐ Mbështetje prioritare 24/7" data-en="⭐ Priority 24/7 support">⭐ Mbështetje prioritare 24/7</span>
+              </li>
+              <li class="flex items-center text-sm text-green-600 font-semibold">
+                <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                </svg>
+                <span data-sq="Asnjë tarifë e fshehur apo përqindje" data-en="No hidden fees or percentages">Asnjë tarifë e fshehur apo përqindje</span>
+              </li>
+            </ul>
+            
+            <a href="/register?plan=premium" class="w-full bg-yellow-600 hover:bg-yellow-700 text-white px-8 py-4 rounded-xl text-lg font-semibold transition-colors block text-center" data-sq="Zgjidhni Premium" data-en="Choose Premium">
+              Zgjidhni Premium
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="text-center mt-12">
+        <div class="bg-blue-50 p-6 rounded-2xl max-w-3xl mx-auto">
+          <h4 class="text-lg font-semibold text-blue-900 mb-2" data-sq="💡 Fleksibilitet i Plotë" data-en="💡 Complete Flexibility">💡 Fleksibilitet i Plotë</h4>
+          <p class="text-blue-800" data-sq="Filloni me planin FALAS dhe ndryshoni në premium kur të doni. Ose filloni premium dhe kthehuni në falas. Ju vendosni!" data-en="Start with the FREE plan and switch to premium when you want. Or start premium and go back to free. You decide!">
+            Filloni me planin FALAS dhe ndryshoni në premium kur të doni. Ose filloni premium dhe kthehuni në falas. Ju vendosni!
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Success Stories Section -->
+  <section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-4" data-sq="Historite e Suksesit me Pagesat" data-en="Payment Success Stories">
+          Historite e Suksesit me Pagesat
+        </h2>
+        <p class="text-xl text-gray-600 max-w-3xl mx-auto" data-sq="Restorantet shqiptare që transformuan biznesin e tyre me sisteme të zgjuara pagesash" data-en="Albanian restaurants that transformed their business with smart payment systems">
+          Restorantet shqiptare që transformuan biznesin e tyre me sisteme të zgjuara pagesash
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
+        
+        <!-- Case Study 1: FREE Plan Success -->
+        <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-2xl p-8 border border-green-200">
+          <div class="flex items-center mb-6">
+            <div class="w-16 h-16 bg-green-600 rounded-xl flex items-center justify-center mr-4">
+              <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"></path>
+              </svg>
+            </div>
+            <div>
+              <h3 class="text-xl font-bold text-green-800" data-sq="Kafé Tirana - Plan FALAS" data-en="Tirana Café - FREE Plan">Kafé Tirana - Plan FALAS</h3>
+              <p class="text-green-700" data-sq="Biznes i ri në qendrën e Tiranës" data-en="New business in central Tirana">Biznes i ri në qendrën e Tiranës</p>
+            </div>
+          </div>
+          
+          <div class="space-y-4 mb-6">
+            <div class="bg-white rounded-lg p-4">
+              <h4 class="font-semibold text-gray-900 mb-2" data-sq="💡 Sfida Fillestare:" data-en="💡 Initial Challenge:">💡 Sfida Fillestare:</h4>
+              <p class="text-gray-700 text-sm" data-sq="Biznes i ri me buxhet të kufizuar, nevojë për modernizim pa kosto fillestare" data-en="New business with limited budget, needed modernization without upfront costs">
+                Biznes i ri me buxhet të kufizuar, nevojë për modernizim pa kosto fillestare
+              </p>
+            </div>
+            
+            <div class="bg-white rounded-lg p-4">
+              <h4 class="font-semibold text-gray-900 mb-2" data-sq="🎯 Zgjidhja SKAN.AL:" data-en="🎯 SKAN.AL Solution:">🎯 Zgjidhja SKAN.AL:</h4>
+              <p class="text-gray-700 text-sm" data-sq="Plan FALAS me Stripe Connect - pa kosto fillestare, vetëm 2.9% komision për pagesa kartë" data-en="FREE plan with Stripe Connect - no upfront costs, only 2.9% commission on card payments">
+                Plan FALAS me Stripe Connect - pa kosto fillestare, vetëm 2.9% komision për pagesa kartë
+              </p>
+            </div>
+          </div>
+          
+          <div class="grid grid-cols-2 gap-4">
+            <div class="bg-white rounded-lg p-4 text-center">
+              <div class="text-2xl font-bold text-green-600">85%</div>
+              <div class="text-sm text-gray-600" data-sq="Pagesa me kartë" data-en="Card payments">Pagesa me kartë</div>
+            </div>
+            <div class="bg-white rounded-lg p-4 text-center">
+              <div class="text-2xl font-bold text-green-600">€8,400</div>
+              <div class="text-sm text-gray-600" data-sq="Të ardhura mujore" data-en="Monthly revenue">Të ardhura mujore</div>
+            </div>
+          </div>
+          
+          <blockquote class="mt-6 border-l-4 border-green-500 pl-4 italic text-gray-700">
+            <p data-sq="\"Filluam pa asnjë kosto dhe tani klientët tanë paguajnë lehtësisht me kartë. Sistemi u pagua vetë që në javën e parë!\"" data-en="\"We started with zero costs and now our customers pay easily with cards. The system paid for itself in the first week!\"">
+              "Filluam pa asnjë kosto dhe tani klientët tanë paguajnë lehtësisht me kartë. Sistemi u pagua vetë që në javën e parë!"
+            </p>
+            <cite class="text-green-800 font-semibold not-italic" data-sq="- Arta Krasniqi, Themeluesja" data-en="- Arta Krasniqi, Founder">- Arta Krasniqi, Themeluesja</cite>
+          </blockquote>
+        </div>
+
+        <!-- Case Study 2: Premium Plan Success -->
+        <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl p-8 border border-blue-200">
+          <div class="flex items-center mb-6">
+            <div class="w-16 h-16 bg-blue-600 rounded-xl flex items-center justify-center mr-4">
+              <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"></path>
+              </svg>
+            </div>
+            <div>
+              <h3 class="text-xl font-bold text-blue-800" data-sq="Restorant Deti - Plan Premium" data-en="Sea Restaurant - Premium Plan">Restorant Deti - Plan Premium</h3>
+              <p class="text-blue-700" data-sq="Familjar në bregdetin e Durrësit" data-en="Family restaurant on Durrës coast">Familjar në bregdetin e Durrësit</p>
+            </div>
+          </div>
+          
+          <div class="space-y-4 mb-6">
+            <div class="bg-white rounded-lg p-4">
+              <h4 class="font-semibold text-gray-900 mb-2" data-sq="💡 Sfida Fillestare:" data-en="💡 Initial Challenge:">💡 Sfida Fillestare:</h4>
+              <p class="text-gray-700 text-sm" data-sq="Volum i lartë shitjesh, tarifa e komisionit po hanin fitimin, klientët paguanin kryesisht kesh" data-en="High sales volume, commission fees eating profits, customers mostly paying cash">
+                Volum i lartë shitjesh, tarifa e komisionit po hanin fitimin, klientët paguanin kryesisht kesh
+              </p>
+            </div>
+            
+            <div class="bg-white rounded-lg p-4">
+              <h4 class="font-semibold text-gray-900 mb-2" data-sq="🎯 Zgjidhja SKAN.AL:" data-en="🎯 SKAN.AL Solution:">🎯 Zgjidhja SKAN.AL:</h4>
+              <p class="text-gray-700 text-sm" data-sq="Plan Premium €35/muaj - 0% komision, kontroll i plotë, kosto e parashikueshme" data-en="Premium plan €35/month - 0% commission, full control, predictable costs">
+                Plan Premium €35/muaj - 0% komision, kontroll i plotë, kosto e parashikueshme
+              </p>
+            </div>
+          </div>
+          
+          <div class="grid grid-cols-2 gap-4">
+            <div class="bg-white rounded-lg p-4 text-center">
+              <div class="text-2xl font-bold text-blue-600">€420</div>
+              <div class="text-sm text-gray-600" data-sq="Kursim mujor" data-en="Monthly savings">Kursim mujor</div>
+            </div>
+            <div class="bg-white rounded-lg p-4 text-center">
+              <div class="text-2xl font-bold text-blue-600">€18,500</div>
+              <div class="text-sm text-gray-600" data-sq="Të ardhura mujore" data-en="Monthly revenue">Të ardhura mujore</div>
+            </div>
+          </div>
+          
+          <blockquote class="mt-6 border-l-4 border-blue-500 pl-4 italic text-gray-700">
+            <p data-sq="\"Nga €385 komision në muaj në vetëm €35. Kursimet i investuam në përmirësimet e kuzhinës. Fitimi ynë rriti 15%!\"" data-en="\"From €385 commission per month to just €35. We invested the savings in kitchen improvements. Our profit increased 15%!\"">
+              "Nga €385 komision në muaj në vetëm €35. Kursimet i investuam në përmirësimet e kuzhinës. Fitimi ynë rriti 15%!"
+            </p>
+            <cite class="text-blue-800 font-semibold not-italic" data-sq="- Flamur Doci, Menaxher" data-en="- Flamur Doci, Manager">- Flamur Doci, Menaxher</cite>
+          </blockquote>
+        </div>
+      </div>
+
+      <!-- Payment Benefits Summary -->
+      <div class="bg-gradient-to-r from-green-50 via-blue-50 to-green-50 rounded-2xl p-8">
+        <div class="text-center mb-8">
+          <h3 class="text-2xl font-bold text-gray-900 mb-4" data-sq="Pse Pagesat Janë Kyçe për Suksesin" data-en="Why Payments Are Key to Success">Pse Pagesat Janë Kyçe për Suksesin</h3>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div class="text-center">
+            <div class="w-16 h-16 bg-green-500 rounded-full mx-auto mb-4 flex items-center justify-center">
+              <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path>
+              </svg>
+            </div>
+            <h4 class="font-semibold text-gray-900 mb-2" data-sq="Fleksibilitet Pagesash" data-en="Payment Flexibility">Fleksibilitet Pagesash</h4>
+            <p class="text-gray-600 text-sm" data-sq="Klientët zgjedhin si të paguajnë - kartë ose kesh - sipas preferimit të tyre" data-en="Customers choose how to pay - card or cash - based on their preference">
+              Klientët zgjedhin si të paguajnë - kartë ose kesh - sipas preferimit të tyre
+            </p>
+          </div>
+          
+          <div class="text-center">
+            <div class="w-16 h-16 bg-blue-500 rounded-full mx-auto mb-4 flex items-center justify-center">
+              <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path>
+              </svg>
+            </div>
+            <h4 class="font-semibold text-gray-900 mb-2" data-sq="Kontrolli i Kostove" data-en="Cost Control">Kontrolli i Kostove</h4>
+            <p class="text-gray-600 text-sm" data-sq="Zgjidhni modelin që ju përshtatet: FALAS me komision ose Premium pa komision" data-en="Choose the model that fits you: FREE with commission or Premium without commission">
+              Zgjidhni modelin që ju përshtatet: FALAS me komision ose Premium pa komision
+            </p>
+          </div>
+          
+          <div class="text-center">
+            <div class="w-16 h-16 bg-yellow-500 rounded-full mx-auto mb-4 flex items-center justify-center">
+              <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M3 3a1 1 0 000 2v8a2 2 0 002 2h2.586l-1.293 1.293a1 1 0 101.414 1.414L10 15.414l2.293 2.293a1 1 0 001.414-1.414L12.414 15H15a2 2 0 002-2V5a1 1 0 100-2H3zm11.707 4.707a1 1 0 00-1.414-1.414L10 9.586 8.707 8.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+              </svg>
+            </div>
+            <h4 class="font-semibold text-gray-900 mb-2" data-sq="Rritje të Ardhurave" data-en="Revenue Growth">Rritje të Ardhurave</h4>
+            <p class="text-gray-600 text-sm" data-sq="Shërbim më i shpejtë dhe opsione më të shumta pagesash = më shumë klientë të lumtur" data-en="Faster service and more payment options = more happy customers">
+              Shërbim më i shpejtë dhe opsione më të shumta pagesash = më shumë klientë të lumtur
+            </p>
           </div>
         </div>
       </div>

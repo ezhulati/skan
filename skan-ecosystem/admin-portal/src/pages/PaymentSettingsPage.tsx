@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useAuth } from '../contexts/AuthContext';
 
 interface PaymentSettings {
   stripeConnectEnabled: boolean;
@@ -11,8 +10,7 @@ interface PaymentSettings {
 }
 
 const PaymentSettingsPage: React.FC = () => {
-  const { auth } = useAuth();
-  // Note: auth will be used for venue-specific API calls in production
+  // Note: useAuth will be used for venue-specific API calls in production
   const [settings, setSettings] = useState<PaymentSettings>({
     stripeConnectEnabled: false,
     subscriptionTier: 'paid',
