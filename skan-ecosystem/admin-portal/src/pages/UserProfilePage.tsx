@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 
 interface ProfileData {
@@ -39,7 +39,7 @@ const UserProfilePage: React.FC = () => {
     confirmPassword: ''
   });
 
-  const fetchProfile = async () => {
+  const fetchProfile = useCallback(async () => {
     try {
       setLoading(true);
       setError('');
@@ -80,7 +80,7 @@ const UserProfilePage: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [auth.token, auth.user?.id]);
 
   const handleUpdateProfile = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -195,7 +195,7 @@ const UserProfilePage: React.FC = () => {
 
   useEffect(() => {
     fetchProfile();
-  }, [auth.user?.id]);
+  }, [fetchProfile]);
 
   if (loading) {
     return (
