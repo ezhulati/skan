@@ -51,7 +51,7 @@ const MenuManagementPage: React.FC = () => {
     setMessage('Duke rifreskuar nga API...');
     await loadMenu();
     setMessage('Demo u rifreskua me sukses!');
-    setTimeout(() => setMessage(null), 3000);
+    setTimeout(() => setMessage(null), 500);
   };
 
   // Image upload helper function
@@ -316,7 +316,7 @@ const MenuManagementPage: React.FC = () => {
       setEditingItem(null);
       setHasLocalChanges(true); // Mark that we have local changes
       setMessage('Artikulli u përditësua me sukses!');
-      setTimeout(() => setMessage(null), 3000);
+      setTimeout(() => setMessage(null), 500);
       
       // Uncomment when API endpoint is available:
       /*
@@ -423,7 +423,7 @@ const MenuManagementPage: React.FC = () => {
                 <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/>
                 <path d="M3 21v-5h5"/>
               </svg>
-              Rifresko nga API
+              Rifresko
             </button>
           </div>
         </div>
@@ -442,10 +442,6 @@ const MenuManagementPage: React.FC = () => {
 
       {message && (
         <div className="success-message">
-          <svg className="success-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"/>
-            <path d="M9 12l2 2 4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
           {message}
         </div>
       )}
@@ -586,7 +582,7 @@ const MenuManagementPage: React.FC = () => {
                             const translated = await translateText(newItem.nameAlbanian, 'new-item');
                             setNewItem({...newItem, name: translated});
                             setMessage('Përkthimi u bë me sukses!');
-                            setTimeout(() => setMessage(null), 3000);
+                            setTimeout(() => setMessage(null), 500);
                           } catch (error) {
                             alert(error instanceof Error ? error.message : 'Përkthimi dështoi');
                           }
