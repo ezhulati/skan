@@ -111,7 +111,7 @@ const MenuManagementPage: React.FC = () => {
   }, [loadMenu, auth]);
 
   const addCategory = async () => {
-    if (!newCategoryName.trim() || !newCategoryNameEn.trim()) return;
+    if (!newCategoryName.trim() || !newCategoryNameAlbanian.trim()) return;
 
     try {
       // Use the same venue that we're displaying the menu from
@@ -144,7 +144,7 @@ const MenuManagementPage: React.FC = () => {
 
       await loadMenu();
       setNewCategoryName('');
-      setNewCategoryNameEn('');
+      setNewCategoryNameAlbanian('');
       setShowAddCategory(false);
     } catch (err) {
       console.error('Error adding category:', err);
@@ -365,8 +365,8 @@ const MenuManagementPage: React.FC = () => {
               <label>Emri i Kategorisë (Anglisht)</label>
               <input
                 type="text"
-                value={newCategoryNameEn}
-                onChange={(e) => setNewCategoryNameEn(e.target.value)}
+                value={newCategoryNameAlbanian}
+                onChange={(e) => setNewCategoryNameAlbanian(e.target.value)}
                 placeholder="p.sh., Drinks"
               />
             </div>
