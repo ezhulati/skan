@@ -528,20 +528,23 @@ const UserProfilePage: React.FC = () => {
           display: flex;
           align-items: center;
           gap: 8px;
-          background: #667eea;
+          background: #2563eb;
           color: white;
-          border: none;
-          padding: 8px 16px;
+          border: 2px solid #2563eb;
+          padding: 10px 20px;
           border-radius: 8px;
           font-size: 14px;
-          font-weight: 500;
+          font-weight: 600;
           cursor: pointer;
           transition: all 0.2s ease;
+          box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);
         }
 
         .edit-button:hover {
-          background: #764ba2;
+          background: #1d4ed8;
+          border-color: #1d4ed8;
           transform: translateY(-1px);
+          box-shadow: 0 4px 8px rgba(37, 99, 235, 0.3);
         }
 
         .edit-icon {
@@ -626,15 +629,19 @@ const UserProfilePage: React.FC = () => {
         }
 
         .save-button, .change-password-button, .retry-button {
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          background: #10b981;
           color: white;
+          border: 2px solid #10b981;
+          box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2);
         }
 
         .save-button:hover:not(:disabled), 
         .change-password-button:hover:not(:disabled),
         .retry-button:hover:not(:disabled) {
+          background: #059669;
+          border-color: #059669;
           transform: translateY(-1px);
-          box-shadow: 0 10px 20px rgba(102, 126, 234, 0.2);
+          box-shadow: 0 4px 8px rgba(16, 185, 129, 0.3);
         }
 
         .save-button:disabled, 
@@ -678,23 +685,53 @@ const UserProfilePage: React.FC = () => {
 
         .role-badge, .status-badge, .verification-badge {
           display: inline-block;
-          padding: 4px 12px;
-          border-radius: 20px;
-          font-size: 12px;
-          font-weight: 600;
+          padding: 6px 12px;
+          border-radius: 6px;
+          font-size: 11px;
+          font-weight: 500;
           text-transform: uppercase;
           letter-spacing: 0.5px;
+          border: 1px solid;
+          opacity: 0.9;
         }
 
-        .role-admin { background: #fecaca; color: #dc2626; }
-        .role-manager { background: #ddd6fe; color: #7c3aed; }
-        .role-staff { background: #bfdbfe; color: #2563eb; }
+        .role-admin { 
+          background: #fef2f2; 
+          color: #dc2626; 
+          border-color: #fecaca;
+        }
+        .role-manager { 
+          background: #f5f3ff; 
+          color: #7c3aed; 
+          border-color: #ddd6fe;
+        }
+        .role-staff { 
+          background: #eff6ff; 
+          color: #2563eb; 
+          border-color: #bfdbfe;
+        }
 
-        .status-badge.active { background: #dcfce7; color: #16a34a; }
-        .status-badge.inactive { background: #fee2e2; color: #dc2626; }
+        .status-badge.active { 
+          background: #f0fdf4; 
+          color: #16a34a; 
+          border-color: #bbf7d0;
+        }
+        .status-badge.inactive { 
+          background: #fef2f2; 
+          color: #dc2626; 
+          border-color: #fecaca;
+        }
 
-        .verification-badge.verified { background: #dcfce7; color: #16a34a; }
-        .verification-badge.unverified { background: #fef3c7; color: #d97706; }
+        .verification-badge.verified { 
+          background: #f0fdf4; 
+          color: #16a34a; 
+          border-color: #bbf7d0;
+        }
+        .verification-badge.unverified { 
+          background: #fffbeb; 
+          color: #d97706; 
+          border-color: #fed7aa;
+        }
 
         @media (max-width: 768px) {
           .profile-page {
