@@ -4039,7 +4039,8 @@ if (config.environment?.node_env === "production") {
 // Export the Express app as a Firebase Cloud Function
 exports.api = onRequest({ 
   region: "europe-west1",
-  memory: "512MB",
-  timeoutSeconds: 60,
-  cors: true
+  memory: "1GB",
+  timeoutSeconds: 540,
+  cors: true,
+  maxInstances: 10
 }, app);
