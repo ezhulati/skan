@@ -270,8 +270,11 @@ const CustomerMenuPreviewModal: React.FC<CustomerMenuPreviewModalProps> = ({
                       {Math.round(getCartTotal() * 97)} Lek
                     </span>
                   </div>
-                  <button className="order-btn">
-                    View Order
+                  <button 
+                    className="order-btn preview-only"
+                    onClick={() => alert('This is a preview only. In the actual customer app, this would take customers to the checkout page.')}
+                  >
+                    View Order (Preview)
                   </button>
                 </div>
               )}
@@ -603,6 +606,15 @@ const CustomerMenuPreviewModal: React.FC<CustomerMenuPreviewModalProps> = ({
 
           .order-btn:hover {
             background: #3b60b0;
+          }
+
+          .order-btn.preview-only {
+            background: #6b7280;
+            border: 1px dashed #9ca3af;
+          }
+
+          .order-btn.preview-only:hover {
+            background: #4b5563;
           }
 
           @media (max-width: 768px) {
