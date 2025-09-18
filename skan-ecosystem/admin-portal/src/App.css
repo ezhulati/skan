@@ -534,12 +534,20 @@ body {
 
 .orders-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: var(--space-lg);
   margin-bottom: var(--space-lg);
 }
 
-/* Tablet-specific grid layout */
+/* Large desktop - 4 columns for optimal space usage */
+@media (min-width: 1400px) {
+  .orders-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-lg);
+  }
+}
+
+/* Tablet - 2 columns for balanced readability */
 @media (min-width: 768px) and (max-width: 1023px) {
   .orders-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -697,7 +705,7 @@ body {
   
   .orders-grid {
     grid-template-columns: 1fr !important;
-    gap: 15px;
+    gap: var(--space-md);
   }
   
   .status-filters {

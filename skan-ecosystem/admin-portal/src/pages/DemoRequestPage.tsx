@@ -74,54 +74,298 @@ const DemoRequestPage: React.FC = () => {
             <p className="login-subtitle">Faleminderit për interesin tuaj!</p>
           </div>
           
-          <div className="success-message" style={{
-            padding: '24px',
-            backgroundColor: '#f0fdf4',
-            border: '1px solid #bbf7d0',
-            borderRadius: '8px',
+          {/* Welcome to Demo Success Experience */}
+          <div className="demo-success-container" style={{
+            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            borderRadius: '16px',
+            padding: '32px',
+            color: 'white',
             textAlign: 'center',
-            marginBottom: '24px'
+            marginBottom: '24px',
+            boxShadow: '0 20px 40px rgba(102, 126, 234, 0.3)'
           }}>
-            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{
-              color: '#16a34a',
-              marginBottom: '16px'
+            {/* Success Icon */}
+            <div style={{
+              width: '80px',
+              height: '80px',
+              background: 'rgba(255, 255, 255, 0.2)',
+              borderRadius: '50%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              margin: '0 auto 24px',
+              backdropFilter: 'blur(10px)'
             }}>
-              <path d="M9 11l3 3L22 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-            <h3 style={{ color: '#16a34a', marginBottom: '8px' }}>Kërkesa u dërgua me sukses!</h3>
-            <p style={{ color: '#15803d' }}>
-              Faleminderit për interesin tuaj! Do t'ju kontaktojmë brenda 24 orëve me kredencialet e demo-s.
-              <br />
-              Kontrolloni email-in tuaj (edhe dosjen spam) për detaje të mëtejshme.
-            </p>
-          </div>
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M9 11l3 3L22 4" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </div>
 
-          <div style={{ textAlign: 'center' }}>
-            <Link 
-              to="/login"
+            <h2 style={{ 
+              margin: '0 0 8px 0', 
+              fontSize: '28px', 
+              fontWeight: '700',
+              textShadow: '0 2px 4px rgba(0,0,0,0.1)'
+            }}>
+              🎉 Demo u aktivizua me sukses!
+            </h2>
+            
+            <p style={{ 
+              margin: '0 0 24px 0', 
+              fontSize: '16px', 
+              opacity: '0.9',
+              lineHeight: '1.5'
+            }}>
+              Ju keni tani akses të plotë në platformën SKAN.AL për të testuar të gjitha veçoritë.
+            </p>
+
+            {/* Demo Credentials */}
+            <div style={{
+              background: 'rgba(255, 255, 255, 0.15)',
+              borderRadius: '12px',
+              padding: '24px',
+              marginBottom: '24px',
+              backdropFilter: 'blur(10px)',
+              border: '1px solid rgba(255, 255, 255, 0.2)'
+            }}>
+              <h4 style={{ 
+                margin: '0 0 16px 0', 
+                fontSize: '18px',
+                fontWeight: '600'
+              }}>
+                Kredencialet tuaja të Demo-s:
+              </h4>
+              
+              <div className="credentials-grid" style={{
+                display: 'grid',
+                gridTemplateColumns: '1fr 1fr',
+                gap: '16px',
+                textAlign: 'left'
+              }}>
+                <div>
+                  <label style={{ 
+                    display: 'block',
+                    fontSize: '12px',
+                    fontWeight: '600',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.5px',
+                    marginBottom: '4px',
+                    opacity: '0.8'
+                  }}>
+                    Email / Username
+                  </label>
+                  <div style={{
+                    background: 'rgba(255, 255, 255, 0.9)',
+                    color: '#2c3e50',
+                    padding: '8px 12px',
+                    borderRadius: '6px',
+                    fontFamily: 'monospace',
+                    fontSize: '14px',
+                    fontWeight: '600'
+                  }}>
+                    manager_email1@gmail.com
+                  </div>
+                </div>
+                
+                <div>
+                  <label style={{ 
+                    display: 'block',
+                    fontSize: '12px',
+                    fontWeight: '600',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.5px',
+                    marginBottom: '4px',
+                    opacity: '0.8'
+                  }}>
+                    Password
+                  </label>
+                  <div style={{
+                    background: 'rgba(255, 255, 255, 0.9)',
+                    color: '#2c3e50',
+                    padding: '8px 12px',
+                    borderRadius: '6px',
+                    fontFamily: 'monospace',
+                    fontSize: '14px',
+                    fontWeight: '600'
+                  }}>
+                    demo123
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Auto-Login Button */}
+            <button
+              onClick={() => {
+                // Auto-fill login form and redirect
+                setLoginData({
+                  email: 'manager_email1@gmail.com',
+                  password: 'demo123'
+                });
+                setShowLoginForm(true);
+                // Smooth scroll to login form
+                setTimeout(() => {
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }, 100);
+              }}
               style={{
+                background: 'rgba(255, 255, 255, 0.95)',
+                color: '#667eea',
+                border: 'none',
+                padding: '16px 32px',
+                borderRadius: '50px',
+                fontSize: '16px',
+                fontWeight: '700',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease',
+                boxShadow: '0 8px 20px rgba(0, 0, 0, 0.2)',
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '8px',
-                backgroundColor: '#667eea',
-                color: 'white',
-                padding: '12px 24px',
-                borderRadius: '8px',
-                textDecoration: 'none',
-                fontSize: '14px',
-                fontWeight: '500',
-                transition: 'background-color 0.2s ease'
+                marginBottom: '20px'
               }}
-              onMouseEnter={(e) => (e.target as HTMLElement).style.backgroundColor = '#764ba2'}
-              onMouseLeave={(e) => (e.target as HTMLElement).style.backgroundColor = '#667eea'}
+              onMouseEnter={(e) => {
+                (e.target as HTMLElement).style.transform = 'translateY(-2px)';
+                (e.target as HTMLElement).style.boxShadow = '0 12px 30px rgba(0, 0, 0, 0.3)';
+              }}
+              onMouseLeave={(e) => {
+                (e.target as HTMLElement).style.transform = 'translateY(0px)';
+                (e.target as HTMLElement).style.boxShadow = '0 8px 20px rgba(0, 0, 0, 0.2)';
+              }}
             >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M15 18l-6-6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
-              Kthehu tek Login
-            </Link>
+              Hyr me këto kredenciale
+            </button>
+
+            <p style={{
+              fontSize: '14px',
+              opacity: '0.8',
+              margin: '0',
+              lineHeight: '1.4'
+            }}>
+              Ose shkoni tek <strong>Login</strong> dhe vendosni kredencialet manualisht
+            </p>
           </div>
+
+          {/* What to Expect */}
+          <div style={{
+            background: '#f8fafc',
+            border: '1px solid #e2e8f0',
+            borderRadius: '12px',
+            padding: '24px',
+            marginBottom: '24px'
+          }}>
+            <h4 style={{
+              margin: '0 0 16px 0',
+              color: '#2c3e50',
+              fontSize: '18px',
+              fontWeight: '600'
+            }}>
+              Çfarë mund të testoni në demo:
+            </h4>
+            
+            <div className="features-grid" style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+              gap: '16px'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
+                <span style={{ fontSize: '16px' }}>📱</span>
+                <div>
+                  <strong style={{ color: '#2c3e50' }}>Menaxhim Porosish</strong>
+                  <p style={{ margin: '4px 0 0 0', fontSize: '14px', color: '#64748b' }}>
+                    Shikoni porositë në kohë reale
+                  </p>
+                </div>
+              </div>
+              
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
+                <span style={{ fontSize: '16px' }}>🍽️</span>
+                <div>
+                  <strong style={{ color: '#2c3e50' }}>Menu Dixhitale</strong>
+                  <p style={{ margin: '4px 0 0 0', fontSize: '14px', color: '#64748b' }}>
+                    Modifikoni dhe organizoni menunë
+                  </p>
+                </div>
+              </div>
+              
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
+                <span style={{ fontSize: '16px' }}>📊</span>
+                <div>
+                  <strong style={{ color: '#2c3e50' }}>Raporte & Analitikë</strong>
+                  <p style={{ margin: '4px 0 0 0', fontSize: '14px', color: '#64748b' }}>
+                    Shikoni performancën e biznesit
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Follow-up CTA */}
+          <div style={{
+            background: 'linear-gradient(135deg, #16a34a 0%, #15803d 100%)',
+            borderRadius: '12px',
+            padding: '20px',
+            textAlign: 'center',
+            color: 'white'
+          }}>
+            <p style={{
+              margin: '0 0 12px 0',
+              fontSize: '16px',
+              fontWeight: '600'
+            }}>
+              🚀 Gati për të implementuar SKAN.AL në restorantin tuaj?
+            </p>
+            <p style={{
+              margin: '0 0 16px 0',
+              fontSize: '14px',
+              opacity: '0.9'
+            }}>
+              Ekipi ynë do t'ju kontaktojë për të diskutuar paketat dhe çmimet.
+            </p>
+            <div style={{
+              fontSize: '12px',
+              opacity: '0.8'
+            }}>
+              📞 +355 69 123 4567 | 📧 hello@skan.al
+            </div>
+          </div>
+
+          {/* Responsive Styles */}
+          <style>{`
+            @media (max-width: 768px) {
+              .demo-success-container {
+                padding: 24px 20px !important;
+                margin-bottom: 20px !important;
+              }
+              .demo-success-container h2 {
+                font-size: 24px !important;
+              }
+              .demo-success-container .credentials-grid {
+                grid-template-columns: 1fr !important;
+                gap: 12px !important;
+              }
+              .demo-success-container button {
+                width: 100% !important;
+                padding: 14px 24px !important;
+              }
+            }
+            @media (max-width: 480px) {
+              .demo-success-container {
+                padding: 20px 16px !important;
+                border-radius: 12px !important;
+              }
+              .demo-success-container h2 {
+                font-size: 20px !important;
+              }
+              .demo-success-container .features-grid {
+                grid-template-columns: 1fr !important;
+              }
+            }
+          `}</style>
         </div>
       </div>
     );
@@ -220,6 +464,35 @@ const DemoRequestPage: React.FC = () => {
             data-netlify-honeypot="bot-field"
             action="/demo-request"
             className="login-form"
+            onSubmit={async (e) => {
+              e.preventDefault();
+              setIsSubmitting(true);
+              setError(null);
+              
+              try {
+                // Get form data
+                const formData = new FormData(e.target as HTMLFormElement);
+                
+                // Submit to Netlify for lead capture
+                const response = await fetch('/demo-request', {
+                  method: 'POST',
+                  headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                  body: new URLSearchParams(formData as any).toString()
+                });
+                
+                if (response.ok) {
+                  // Show our custom success experience instead of redirecting
+                  setIsSubmitted(true);
+                } else {
+                  throw new Error('Form submission failed');
+                }
+              } catch (error) {
+                console.error('Form submission error:', error);
+                setError('Kishte një problem me dërgimin e formës. Ju lutemi provoni përsëri.');
+              } finally {
+                setIsSubmitting(false);
+              }
+            }}
           >
           {/* Honeypot field for spam protection */}
           <input type="hidden" name="form-name" value="demo-request" />
@@ -280,11 +553,30 @@ const DemoRequestPage: React.FC = () => {
           <button 
             type="submit" 
             className="login-button"
+            disabled={isSubmitting}
+            style={{
+              opacity: isSubmitting ? 0.7 : 1,
+              cursor: isSubmitting ? 'not-allowed' : 'pointer'
+            }}
           >
-            <svg className="login-arrow" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M4 12l8-8 8 8M12 4v16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-            Dërgo Kërkesën
+            {isSubmitting ? (
+              <>
+                <svg className="login-arrow" style={{animation: 'spin 1s linear infinite'}} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" strokeDasharray="31.416" strokeDashoffset="31.416">
+                    <animate attributeName="stroke-dasharray" dur="2s" values="0 31.416;15.708 15.708;0 31.416" repeatCount="indefinite"/>
+                    <animate attributeName="stroke-dashoffset" dur="2s" values="0;-15.708;-31.416" repeatCount="indefinite"/>
+                  </circle>
+                </svg>
+                Duke dërguar...
+              </>
+            ) : (
+              <>
+                <svg className="login-arrow" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M4 12l8-8 8 8M12 4v16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+                Dërgo Kërkesën
+              </>
+            )}
           </button>
         </form>
         ) : (

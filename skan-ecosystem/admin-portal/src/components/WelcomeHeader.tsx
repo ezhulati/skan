@@ -36,29 +36,25 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({
     
     if (hour >= 5 && hour < 12) {
       return {
-        sq: "Mirëmëngjes",
-        en: "Good morning",
+        text: 'Mirëmëngjes',
         emoji: "☀️",
         timeOfDay: "morning"
       };
     } else if (hour >= 12 && hour < 17) {
       return {
-        sq: "Mirëdita", 
-        en: "Good afternoon",
+        text: 'Mirëdita',
         emoji: "🌤️",
         timeOfDay: "afternoon"
       };
     } else if (hour >= 17 && hour < 24) {
       return {
-        sq: "Mirëmbrëma",
-        en: "Good evening", 
+        text: 'Mirëmbrëma',
         emoji: "🌙",
         timeOfDay: "evening"
       };
     } else {
       return {
-        sq: "Natën e mirë",
-        en: "Good night",
+        text: 'Natën e mirë',
         emoji: "🌃", 
         timeOfDay: "night"
       };
@@ -68,20 +64,17 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({
   const getMotivationalMessage = () => {
     if (activeOrders > 0) {
       return {
-        sq: `Ju keni ${activeOrders} porosite aktive!`,
-        en: `You have ${activeOrders} active orders!`,
+        text: `Keni ${activeOrders} porosi aktive`,
         type: "active"
       };
     } else if (ordersCount > 0) {
       return {
-        sq: `${ordersCount} porosite të marra sot 🎉`,
-        en: `${ordersCount} orders received today 🎉`, 
+        text: `${ordersCount} porosi të marra sot`,
         type: "success"
       };
     } else {
       return {
-        sq: "Gati për porosite e reja!",
-        en: "Ready for new orders!",
+        text: 'Gati për porosi të reja',
         type: "ready"
       };
     }
@@ -102,7 +95,7 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({
         <div className="greeting-section">
           <div className="main-greeting">
             <span className="greeting-text">
-              {greeting.sq}, <span className="user-name">{userName}</span>!
+              {greeting.text}, <span className="user-name">{userName}</span>!
             </span>
             <span className="greeting-emoji">{greeting.emoji}</span>
           </div>
@@ -124,7 +117,7 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({
               {motivation.type === 'active' ? '🔔' : 
                motivation.type === 'success' ? '✨' : '🚀'}
             </div>
-            <div className="motivation-text">{motivation.sq}</div>
+            <div className="motivation-text">{motivation.text}</div>
           </div>
           
           {todayRevenue > 0 && (

@@ -19,11 +19,11 @@ import ScrollToTop from './components/ScrollToTop';
 
 function App() {
   return (
-    <AuthProvider>
-      <Router>
-        <ScrollToTop />
-        <div className="App">
-          <Routes>
+      <AuthProvider>
+        <Router>
+          <ScrollToTop />
+          <div className="App">
+            <Routes>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/demo-request" element={<DemoRequestPage />} />
             <Route path="/forgot-password" element={<ForgotPasswordPage />} />
@@ -100,7 +100,7 @@ function App() {
           </Routes>
         </div>
       </Router>
-    </AuthProvider>
+      </AuthProvider>
   );
 }
 
