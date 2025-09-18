@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { calculateSplit, getSubscriptionUrls, VERIFONE_CONFIG } from '../config/verifone';
+import { VERIFONE_CONFIG } from '../config/verifone';
 
 interface PaymentSettings {
   digitalPaymentsEnabled: boolean;
