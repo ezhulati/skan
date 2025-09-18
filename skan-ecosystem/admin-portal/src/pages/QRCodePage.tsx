@@ -14,10 +14,10 @@ const QRCodePage: React.FC = () => {
   const [tables, setTables] = useState<TableQR[]>([]);
   const [newTableNumber, setNewTableNumber] = useState('');
   const [loading, setLoading] = useState(false);
-  const [baseUrl, setBaseUrl] = useState('http://localhost:3000');
+  const [baseUrl, setBaseUrl] = useState('https://order.skan.al');
   const printRef = useRef<HTMLDivElement>(null);
 
-  const venueSlug = 'beach-bar-durres'; // This could be dynamic based on venue
+  const venueSlug = 'demo-restaurant'; // This could be dynamic based on venue
 
   useEffect(() => {
     // Generate some default table QR codes
@@ -26,7 +26,7 @@ const QRCodePage: React.FC = () => {
   }, []);
 
   const generateQRCode = useCallback(async (tableNumber: string): Promise<TableQR> => {
-    const url = `${baseUrl}/order/${venueSlug}/${tableNumber}`;
+    const url = `${baseUrl}/${venueSlug}/${tableNumber}`;
     
     try {
       const qrCodeDataUrl = await QRCode.toDataURL(url, {
