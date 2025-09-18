@@ -105,12 +105,12 @@ const MenuManagementPage: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  }, [baseUrl, auth.venue?.slug]);
+  }, [baseUrl, auth.venue]);
 
   useEffect(() => {
     console.log('MenuManagementPage: Auth state changed:', auth);
     loadMenu();
-  }, [loadMenu]);
+  }, [loadMenu, auth]);
 
   const addCategory = async () => {
     if (!newCategoryName.trim() || !newCategoryNameEn.trim()) return;
