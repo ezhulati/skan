@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 
 interface MenuItem {
@@ -56,7 +56,7 @@ const CustomerMenuPreviewModal: React.FC<CustomerMenuPreviewModalProps> = ({
   const [language, setLanguage] = useState<'english' | 'albanian'>('english');
   const [cart, setCart] = useState<{ [itemId: string]: number }>({});
 
-  const loadMenu = async () => {
+  const loadMenu = useCallback(async () => {
     if (!auth.venue?.slug) return;
 
     setLoading(true);
@@ -79,13 +79,13 @@ const CustomerMenuPreviewModal: React.FC<CustomerMenuPreviewModalProps> = ({
     } finally {
       setLoading(false);
     }
-  };
+  }, [auth.venue?.slug]);
 
   useEffect(() => {
     if (isOpen && auth.venue?.slug) {
       loadMenu();
     }
-  }, [isOpen, auth.venue?.slug]);
+  }, [isOpen, auth.venue?.slug, loadMenu]);
 
   const addToCart = (itemId: string) => {
     setCart(prev => ({
