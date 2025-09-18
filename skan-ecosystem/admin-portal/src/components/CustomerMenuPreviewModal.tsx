@@ -266,7 +266,10 @@ const CustomerMenuPreviewModal: React.FC<CustomerMenuPreviewModalProps> = ({
                 <div className="cart-summary">
                   <div className="cart-info">
                     <span className="cart-items">
-                      {getCartItemCount()} item{getCartItemCount() !== 1 ? 's' : ''}
+                      {getCartItemCount()} {language === 'albanian' 
+                        ? (getCartItemCount() === 1 ? 'artikull' : 'artikuj')
+                        : (getCartItemCount() === 1 ? 'item' : 'items')
+                      }
                     </span>
                     <span className="cart-total">
                       {Math.round(getCartTotal() * 97)} Lek
@@ -274,9 +277,12 @@ const CustomerMenuPreviewModal: React.FC<CustomerMenuPreviewModalProps> = ({
                   </div>
                   <button 
                     className="order-btn preview-only"
-                    onClick={() => alert('This is a preview only. In the actual customer app, this would take customers to the checkout page.')}
+                    onClick={() => alert(language === 'albanian' 
+                      ? 'Kjo është vetëm parashikim. Në aplikacionin real të klientit, kjo do t\'i çonte klientët në faqen e pagesës.'
+                      : 'This is a preview only. In the actual customer app, this would take customers to the checkout page.'
+                    )}
                   >
-                    View Order (Preview)
+                    {language === 'albanian' ? 'Shiko Porosinë (Parashikim)' : 'View Order (Preview)'}
                   </button>
                 </div>
               )}
