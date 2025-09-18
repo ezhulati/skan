@@ -20,6 +20,12 @@ export interface Order {
 }
 
 class RestaurantApiService {
+  private token: string | null = null;
+
+  setToken(token: string | null) {
+    this.token = token;
+  }
+
   private async request<T>(url: string, options?: RequestInit): Promise<T> {
     const response = await fetch(`${API_BASE_URL}${url}`, {
       headers: {

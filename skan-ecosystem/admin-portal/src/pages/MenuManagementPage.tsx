@@ -40,6 +40,7 @@ const MenuManagementPage: React.FC = () => {
     imageUrl: ''
   });
   const [uploadingImage, setUploadingImage] = useState<string | null>(null);
+  const [translating, setTranslating] = useState<string | null>(null);
 
   const baseUrl = process.env.REACT_APP_API_URL || 'https://api-mkazmlu7ta-ew.a.run.app/v1';
 
@@ -76,6 +77,43 @@ const MenuManagementPage: React.FC = () => {
       throw error;
     } finally {
       setUploadingImage(null);
+    }
+  };
+
+  // Translation service function
+  const translateText = async (text: string, context: string = 'item'): Promise<string> => {
+    if (!text?.trim()) {
+      throw new Error('Teksti është i zbrazët');
+    }
+
+    try {
+      setTranslating(context);
+
+      const response = await fetch(`${baseUrl}/translate/menu-item`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${auth.token}`
+        },
+        body: JSON.stringify({
+          text: text.trim(),
+          fromLang: 'sq',
+          toLang: 'en'
+        })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Përkthimi dështoi');
+      }
+
+      const data = await response.json();
+      return data.translatedText;
+    } catch (error) {
+      console.error('Translation error:', error);
+      throw error;
+    } finally {
+      setTranslating(null);
     }
   };
 
@@ -463,16 +501,51 @@ const MenuManagementPage: React.FC = () => {
                   <div className="item-form-grid">
                     <input
                       type="text"
-                      placeholder="Emri i artikullit"
+                      placeholder="Emri i artikullit (Shqip)"
                       value={newItem.name}
                       onChange={(e) => setNewItem({...newItem, name: e.target.value})}
                     />
-                    <input
-                      type="text"
-                      placeholder="Emri i artikullit (Anglisht)"
-                      value={newItem.nameAlbanian}
-                      onChange={(e) => setNewItem({...newItem, nameAlbanian: e.target.value})}
-                    />
+                    <div className="name-input-with-translate">
+                      <input
+                        type="text"
+                        placeholder="Emri i artikullit (Anglisht)"
+                        value={newItem.nameAlbanian}
+                        onChange={(e) => setNewItem({...newItem, nameAlbanian: e.target.value})}
+                      />
+                      <button
+                        type="button"
+                        className="translate-button"
+                        onClick={async () => {
+                          if (!newItem.name.trim()) {
+                            alert('Shkruani emrin në shqip së pari');
+                            return;
+                          }
+                          try {
+                            const translated = await translateText(newItem.name, 'new-item');
+                            setNewItem({...newItem, nameAlbanian: translated});
+                            setMessage('Përkthimi u bë me sukses!');
+                            setTimeout(() => setMessage(null), 3000);
+                          } catch (error) {
+                            alert(error instanceof Error ? error.message : 'Përkthimi dështoi');
+                          }
+                        }}
+                        disabled={translating === 'new-item' || !newItem.name.trim()}
+                        title="Përkthe automatikisht nga shqip në anglisht"
+                      >
+                        {translating === 'new-item' ? (
+                          <svg className="spinner" viewBox="0 0 24 24" width="16" height="16">
+                            <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" fill="none" strokeDasharray="32" strokeDashoffset="32">
+                              <animate attributeName="stroke-dashoffset" dur="1s" values="32;0;32" repeatCount="indefinite"/>
+                            </circle>
+                          </svg>
+                        ) : (
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <path d="M2 12h20M9 5l7 7-7 7"/>
+                          </svg>
+                        )}
+                        AI Përkthe
+                      </button>
+                    </div>
                     <input
                       type="number"
                       step="0.01"
@@ -810,3 +883,93 @@ const ItemEditor: React.FC<{
 };
 
 export default MenuManagementPage;
+
+// Translation feature styles
+const translationStyles = document.createElement("style");
+translationStyles.innerHTML = `
+  .name-input-with-translate {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    width: 100%;
+  }
+
+  .name-input-with-translate input {
+    flex: 1;
+  }
+
+  .translate-button {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    min-height: 36px;
+  }
+
+  .translate-button:hover:not(:disabled) {
+    background: linear-gradient(135deg, #4338CA 0%, #6D28D9 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+  }
+
+  .translate-button:disabled {
+    background: #94A3B8;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+
+  .translate-button svg {
+    stroke-width: 2;
+  }
+
+  .spinner {
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  .item-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    align-items: start;
+  }
+
+  .item-form-grid > .name-input-with-translate {
+    grid-column: span 1;
+  }
+
+  @media (max-width: 768px) {
+    .item-form-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .name-input-with-translate {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    
+    .translate-button {
+      margin-top: 8px;
+    }
+  }
+`;
+
+// Inject styles into document head
+if (typeof document !== 'undefined' && !document.head.querySelector('#translation-styles')) {
+  translationStyles.id = 'translation-styles';
+  document.head.appendChild(translationStyles);
+}

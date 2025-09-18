@@ -47,8 +47,21 @@ const DashboardPage: React.FC = () => {
   }, [auth.user?.venueId, selectedStatus, loadOrders]);
 
   const handleStatusUpdate = async (orderId: string, newStatus: string) => {
+    console.log('Button clicked! Order ID:', orderId, 'New Status:', newStatus);
+    
+    if (!auth.token) {
+      console.error('No auth token available');
+      alert('Authentication required. Please login again.');
+      return;
+    }
+
     try {
+      console.log('Setting auth token and calling API...');
+      // CRITICAL: Set the auth token before making API call
+      restaurantApiService.setToken(auth.token);
+      
       await restaurantApiService.updateOrderStatus(orderId, newStatus);
+      console.log('API call successful, updating local state...');
       
       // Update the order in the local state
       setOrders(prevOrders => 
@@ -58,9 +71,10 @@ const DashboardPage: React.FC = () => {
             : order
         )
       );
+      console.log('Order status updated successfully!');
     } catch (err) {
       console.error('Error updating order status:', err);
-      alert('Dështoi përditësimi i statusit të porosisë');
+      alert('Failed to update order status: ' + (err instanceof Error ? err.message : 'Unknown error'));
     }
   };
 
