@@ -57,7 +57,7 @@ const DemoRequestPage: React.FC = () => {
     }
   };
 
-  if (isSubmitted) {
+  if (isSubmitted && !showLoginForm) {
     return (
       <div className="login-page">
         <div className="login-container">

@@ -12,6 +12,7 @@ import UserManagementPage from './pages/UserManagementPage';
 import UserProfilePage from './pages/UserProfilePage';
 import PaymentSettingsPage from './pages/PaymentSettingsPage';
 import OnboardingWizardPage from './pages/OnboardingWizardPage';
+import TranslationTest from './components/TranslationTest';
 import { AuthProvider } from './contexts/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import Navigation from './components/Navigation';
@@ -28,6 +29,7 @@ function App() {
             <Route path="/demo-request" element={<DemoRequestPage />} />
             <Route path="/forgot-password" element={<ForgotPasswordPage />} />
             <Route path="/reset-password" element={<ResetPasswordPage />} />
+            <Route path="/translation-test" element={<TranslationTest />} />
             <Route 
               path="/onboarding" 
               element={
