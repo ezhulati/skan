@@ -195,20 +195,42 @@ const DemoRequestPage: React.FC = () => {
               </div>
             </div>
 
-            {/* Auto-Login Button */}
+            {/* Direct Auto-Login Button */}
             <button
-              onClick={() => {
-                // Auto-fill login form and redirect
-                setLoginData({
-                  email: 'manager_email1@gmail.com',
-                  password: 'demo123'
-                });
-                setShowLoginForm(true);
-                // Smooth scroll to login form
-                setTimeout(() => {
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }, 100);
+              onClick={async () => {
+                // Directly log in the user without showing form
+                setIsSubmitting(true);
+                setError(null);
+                
+                try {
+                  const response = await fetch('/api/v1/auth/login', {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                      email: 'manager_email1@gmail.com',
+                      password: 'demo123'
+                    }),
+                  });
+
+                  if (response.ok) {
+                    const result = await response.json();
+                    localStorage.setItem('token', result.token);
+                    localStorage.setItem('user', JSON.stringify(result.user));
+                    window.location.href = '/dashboard';
+                  } else {
+                    const errorResult = await response.json();
+                    setError(errorResult.error || 'Problem me hyrjen. Ju lutemi provoni përsëri.');
+                  }
+                } catch (err) {
+                  console.error('Auto-login error:', err);
+                  setError('Ka ndodhur një gabim. Ju lutemi provoni përsëri.');
+                } finally {
+                  setIsSubmitting(false);
+                }
               }}
+              disabled={isSubmitting}
               style={{
                 background: 'rgba(255, 255, 255, 0.95)',
                 color: '#667eea',
@@ -234,10 +256,21 @@ const DemoRequestPage: React.FC = () => {
                 (e.target as HTMLElement).style.boxShadow = '0 8px 20px rgba(0, 0, 0, 0.2)';
               }}
             >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-              Hyr me këto kredenciale
+              {isSubmitting ? (
+                <>
+                  <svg className="loading-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                  </svg>
+                  Duke u futur në Demo...
+                </>
+              ) : (
+                <>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                  Hyr në Demo
+                </>
+              )}
             </button>
 
             <p style={{
@@ -654,6 +687,18 @@ const DemoRequestPage: React.FC = () => {
           </Link>
         </div>
       </div>
+      
+      {/* Loading animation styles */}
+      <style jsx>{`
+        .loading-icon {
+          animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+      `}</style>
     </div>
   );
 };
