@@ -1,0 +1,19 @@
+<!-- Netlify Forms Detection - Hidden Forms for Build Time Processing -->
+<!-- This file helps Netlify detect and process forms during build -->
+
+<!-- Contact Form -->
+<form 
+    name="contact"
+    method="POST"
+    data-netlify="true"
+    data-netlify-honeypot="bot-field"
+    hidden
+>
+    <input type="hidden" name="form-name" value="contact" />
+    <input name="bot-field" />
+    <input type="text" name="name" />
+    <input type="email" name="email" />
+    <input type="text" name="restaurant" />
+    <input type="text" name="subject" />
+    <textarea name="message"></textarea>
+</form>

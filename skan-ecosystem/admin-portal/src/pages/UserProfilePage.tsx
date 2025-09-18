@@ -125,7 +125,7 @@ const UserProfilePage: React.FC = () => {
       setEditMode(false);
       await fetchProfile(); // Refresh profile data
       
-      setTimeout(() => setMessage(''), 3000);
+      setTimeout(() => setMessage(''), 500);
     } catch (err: any) {
       console.error('Error updating profile:', err);
       setError(err.message);
@@ -187,7 +187,7 @@ const UserProfilePage: React.FC = () => {
         confirmPassword: ''
       });
       
-      setTimeout(() => setMessage(''), 3000);
+      setTimeout(() => setMessage(''), 500);
     } catch (err: any) {
       console.error('Error changing password:', err);
       setError(err.message);
@@ -475,9 +475,9 @@ const UserProfilePage: React.FC = () => {
         .loading-spinner {
           width: 20px;
           height: 20px;
-          border: 2px solid rgba(102, 126, 234, 0.3);
+          border: 2px solid rgba(37, 99, 235, 0.3);
           border-radius: 50%;
-          border-top-color: #667eea;
+          border-top-color: #2563eb;
           animation: spin 1s ease-in-out infinite;
           display: inline-block;
         }
@@ -548,7 +548,7 @@ const UserProfilePage: React.FC = () => {
           align-items: center;
           justify-content: center;
           gap: 8px;
-          background: #4472c4;
+          background: #2563eb;
           color: white;
           border: none;
           padding: 12px 24px;
@@ -562,7 +562,7 @@ const UserProfilePage: React.FC = () => {
         }
 
         .edit-button:hover {
-          background: #365a96;
+          background: #1d4ed8;
           transform: translateY(-1px);
         }
 
@@ -606,8 +606,8 @@ const UserProfilePage: React.FC = () => {
 
         .form-group input:focus, .role-select:focus {
           outline: none;
-          border-color: #4472c4;
-          box-shadow: 0 0 0 3px rgba(68, 114, 196, 0.1);
+          border-color: #2563eb;
+          box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
         }
 
         .form-group input:disabled, .role-select:disabled {
@@ -657,14 +657,14 @@ const UserProfilePage: React.FC = () => {
         }
 
         .save-button, .change-password-button, .retry-button {
-          background: #4472c4;
+          background: #2563eb;
           color: white;
         }
 
         .save-button:hover:not(:disabled), 
         .change-password-button:hover:not(:disabled),
         .retry-button:hover:not(:disabled) {
-          background: #365a96;
+          background: #1d4ed8;
           transform: translateY(-1px);
         }
 
