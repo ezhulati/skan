@@ -7,6 +7,7 @@ const rateLimit = require("express-rate-limit");
 const { body, validationResult } = require("express-validator");
 const jwt = require("jsonwebtoken");
 const { v4: uuidv4 } = require("uuid");
+const axios = require("axios");
 
 admin.initializeApp();
 const db = admin.firestore();
@@ -17,6 +18,14 @@ const app = express();
 const JWT_SECRET = process.env.JWT_SECRET || "your-super-secret-jwt-key-change-in-production";
 const JWT_EXPIRE = "15m"; // Access token expires in 15 minutes
 const REFRESH_TOKEN_EXPIRE = "7d"; // Refresh token expires in 7 days
+
+// Microsoft Translator Configuration
+const TRANSLATOR_CONFIG = {
+  key1: process.env.TRANSLATOR_KEY_1,
+  key2: process.env.TRANSLATOR_KEY_2,
+  endpoint: process.env.TRANSLATOR_ENDPOINT || "https://api.cognitive.microsofttranslator.com/",
+  region: process.env.TRANSLATOR_REGION || "westeurope"
+};
 
 // Security Middleware
 app.use(helmet({
@@ -394,7 +403,8 @@ app.get("/", (req, res) => {
       auth: ["/v1/auth/login", "/v1/auth/refresh", "/v1/auth/logout"],
       venues: ["/v1/venue/:slug/menu", "/v1/venues"],
       orders: ["/v1/orders", "/v1/venue/:venueId/orders"],
-      users: ["/v1/users", "/v1/auth/register"]
+      users: ["/v1/users", "/v1/auth/register"],
+      translation: ["/v1/translate/menu-item", "/v1/translate/menu-items/bulk"]
     }
   });
 });
@@ -2907,6 +2917,53 @@ function getEstimatedTime(status, _createdAt) {
   return estimatedTimes[status] || "Unknown";
 }
 
+// Microsoft Translator function with dual key fallback
+async function translateText(text, fromLang, toLang, useBackupKey = false) {
+  const subscriptionKey = useBackupKey ? TRANSLATOR_CONFIG.key2 : TRANSLATOR_CONFIG.key1;
+  
+  if (!subscriptionKey) {
+    throw new Error("Microsoft Translator API key not configured");
+  }
+
+  try {
+    const response = await axios({
+      baseURL: TRANSLATOR_CONFIG.endpoint,
+      url: "/translate",
+      method: "post",
+      headers: {
+        "Ocp-Apim-Subscription-Key": subscriptionKey,
+        "Ocp-Apim-Subscription-Region": TRANSLATOR_CONFIG.region,
+        "Content-type": "application/json",
+        "X-ClientTraceId": uuidv4().toString()
+      },
+      params: {
+        "api-version": "3.0",
+        "from": fromLang,
+        "to": toLang
+      },
+      data: [{
+        "text": text
+      }],
+      responseType: "json"
+    });
+
+    if (response.data && response.data[0] && response.data[0].translations && response.data[0].translations[0]) {
+      return response.data[0].translations[0].text;
+    } else {
+      throw new Error("Invalid response from Microsoft Translator");
+    }
+  } catch (error) {
+    // If first key fails and we haven't tried backup, try backup key
+    if (!useBackupKey && TRANSLATOR_CONFIG.key2) {
+      console.log("Primary translation key failed, trying backup key...");
+      return await translateText(text, fromLang, toLang, true);
+    }
+    
+    console.error("Translation error:", error.response?.data || error.message);
+    throw new Error(error.response?.data?.error?.message || "Translation failed");
+  }
+}
+
 // ============================================================================
 // HEALTH CHECK AND INFO
 // ============================================================================
@@ -4130,6 +4187,166 @@ app.use((error, req, res, _next) => {
       error: error.message,
       stack: error.stack,
       requestId: req.requestId
+    });
+  }
+});
+
+// ============================================================================
+// TRANSLATION ENDPOINTS
+// ============================================================================
+
+// Translate single menu item
+app.post("/v1/translate/menu-item", verifyAuth, [
+  body("text").notEmpty().withMessage("Text is required"),
+  body("fromLang").notEmpty().withMessage("Source language is required"),
+  body("toLang").notEmpty().withMessage("Target language is required"),
+  body("context").optional().isString()
+], async (req, res) => {
+  try {
+    // Validate request
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ 
+        error: "Validation failed", 
+        details: errors.array() 
+      });
+    }
+
+    const { text, fromLang, toLang, context } = req.body;
+    
+    // Validate languages
+    const supportedLanguages = ["sq", "en", "it", "de", "fr", "es"];
+    if (!supportedLanguages.includes(fromLang) || !supportedLanguages.includes(toLang)) {
+      return res.status(400).json({ 
+        error: "Unsupported language. Supported: sq, en, it, de, fr, es" 
+      });
+    }
+
+    // Call translation function
+    const translatedText = await translateText(text, fromLang, toLang);
+    
+    // Log for audit
+    await auditLog("TRANSLATE_SUCCESS", req.user.uid, { 
+      originalText: text,
+      translatedText,
+      fromLang,
+      toLang,
+      context: context || "menu-item"
+    }, req.ip);
+
+    res.json({
+      originalText: text,
+      translatedText: translatedText,
+      fromLanguage: fromLang,
+      toLanguage: toLang,
+      context: context || "menu-item"
+    });
+
+  } catch (error) {
+    console.error("Translation endpoint error:", error);
+    
+    await auditLog("TRANSLATE_FAILED", req.user?.uid || "anonymous", { 
+      error: error.message,
+      text: req.body?.text,
+      fromLang: req.body?.fromLang,
+      toLang: req.body?.toLang
+    }, req.ip);
+
+    res.status(500).json({
+      error: "Translation failed",
+      message: error.message
+    });
+  }
+});
+
+// Bulk translate menu items
+app.post("/v1/translate/menu-items/bulk", verifyAuth, [
+  body("items").isArray().withMessage("Items must be an array"),
+  body("items.*.text").notEmpty().withMessage("Each item must have text"),
+  body("fromLang").notEmpty().withMessage("Source language is required"),
+  body("toLang").notEmpty().withMessage("Target language is required")
+], async (req, res) => {
+  try {
+    // Validate request
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ 
+        error: "Validation failed", 
+        details: errors.array() 
+      });
+    }
+
+    const { items, fromLang, toLang } = req.body;
+    
+    // Validate languages
+    const supportedLanguages = ["sq", "en", "it", "de", "fr", "es"];
+    if (!supportedLanguages.includes(fromLang) || !supportedLanguages.includes(toLang)) {
+      return res.status(400).json({ 
+        error: "Unsupported language. Supported: sq, en, it, de, fr, es" 
+      });
+    }
+
+    // Limit bulk requests
+    if (items.length > 50) {
+      return res.status(400).json({ 
+        error: "Too many items. Maximum 50 items per request" 
+      });
+    }
+
+    // Translate all items
+    const translatedItems = [];
+    const translationErrors = [];
+
+    for (let i = 0; i < items.length; i++) {
+      try {
+        const translatedText = await translateText(items[i].text, fromLang, toLang);
+        translatedItems.push({
+          index: i,
+          originalText: items[i].text,
+          translatedText: translatedText,
+          success: true
+        });
+      } catch (error) {
+        translationErrors.push({
+          index: i,
+          originalText: items[i].text,
+          error: error.message,
+          success: false
+        });
+      }
+    }
+
+    // Log for audit
+    await auditLog("TRANSLATE_BULK", req.user.uid, { 
+      itemCount: items.length,
+      successCount: translatedItems.length,
+      errorCount: translationErrors.length,
+      fromLang,
+      toLang
+    }, req.ip);
+
+    res.json({
+      success: true,
+      translatedItems,
+      errors: translationErrors,
+      summary: {
+        total: items.length,
+        successful: translatedItems.length,
+        failed: translationErrors.length
+      }
+    });
+
+  } catch (error) {
+    console.error("Bulk translation endpoint error:", error);
+    
+    await auditLog("TRANSLATE_BULK_FAILED", req.user?.uid || "anonymous", { 
+      error: error.message,
+      itemCount: req.body?.items?.length || 0
+    }, req.ip);
+
+    res.status(500).json({
+      error: "Bulk translation failed",
+      message: error.message
     });
   }
 });
