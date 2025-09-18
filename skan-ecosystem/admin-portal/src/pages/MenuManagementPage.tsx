@@ -54,16 +54,43 @@ const MenuManagementPage: React.FC = () => {
     setTimeout(() => setMessage(null), 500);
   };
 
-  // Image upload helper function
+  // Image upload helper function with compression
   const uploadImage = async (file: File): Promise<string> => {
-    // For now, we'll use a simple base64 approach or placeholder
+    // For now, we'll use a compressed base64 approach
     // In production, this would upload to Firebase Storage or similar
-    return new Promise((resolve) => {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        resolve(e.target?.result as string);
+    return new Promise((resolve, reject) => {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      const img = new Image();
+      
+      img.onload = () => {
+        // Calculate new dimensions (max 800px width/height)
+        let { width, height } = img;
+        const maxSize = 800;
+        
+        if (width > height) {
+          if (width > maxSize) {
+            height = (height * maxSize) / width;
+            width = maxSize;
+          }
+        } else {
+          if (height > maxSize) {
+            width = (width * maxSize) / height;
+            height = maxSize;
+          }
+        }
+        
+        canvas.width = width;
+        canvas.height = height;
+        
+        // Draw and compress
+        ctx?.drawImage(img, 0, 0, width, height);
+        const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.7); // 70% quality
+        resolve(compressedDataUrl);
       };
-      reader.readAsDataURL(file);
+      
+      img.onerror = () => reject(new Error('Failed to load image'));
+      img.src = URL.createObjectURL(file);
     });
   };
 
@@ -817,14 +844,13 @@ const ItemEditor: React.FC<{
   onCancel: () => void;
 }> = ({ item, onSave, onCancel }) => {
   const { auth } = useAuth();
+  const baseUrl = process.env.REACT_APP_API_URL || 'https://api-mkazmlu7ta-ew.a.run.app/v1';
   const [name, setName] = useState(item.name);
   const [nameAlbanian, setNameAlbanian] = useState(item.nameAlbanian);
   const [price, setPrice] = useState(item.price.toString());
   const [imageUrl, setImageUrl] = useState(item.imageUrl || '');
   const [isUploadingImage, setIsUploadingImage] = useState(false);
   const [translating, setTranslating] = useState<string | null>(null);
-
-  const baseUrl = process.env.REACT_APP_API_URL || 'http://localhost:5001/qr-restaurant-api/europe-west1/api/v1';
 
   const translateText = async (text: string, context: string = 'edit-item'): Promise<string> => {
     if (!text?.trim()) {
@@ -875,12 +901,42 @@ const ItemEditor: React.FC<{
         throw new Error('Imazhi duhet të jetë më i vogël se 5MB');
       }
       
-      // Convert to base64
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setImageUrl(e.target?.result as string);
+      // Compress and convert to base64
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      const img = new Image();
+      
+      img.onload = () => {
+        // Calculate new dimensions (max 800px width/height)
+        let { width, height } = img;
+        const maxSize = 800;
+        
+        if (width > height) {
+          if (width > maxSize) {
+            height = (height * maxSize) / width;
+            width = maxSize;
+          }
+        } else {
+          if (height > maxSize) {
+            width = (width * maxSize) / height;
+            height = maxSize;
+          }
+        }
+        
+        canvas.width = width;
+        canvas.height = height;
+        
+        // Draw and compress
+        ctx?.drawImage(img, 0, 0, width, height);
+        const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.7); // 70% quality
+        setImageUrl(compressedDataUrl);
       };
-      reader.readAsDataURL(file);
+      
+      img.onerror = () => {
+        throw new Error('Dështoi të ngarkojë imazhin');
+      };
+      
+      img.src = URL.createObjectURL(file);
     } catch (error) {
       alert(error instanceof Error ? error.message : 'Dështoi ngarkimi i imazhit');
     } finally {
