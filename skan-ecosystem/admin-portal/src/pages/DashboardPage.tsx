@@ -97,7 +97,7 @@ const DashboardPage: React.FC = () => {
       setLoading(false);
       setRefreshing(false);
     }
-  }, [auth.user?.venueId]);
+  }, [auth.user?.venueId, selectedStatus]);
 
   useEffect(() => {
     loadOrders();
