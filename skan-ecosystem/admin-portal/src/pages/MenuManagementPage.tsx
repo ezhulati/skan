@@ -82,12 +82,22 @@ const MenuManagementPage: React.FC = () => {
       
       // Use venue slug from authenticated user, fallback to demo venue
       const venueSlug = auth.venue?.slug || 'beach-bar-durres';
+      console.log('Loading menu for venue:', venueSlug);
+      console.log('Auth venue:', auth.venue);
+      console.log('API URL:', `${baseUrl}/venue/${venueSlug}/menu`);
       
       // Use venue slug from authenticated user
       const response = await fetch(`${baseUrl}/venue/${venueSlug}/menu`);
-      if (!response.ok) throw new Error('Dështoi të ngarkoj menunë');
+      console.log('Response status:', response.status);
+      
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('API Error:', errorText);
+        throw new Error('Dështoi të ngarkoj menunë');
+      }
       
       const data = await response.json();
+      console.log('Menu data:', data);
       setCategories(data.categories || []);
     } catch (err) {
       console.error('Error loading menu:', err);
@@ -98,6 +108,7 @@ const MenuManagementPage: React.FC = () => {
   }, [baseUrl, auth.venue?.slug]);
 
   useEffect(() => {
+    console.log('MenuManagementPage: Auth state changed:', auth);
     loadMenu();
   }, [loadMenu]);
 
