@@ -52,8 +52,7 @@ app.use((req, res, next) => {
   next();
 });
 
-// Global rate limiting
-app.use(generalLimiter);
+// Global rate limiting (applied after generalLimiter is defined)
 
 // Input sanitization middleware
 app.use((req, res, next) => {
@@ -233,6 +232,9 @@ const createRateLimiter = (windowMs, max, message) => {
 
 // Different rate limits for different endpoint types
 const generalLimiter = createRateLimiter(15 * 60 * 1000, 100, "Rate limit exceeded. Please try again later.");
+
+// Apply global rate limiting
+app.use(generalLimiter);
 
 // ============================================================================
 // MIDDLEWARE FUNCTIONS
