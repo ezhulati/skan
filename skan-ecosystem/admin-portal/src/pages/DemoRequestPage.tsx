@@ -189,7 +189,7 @@ const DemoRequestPage: React.FC = () => {
                     fontSize: '14px',
                     fontWeight: '600'
                   }}>
-                    demo123
+                    demo12345
                   </div>
                 </div>
               </div>
@@ -210,7 +210,7 @@ const DemoRequestPage: React.FC = () => {
                     },
                     body: JSON.stringify({
                       email: 'manager_email1@gmail.com',
-                      password: 'demo123'
+                      password: 'demo12345'
                     }),
                   });
 
