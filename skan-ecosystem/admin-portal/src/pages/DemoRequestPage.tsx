@@ -26,24 +26,19 @@ const DemoRequestPage: React.FC = () => {
     setError(null);
 
     try {
-      // Submit to Netlify function
-      const response = await fetch('/.netlify/functions/send-demo-credentials', {
+      const myForm = e.target as HTMLFormElement;
+      const formDataToSubmit = new FormData(myForm);
+
+      const response = await fetch('/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams({
-          firstName: formData.firstName,
-          lastName: formData.lastName,
-          email: formData.email,
-          businessName: formData.businessName
-        }).toString()
+        body: new URLSearchParams(formDataToSubmit as any).toString()
       });
 
-      const result = await response.json();
-
-      if (response.ok && result.success) {
+      if (response.ok) {
         setIsSubmitted(true);
       } else {
-        throw new Error(result.error || 'Failed to submit form');
+        throw new Error('Failed to submit form');
       }
     } catch (err) {
       console.error('Form submission error:', err);
@@ -87,9 +82,9 @@ const DemoRequestPage: React.FC = () => {
             </svg>
             <h3 style={{ color: '#16a34a', marginBottom: '8px' }}>Kërkesa u dërgua me sukses!</h3>
             <p style={{ color: '#15803d' }}>
-              Do të merrni kredencialet e demo-s në email-in tuaj brenda 5 minutave.
+              Faleminderit për interesin tuaj! Do t'ju kontaktojmë brenda 24 orëve me kredencialet e demo-s.
               <br />
-              Kontrolloni edhe dosjen spam nëse nuk e gjeni email-in.
+              Kontrolloni email-in tuaj (edhe dosjen spam) për detaje të mëtejshme.
             </p>
           </div>
 
@@ -139,10 +134,24 @@ const DemoRequestPage: React.FC = () => {
           <p className="login-subtitle">Plotësoni të dhënat tuaja për të marrë kredencialet e demo-s</p>
         </div>
         
+        {/* Hidden form for Netlify to detect */}
+        <form name="demo-request" data-netlify="true" style={{ display: 'none' }}>
+          <input type="text" name="firstName" />
+          <input type="text" name="lastName" />
+          <input type="email" name="email" />
+          <input type="text" name="businessName" />
+          <input type="email" name="admin-email" />
+        </form>
+
         <form 
+          name="demo-request"
+          method="POST"
+          data-netlify="true"
           className="login-form" 
           onSubmit={handleSubmit}
         >
+          <input type="hidden" name="form-name" value="demo-request" />
+          <input type="hidden" name="admin-email" value="enrizhulati@gmail.com" />
           
           <div className="form-group">
             <label htmlFor="firstName">Emri</label>

@@ -2,11 +2,6 @@
 [build]
   command = "npm install && npm run build"
   publish = "build"
-  functions = "netlify/functions"
-
-# Form notifications
-[notifications]
-  email = "enrizhulati@gmail.com"
 
 # API proxy for development and production
 [[redirects]]
