@@ -148,7 +148,7 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({
           border: 1px solid rgba(255, 255, 255, 0.1);
           border-radius: 20px;
           padding: 32px;
-          margin: 0 24px 20px 24px;
+          margin: 0 0 20px 0;
           position: relative;
           overflow: hidden;
           opacity: 0;
@@ -312,7 +312,7 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({
         /* Mobile Responsive */
         @media (max-width: 768px) {
           .welcome-header {
-            margin: 0 12px 16px 12px;
+            margin: 0 0 16px 0;
             padding: 24px 20px;
             border-radius: 16px;
           }
@@ -351,7 +351,7 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({
 
         @media (max-width: 480px) {
           .welcome-header {
-            margin: 0 12px 12px 12px;
+            margin: 0 0 12px 0;
             padding: 20px 16px;
           }
 
