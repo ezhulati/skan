@@ -527,24 +527,24 @@ const UserProfilePage: React.FC = () => {
         .edit-button {
           display: flex;
           align-items: center;
+          justify-content: center;
           gap: 8px;
-          background: #2563eb;
+          background: #5b9bd5;
           color: white;
-          border: 2px solid #2563eb;
-          padding: 10px 20px;
+          border: none;
+          padding: 12px 24px;
           border-radius: 8px;
           font-size: 14px;
           font-weight: 600;
           cursor: pointer;
           transition: all 0.2s ease;
-          box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);
+          text-align: center;
+          min-width: 120px;
         }
 
         .edit-button:hover {
-          background: #1d4ed8;
-          border-color: #1d4ed8;
+          background: #4a8bc2;
           transform: translateY(-1px);
-          box-shadow: 0 4px 8px rgba(37, 99, 235, 0.3);
         }
 
         .edit-icon {
@@ -615,33 +615,33 @@ const UserProfilePage: React.FC = () => {
           transition: all 0.2s ease;
           display: flex;
           align-items: center;
+          justify-content: center;
           gap: 8px;
           border: none;
+          text-align: center;
+          min-width: 120px;
         }
 
         .cancel-button {
-          background: #f3f4f6;
-          color: #374151;
+          background: #d14343;
+          color: white;
         }
 
         .cancel-button:hover:not(:disabled) {
-          background: #e5e7eb;
+          background: #b73333;
+          transform: translateY(-1px);
         }
 
         .save-button, .change-password-button, .retry-button {
-          background: #10b981;
+          background: #5b9bd5;
           color: white;
-          border: 2px solid #10b981;
-          box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2);
         }
 
         .save-button:hover:not(:disabled), 
         .change-password-button:hover:not(:disabled),
         .retry-button:hover:not(:disabled) {
-          background: #059669;
-          border-color: #059669;
+          background: #4a8bc2;
           transform: translateY(-1px);
-          box-shadow: 0 4px 8px rgba(16, 185, 129, 0.3);
         }
 
         .save-button:disabled, 
@@ -685,52 +685,53 @@ const UserProfilePage: React.FC = () => {
 
         .role-badge, .status-badge, .verification-badge {
           display: inline-block;
-          padding: 6px 12px;
-          border-radius: 6px;
-          font-size: 11px;
+          padding: 4px 8px;
+          border-radius: 4px;
+          font-size: 10px;
           font-weight: 500;
           text-transform: uppercase;
           letter-spacing: 0.5px;
-          border: 1px solid;
-          opacity: 0.9;
+          border: 1px solid #e5e7eb;
+          background: #f9fafb;
+          color: #6b7280;
         }
 
         .role-admin { 
-          background: #fef2f2; 
-          color: #dc2626; 
-          border-color: #fecaca;
+          background: #f9f9f9; 
+          color: #6b7280; 
+          border-color: #e5e7eb;
         }
         .role-manager { 
-          background: #f5f3ff; 
-          color: #7c3aed; 
-          border-color: #ddd6fe;
+          background: #f9f9f9; 
+          color: #6b7280; 
+          border-color: #e5e7eb;
         }
         .role-staff { 
-          background: #eff6ff; 
-          color: #2563eb; 
-          border-color: #bfdbfe;
+          background: #f9f9f9; 
+          color: #6b7280; 
+          border-color: #e5e7eb;
         }
 
         .status-badge.active { 
-          background: #f0fdf4; 
-          color: #16a34a; 
-          border-color: #bbf7d0;
+          background: #f9f9f9; 
+          color: #6b7280; 
+          border-color: #e5e7eb;
         }
         .status-badge.inactive { 
-          background: #fef2f2; 
-          color: #dc2626; 
-          border-color: #fecaca;
+          background: #f9f9f9; 
+          color: #6b7280; 
+          border-color: #e5e7eb;
         }
 
         .verification-badge.verified { 
-          background: #f0fdf4; 
-          color: #16a34a; 
-          border-color: #bbf7d0;
+          background: #f9f9f9; 
+          color: #6b7280; 
+          border-color: #e5e7eb;
         }
         .verification-badge.unverified { 
-          background: #fffbeb; 
-          color: #d97706; 
-          border-color: #fed7aa;
+          background: #f9f9f9; 
+          color: #6b7280; 
+          border-color: #e5e7eb;
         }
 
         @media (max-width: 768px) {
