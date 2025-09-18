@@ -97,11 +97,11 @@ const DashboardPage: React.FC = () => {
       setLoading(false);
       setRefreshing(false);
     }
-  }, [auth.user?.venueId, selectedStatus]);
+  }, [auth.user?.venueId]);
 
   useEffect(() => {
     loadOrders();
-  }, [auth.user?.venueId, selectedStatus, loadOrders]);
+  }, [loadOrders]);
 
   useEffect(() => {
     // Auto-refresh every 30 seconds
@@ -113,7 +113,7 @@ const DashboardPage: React.FC = () => {
     }, 30000);
 
     return () => clearInterval(interval);
-  }, [auth.user?.venueId, selectedStatus, loadOrders]);
+  }, [auth.user?.venueId, loadOrders]);
 
   // Handle undo operation
   const handleUndo = async () => {
@@ -121,12 +121,14 @@ const DashboardPage: React.FC = () => {
     
     console.log('Undoing status change:', undoOperation);
     
+    const operation = undoOperation; // Create local reference for TypeScript
+    
     // Revert the status change
     if (usingMockData || true) { // Always use local update for undo to be instant
       setOrders(prevOrders => 
         prevOrders.map(order => 
-          order.id === undoOperation.orderId 
-            ? { ...order, status: undoOperation.previousStatus as any, updatedAt: new Date().toISOString() }
+          order.id === operation.orderId 
+            ? { ...order, status: operation.previousStatus as any, updatedAt: new Date().toISOString() }
             : order
         )
       );
@@ -135,7 +137,7 @@ const DashboardPage: React.FC = () => {
       try {
         if (auth.token) {
           restaurantApiService.setToken(auth.token);
-          await restaurantApiService.updateOrderStatus(undoOperation.orderId, undoOperation.previousStatus);
+          await restaurantApiService.updateOrderStatus(operation.orderId, operation.previousStatus);
         }
       } catch (err) {
         console.error('Error reverting order status:', err);

@@ -199,10 +199,12 @@ const DemoRequestPage: React.FC = () => {
             <button
               onClick={() => {
                 // Auto-fill login form and redirect
+                console.log('Setting login data with credentials');
                 setLoginData({
                   email: 'manager_email1@gmail.com',
                   password: 'demo123'
                 });
+                console.log('Login data set, showing form');
                 setShowLoginForm(true);
                 // Smooth scroll to login form
                 setTimeout(() => {
@@ -581,6 +583,10 @@ const DemoRequestPage: React.FC = () => {
         </form>
         ) : (
           <form className="login-form" onSubmit={handleLogin}>
+            {/* Debug info */}
+            <div style={{fontSize: '12px', color: 'red', marginBottom: '10px'}}>
+              DEBUG: Email="{loginData.email}" Password="{loginData.password}"
+            </div>
             <div className="form-group">
               <label htmlFor="loginEmail">Email</label>
               <input

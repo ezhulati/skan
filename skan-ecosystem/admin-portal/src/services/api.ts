@@ -27,13 +27,17 @@ class RestaurantApiService {
   }
 
   private async request<T>(url: string, options?: RequestInit): Promise<T> {
-    const headers: HeadersInit = {
+    const headers: Record<string, string> = {
       'Content-Type': 'application/json',
-      ...options?.headers,
     };
 
+    // Add any existing headers
+    if (options?.headers) {
+      Object.assign(headers, options.headers);
+    }
+
     if (this.token) {
-      (headers as Record<string, string>)['Authorization'] = `Bearer ${this.token}`;
+      headers['Authorization'] = `Bearer ${this.token}`;
     }
 
     const response = await fetch(`${API_BASE_URL}${url}`, {
