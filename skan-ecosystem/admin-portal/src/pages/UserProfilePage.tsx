@@ -529,7 +529,7 @@ const UserProfilePage: React.FC = () => {
           align-items: center;
           justify-content: center;
           gap: 8px;
-          background: #5b9bd5;
+          background: #4472c4;
           color: white;
           border: none;
           padding: 12px 24px;
@@ -543,7 +543,7 @@ const UserProfilePage: React.FC = () => {
         }
 
         .edit-button:hover {
-          background: #4a8bc2;
+          background: #365a96;
           transform: translateY(-1px);
         }
 
@@ -633,14 +633,14 @@ const UserProfilePage: React.FC = () => {
         }
 
         .save-button, .change-password-button, .retry-button {
-          background: #5b9bd5;
+          background: #4472c4;
           color: white;
         }
 
         .save-button:hover:not(:disabled), 
         .change-password-button:hover:not(:disabled),
         .retry-button:hover:not(:disabled) {
-          background: #4a8bc2;
+          background: #365a96;
           transform: translateY(-1px);
         }
 
