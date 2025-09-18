@@ -9,6 +9,7 @@ interface VerifoneConfig {
   merchantCode: string;
   secretKey: string;
   environment: 'sandbox' | 'production';
+  currency: string;
 }
 
 // Payment split configuration
