@@ -2,29 +2,17 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 const DemoRequestPage: React.FC = () => {
-  const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    businessName: '',
-    demoType: 'both'
-  });
   const [loginData, setLoginData] = useState({
     email: '',
     password: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showLoginForm, setShowLoginForm] = useState(false);
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
+  
+  // Check if form was successfully submitted via URL params
+  const urlParams = new URLSearchParams(window.location.search);
+  const isSubmitted = urlParams.get('success') === 'true';
 
   const handleLoginInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -32,34 +20,6 @@ const DemoRequestPage: React.FC = () => {
       ...prev,
       [name]: value
     }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    setError(null);
-
-    try {
-      const myForm = e.target as HTMLFormElement;
-      const formDataToSubmit = new FormData(myForm);
-
-      const response = await fetch('/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams(formDataToSubmit as any).toString()
-      });
-
-      if (response.ok) {
-        setIsSubmitted(true);
-      } else {
-        throw new Error('Failed to submit form');
-      }
-    } catch (err) {
-      console.error('Form submission error:', err);
-      setError('Ka ndodhur një gabim. Ju lutemi provoni përsëri.');
-    } finally {
-      setIsSubmitting(false);
-    }
   };
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -246,27 +206,22 @@ const DemoRequestPage: React.FC = () => {
           </div>
         )}
         
-        {/* Hidden form for Netlify to detect */}
-        <form name="demo-request" data-netlify="true" style={{ display: 'none' }}>
-          <input type="text" name="firstName" />
-          <input type="text" name="lastName" />
-          <input type="email" name="email" />
-          <input type="text" name="businessName" />
-          <input type="text" name="demoType" />
-          <input type="email" name="admin-email" />
-        </form>
-
         {!showLoginForm ? (
           <form 
             name="demo-request"
             method="POST"
             data-netlify="true"
-            className="login-form" 
-            onSubmit={handleSubmit}
+            data-netlify-honeypot="bot-field"
+            action="/demo-request?success=true"
+            className="login-form"
           >
+          {/* Honeypot field for spam protection */}
           <input type="hidden" name="form-name" value="demo-request" />
+          <div style={{ display: 'none' }}>
+            <label>Don't fill this out if you're human: <input name="bot-field" /></label>
+          </div>
           <input type="hidden" name="admin-email" value="enrizhulati@gmail.com" />
-          <input type="hidden" name="demoType" value={formData.demoType} />
+          <input type="hidden" name="demoType" value="both" />
           
           <div className="form-group">
             <label htmlFor="firstName">Emri</label>
@@ -274,11 +229,8 @@ const DemoRequestPage: React.FC = () => {
               type="text"
               id="firstName"
               name="firstName"
-              value={formData.firstName}
-              onChange={handleInputChange}
               required
               placeholder="Shkruaj emrin tënd"
-              disabled={isSubmitting}
               className="clean-input"
             />
           </div>
@@ -289,11 +241,8 @@ const DemoRequestPage: React.FC = () => {
               type="text"
               id="lastName"
               name="lastName"
-              value={formData.lastName}
-              onChange={handleInputChange}
               required
               placeholder="Shkruaj mbiemrin tënd"
-              disabled={isSubmitting}
               className="clean-input"
             />
           </div>
@@ -304,11 +253,8 @@ const DemoRequestPage: React.FC = () => {
               type="email"
               id="email"
               name="email"
-              value={formData.email}
-              onChange={handleInputChange}
               required
               placeholder="Shkruaj email-in tënd"
-              disabled={isSubmitting}
               className="clean-input"
             />
           </div>
@@ -319,11 +265,8 @@ const DemoRequestPage: React.FC = () => {
               type="text"
               id="businessName"
               name="businessName"
-              value={formData.businessName}
-              onChange={handleInputChange}
               required
               placeholder="Shkruaj emrin e restorantit ose biznesit tënd"
-              disabled={isSubmitting}
               className="clean-input"
             />
           </div>
@@ -331,23 +274,11 @@ const DemoRequestPage: React.FC = () => {
           <button 
             type="submit" 
             className="login-button"
-            disabled={isSubmitting}
           >
-            {isSubmitting ? (
-              <>
-                <svg className="loading-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-                </svg>
-                Duke u dërguar...
-              </>
-            ) : (
-              <>
-                <svg className="login-arrow" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M4 12l8-8 8 8M12 4v16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-                Dërgo Kërkesën
-              </>
-            )}
+            <svg className="login-arrow" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M4 12l8-8 8 8M12 4v16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+            Dërgo Kërkesën
           </button>
         </form>
         ) : (
