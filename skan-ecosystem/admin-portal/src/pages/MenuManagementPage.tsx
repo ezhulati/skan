@@ -4,7 +4,9 @@ import { useAuth } from '../contexts/AuthContext';
 interface MenuItem {
   id: string;
   name: string;
-  nameEn: string;
+  nameAlbanian: string;
+  description?: string;
+  descriptionAlbanian?: string;
   price: number;
   isActive: boolean;
   categoryId: string;
@@ -14,7 +16,7 @@ interface MenuItem {
 interface MenuCategory {
   id: string;
   name: string;
-  nameEn: string;
+  nameAlbanian: string;
   items: MenuItem[];
 }
 
@@ -23,15 +25,16 @@ const MenuManagementPage: React.FC = () => {
   const [categories, setCategories] = useState<MenuCategory[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [message, setMessage] = useState<string | null>(null);
   const [editingCategory, setEditingCategory] = useState<string | null>(null);
   const [editingItem, setEditingItem] = useState<string | null>(null);
   const [newCategoryName, setNewCategoryName] = useState('');
-  const [newCategoryNameEn, setNewCategoryNameEn] = useState('');
+  const [newCategoryNameAlbanian, setNewCategoryNameAlbanian] = useState('');
   const [showAddCategory, setShowAddCategory] = useState(false);
   const [showAddItem, setShowAddItem] = useState<string | null>(null);
   const [newItem, setNewItem] = useState({
     name: '',
-    nameEn: '',
+    nameAlbanian: '',
     price: '',
     isActive: true,
     imageUrl: ''
@@ -129,7 +132,7 @@ const MenuManagementPage: React.FC = () => {
         headers,
         body: JSON.stringify({
           name: newCategoryName,
-          nameEn: newCategoryNameEn
+          nameAlbanian: newCategoryNameAlbanian
         })
       });
 
@@ -149,21 +152,35 @@ const MenuManagementPage: React.FC = () => {
     }
   };
 
-  const updateCategory = async (categoryId: string, name: string, nameEn: string) => {
+  const updateCategory = async (categoryId: string, name: string, nameAlbanian: string) => {
     try {
-      const response = await fetch(`${baseUrl}/venue/${'beach-bar-durres'}/categories/${categoryId}`, {
+      const venueId = auth.venue?.id || 'demo-venue-1';
+      const headers: HeadersInit = {
+        'Content-Type': 'application/json'
+      };
+      
+      if (auth.token) {
+        headers['Authorization'] = `Bearer ${auth.token}`;
+      }
+      
+      const response = await fetch(`${baseUrl}/venue/${venueId}/categories/${categoryId}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, nameEn })
+        headers,
+        body: JSON.stringify({ name, nameAlbanian })
       });
 
-      if (!response.ok) throw new Error('Dështoi të përditësoj kategorinë');
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Dështoi të përditësoj kategorinë');
+      }
 
       await loadMenu();
       setEditingCategory(null);
+      setMessage('✅ Kategoria u përditësua me sukses!');
+      setTimeout(() => setMessage(''), 3000);
     } catch (err) {
       console.error('Error updating category:', err);
-      alert('Dështoi të përditësoj kategorinë');
+      setError(err instanceof Error ? err.message : 'Dështoi të përditësoj kategorinë');
     }
   };
 
@@ -193,7 +210,7 @@ const MenuManagementPage: React.FC = () => {
   };
 
   const addItem = async (categoryId: string) => {
-    if (!newItem.name.trim() || !newItem.nameEn.trim() || !newItem.price) return;
+    if (!newItem.name.trim() || !newItem.nameAlbanian.trim() || !newItem.price) return;
 
     try {
       const headers: HeadersInit = {
@@ -209,7 +226,7 @@ const MenuManagementPage: React.FC = () => {
         headers,
         body: JSON.stringify({
           name: newItem.name,
-          nameEn: newItem.nameEn,
+          nameAlbanian: newItem.nameAlbanian,
           price: parseFloat(newItem.price),
           isActive: newItem.isActive,
           imageUrl: newItem.imageUrl || undefined
@@ -219,7 +236,7 @@ const MenuManagementPage: React.FC = () => {
       if (!response.ok) throw new Error('Dështoi të shtoj artikullin');
 
       await loadMenu();
-      setNewItem({ name: '', nameEn: '', price: '', isActive: true, imageUrl: '' });
+      setNewItem({ name: '', nameAlbanian: '', price: '', isActive: true, imageUrl: '' });
       setShowAddItem(null);
     } catch (err) {
       console.error('Error adding item:', err);
@@ -384,14 +401,14 @@ const MenuManagementPage: React.FC = () => {
                 {editingCategory === category.id ? (
                   <CategoryEditor
                     category={category}
-                    onSave={(name, nameEn) => updateCategory(category.id, name, nameEn)}
+                    onSave={(name, nameAlbanian) => updateCategory(category.id, name, nameAlbanian)}
                     onCancel={() => setEditingCategory(null)}
                   />
                 ) : (
                   <>
                     <div className="category-info">
                       <h2>{category.name}</h2>
-                      <p className="category-subtitle">{category.nameEn}</p>
+                      <p className="category-subtitle">{category.nameAlbanian}</p>
                     </div>
                     <div className="category-actions">
                       <button 
@@ -443,8 +460,8 @@ const MenuManagementPage: React.FC = () => {
                     <input
                       type="text"
                       placeholder="Emri i artikullit (Anglisht)"
-                      value={newItem.nameEn}
-                      onChange={(e) => setNewItem({...newItem, nameEn: e.target.value})}
+                      value={newItem.nameAlbanian}
+                      onChange={(e) => setNewItem({...newItem, nameAlbanian: e.target.value})}
                     />
                     <input
                       type="number"
@@ -545,7 +562,7 @@ const MenuManagementPage: React.FC = () => {
                         <>
                           <div className="item-info">
                             <div className="item-header">
-                              <h4>{item.name}</h4>
+                              <h4>{item.nameAlbanian || item.name}</h4>
                               {item.imageUrl && (
                                 <span className="image-indicator" title="Ka imazh">
                                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -556,7 +573,7 @@ const MenuManagementPage: React.FC = () => {
                                 </span>
                               )}
                             </div>
-                            <p className="item-subtitle">{item.nameEn}</p>
+                            <p className="item-subtitle">{item.name}</p>
                             <p className="item-price">{Math.round(item.price * 97)} Lek</p>
                           </div>
                           <div className="item-status">
@@ -612,11 +629,11 @@ const MenuManagementPage: React.FC = () => {
 
 const CategoryEditor: React.FC<{
   category: MenuCategory;
-  onSave: (name: string, nameEn: string) => void;
+  onSave: (name: string, nameAlbanian: string) => void;
   onCancel: () => void;
 }> = ({ category, onSave, onCancel }) => {
   const [name, setName] = useState(category.name);
-  const [nameEn, setNameEn] = useState(category.nameEn);
+  const [nameAlbanian, setNameAlbanian] = useState(category.nameAlbanian);
 
   return (
     <div className="category-editor">
@@ -629,8 +646,8 @@ const CategoryEditor: React.FC<{
         />
         <input
           type="text"
-          value={nameEn}
-          onChange={(e) => setNameEn(e.target.value)}
+          value={nameAlbanian}
+          onChange={(e) => setNameAlbanian(e.target.value)}
           placeholder="Emri i kategorisë (Anglisht)"
         />
       </div>
@@ -642,7 +659,7 @@ const CategoryEditor: React.FC<{
           </svg>
           Cancel
         </button>
-        <button onClick={() => onSave(name, nameEn)} className="save-button">
+        <button onClick={() => onSave(name, nameAlbanian)} className="save-button">
           <svg className="button-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M20 6L9 17l-5-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
@@ -659,7 +676,7 @@ const ItemEditor: React.FC<{
   onCancel: () => void;
 }> = ({ item, onSave, onCancel }) => {
   const [name, setName] = useState(item.name);
-  const [nameEn, setNameEn] = useState(item.nameEn);
+  const [nameAlbanian, setNameAlbanian] = useState(item.nameAlbanian);
   const [price, setPrice] = useState(item.price.toString());
   const [imageUrl, setImageUrl] = useState(item.imageUrl || '');
   const [isUploadingImage, setIsUploadingImage] = useState(false);
@@ -701,8 +718,8 @@ const ItemEditor: React.FC<{
         />
         <input
           type="text"
-          value={nameEn}
-          onChange={(e) => setNameEn(e.target.value)}
+          value={nameAlbanian}
+          onChange={(e) => setNameAlbanian(e.target.value)}
           placeholder="Emri i artikullit (Anglisht)"
         />
         <input
@@ -766,7 +783,7 @@ const ItemEditor: React.FC<{
         <button 
           onClick={() => onSave({ 
             name, 
-            nameEn, 
+            nameAlbanian, 
             price: parseFloat(price),
             imageUrl: imageUrl || undefined
           })} 

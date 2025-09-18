@@ -4,6 +4,7 @@ const https = require('https');
 const userData = {
   email: 'test@skan.al',
   password: 'TestPassword123!',
+  fullName: 'Test User',
   role: 'manager'
 };
 
