@@ -535,7 +535,6 @@ const DemoRequestPage: React.FC = () => {
             <label>Don't fill this out if you're human: <input name="bot-field" /></label>
           </div>
           <input type="hidden" name="admin-email" value="enrizhulati@gmail.com" />
-          <input type="hidden" name="demoType" value="both" />
           
           <div className="form-group">
             <label htmlFor="firstName">Emri</label>
