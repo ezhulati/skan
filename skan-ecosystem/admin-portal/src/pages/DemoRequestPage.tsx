@@ -10,7 +10,7 @@ const DemoRequestPage: React.FC = () => {
     demoType: 'both'
   });
   const [loginData, setLoginData] = useState({
-    email: 'manager_email1@gmail.com',
+    email: '',
     password: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -361,13 +361,10 @@ const DemoRequestPage: React.FC = () => {
                 value={loginData.email}
                 onChange={handleLoginInputChange}
                 required
-                disabled={true}
+                placeholder="Vendosni email-in që keni marrë"
+                disabled={isSubmitting}
                 className="clean-input"
-                style={{ backgroundColor: '#f9fafb', color: '#6b7280' }}
               />
-              <small style={{ color: '#6b7280', fontSize: '12px' }}>
-                Email është i paracaktuar për demo-n
-              </small>
             </div>
             
             <div className="form-group">
@@ -379,13 +376,10 @@ const DemoRequestPage: React.FC = () => {
                 value={loginData.password}
                 onChange={handleLoginInputChange}
                 required
-                placeholder="Vendosni fjalëkalimin e demo-s"
+                placeholder="Vendosni fjalëkalimin që keni marrë"
                 disabled={isSubmitting}
                 className="clean-input"
               />
-              <small style={{ color: '#6b7280', fontSize: '12px' }}>
-                Vendosni: admin123
-              </small>
             </div>
             
             <button 
