@@ -203,7 +203,7 @@ const DemoRequestPage: React.FC = () => {
                 setError(null);
                 
                 try {
-                  const response = await fetch('https://api-mkazmlu7ta-ew.a.run.app/v1/auth/login', {
+                  const response = await fetch('/api/v1/auth/login', {
                     method: 'POST',
                     headers: {
                       'Content-Type': 'application/json',
@@ -219,8 +219,10 @@ const DemoRequestPage: React.FC = () => {
                     localStorage.setItem('token', result.token);
                     localStorage.setItem('user', JSON.stringify(result.user));
                     window.location.href = '/dashboard';
+                  } else if (response.status === 429) {
+                    setError('Shumë kërkesa. Ju lutemi provoni përsëri pas disa sekondash.');
                   } else {
-                    const errorResult = await response.json();
+                    const errorResult = await response.json().catch(() => ({}));
                     setError(errorResult.error || 'Problem me hyrjen. Ju lutemi provoni përsëri.');
                   }
                 } catch (err) {

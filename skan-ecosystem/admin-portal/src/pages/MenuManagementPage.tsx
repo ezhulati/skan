@@ -766,6 +766,8 @@ const ItemEditor: React.FC<{
   const [isUploadingImage, setIsUploadingImage] = useState(false);
   const [translating, setTranslating] = useState<string | null>(null);
 
+  const baseUrl = process.env.REACT_APP_API_URL || 'http://localhost:5001/qr-restaurant-api/europe-west1/api/v1';
+
   const translateText = async (text: string, context: string = 'edit-item'): Promise<string> => {
     if (!text?.trim()) {
       throw new Error('Teksti është i zbrazët');
