@@ -191,8 +191,18 @@ const CustomerMenuPreviewModal: React.FC<CustomerMenuPreviewModalProps> = ({
           {menuData && (
             <div className="customer-menu-view">
               <div className="venue-header">
-                <h1>{menuData.venue.name}</h1>
-                <p>{menuData.venue.description}</p>
+                <h1>
+                  {language === 'albanian' && menuData.venue.name.includes('Demo Menu')
+                    ? 'Restoranti Demo (Menu Demo)'
+                    : menuData.venue.name
+                  }
+                </h1>
+                <p>
+                  {language === 'albanian' 
+                    ? 'Një bar dhe restorant i bukur pranë detit në Durrës që ofron peshk të freskët deti, pije freske dhe pamje mahnitëse të detit. Perfekt për darkë në perëndim dielli dhe atmosferë të qetë plazhi.'
+                    : menuData.venue.description
+                  }
+                </p>
               </div>
 
               <div className="menu-categories">
