@@ -689,7 +689,7 @@ const DemoRequestPage: React.FC = () => {
       </div>
       
       {/* Loading animation styles */}
-      <style jsx>{`
+      <style>{`
         .loading-icon {
           animation: spin 1s linear infinite;
         }
