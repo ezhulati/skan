@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 
 interface MenuItem {
@@ -76,11 +76,7 @@ const MenuManagementPage: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    loadMenu();
-  }, []);
-
-  const loadMenu = async () => {
+  const loadMenu = useCallback(async () => {
     try {
       setError(null);
       // Use venue slug for public menu endpoint as per API docs
@@ -95,7 +91,11 @@ const MenuManagementPage: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [baseUrl]);
+
+  useEffect(() => {
+    loadMenu();
+  }, [loadMenu]);
 
   const addCategory = async () => {
     if (!newCategoryName.trim() || !newCategoryNameEn.trim()) return;
