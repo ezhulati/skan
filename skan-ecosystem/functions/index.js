@@ -2,37 +2,407 @@ const { onRequest } = require("firebase-functions/v2/https");
 const admin = require("firebase-admin");
 const express = require("express");
 const cors = require("cors");
+const helmet = require("helmet");
+const rateLimit = require("express-rate-limit");
+const { body, validationResult } = require("express-validator");
+const jwt = require("jsonwebtoken");
+const { v4: uuidv4 } = require("uuid");
 
 admin.initializeApp();
 const db = admin.firestore();
 
 const app = express();
-app.use(cors({ origin: true }));
-app.use(express.json());
+
+// Security Configuration
+const JWT_SECRET = process.env.JWT_SECRET || 'your-super-secret-jwt-key-change-in-production';
+const JWT_EXPIRE = '15m'; // Access token expires in 15 minutes
+const REFRESH_TOKEN_EXPIRE = '7d'; // Refresh token expires in 7 days
+
+// Security Middleware
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      imgSrc: ["'self'", "data:", "https:"],
+      connectSrc: ["'self'"],
+      fontSrc: ["'self'"],
+      objectSrc: ["'none'"],
+      mediaSrc: ["'self'"],
+      frameSrc: ["'none'"],
+    },
+  },
+  crossOriginEmbedderPolicy: false
+}));
+
+app.use(cors({ 
+  origin: process.env.NODE_ENV === 'production' 
+    ? ['https://admin.skan.al', 'https://order.skan.al', 'https://skan.al']
+    : true,
+  credentials: true
+}));
+app.use(express.json({ limit: '1mb' })); // Reduced limit for security
+
+// HTTPS Enforcement (production only)
+app.use((req, res, next) => {
+  if (process.env.NODE_ENV === 'production' && req.header('x-forwarded-proto') !== 'https') {
+    return res.redirect(`https://${req.header('host')}${req.url}`);
+  }
+  next();
+});
+
+// Global rate limiting
+app.use(generalLimiter);
+
+// Input sanitization middleware
+app.use((req, res, next) => {
+  if (req.body && typeof req.body === 'object') {
+    req.body = sanitizeObject(req.body);
+  }
+  if (req.query && typeof req.query === 'object') {
+    req.query = sanitizeObject(req.query);
+  }
+  if (req.params && typeof req.params === 'object') {
+    req.params = sanitizeObject(req.params);
+  }
+  next();
+});
+
+// Input validation helper
+const validateEmail = (email) => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+};
+
+const validatePassword = (password) => {
+  // At least 8 characters, 1 uppercase, 1 lowercase, 1 number
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d@$!%*?&]{8,}$/;
+  return passwordRegex.test(password);
+};
+
+// JWT Token Management
+const generateTokens = (user) => {
+  const payload = {
+    uid: user.id,
+    email: user.email,
+    role: user.role,
+    venueId: user.venueId,
+    type: 'access'
+  };
+  
+  const accessToken = jwt.sign(payload, JWT_SECRET, { 
+    expiresIn: JWT_EXPIRE,
+    issuer: 'skan.al',
+    audience: 'skan-api'
+  });
+  
+  const refreshToken = jwt.sign({
+    uid: user.id,
+    type: 'refresh',
+    jti: uuidv4() // Unique token ID for blacklisting
+  }, JWT_SECRET, { 
+    expiresIn: REFRESH_TOKEN_EXPIRE,
+    issuer: 'skan.al',
+    audience: 'skan-api'
+  });
+  
+  return { accessToken, refreshToken };
+};
+
+const verifyToken = (token) => {
+  try {
+    return jwt.verify(token, JWT_SECRET, {
+      issuer: 'skan.al',
+      audience: 'skan-api'
+    });
+  } catch (error) {
+    throw new Error('Invalid token');
+  }
+};
+
+// Audit Logging
+const auditLog = async (action, userId, details = {}, ip = 'unknown') => {
+  try {
+    await db.collection('audit_logs').add({
+      action,
+      userId,
+      details,
+      ip,
+      timestamp: admin.firestore.FieldValue.serverTimestamp(),
+      userAgent: details.userAgent || 'unknown'
+    });
+  } catch (error) {
+    console.error('Audit log failed:', error);
+  }
+};
+
+// Account Lockout Management
+const accountLockout = {
+  async checkLockout(email) {
+    const lockoutDoc = await db.collection('account_lockouts').doc(email).get();
+    if (!lockoutDoc.exists) return false;
+    
+    const data = lockoutDoc.data();
+    if (data.lockedUntil && data.lockedUntil.toDate() > new Date()) {
+      return true;
+    }
+    return false;
+  },
+  
+  async recordFailedAttempt(email, ip) {
+    const docRef = db.collection('account_lockouts').doc(email);
+    const doc = await docRef.get();
+    
+    if (!doc.exists) {
+      await docRef.set({
+        failedAttempts: 1,
+        lastAttempt: admin.firestore.FieldValue.serverTimestamp(),
+        ip
+      });
+    } else {
+      const data = doc.data();
+      const attempts = data.failedAttempts + 1;
+      
+      // Lock account after 5 failed attempts for 30 minutes
+      if (attempts >= 5) {
+        await docRef.update({
+          failedAttempts: attempts,
+          lockedUntil: admin.firestore.Timestamp.fromDate(new Date(Date.now() + 30 * 60 * 1000)),
+          lastAttempt: admin.firestore.FieldValue.serverTimestamp(),
+          ip
+        });
+      } else {
+        await docRef.update({
+          failedAttempts: attempts,
+          lastAttempt: admin.firestore.FieldValue.serverTimestamp(),
+          ip
+        });
+      }
+    }
+  },
+  
+  async clearFailedAttempts(email) {
+    await db.collection('account_lockouts').doc(email).delete();
+  }
+};
+
+// Input Sanitization
+const xss = require('xss');
+
+const sanitizeInput = (input) => {
+  if (typeof input === 'string') {
+    return xss(input.trim().slice(0, 1000)); // Limit length and sanitize
+  }
+  if (typeof input === 'number') {
+    return isNaN(input) ? 0 : Math.max(-999999, Math.min(999999, input));
+  }
+  return input;
+};
+
+const sanitizeObject = (obj) => {
+  const sanitized = {};
+  for (const [key, value] of Object.entries(obj)) {
+    if (typeof value === 'object' && value !== null) {
+      sanitized[key] = sanitizeObject(value);
+    } else {
+      sanitized[key] = sanitizeInput(value);
+    }
+  }
+  return sanitized;
+};
+
+// Enhanced Rate Limiting
+const createRateLimiter = (windowMs, max, message) => {
+  return rateLimit({
+    windowMs,
+    max,
+    message: { error: message },
+    standardHeaders: true,
+    legacyHeaders: false,
+    handler: async (req, res) => {
+      await auditLog('RATE_LIMIT_EXCEEDED', req.user?.uid || null, {
+        ip: req.ip,
+        endpoint: req.path,
+        userAgent: req.headers['user-agent']
+      }, req.ip);
+      res.status(429).json({ error: message });
+    }
+  });
+};
+
+// Different rate limits for different endpoint types
+const strictLimiter = createRateLimiter(15 * 60 * 1000, 5, "Too many attempts. Please try again later.");
+const moderateLimiter = createRateLimiter(15 * 60 * 1000, 20, "Too many requests. Please slow down.");
+const generalLimiter = createRateLimiter(15 * 60 * 1000, 100, "Rate limit exceeded. Please try again later.");
 
 // ============================================================================
 // MIDDLEWARE FUNCTIONS
 // ============================================================================
 
 // Middleware to verify authentication for protected routes
-// eslint-disable-next-line no-unused-vars
 const verifyAuth = async (req, res, next) => {
   try {
     const token = req.headers.authorization?.replace("Bearer ", "");
     
     if (!token) {
+      await auditLog('AUTH_FAILED', null, { reason: 'No token provided' }, req.ip);
       return res.status(401).json({ error: "No token provided" });
     }
     
-    const decodedToken = await admin.auth().verifyIdToken(token);
-    req.user = decodedToken;
-    next();
+    // Handle demo tokens (development only)
+    if (process.env.NODE_ENV !== "production" && token.startsWith("demo_token_")) {
+      req.user = {
+        uid: "demo-user-1",
+        email: "manager_email1@gmail.com",
+        role: "manager",
+        venueId: "demo-venue-1"
+      };
+      return next();
+    }
+    
+    // Handle legacy temporary tokens (for backward compatibility)
+    if (token.startsWith("temp_")) {
+      const parts = token.split("_");
+      if (parts.length !== 3) {
+        await auditLog('AUTH_FAILED', null, { reason: 'Invalid temp token format' }, req.ip);
+        return res.status(401).json({ error: "Invalid token format" });
+      }
+      
+      const userId = parts[1];
+      const timestamp = parseInt(parts[2]);
+      
+      // Check token age (expire after 24 hours)
+      if (Date.now() - timestamp > 24 * 60 * 60 * 1000) {
+        await auditLog('AUTH_FAILED', userId, { reason: 'Token expired' }, req.ip);
+        return res.status(401).json({ error: "Token expired" });
+      }
+      
+      // Verify user exists and is active
+      const userDoc = await db.collection("users").doc(userId).get();
+      if (!userDoc.exists) {
+        await auditLog('AUTH_FAILED', userId, { reason: 'User not found' }, req.ip);
+        return res.status(401).json({ error: "User not found" });
+      }
+      
+      const userData = userDoc.data();
+      if (!userData.isActive) {
+        await auditLog('AUTH_FAILED', userId, { reason: 'User inactive' }, req.ip);
+        return res.status(401).json({ error: "User account is inactive" });
+      }
+      
+      req.user = {
+        uid: userId,
+        email: userData.email,
+        role: userData.role,
+        venueId: userData.venueId
+      };
+      return next();
+    }
+    
+    // Verify JWT token (preferred method)
+    try {
+      const decoded = verifyToken(token);
+      
+      if (decoded.type !== 'access') {
+        await auditLog('AUTH_FAILED', decoded.uid, { reason: 'Invalid token type' }, req.ip);
+        return res.status(401).json({ error: "Invalid token type" });
+      }
+      
+      // Verify user still exists and is active
+      const userDoc = await db.collection("users").doc(decoded.uid).get();
+      if (!userDoc.exists) {
+        await auditLog('AUTH_FAILED', decoded.uid, { reason: 'User not found' }, req.ip);
+        return res.status(401).json({ error: "User not found" });
+      }
+      
+      const userData = userDoc.data();
+      if (!userData.isActive) {
+        await auditLog('AUTH_FAILED', decoded.uid, { reason: 'User inactive' }, req.ip);
+        return res.status(401).json({ error: "User account is inactive" });
+      }
+      
+      req.user = decoded;
+      next();
+      
+    } catch (jwtError) {
+      // Fallback to Firebase ID token verification
+      try {
+        const decodedToken = await admin.auth().verifyIdToken(token);
+        req.user = decodedToken;
+        next();
+      } catch (firebaseError) {
+        await auditLog('AUTH_FAILED', null, { reason: 'Invalid token', error: firebaseError.message }, req.ip);
+        console.error("Auth verification error:", firebaseError);
+        res.status(401).json({ error: "Invalid token" });
+      }
+    }
     
   } catch (error) {
+    await auditLog('AUTH_FAILED', null, { reason: 'Auth middleware error', error: error.message }, req.ip);
     console.error("Auth verification error:", error);
-    res.status(401).json({ error: "Invalid token" });
+    res.status(401).json({ error: "Authentication failed" });
   }
 };
+
+// Global error handler
+const asyncHandler = (fn) => (req, res, next) => {
+  Promise.resolve(fn(req, res, next)).catch(next);
+};
+
+// Security monitoring endpoint (admin only)
+app.get("/v1/security/audit", verifyAuth, asyncHandler(async (req, res) => {
+  if (req.user.role !== 'admin') {
+    return res.status(403).json({ error: "Admin access required" });
+  }
+  
+  const logs = await db.collection('audit_logs')
+    .orderBy('timestamp', 'desc')
+    .limit(100)
+    .get();
+  
+  const auditData = logs.docs.map(doc => doc.data());
+  res.json({ logs: auditData });
+}));
+
+// Health check endpoint
+app.get("/health", (req, res) => {
+  res.json({
+    status: "OK",
+    timestamp: new Date().toISOString(),
+    service: "skan-api",
+    version: "2.0.0",
+    environment: process.env.NODE_ENV || 'development'
+  });
+});
+
+// API Info endpoint
+app.get("/", (req, res) => {
+  res.json({
+    message: "Skan.al API - Secure QR Code Ordering System",
+    version: "2.0.0",
+    security: {
+      jwt: "enabled",
+      rateLimit: "enabled",
+      auditLog: "enabled",
+      inputSanitization: "enabled",
+      helmet: "enabled"
+    },
+    endpoints: {
+      auth: ["/v1/auth/login", "/v1/auth/refresh", "/v1/auth/logout"],
+      venues: ["/v1/venue/:slug/menu", "/v1/venues"],
+      orders: ["/v1/orders", "/v1/venue/:venueId/orders"],
+      users: ["/v1/users", "/v1/auth/register"]
+    }
+  });
+});
+
+// Request ID middleware for tracing
+app.use((req, res, next) => {
+  req.requestId = uuidv4();
+  res.setHeader('X-Request-ID', req.requestId);
+  next();
+});
 
 // ============================================================================
 // VENUE & MENU ENDPOINTS
@@ -1119,15 +1489,12 @@ app.post("/v1/auth/register", async (req, res) => {
       return res.status(400).json({ error: "Email, password, and full name are required" });
     }
     
-    // Validate email format
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
+    if (!validateEmail(email)) {
       return res.status(400).json({ error: "Invalid email format" });
     }
     
-    // Validate password strength
-    if (password.length < 8) {
-      return res.status(400).json({ error: "Password must be at least 8 characters long" });
+    if (!validatePassword(password)) {
+      return res.status(400).json({ error: "Password must be at least 8 characters with uppercase, lowercase, and number" });
     }
     
     // Check if user already exists
@@ -1140,16 +1507,16 @@ app.post("/v1/auth/register", async (req, res) => {
       return res.status(409).json({ error: "User with this email already exists" });
     }
     
-    // Generate password hash
+    // Generate password hash (standardized format)
     const crypto = require("crypto");
-    const salt = crypto.randomBytes(32);
-    const hashedPassword = crypto.scryptSync(password, salt, 64);
+    const salt = crypto.randomBytes(16).toString("hex");
+    const hash = crypto.scryptSync(password, salt, 64).toString("hex");
+    const passwordHash = `${salt}:${hash}`;
     
     // Create user document
     const userData = {
       email: email.toLowerCase(),
-      passwordHash: hashedPassword.toString("hex"),
-      salt: salt.toString("hex"),
+      passwordHash: passwordHash,
       fullName,
       role: ["admin", "manager", "staff"].includes(role) ? role : "staff",
       venueId: venueId || null,
@@ -1340,17 +1707,42 @@ app.post("/v1/auth/change-password", verifyAuth, async (req, res) => {
   }
 });
 
+// Rate limiting for authentication endpoints
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 5, // Limit each IP to 5 requests per windowMs
+  message: { error: "Too many authentication attempts. Please try again later." },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
 // Restaurant staff login
-app.post("/v1/auth/login", async (req, res) => {
+app.post("/v1/auth/login", 
+  authLimiter,
+  [
+    body('email').isEmail().normalizeEmail(),
+    body('password').isLength({ min: 8 }).trim()
+  ],
+  async (req, res) => {
   try {
-    const { email, password } = req.body;
-    
-    if (!email || !password) {
-      return res.status(400).json({ error: "Email and password required" });
+    // Validate request
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      await auditLog('LOGIN_FAILED', null, { reason: 'Validation failed', errors: errors.array() }, req.ip);
+      return res.status(400).json({ error: "Invalid input", details: errors.array() });
     }
     
-    // Demo user for testing - check first
-    if (email === "manager_email1@gmail.com" && password === "demo123") {
+    const { email, password } = req.body;
+    const clientIP = req.ip || req.connection.remoteAddress;
+    
+    // Check account lockout
+    if (await accountLockout.checkLockout(email)) {
+      await auditLog('LOGIN_BLOCKED', null, { email, reason: 'Account locked' }, clientIP);
+      return res.status(423).json({ error: "Account temporarily locked due to too many failed attempts" });
+    }
+    
+    // Demo user for development/testing only - remove in production
+    if (process.env.NODE_ENV !== "production" && email === "manager_email1@gmail.com" && password === "demo123") {
       return res.json({
         message: "Login successful",
         user: {
@@ -1402,11 +1794,18 @@ app.post("/v1/auth/login", async (req, res) => {
       }
       
       if (!isValid) {
+        await accountLockout.recordFailedAttempt(email, clientIP);
+        await auditLog('LOGIN_FAILED', userDoc.id, { email, reason: 'Invalid password' }, clientIP);
         return res.status(401).json({ error: "Invalid credentials" });
       }
     } else {
+      await accountLockout.recordFailedAttempt(email, clientIP);
+      await auditLog('LOGIN_FAILED', userDoc.id, { email, reason: 'No password hash' }, clientIP);
       return res.status(401).json({ error: "Invalid credentials" });
     }
+    
+    // Clear failed attempts on successful login
+    await accountLockout.clearFailedAttempts(email);
     
     // Get venue information
     let venueData = null;
@@ -1421,24 +1820,135 @@ app.post("/v1/auth/login", async (req, res) => {
       }
     }
     
-    // Return user data without custom token (for now)
+    // Generate JWT tokens
+    const user = {
+      id: userDoc.id,
+      email: userData.email,
+      fullName: userData.fullName,
+      role: userData.role,
+      venueId: userData.venueId
+    };
+    
+    const { accessToken, refreshToken } = generateTokens(user);
+    
+    // Store refresh token in database
+    await db.collection('refresh_tokens').doc(userDoc.id).set({
+      token: refreshToken,
+      userId: userDoc.id,
+      createdAt: admin.firestore.FieldValue.serverTimestamp(),
+      expiresAt: admin.firestore.Timestamp.fromDate(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)),
+      ip: clientIP,
+      userAgent: req.headers['user-agent'] || 'unknown'
+    });
+    
+    // Audit successful login
+    await auditLog('LOGIN_SUCCESS', userDoc.id, { 
+      email, 
+      role: userData.role, 
+      venueId: userData.venueId 
+    }, clientIP);
+    
+    // Return user data with JWT tokens
     res.json({
       message: "Login successful",
-      user: {
-        id: userDoc.id,
-        email: userData.email,
-        fullName: userData.fullName,
-        role: userData.role,
-        venueId: userData.venueId
-      },
+      user,
       venue: venueData,
-      // Temporary token placeholder
-      token: `temp_${userDoc.id}_${Date.now()}`
+      accessToken,
+      refreshToken,
+      expiresIn: JWT_EXPIRE
     });
     
   } catch (error) {
+    await auditLog('LOGIN_ERROR', null, { reason: 'Server error', error: error.message }, req.ip);
     console.error("Error during login:", error);
     res.status(500).json({ error: "Login failed" });
+  }
+});
+
+// Token refresh endpoint
+app.post("/v1/auth/refresh", authLimiter, async (req, res) => {
+  try {
+    const { refreshToken } = req.body;
+    
+    if (!refreshToken) {
+      return res.status(400).json({ error: "Refresh token required" });
+    }
+    
+    // Verify refresh token
+    const decoded = verifyToken(refreshToken);
+    if (decoded.type !== 'refresh') {
+      return res.status(401).json({ error: "Invalid refresh token" });
+    }
+    
+    // Check if refresh token exists in database
+    const tokenDoc = await db.collection('refresh_tokens').doc(decoded.uid).get();
+    if (!tokenDoc.exists || tokenDoc.data().token !== refreshToken) {
+      await auditLog('REFRESH_FAILED', decoded.uid, { reason: 'Token not found' }, req.ip);
+      return res.status(401).json({ error: "Refresh token not found" });
+    }
+    
+    // Check if token is expired
+    if (tokenDoc.data().expiresAt.toDate() < new Date()) {
+      await db.collection('refresh_tokens').doc(decoded.uid).delete();
+      await auditLog('REFRESH_FAILED', decoded.uid, { reason: 'Token expired' }, req.ip);
+      return res.status(401).json({ error: "Refresh token expired" });
+    }
+    
+    // Get user data
+    const userDoc = await db.collection("users").doc(decoded.uid).get();
+    if (!userDoc.exists || !userDoc.data().isActive) {
+      await auditLog('REFRESH_FAILED', decoded.uid, { reason: 'User inactive' }, req.ip);
+      return res.status(401).json({ error: "User account is inactive" });
+    }
+    
+    const userData = userDoc.data();
+    const user = {
+      id: userDoc.id,
+      email: userData.email,
+      fullName: userData.fullName,
+      role: userData.role,
+      venueId: userData.venueId
+    };
+    
+    // Generate new tokens
+    const { accessToken, refreshToken: newRefreshToken } = generateTokens(user);
+    
+    // Update refresh token in database
+    await db.collection('refresh_tokens').doc(decoded.uid).update({
+      token: newRefreshToken,
+      updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+      ip: req.ip,
+      userAgent: req.headers['user-agent'] || 'unknown'
+    });
+    
+    await auditLog('TOKEN_REFRESHED', decoded.uid, {}, req.ip);
+    
+    res.json({
+      accessToken,
+      refreshToken: newRefreshToken,
+      expiresIn: JWT_EXPIRE
+    });
+    
+  } catch (error) {
+    await auditLog('REFRESH_ERROR', null, { error: error.message }, req.ip);
+    console.error("Error refreshing token:", error);
+    res.status(401).json({ error: "Invalid refresh token" });
+  }
+});
+
+// Logout endpoint
+app.post("/v1/auth/logout", verifyAuth, async (req, res) => {
+  try {
+    // Remove refresh token from database
+    await db.collection('refresh_tokens').doc(req.user.uid).delete();
+    
+    await auditLog('LOGOUT', req.user.uid, {}, req.ip);
+    
+    res.json({ message: "Logged out successfully" });
+    
+  } catch (error) {
+    console.error("Error during logout:", error);
+    res.status(500).json({ error: "Logout failed" });
   }
 });
 
@@ -1651,8 +2161,8 @@ app.post("/v1/auth/accept-invitation", async (req, res) => {
       return res.status(400).json({ error: "Token and password are required" });
     }
     
-    if (password.length < 8) {
-      return res.status(400).json({ error: "Password must be at least 8 characters long" });
+    if (!validatePassword(password)) {
+      return res.status(400).json({ error: "Password must be at least 8 characters with uppercase, lowercase, and number" });
     }
     
     // Find invitation by token
@@ -1674,16 +2184,16 @@ app.post("/v1/auth/accept-invitation", async (req, res) => {
       return res.status(400).json({ error: "Invitation has expired" });
     }
     
-    // Generate password hash
+    // Generate password hash (standardized format)
     const crypto = require("crypto");
-    const salt = crypto.randomBytes(32);
-    const hashedPassword = crypto.scryptSync(password, salt, 64);
+    const salt = crypto.randomBytes(16).toString("hex");
+    const hash = crypto.scryptSync(password, salt, 64).toString("hex");
+    const passwordHash = `${salt}:${hash}`;
     
     // Create user document
     const userData = {
       email: inviteData.email,
-      passwordHash: hashedPassword.toString("hex"),
-      salt: salt.toString("hex"),
+      passwordHash: passwordHash,
       fullName: inviteData.fullName,
       role: inviteData.role,
       venueId: inviteData.venueId,
@@ -2018,18 +2528,20 @@ app.post("/v1/register/venue", async (req, res) => {
       });
     }
     
-    // Validate email format
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(ownerEmail)) {
+    // Validate input formats
+    if (!validateEmail(ownerEmail)) {
       return res.status(400).json({ error: "Invalid email format" });
     }
     
-    // Validate password strength
-    if (password.length < 8) {
-      return res.status(400).json({ 
-        error: "Password must be at least 8 characters long" 
-      });
+    if (!validatePassword(password)) {
+      return res.status(400).json({ error: "Password must be at least 8 characters with uppercase, lowercase, and number" });
     }
+    
+    // Sanitize string inputs
+    const sanitizedVenueName = venueName.trim().slice(0, 100);
+    const sanitizedAddress = address.trim().slice(0, 200);
+    const sanitizedOwnerName = ownerName.trim().slice(0, 100);
+    
     
     // Check if email already exists
     const existingUserSnapshot = await db.collection("users")
@@ -2087,15 +2599,15 @@ app.post("/v1/register/venue", async (req, res) => {
     const venueRef = await db.collection("venue").add(venueData);
     const venueId = venueRef.id;
     
-    // Create owner user account
+    // Create owner user account (standardized format)
     const crypto = require("crypto");
-    const salt = crypto.randomBytes(32);
-    const hashedPassword = crypto.scryptSync(password, salt, 64);
+    const salt = crypto.randomBytes(16).toString("hex");
+    const hash = crypto.scryptSync(password, salt, 64).toString("hex");
+    const passwordHash = `${salt}:${hash}`;
     
     const userData = {
       email: ownerEmail.toLowerCase(),
-      passwordHash: hashedPassword.toString("hex"),
-      salt: salt.toString("hex"),
+      passwordHash: passwordHash,
       fullName: ownerName.trim(),
       role: "manager", // Venue owner gets manager role
       venueId: venueId,
@@ -2301,7 +2813,12 @@ app.get("/", (req, res) => {
     endpoints: {
       venues: {
         "GET /v1/venue/:slug/menu": "Get venue menu by slug",
-        "GET /v1/venue/:slug/tables": "Get venue tables for QR generation"
+        "GET /v1/venue/:slug/tables": "Get venue tables for QR generation",
+        "POST /v1/venues": "Create new venue (admin only)",
+        "GET /v1/venues": "Get all venues (admin only)",
+        "GET /v1/venues/:venueId": "Get single venue",
+        "PUT /v1/venues/:venueId": "Update venue",
+        "GET /v1/venues/:venueId/stats": "Get venue statistics"
       },
       menuManagement: {
         "PUT /v1/venue/:venueId/categories/:categoryId": "Update menu category",
@@ -2312,15 +2829,59 @@ app.get("/", (req, res) => {
         "DELETE /v1/venue/:venueId/items/:itemId": "Delete menu item",
         "PATCH /v1/venue/:venueId/items/:itemId/toggle": "Toggle menu item active status"
       },
+      tableManagement: {
+        "POST /v1/venues/:venueId/tables": "Create new table",
+        "PUT /v1/venues/:venueId/tables/:tableId": "Update table information",
+        "DELETE /v1/venues/:venueId/tables/:tableId": "Delete table",
+        "GET /v1/venues/:venueId/tables/:tableId/qr": "Generate QR code for table",
+        "PUT /v1/venues/:venueId/tables/:tableId/status": "Enable/disable table"
+      },
       orders: {
         "POST /v1/orders": "Create new order",
         "GET /v1/venue/:venueId/orders": "Get orders for restaurant dashboard",
         "PUT /v1/orders/:orderId/status": "Update order status",
         "GET /v1/orders/:orderId": "Get order details",
-        "GET /v1/track/:orderNumber": "Track order by number"
+        "GET /v1/track/:orderNumber": "Track order by number",
+        "PUT /v1/orders/:orderId/cancel": "Cancel order",
+        "POST /v1/orders/:orderId/refund": "Process refund",
+        "GET /v1/venues/:venueId/orders/summary": "Get order summary stats"
+      },
+      analytics: {
+        "GET /v1/venues/:venueId/analytics/daily": "Get daily sales reports",
+        "GET /v1/venues/:venueId/analytics/popular-items": "Get popular items report",
+        "GET /v1/venues/:venueId/analytics/peak-hours": "Get peak hours analysis",
+        "GET /v1/venues/:venueId/analytics/revenue": "Get revenue trends",
+        "GET /v1/venues/:venueId/analytics/orders/export": "Export order data"
+      },
+      settings: {
+        "PUT /v1/venues/:venueId/settings": "Update venue settings",
+        "GET /v1/venues/:venueId/settings/notifications": "Get notification preferences",
+        "PUT /v1/venues/:venueId/settings/notifications": "Update notification preferences",
+        "GET /v1/venues/:venueId/settings/operating-hours": "Get operating hours",
+        "PUT /v1/venues/:venueId/settings/operating-hours": "Update operating hours"
+      },
+      userManagement: {
+        "GET /v1/users": "Get all users (admin/manager only)",
+        "GET /v1/users/:userId": "Get single user",
+        "PUT /v1/users/:userId": "Update user",
+        "POST /v1/users/invite": "Invite new user"
       },
       auth: {
-        "POST /v1/auth/login": "Restaurant staff login"
+        "POST /v1/auth/login": "Restaurant staff login",
+        "POST /v1/auth/register": "User registration",
+        "POST /v1/auth/reset-password": "Request password reset",
+        "POST /v1/auth/reset-password/confirm": "Confirm password reset",
+        "POST /v1/auth/change-password": "Change password",
+        "POST /v1/auth/accept-invitation": "Accept invitation"
+      },
+      registration: {
+        "POST /v1/register/venue": "Self-service venue registration",
+        "GET /v1/register/status/:venueId": "Get venue registration status"
+      },
+      fileManagement: {
+        "POST /v1/upload/menu-images": "Upload menu images (placeholder)",
+        "DELETE /v1/upload/:fileId": "Delete uploaded files (placeholder)",
+        "GET /v1/venues/:venueId/images": "List venue images (placeholder)"
       },
       system: {
         "GET /health": "Health check",
@@ -2367,6 +2928,982 @@ app.get("/", (req, res) => {
 //     
 //     return null;
 //   });
+
+// ============================================================================
+// TABLE MANAGEMENT ENDPOINTS
+// ============================================================================
+
+// Create new table
+app.post("/v1/venues/:venueId/tables", verifyAuth, async (req, res) => {
+  try {
+    const { venueId } = req.params;
+    const { tableNumber, displayName, capacity, location } = req.body;
+    
+    if (!tableNumber || !displayName) {
+      return res.status(400).json({ error: "Table number and display name are required" });
+    }
+    
+    // Verify user has access to this venue
+    if (req.user.role !== "admin" && req.user.venueId !== venueId) {
+      return res.status(403).json({ error: "Access denied" });
+    }
+    
+    // Check if table number already exists
+    const existingTableSnapshot = await db.collection("venue").doc(venueId)
+      .collection("table")
+      .where("tableNumber", "==", tableNumber)
+      .limit(1)
+      .get();
+    
+    if (!existingTableSnapshot.empty) {
+      return res.status(409).json({ error: "Table number already exists" });
+    }
+    
+    // Create table
+    const tableRef = db.collection("venue").doc(venueId)
+      .collection("table").doc();
+    
+    await tableRef.set({
+      tableNumber,
+      displayName,
+      capacity: capacity || 4,
+      location: location || "Main dining area",
+      isActive: true,
+      createdAt: admin.firestore.FieldValue.serverTimestamp(),
+      updatedAt: admin.firestore.FieldValue.serverTimestamp()
+    });
+    
+    res.status(201).json({ 
+      message: "Table created successfully",
+      tableId: tableRef.id
+    });
+    
+  } catch (error) {
+    console.error("Error creating table:", error);
+    res.status(500).json({ error: "Failed to create table" });
+  }
+});
+
+// Update table information
+app.put("/v1/venues/:venueId/tables/:tableId", verifyAuth, async (req, res) => {
+  try {
+    const { venueId, tableId } = req.params;
+    const { tableNumber, displayName, capacity, location, isActive } = req.body;
+    
+    // Verify user has access to this venue
+    if (req.user.role !== "admin" && req.user.venueId !== venueId) {
+      return res.status(403).json({ error: "Access denied" });
+    }
+    
+    const tableRef = db.collection("venue").doc(venueId)
+      .collection("table").doc(tableId);
+    
+    const tableDoc = await tableRef.get();
+    if (!tableDoc.exists) {
+      return res.status(404).json({ error: "Table not found" });
+    }
+    
+    const updateData = {
+      updatedAt: admin.firestore.FieldValue.serverTimestamp()
+    };
+    
+    if (tableNumber !== undefined) updateData.tableNumber = tableNumber;
+    if (displayName !== undefined) updateData.displayName = displayName;
+    if (capacity !== undefined) updateData.capacity = parseInt(capacity);
+    if (location !== undefined) updateData.location = location;
+    if (isActive !== undefined) updateData.isActive = Boolean(isActive);
+    
+    await tableRef.update(updateData);
+    
+    res.json({ message: "Table updated successfully" });
+    
+  } catch (error) {
+    console.error("Error updating table:", error);
+    res.status(500).json({ error: "Failed to update table" });
+  }
+});
+
+// Delete table
+app.delete("/v1/venues/:venueId/tables/:tableId", verifyAuth, async (req, res) => {
+  try {
+    const { venueId, tableId } = req.params;
+    
+    // Verify user has access to this venue
+    if (req.user.role !== "admin" && req.user.venueId !== venueId) {
+      return res.status(403).json({ error: "Access denied" });
+    }
+    
+    const tableRef = db.collection("venue").doc(venueId)
+      .collection("table").doc(tableId);
+    
+    const tableDoc = await tableRef.get();
+    if (!tableDoc.exists) {
+      return res.status(404).json({ error: "Table not found" });
+    }
+    
+    await tableRef.delete();
+    
+    res.json({ message: "Table deleted successfully" });
+    
+  } catch (error) {
+    console.error("Error deleting table:", error);
+    res.status(500).json({ error: "Failed to delete table" });
+  }
+});
+
+// Generate QR code for table
+app.get("/v1/venues/:venueId/tables/:tableId/qr", verifyAuth, async (req, res) => {
+  try {
+    const { venueId, tableId } = req.params;
+    
+    // Verify user has access to this venue
+    if (req.user.role !== "admin" && req.user.venueId !== venueId) {
+      return res.status(403).json({ error: "Access denied" });
+    }
+    
+    // Get venue and table info
+    const [venueDoc, tableDoc] = await Promise.all([
+      db.collection("venue").doc(venueId).get(),
+      db.collection("venue").doc(venueId).collection("table").doc(tableId).get()
+    ]);
+    
+    if (!venueDoc.exists) {
+      return res.status(404).json({ error: "Venue not found" });
+    }
+    
+    if (!tableDoc.exists) {
+      return res.status(404).json({ error: "Table not found" });
+    }
+    
+    const venueData = venueDoc.data();
+    const tableData = tableDoc.data();
+    
+    const qrUrl = `https://order.skan.al/${venueData.slug}/${tableData.tableNumber}`;
+    
+    res.json({
+      qrUrl,
+      tableNumber: tableData.tableNumber,
+      displayName: tableData.displayName,
+      venueSlug: venueData.slug
+    });
+    
+  } catch (error) {
+    console.error("Error generating QR code:", error);
+    res.status(500).json({ error: "Failed to generate QR code" });
+  }
+});
+
+// Enable/disable table
+app.put("/v1/venues/:venueId/tables/:tableId/status", verifyAuth, async (req, res) => {
+  try {
+    const { venueId, tableId } = req.params;
+    const { isActive } = req.body;
+    
+    if (isActive === undefined) {
+      return res.status(400).json({ error: "isActive is required" });
+    }
+    
+    // Verify user has access to this venue
+    if (req.user.role !== "admin" && req.user.venueId !== venueId) {
+      return res.status(403).json({ error: "Access denied" });
+    }
+    
+    const tableRef = db.collection("venue").doc(venueId)
+      .collection("table").doc(tableId);
+    
+    const tableDoc = await tableRef.get();
+    if (!tableDoc.exists) {
+      return res.status(404).json({ error: "Table not found" });
+    }
+    
+    await tableRef.update({
+      isActive: Boolean(isActive),
+      updatedAt: admin.firestore.FieldValue.serverTimestamp()
+    });
+    
+    res.json({ 
+      message: "Table status updated successfully",
+      isActive: Boolean(isActive)
+    });
+    
+  } catch (error) {
+    console.error("Error updating table status:", error);
+    res.status(500).json({ error: "Failed to update table status" });
+  }
+});
+
+// ============================================================================
+// ANALYTICS & REPORTING ENDPOINTS
+// ============================================================================
+
+// Get daily sales reports
+app.get("/v1/venues/:venueId/analytics/daily", verifyAuth, async (req, res) => {
+  try {
+    const { venueId } = req.params;
+    const { date, days = 7 } = req.query;
+    
+    // Verify user has access to this venue
+    if (req.user.role !== "admin" && req.user.venueId !== venueId) {
+      return res.status(403).json({ error: "Access denied" });
+    }
+    
+    const targetDate = date ? new Date(date) : new Date();
+    const daysCount = Math.min(parseInt(days), 30); // Limit to 30 days
+    
+    const dailyStats = [];
+    
+    for (let i = 0; i < daysCount; i++) {
+      const currentDate = new Date(targetDate);
+      currentDate.setDate(targetDate.getDate() - i);
+      
+      const startOfDay = new Date(currentDate);
+      startOfDay.setHours(0, 0, 0, 0);
+      
+      const endOfDay = new Date(currentDate);
+      endOfDay.setHours(23, 59, 59, 999);
+      
+      const ordersSnapshot = await db.collection("orders")
+        .where("venueId", "==", venueId)
+        .where("createdAt", ">=", admin.firestore.Timestamp.fromDate(startOfDay))
+        .where("createdAt", "<=", admin.firestore.Timestamp.fromDate(endOfDay))
+        .get();
+      
+      let totalRevenue = 0;
+      let orderCount = 0;
+      
+      ordersSnapshot.docs.forEach(doc => {
+        const order = doc.data();
+        totalRevenue += order.totalAmount || 0;
+        orderCount++;
+      });
+      
+      dailyStats.push({
+        date: currentDate.toISOString().split("T")[0],
+        orders: orderCount,
+        revenue: Math.round(totalRevenue * 100) / 100,
+        averageOrderValue: orderCount > 0 ? Math.round((totalRevenue / orderCount) * 100) / 100 : 0
+      });
+    }
+    
+    res.json({
+      period: `${daysCount} days`,
+      stats: dailyStats.reverse()
+    });
+    
+  } catch (error) {
+    console.error("Error fetching daily analytics:", error);
+    res.status(500).json({ error: "Failed to fetch daily analytics" });
+  }
+});
+
+// Get popular items report
+app.get("/v1/venues/:venueId/analytics/popular-items", verifyAuth, async (req, res) => {
+  try {
+    const { venueId } = req.params;
+    const { limit = 10, days = 30 } = req.query;
+    
+    // Verify user has access to this venue
+    if (req.user.role !== "admin" && req.user.venueId !== venueId) {
+      return res.status(403).json({ error: "Access denied" });
+    }
+    
+    const daysBack = Math.min(parseInt(days), 90); // Limit to 90 days
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - daysBack);
+    
+    const ordersSnapshot = await db.collection("orders")
+      .where("venueId", "==", venueId)
+      .where("createdAt", ">=", admin.firestore.Timestamp.fromDate(startDate))
+      .get();
+    
+    const itemStats = {};
+    
+    ordersSnapshot.docs.forEach(doc => {
+      const order = doc.data();
+      order.items?.forEach(item => {
+        const itemId = item.id || item.name;
+        if (!itemStats[itemId]) {
+          itemStats[itemId] = {
+            name: item.name,
+            totalQuantity: 0,
+            totalRevenue: 0,
+            orderCount: 0
+          };
+        }
+        
+        itemStats[itemId].totalQuantity += item.quantity || 1;
+        itemStats[itemId].totalRevenue += (item.price || 0) * (item.quantity || 1);
+        itemStats[itemId].orderCount += 1;
+      });
+    });
+    
+    const popularItems = Object.values(itemStats)
+      .sort((a, b) => b.totalQuantity - a.totalQuantity)
+      .slice(0, parseInt(limit))
+      .map(item => ({
+        ...item,
+        totalRevenue: Math.round(item.totalRevenue * 100) / 100,
+        averagePrice: Math.round((item.totalRevenue / item.totalQuantity) * 100) / 100
+      }));
+    
+    res.json({
+      period: `${daysBack} days`,
+      totalItems: Object.keys(itemStats).length,
+      popularItems
+    });
+    
+  } catch (error) {
+    console.error("Error fetching popular items:", error);
+    res.status(500).json({ error: "Failed to fetch popular items" });
+  }
+});
+
+// Get peak hours analysis
+app.get("/v1/venues/:venueId/analytics/peak-hours", verifyAuth, async (req, res) => {
+  try {
+    const { venueId } = req.params;
+    const { days = 30 } = req.query;
+    
+    // Verify user has access to this venue
+    if (req.user.role !== "admin" && req.user.venueId !== venueId) {
+      return res.status(403).json({ error: "Access denied" });
+    }
+    
+    const daysBack = Math.min(parseInt(days), 90);
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - daysBack);
+    
+    const ordersSnapshot = await db.collection("orders")
+      .where("venueId", "==", venueId)
+      .where("createdAt", ">=", admin.firestore.Timestamp.fromDate(startDate))
+      .get();
+    
+    const hourlyStats = Array(24).fill(0).map(() => ({ orders: 0, revenue: 0 }));
+    const dailyStats = Array(7).fill(0).map(() => ({ orders: 0, revenue: 0 }));
+    
+    ordersSnapshot.docs.forEach(doc => {
+      const order = doc.data();
+      const orderDate = order.createdAt.toDate();
+      const hour = orderDate.getHours();
+      const dayOfWeek = orderDate.getDay();
+      
+      hourlyStats[hour].orders += 1;
+      hourlyStats[hour].revenue += order.totalAmount || 0;
+      
+      dailyStats[dayOfWeek].orders += 1;
+      dailyStats[dayOfWeek].revenue += order.totalAmount || 0;
+    });
+    
+    const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    
+    res.json({
+      period: `${daysBack} days`,
+      hourlyBreakdown: hourlyStats.map((stat, hour) => ({
+        hour: `${hour.toString().padStart(2, "0")}:00`,
+        orders: stat.orders,
+        revenue: Math.round(stat.revenue * 100) / 100
+      })),
+      dailyBreakdown: dailyStats.map((stat, day) => ({
+        day: dayNames[day],
+        orders: stat.orders,
+        revenue: Math.round(stat.revenue * 100) / 100
+      }))
+    });
+    
+  } catch (error) {
+    console.error("Error fetching peak hours:", error);
+    res.status(500).json({ error: "Failed to fetch peak hours analysis" });
+  }
+});
+
+// Get revenue trends
+app.get("/v1/venues/:venueId/analytics/revenue", verifyAuth, async (req, res) => {
+  try {
+    const { venueId } = req.params;
+    const { months = 6 } = req.query;
+    
+    // Verify user has access to this venue
+    if (req.user.role !== "admin" && req.user.venueId !== venueId) {
+      return res.status(403).json({ error: "Access denied" });
+    }
+    
+    const monthsBack = Math.min(parseInt(months), 12);
+    const trends = [];
+    
+    for (let i = 0; i < monthsBack; i++) {
+      const currentDate = new Date();
+      currentDate.setMonth(currentDate.getMonth() - i);
+      
+      const startOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+      const endOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0, 23, 59, 59);
+      
+      const ordersSnapshot = await db.collection("orders")
+        .where("venueId", "==", venueId)
+        .where("createdAt", ">=", admin.firestore.Timestamp.fromDate(startOfMonth))
+        .where("createdAt", "<=", admin.firestore.Timestamp.fromDate(endOfMonth))
+        .get();
+      
+      let totalRevenue = 0;
+      let orderCount = 0;
+      
+      ordersSnapshot.docs.forEach(doc => {
+        const order = doc.data();
+        totalRevenue += order.totalAmount || 0;
+        orderCount++;
+      });
+      
+      trends.push({
+        period: `${currentDate.getFullYear()}-${(currentDate.getMonth() + 1).toString().padStart(2, "0")}`,
+        revenue: Math.round(totalRevenue * 100) / 100,
+        orders: orderCount,
+        averageOrderValue: orderCount > 0 ? Math.round((totalRevenue / orderCount) * 100) / 100 : 0
+      });
+    }
+    
+    res.json({
+      period: `${monthsBack} months`,
+      trends: trends.reverse()
+    });
+    
+  } catch (error) {
+    console.error("Error fetching revenue trends:", error);
+    res.status(500).json({ error: "Failed to fetch revenue trends" });
+  }
+});
+
+// Export order data
+app.get("/v1/venues/:venueId/analytics/orders/export", verifyAuth, async (req, res) => {
+  try {
+    const { venueId } = req.params;
+    const { format = "json", startDate, endDate } = req.query;
+    
+    // Verify user has access to this venue
+    if (req.user.role !== "admin" && req.user.venueId !== venueId) {
+      return res.status(403).json({ error: "Access denied" });
+    }
+    
+    let query = db.collection("orders")
+      .where("venueId", "==", venueId)
+      .orderBy("createdAt", "desc");
+    
+    if (startDate) {
+      query = query.where("createdAt", ">=", admin.firestore.Timestamp.fromDate(new Date(startDate)));
+    }
+    
+    if (endDate) {
+      query = query.where("createdAt", "<=", admin.firestore.Timestamp.fromDate(new Date(endDate)));
+    }
+    
+    const ordersSnapshot = await query.limit(1000).get(); // Limit exports to 1000 orders
+    
+    const orders = ordersSnapshot.docs.map(doc => {
+      const order = doc.data();
+      return {
+        orderId: doc.id,
+        orderNumber: order.orderNumber,
+        tableNumber: order.tableNumber,
+        customerName: order.customerName,
+        totalAmount: order.totalAmount,
+        status: order.status,
+        items: order.items,
+        specialInstructions: order.specialInstructions,
+        createdAt: order.createdAt?.toDate()?.toISOString(),
+        updatedAt: order.updatedAt?.toDate()?.toISOString()
+      };
+    });
+    
+    if (format === "csv") {
+      // Convert to CSV format
+      const csv = orders.map(order => 
+        `"${order.orderNumber}","${order.tableNumber}","${order.customerName}","${order.totalAmount}","${order.status}","${order.createdAt}"`
+      ).join("\n");
+      
+      const header = "Order Number,Table,Customer,Amount,Status,Created At\n";
+      
+      res.setHeader("Content-Type", "text/csv");
+      res.setHeader("Content-Disposition", "attachment; filename=\"orders-export.csv\"");
+      res.send(header + csv);
+    } else {
+      res.json({
+        exportedAt: new Date().toISOString(),
+        totalOrders: orders.length,
+        orders
+      });
+    }
+    
+  } catch (error) {
+    console.error("Error exporting orders:", error);
+    res.status(500).json({ error: "Failed to export orders" });
+  }
+});
+
+// ============================================================================
+// SETTINGS & CONFIGURATION ENDPOINTS
+// ============================================================================
+
+// Update venue settings
+app.put("/v1/venues/:venueId/settings", verifyAuth, async (req, res) => {
+  try {
+    const { venueId } = req.params;
+    const { currency, orderingEnabled, estimatedPreparationTime, taxRate, serviceCharge } = req.body;
+    
+    // Verify user has access to this venue
+    if (req.user.role !== "admin" && req.user.venueId !== venueId) {
+      return res.status(403).json({ error: "Access denied" });
+    }
+    
+    const venueRef = db.collection("venue").doc(venueId);
+    const venueDoc = await venueRef.get();
+    
+    if (!venueDoc.exists) {
+      return res.status(404).json({ error: "Venue not found" });
+    }
+    
+    const currentSettings = venueDoc.data().settings || {};
+    const updateData = {
+      settings: {
+        ...currentSettings
+      },
+      updatedAt: admin.firestore.FieldValue.serverTimestamp()
+    };
+    
+    if (currency !== undefined) updateData.settings.currency = currency;
+    if (orderingEnabled !== undefined) updateData.settings.orderingEnabled = Boolean(orderingEnabled);
+    if (estimatedPreparationTime !== undefined) updateData.settings.estimatedPreparationTime = parseInt(estimatedPreparationTime);
+    if (taxRate !== undefined) updateData.settings.taxRate = parseFloat(taxRate);
+    if (serviceCharge !== undefined) updateData.settings.serviceCharge = parseFloat(serviceCharge);
+    
+    await venueRef.update(updateData);
+    
+    res.json({ 
+      message: "Venue settings updated successfully",
+      settings: updateData.settings
+    });
+    
+  } catch (error) {
+    console.error("Error updating venue settings:", error);
+    res.status(500).json({ error: "Failed to update venue settings" });
+  }
+});
+
+// Get notification preferences
+app.get("/v1/venues/:venueId/settings/notifications", verifyAuth, async (req, res) => {
+  try {
+    const { venueId } = req.params;
+    
+    // Verify user has access to this venue
+    if (req.user.role !== "admin" && req.user.venueId !== venueId) {
+      return res.status(403).json({ error: "Access denied" });
+    }
+    
+    const venueDoc = await db.collection("venue").doc(venueId).get();
+    
+    if (!venueDoc.exists) {
+      return res.status(404).json({ error: "Venue not found" });
+    }
+    
+    const settings = venueDoc.data().settings || {};
+    const notifications = settings.notifications || {
+      newOrderAlert: true,
+      emailNotifications: true,
+      smsNotifications: false,
+      soundAlerts: true,
+      orderUpdateNotifications: true
+    };
+    
+    res.json({ notifications });
+    
+  } catch (error) {
+    console.error("Error fetching notification settings:", error);
+    res.status(500).json({ error: "Failed to fetch notification settings" });
+  }
+});
+
+// Update notification preferences
+app.put("/v1/venues/:venueId/settings/notifications", verifyAuth, async (req, res) => {
+  try {
+    const { venueId } = req.params;
+    const { newOrderAlert, emailNotifications, smsNotifications, soundAlerts, orderUpdateNotifications } = req.body;
+    
+    // Verify user has access to this venue
+    if (req.user.role !== "admin" && req.user.venueId !== venueId) {
+      return res.status(403).json({ error: "Access denied" });
+    }
+    
+    const venueRef = db.collection("venue").doc(venueId);
+    const venueDoc = await venueRef.get();
+    
+    if (!venueDoc.exists) {
+      return res.status(404).json({ error: "Venue not found" });
+    }
+    
+    const currentSettings = venueDoc.data().settings || {};
+    const currentNotifications = currentSettings.notifications || {};
+    
+    const updatedNotifications = { ...currentNotifications };
+    
+    if (newOrderAlert !== undefined) updatedNotifications.newOrderAlert = Boolean(newOrderAlert);
+    if (emailNotifications !== undefined) updatedNotifications.emailNotifications = Boolean(emailNotifications);
+    if (smsNotifications !== undefined) updatedNotifications.smsNotifications = Boolean(smsNotifications);
+    if (soundAlerts !== undefined) updatedNotifications.soundAlerts = Boolean(soundAlerts);
+    if (orderUpdateNotifications !== undefined) updatedNotifications.orderUpdateNotifications = Boolean(orderUpdateNotifications);
+    
+    await venueRef.update({
+      "settings.notifications": updatedNotifications,
+      updatedAt: admin.firestore.FieldValue.serverTimestamp()
+    });
+    
+    res.json({ 
+      message: "Notification preferences updated successfully",
+      notifications: updatedNotifications
+    });
+    
+  } catch (error) {
+    console.error("Error updating notification settings:", error);
+    res.status(500).json({ error: "Failed to update notification settings" });
+  }
+});
+
+// Get operating hours
+app.get("/v1/venues/:venueId/settings/operating-hours", verifyAuth, async (req, res) => {
+  try {
+    const { venueId } = req.params;
+    
+    // Verify user has access to this venue
+    if (req.user.role !== "admin" && req.user.venueId !== venueId) {
+      return res.status(403).json({ error: "Access denied" });
+    }
+    
+    const venueDoc = await db.collection("venue").doc(venueId).get();
+    
+    if (!venueDoc.exists) {
+      return res.status(404).json({ error: "Venue not found" });
+    }
+    
+    const settings = venueDoc.data().settings || {};
+    const operatingHours = settings.operatingHours || {
+      monday: { open: "09:00", close: "22:00", isOpen: true },
+      tuesday: { open: "09:00", close: "22:00", isOpen: true },
+      wednesday: { open: "09:00", close: "22:00", isOpen: true },
+      thursday: { open: "09:00", close: "22:00", isOpen: true },
+      friday: { open: "09:00", close: "23:00", isOpen: true },
+      saturday: { open: "09:00", close: "23:00", isOpen: true },
+      sunday: { open: "10:00", close: "21:00", isOpen: true }
+    };
+    
+    res.json({ operatingHours });
+    
+  } catch (error) {
+    console.error("Error fetching operating hours:", error);
+    res.status(500).json({ error: "Failed to fetch operating hours" });
+  }
+});
+
+// Update operating hours
+app.put("/v1/venues/:venueId/settings/operating-hours", verifyAuth, async (req, res) => {
+  try {
+    const { venueId } = req.params;
+    const { operatingHours } = req.body;
+    
+    if (!operatingHours) {
+      return res.status(400).json({ error: "Operating hours data is required" });
+    }
+    
+    // Verify user has access to this venue
+    if (req.user.role !== "admin" && req.user.venueId !== venueId) {
+      return res.status(403).json({ error: "Access denied" });
+    }
+    
+    const venueRef = db.collection("venue").doc(venueId);
+    const venueDoc = await venueRef.get();
+    
+    if (!venueDoc.exists) {
+      return res.status(404).json({ error: "Venue not found" });
+    }
+    
+    await venueRef.update({
+      "settings.operatingHours": operatingHours,
+      updatedAt: admin.firestore.FieldValue.serverTimestamp()
+    });
+    
+    res.json({ 
+      message: "Operating hours updated successfully",
+      operatingHours
+    });
+    
+  } catch (error) {
+    console.error("Error updating operating hours:", error);
+    res.status(500).json({ error: "Failed to update operating hours" });
+  }
+});
+
+// ============================================================================
+// ORDER ENHANCEMENT ENDPOINTS
+// ============================================================================
+
+// Cancel order
+app.put("/v1/orders/:orderId/cancel", verifyAuth, async (req, res) => {
+  try {
+    const { orderId } = req.params;
+    const { reason } = req.body;
+    
+    const orderRef = db.collection("orders").doc(orderId);
+    const orderDoc = await orderRef.get();
+    
+    if (!orderDoc.exists) {
+      return res.status(404).json({ error: "Order not found" });
+    }
+    
+    const orderData = orderDoc.data();
+    
+    // Verify user has access to this venue
+    if (req.user.role !== "admin" && req.user.venueId !== orderData.venueId) {
+      return res.status(403).json({ error: "Access denied" });
+    }
+    
+    // Can only cancel orders that are new or preparing
+    if (!["new", "preparing"].includes(orderData.status)) {
+      return res.status(400).json({ error: "Cannot cancel order that is ready or served" });
+    }
+    
+    await orderRef.update({
+      status: "cancelled",
+      cancellationReason: reason || "Cancelled by restaurant",
+      cancelledAt: admin.firestore.FieldValue.serverTimestamp(),
+      cancelledBy: req.user.uid,
+      updatedAt: admin.firestore.FieldValue.serverTimestamp()
+    });
+    
+    res.json({ 
+      message: "Order cancelled successfully",
+      orderId
+    });
+    
+  } catch (error) {
+    console.error("Error cancelling order:", error);
+    res.status(500).json({ error: "Failed to cancel order" });
+  }
+});
+
+// Process refund
+app.post("/v1/orders/:orderId/refund", verifyAuth, async (req, res) => {
+  try {
+    const { orderId } = req.params;
+    const { amount, reason } = req.body;
+    
+    if (!amount || amount <= 0) {
+      return res.status(400).json({ error: "Valid refund amount is required" });
+    }
+    
+    const orderRef = db.collection("orders").doc(orderId);
+    const orderDoc = await orderRef.get();
+    
+    if (!orderDoc.exists) {
+      return res.status(404).json({ error: "Order not found" });
+    }
+    
+    const orderData = orderDoc.data();
+    
+    // Verify user has access to this venue and has manager+ role
+    if (req.user.role === "staff" || (req.user.role !== "admin" && req.user.venueId !== orderData.venueId)) {
+      return res.status(403).json({ error: "Only managers and admins can process refunds" });
+    }
+    
+    if (amount > orderData.totalAmount) {
+      return res.status(400).json({ error: "Refund amount cannot exceed order total" });
+    }
+    
+    // Create refund record
+    const refundData = {
+      orderId,
+      orderNumber: orderData.orderNumber,
+      venueId: orderData.venueId,
+      amount: parseFloat(amount),
+      reason: reason || "Refund processed",
+      processedBy: req.user.uid,
+      processedAt: admin.firestore.FieldValue.serverTimestamp(),
+      status: "pending" // In a real system, this would integrate with payment processor
+    };
+    
+    const refundRef = await db.collection("refunds").add(refundData);
+    
+    // Update order with refund information
+    await orderRef.update({
+      refundAmount: parseFloat(amount),
+      refundReason: reason,
+      refundId: refundRef.id,
+      refundedAt: admin.firestore.FieldValue.serverTimestamp(),
+      updatedAt: admin.firestore.FieldValue.serverTimestamp()
+    });
+    
+    res.json({ 
+      message: "Refund processed successfully",
+      refundId: refundRef.id,
+      amount: parseFloat(amount)
+    });
+    
+  } catch (error) {
+    console.error("Error processing refund:", error);
+    res.status(500).json({ error: "Failed to process refund" });
+  }
+});
+
+// Get order summary stats for venue
+app.get("/v1/venues/:venueId/orders/summary", verifyAuth, async (req, res) => {
+  try {
+    const { venueId } = req.params;
+    const { period = "today" } = req.query;
+    
+    // Verify user has access to this venue
+    if (req.user.role !== "admin" && req.user.venueId !== venueId) {
+      return res.status(403).json({ error: "Access denied" });
+    }
+    
+    let startDate, endDate;
+    const now = new Date();
+    
+    switch (period) {
+      case "today":
+        startDate = new Date(now);
+        startDate.setHours(0, 0, 0, 0);
+        endDate = new Date(now);
+        endDate.setHours(23, 59, 59, 999);
+        break;
+      case "week":
+        startDate = new Date(now);
+        startDate.setDate(now.getDate() - 7);
+        endDate = now;
+        break;
+      case "month":
+        startDate = new Date(now);
+        startDate.setMonth(now.getMonth() - 1);
+        endDate = now;
+        break;
+      default:
+        startDate = new Date(now);
+        startDate.setHours(0, 0, 0, 0);
+        endDate = new Date(now);
+        endDate.setHours(23, 59, 59, 999);
+    }
+    
+    const ordersSnapshot = await db.collection("orders")
+      .where("venueId", "==", venueId)
+      .where("createdAt", ">=", admin.firestore.Timestamp.fromDate(startDate))
+      .where("createdAt", "<=", admin.firestore.Timestamp.fromDate(endDate))
+      .get();
+    
+    let totalRevenue = 0;
+    let totalRefunds = 0;
+    const statusCounts = { new: 0, preparing: 0, ready: 0, served: 0, cancelled: 0 };
+    const tableCounts = {};
+    
+    ordersSnapshot.docs.forEach(doc => {
+      const order = doc.data();
+      totalRevenue += order.totalAmount || 0;
+      totalRefunds += order.refundAmount || 0;
+      statusCounts[order.status] = (statusCounts[order.status] || 0) + 1;
+      tableCounts[order.tableNumber] = (tableCounts[order.tableNumber] || 0) + 1;
+    });
+    
+    const netRevenue = totalRevenue - totalRefunds;
+    const averageOrderValue = ordersSnapshot.size > 0 ? totalRevenue / ordersSnapshot.size : 0;
+    
+    res.json({
+      period,
+      summary: {
+        totalOrders: ordersSnapshot.size,
+        totalRevenue: Math.round(totalRevenue * 100) / 100,
+        totalRefunds: Math.round(totalRefunds * 100) / 100,
+        netRevenue: Math.round(netRevenue * 100) / 100,
+        averageOrderValue: Math.round(averageOrderValue * 100) / 100,
+        statusBreakdown: statusCounts,
+        busiestTables: Object.entries(tableCounts)
+          .sort(([,a], [,b]) => b - a)
+          .slice(0, 5)
+          .map(([table, count]) => ({ table, orders: count }))
+      }
+    });
+    
+  } catch (error) {
+    console.error("Error fetching order summary:", error);
+    res.status(500).json({ error: "Failed to fetch order summary" });
+  }
+});
+
+// ============================================================================
+// FILE MANAGEMENT ENDPOINTS
+// ============================================================================
+
+// Upload menu images (placeholder - requires Firebase Storage setup)
+app.post("/v1/upload/menu-images", verifyAuth, async (req, res) => {
+  try {
+    // This is a placeholder endpoint
+    // In a real implementation, you would:
+    // 1. Use multer or similar for file upload
+    // 2. Validate file types and sizes
+    // 3. Upload to Firebase Storage
+    // 4. Return the download URL
+    
+    res.status(501).json({ 
+      error: "File upload not implemented yet",
+      message: "This endpoint requires Firebase Storage configuration and file upload middleware"
+    });
+    
+  } catch (error) {
+    console.error("Error uploading image:", error);
+    res.status(500).json({ error: "Failed to upload image" });
+  }
+});
+
+// Delete uploaded files (placeholder)
+app.delete("/v1/upload/:fileId", verifyAuth, async (req, res) => {
+  try {
+    const { fileId } = req.params;
+    
+    // This is a placeholder endpoint
+    // In a real implementation, you would:
+    // 1. Verify file ownership
+    // 2. Delete from Firebase Storage
+    // 3. Update any references in Firestore
+    
+    res.status(501).json({ 
+      error: "File deletion not implemented yet",
+      message: "This endpoint requires Firebase Storage configuration",
+      fileId
+    });
+    
+  } catch (error) {
+    console.error("Error deleting file:", error);
+    res.status(500).json({ error: "Failed to delete file" });
+  }
+});
+
+// List venue images (placeholder)
+app.get("/v1/venues/:venueId/images", verifyAuth, async (req, res) => {
+  try {
+    const { venueId } = req.params;
+    
+    // Verify user has access to this venue
+    if (req.user.role !== "admin" && req.user.venueId !== venueId) {
+      return res.status(403).json({ error: "Access denied" });
+    }
+    
+    // This is a placeholder endpoint
+    // In a real implementation, you would:
+    // 1. Query Firebase Storage for venue images
+    // 2. Return list of image URLs and metadata
+    
+    res.json({
+      venueId,
+      images: [],
+      message: "Image listing not implemented yet - requires Firebase Storage configuration"
+    });
+    
+  } catch (error) {
+    console.error("Error listing images:", error);
+    res.status(500).json({ error: "Failed to list images" });
+  }
+});
 
 // ============================================================================
 // VENUE SETUP & ONBOARDING ENDPOINTS
@@ -2453,7 +3990,61 @@ app.post("/v1/venue/complete-onboarding", verifyAuth, async (req, res) => {
   }
 });
 
+// Global error handler (must be last)
+app.use((error, req, res, next) => {
+  console.error(`[${req.requestId}] Error:`, error);
+  
+  // Log error for monitoring
+  auditLog('SERVER_ERROR', req.user?.uid || null, {
+    error: error.message,
+    stack: process.env.NODE_ENV === 'development' ? error.stack : undefined,
+    requestId: req.requestId,
+    endpoint: req.path,
+    method: req.method
+  }, req.ip);
+  
+  // Don't leak error details in production
+  if (process.env.NODE_ENV === 'production') {
+    res.status(500).json({
+      error: "Internal server error",
+      requestId: req.requestId
+    });
+  } else {
+    res.status(500).json({
+      error: error.message,
+      stack: error.stack,
+      requestId: req.requestId
+    });
+  }
+});
+
+// 404 handler
+app.use('*', (req, res) => {
+  res.status(404).json({
+    error: "Endpoint not found",
+    path: req.originalUrl,
+    method: req.method
+  });
+});
+
+// Environment validation
+const requiredEnvVars = ['JWT_SECRET'];
+const missingVars = requiredEnvVars.filter(varName => !process.env[varName]);
+
+if (missingVars.length > 0 && process.env.NODE_ENV === 'production') {
+  console.error('Missing required environment variables:', missingVars);
+  process.exit(1);
+}
+
+if (process.env.NODE_ENV === 'production' && process.env.JWT_SECRET === 'your-super-secret-jwt-key-change-in-production') {
+  console.error('Default JWT secret detected in production! This is a security risk.');
+  process.exit(1);
+}
+
 // Export the Express app as a Firebase Cloud Function
-exports.api = onRequest({
-  region: "europe-west1"
+exports.api = onRequest({ 
+  region: "europe-west1",
+  memory: "512MB",
+  timeoutSeconds: 60,
+  cors: true
 }, app);
