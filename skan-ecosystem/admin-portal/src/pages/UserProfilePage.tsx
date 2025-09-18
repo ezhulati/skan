@@ -30,7 +30,8 @@ const UserProfilePage: React.FC = () => {
   const [editMode, setEditMode] = useState(false);
   const [editForm, setEditForm] = useState({
     fullName: '',
-    email: ''
+    email: '',
+    role: ''
   });
   
   const [passwordForm, setPasswordForm] = useState<PasswordChangeForm>({
@@ -72,7 +73,8 @@ const UserProfilePage: React.FC = () => {
       setProfile(data);
       setEditForm({
         fullName: data.fullName || '',
-        email: data.email || ''
+        email: data.email || '',
+        role: data.role || ''
       });
     } catch (err: any) {
       console.error('Error fetching profile:', err);
@@ -109,7 +111,8 @@ const UserProfilePage: React.FC = () => {
         headers,
         body: JSON.stringify({
           fullName: editForm.fullName,
-          email: editForm.email
+          email: editForm.email,
+          role: editForm.role
         })
       });
       
@@ -290,6 +293,21 @@ const UserProfilePage: React.FC = () => {
                   disabled={saving}
                 />
               </div>
+
+              <div className="form-group">
+                <label htmlFor="role">Roli</label>
+                <select
+                  id="role"
+                  value={editForm.role}
+                  onChange={(e) => setEditForm({...editForm, role: e.target.value})}
+                  disabled={saving}
+                  className="role-select"
+                >
+                  <option value="staff">Staf</option>
+                  <option value="manager">Menaxher</option>
+                  <option value="admin">Administrator</option>
+                </select>
+              </div>
             </div>
 
             <div className="form-actions">
@@ -300,7 +318,8 @@ const UserProfilePage: React.FC = () => {
                   setEditMode(false);
                   setEditForm({
                     fullName: profile.fullName,
-                    email: profile.email
+                    email: profile.email,
+                    role: profile.role
                   });
                 }}
                 disabled={saving}
@@ -576,23 +595,28 @@ const UserProfilePage: React.FC = () => {
           font-size: 14px;
         }
 
-        .form-group input {
+        .form-group input, .role-select {
           padding: 12px 16px;
           border: 2px solid #e5e7eb;
           border-radius: 8px;
           font-size: 16px;
           transition: all 0.2s ease;
+          background: white;
         }
 
-        .form-group input:focus {
+        .form-group input:focus, .role-select:focus {
           outline: none;
-          border-color: #667eea;
-          box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+          border-color: #4472c4;
+          box-shadow: 0 0 0 3px rgba(68, 114, 196, 0.1);
         }
 
-        .form-group input:disabled {
+        .form-group input:disabled, .role-select:disabled {
           background: #f9fafb;
           cursor: not-allowed;
+        }
+
+        .role-select {
+          cursor: pointer;
         }
 
         .password-hint {
