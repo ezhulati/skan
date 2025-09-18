@@ -1,6 +1,6 @@
 {
   "name": "skan-api",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Skan.al API - QR Code Ordering System",
   "main": "index.js",
   "engines": {
