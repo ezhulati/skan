@@ -71,68 +71,21 @@ export async function validateImage(
   const sizeMB = file.size / (1024 * 1024);
   const sizeKB = file.size / 1024;
   
-  // Check file type
-  if (!rules.allowedFormats.includes(file.type)) {
-    const allowedExtensions = rules.allowedFormats
-      .map(format => format.split('/')[1].toUpperCase())
-      .join(', ');
-    errors.push(`File type not supported. Please use: ${allowedExtensions}`);
+  // Check file type - only reject completely unsupported formats
+  if (!file.type.startsWith('image/')) {
+    errors.push('Please select an image file (JPG, PNG, WEBP, etc.)');
   }
   
-  // Check file size
-  if (sizeMB > rules.maxSizeMB) {
-    errors.push(
-      `File size too large (${formatFileSize(file.size)}). Maximum allowed: ${rules.maxSizeMB}MB`
-    );
-  }
-  
-  // Add size warning if approaching limit
-  if (sizeMB > rules.maxSizeMB * 0.8) {
-    warnings.push(
-      `Large file size (${formatFileSize(file.size)}). Consider optimizing for faster uploads.`
-    );
-  }
-  
+  // We'll auto-process everything else, so no size/dimension errors
+  // Just provide helpful info
   let dimensions: { width: number; height: number } | undefined;
   
-  // Check image dimensions if it's a valid image type
-  if (rules.allowedFormats.includes(file.type)) {
+  if (file.type.startsWith('image/')) {
     try {
       dimensions = await getImageDimensions(file);
-      
-      if (dimensions.width > rules.maxWidth) {
-        errors.push(
-          `Image width too large (${dimensions.width}px). Maximum: ${rules.maxWidth}px`
-        );
-      }
-      
-      if (dimensions.height > rules.maxHeight) {
-        errors.push(
-          `Image height too large (${dimensions.height}px). Maximum: ${rules.maxHeight}px`
-        );
-      }
-      
-      if (rules.minWidth && dimensions.width < rules.minWidth) {
-        errors.push(
-          `Image width too small (${dimensions.width}px). Minimum: ${rules.minWidth}px`
-        );
-      }
-      
-      if (rules.minHeight && dimensions.height < rules.minHeight) {
-        errors.push(
-          `Image height too small (${dimensions.height}px). Minimum: ${rules.minHeight}px`
-        );
-      }
-      
-      // Add dimension recommendations
-      if (dimensions.width > rules.maxWidth * 0.8 || dimensions.height > rules.maxHeight * 0.8) {
-        warnings.push(
-          `Large image dimensions (${dimensions.width}×${dimensions.height}px). Consider resizing for better performance.`
-        );
-      }
-      
+      warnings.push(`✨ Image will be automatically optimized for best performance`);
     } catch (error) {
-      errors.push('Unable to read image dimensions. File may be corrupted.');
+      errors.push('Unable to process this image file. Please try a different image.');
     }
   }
   
@@ -144,6 +97,73 @@ export async function validateImage(
     dimensions,
     sizeInfo: { sizeMB, sizeKB }
   };
+}
+
+export async function processImageForUpload(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    const img = new Image();
+    
+    img.onload = () => {
+      // Calculate optimal dimensions (max 800px for either dimension)
+      let { width, height } = img;
+      const maxSize = 800;
+      
+      // Maintain aspect ratio while ensuring max dimension is 800px
+      if (width > height) {
+        if (width > maxSize) {
+          height = (height * maxSize) / width;
+          width = maxSize;
+        }
+      } else {
+        if (height > maxSize) {
+          width = (width * maxSize) / height;
+          height = maxSize;
+        }
+      }
+      
+      // Ensure minimum size (200x150) by scaling up if needed
+      const minWidth = 200;
+      const minHeight = 150;
+      
+      if (width < minWidth || height < minHeight) {
+        const scaleX = minWidth / width;
+        const scaleY = minHeight / height;
+        const scale = Math.max(scaleX, scaleY);
+        
+        width *= scale;
+        height *= scale;
+      }
+      
+      canvas.width = width;
+      canvas.height = height;
+      
+      // Draw and compress - high quality for food photos
+      ctx?.drawImage(img, 0, 0, width, height);
+      
+      // Use JPEG with 85% quality for good balance of quality and size
+      const optimizedDataUrl = canvas.toDataURL('image/jpeg', 0.85);
+      
+      // Check final size and adjust quality if needed
+      const finalSize = optimizedDataUrl.length * 0.75; // approximate size in bytes
+      const finalSizeMB = finalSize / (1024 * 1024);
+      
+      if (finalSizeMB > 1.5) {
+        // If still too large, reduce quality more
+        const reducedQualityDataUrl = canvas.toDataURL('image/jpeg', 0.7);
+        resolve(reducedQualityDataUrl);
+      } else {
+        resolve(optimizedDataUrl);
+      }
+    };
+    
+    img.onerror = () => {
+      reject(new Error('Failed to process image. Please try a different image.'));
+    };
+    
+    img.src = URL.createObjectURL(file);
+  });
 }
 
 export function getImageValidationMessage(result: ImageValidationResult): string {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { validateImage, MENU_ITEM_RULES, getImageValidationMessage, getImageRecommendations, ImageValidationResult } from '../utils/imageValidation';
+import { validateImage, processImageForUpload, MENU_ITEM_RULES, getImageValidationMessage, getImageRecommendations, ImageValidationResult } from '../utils/imageValidation';
 
 interface MenuItem {
   id: string;
@@ -104,7 +104,7 @@ const MenuManagementPage: React.FC = () => {
     setImageValidation(null);
     
     try {
-      // Validate image with comprehensive rules
+      // Quick validation - only check if it's actually an image
       const validation = await validateImage(file, MENU_ITEM_RULES);
       setImageValidation(validation);
       
@@ -112,15 +112,16 @@ const MenuManagementPage: React.FC = () => {
         throw new Error(validation.errors.join('\n'));
       }
       
-      // Show warnings if any
-      if (validation.warnings.length > 0) {
-        setMessage(`⚠️ ${validation.warnings.join('\n')}`);
-      }
+      // Show positive feedback
+      setMessage('✨ Processing and optimizing image...');
       
-      const imageUrl = await uploadImage(file);
-      return imageUrl;
+      // Automatically process the image to perfect size and quality
+      const optimizedImageUrl = await processImageForUpload(file);
+      
+      setMessage('✅ Image optimized successfully!');
+      return optimizedImageUrl;
     } catch (error) {
-      setError(error instanceof Error ? error.message : 'Dështoi ngarkimi i imazhit');
+      setError(error instanceof Error ? error.message : 'Failed to process image');
       throw error;
     } finally {
       setUploadingImage(null);
@@ -649,34 +650,10 @@ const MenuManagementPage: React.FC = () => {
                       onChange={(e) => setNewItem({...newItem, price: e.target.value})}
                     />
                     <div className="form-group">
-                      <label>
-                        Imazhi i Artikullit (Opsional)
-                        <button 
-                          type="button"
-                          onClick={() => setShowImageRules(!showImageRules)}
-                          className="help-button"
-                          style={{ marginLeft: '8px', fontSize: '12px', padding: '2px 6px' }}
-                        >
-                          {showImageRules ? '❌' : '❓'}
-                        </button>
-                      </label>
-                      
-                      {showImageRules && (
-                        <div className="image-rules-help" style={{ 
-                          background: '#f8f9fa', 
-                          border: '1px solid #e9ecef', 
-                          borderRadius: '4px', 
-                          padding: '12px', 
-                          marginBottom: '8px',
-                          fontSize: '14px'
-                        }}>
-                          <h4 style={{ margin: '0 0 8px 0', color: '#495057' }}>📋 Rregullat e Imazhit:</h4>
-                          {getImageRecommendations(MENU_ITEM_RULES).map((rule, index) => (
-                            <div key={index} style={{ marginBottom: '4px', color: '#6c757d' }}>{rule}</div>
-                          ))}
-                        </div>
-                      )}
-                      
+                      <label>Imazhi i Artikullit (Opsional)</label>
+                      <p style={{ fontSize: '14px', color: '#6c757d', margin: '4px 0 8px 0' }}>
+                        📸 Just upload any image - we'll automatically optimize it for you!
+                      </p>
                       <div className="image-upload-container">
                         <input
                           type="file"
@@ -1034,7 +1011,7 @@ const ItemEditor: React.FC<{
     setItemImageValidation(null);
     
     try {
-      // Validate image with comprehensive rules
+      // Quick validation - only check if it's actually an image
       const validation = await validateImage(file, MENU_ITEM_RULES);
       setItemImageValidation(validation);
       
@@ -1042,44 +1019,12 @@ const ItemEditor: React.FC<{
         throw new Error(validation.errors.join('\n'));
       }
       
-      // Compress and convert to base64
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
-      const img = new Image();
+      // Automatically process the image to perfect size and quality
+      const optimizedImageUrl = await processImageForUpload(file);
+      setImageUrl(optimizedImageUrl);
       
-      img.onload = () => {
-        // Calculate new dimensions (max 800px width/height)
-        let { width, height } = img;
-        const maxSize = 800;
-        
-        if (width > height) {
-          if (width > maxSize) {
-            height = (height * maxSize) / width;
-            width = maxSize;
-          }
-        } else {
-          if (height > maxSize) {
-            width = (width * maxSize) / height;
-            height = maxSize;
-          }
-        }
-        
-        canvas.width = width;
-        canvas.height = height;
-        
-        // Draw and compress
-        ctx?.drawImage(img, 0, 0, width, height);
-        const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.7); // 70% quality
-        setImageUrl(compressedDataUrl);
-      };
-      
-      img.onerror = () => {
-        throw new Error('Dështoi të ngarkojë imazhin');
-      };
-      
-      img.src = URL.createObjectURL(file);
     } catch (error) {
-      alert(error instanceof Error ? error.message : 'Dështoi ngarkimi i imazhit');
+      alert(error instanceof Error ? error.message : 'Failed to process image');
     } finally {
       setIsUploadingImage(false);
     }
