@@ -1490,6 +1490,27 @@ input:checked + .slider:before {
   height: 12px;
 }
 
+/* Menu Item Display Layout */
+.item-display {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-md);
+  flex: 1;
+}
+
+.item-image {
+  flex-shrink: 0;
+}
+
+.item-image img {
+  transition: transform 0.2s ease;
+}
+
+.item-image img:hover {
+  transform: scale(1.05);
+  cursor: pointer;
+}
+
 /* Menu Item Image Indicator */
 .item-header {
   display: flex;

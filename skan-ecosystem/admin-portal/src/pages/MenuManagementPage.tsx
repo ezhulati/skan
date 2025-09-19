@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import { validateImage, MENU_ITEM_RULES, getImageValidationMessage, getImageRecommendations, ImageValidationResult } from '../utils/imageValidation';
 
 interface MenuItem {
   id: string;
@@ -42,6 +43,9 @@ const MenuManagementPage: React.FC = () => {
   const [uploadingImage, setUploadingImage] = useState<string | null>(null);
   const [translating, setTranslating] = useState<string | null>(null);
   const [hasLocalChanges, setHasLocalChanges] = useState(false); // Track if we have local changes
+  const [imageValidation, setImageValidation] = useState<ImageValidationResult | null>(null);
+  const [showImageRules, setShowImageRules] = useState(false);
+  const [viewingImage, setViewingImage] = useState<string | null>(null);
 
   const baseUrl = process.env.REACT_APP_API_URL || 'https://api-mkazmlu7ta-ew.a.run.app/v1';
 
@@ -96,15 +100,21 @@ const MenuManagementPage: React.FC = () => {
 
   const handleImageUpload = async (file: File, itemId?: string): Promise<string> => {
     setUploadingImage(itemId || 'new');
+    setError(null);
+    setImageValidation(null);
+    
     try {
-      // Validate file type
-      if (!file.type.startsWith('image/')) {
-        throw new Error('Ju mund të ngarkoni vetëm imazhe');
+      // Validate image with comprehensive rules
+      const validation = await validateImage(file, MENU_ITEM_RULES);
+      setImageValidation(validation);
+      
+      if (!validation.isValid) {
+        throw new Error(validation.errors.join('\n'));
       }
       
-      // Validate file size (max 5MB)
-      if (file.size > 5 * 1024 * 1024) {
-        throw new Error('Imazhi duhet të jetë më i vogël se 5MB');
+      // Show warnings if any
+      if (validation.warnings.length > 0) {
+        setMessage(`⚠️ ${validation.warnings.join('\n')}`);
       }
       
       const imageUrl = await uploadImage(file);
@@ -639,7 +649,34 @@ const MenuManagementPage: React.FC = () => {
                       onChange={(e) => setNewItem({...newItem, price: e.target.value})}
                     />
                     <div className="form-group">
-                      <label>Imazhi i Artikullit (Opsional)</label>
+                      <label>
+                        Imazhi i Artikullit (Opsional)
+                        <button 
+                          type="button"
+                          onClick={() => setShowImageRules(!showImageRules)}
+                          className="help-button"
+                          style={{ marginLeft: '8px', fontSize: '12px', padding: '2px 6px' }}
+                        >
+                          {showImageRules ? '❌' : '❓'}
+                        </button>
+                      </label>
+                      
+                      {showImageRules && (
+                        <div className="image-rules-help" style={{ 
+                          background: '#f8f9fa', 
+                          border: '1px solid #e9ecef', 
+                          borderRadius: '4px', 
+                          padding: '12px', 
+                          marginBottom: '8px',
+                          fontSize: '14px'
+                        }}>
+                          <h4 style={{ margin: '0 0 8px 0', color: '#495057' }}>📋 Rregullat e Imazhit:</h4>
+                          {getImageRecommendations(MENU_ITEM_RULES).map((rule, index) => (
+                            <div key={index} style={{ marginBottom: '4px', color: '#6c757d' }}>{rule}</div>
+                          ))}
+                        </div>
+                      )}
+                      
                       <div className="image-upload-container">
                         <input
                           type="file"
@@ -658,6 +695,28 @@ const MenuManagementPage: React.FC = () => {
                           disabled={uploadingImage === 'new'}
                           className="image-input"
                         />
+                        
+                        {imageValidation && (
+                          <div className={`validation-feedback ${imageValidation.isValid ? 'valid' : 'invalid'}`} style={{
+                            padding: '8px',
+                            marginTop: '4px',
+                            borderRadius: '4px',
+                            fontSize: '13px',
+                            background: imageValidation.isValid ? '#d1f2eb' : '#f8d7da',
+                            color: imageValidation.isValid ? '#155724' : '#721c24',
+                            border: `1px solid ${imageValidation.isValid ? '#c3e6cb' : '#f5c6cb'}`
+                          }}>
+                            {getImageValidationMessage(imageValidation)}
+                            {imageValidation.warnings.length > 0 && (
+                              <div style={{ marginTop: '4px', fontStyle: 'italic' }}>
+                                {imageValidation.warnings.map((warning, index) => (
+                                  <div key={index}>⚠️ {warning}</div>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        )}
+                        
                         {uploadingImage === 'new' && (
                           <div className="upload-progress">
                             <svg className="spinner" viewBox="0 0 24 24">
@@ -728,21 +787,44 @@ const MenuManagementPage: React.FC = () => {
                         />
                       ) : (
                         <>
-                          <div className="item-info">
-                            <div className="item-header">
-                              <h4>{item.nameAlbanian || item.name}</h4>
-                              {item.imageUrl && (
-                                <span className="image-indicator" title="Ka imazh">
-                                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
-                                    <circle cx="8.5" cy="8.5" r="1.5"/>
-                                    <polyline points="21,15 16,10 5,21"/>
-                                  </svg>
-                                </span>
-                              )}
+                          <div className="item-display">
+                            {item.imageUrl && (
+                              <div className="item-image">
+                                <img 
+                                  src={item.imageUrl} 
+                                  alt={item.nameAlbanian || item.name}
+                                  style={{
+                                    width: '80px',
+                                    height: '60px',
+                                    objectFit: 'cover',
+                                    borderRadius: '8px',
+                                    border: '1px solid #e0e0e0',
+                                    flexShrink: 0
+                                  }}
+                                  onClick={() => setViewingImage(item.imageUrl || '')}
+                                  onError={(e) => {
+                                    // Hide image if it fails to load
+                                    e.currentTarget.style.display = 'none';
+                                  }}
+                                />
+                              </div>
+                            )}
+                            <div className="item-info">
+                              <div className="item-header">
+                                <h4>{item.nameAlbanian || item.name}</h4>
+                                {item.imageUrl && (
+                                  <span className="image-indicator" title="Ka imazh" style={{ color: '#28a745' }}>
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                                      <circle cx="8.5" cy="8.5" r="1.5"/>
+                                      <polyline points="21,15 16,10 5,21"/>
+                                    </svg>
+                                  </span>
+                                )}
+                              </div>
+                              <p className="item-subtitle">{item.name}</p>
+                              <p className="item-price">{item.price} Lek</p>
                             </div>
-                            <p className="item-subtitle">{item.name}</p>
-                            <p className="item-price">{item.price} Lek</p>
                           </div>
                           <div className="item-status">
                             <label className="toggle-switch">
@@ -790,6 +872,63 @@ const MenuManagementPage: React.FC = () => {
           ))
         )}
       </div>
+
+      {/* Image Viewer Modal */}
+      {viewingImage && (
+        <div 
+          className="image-viewer-modal"
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 1000,
+            padding: '20px'
+          }}
+          onClick={() => setViewingImage(null)}
+        >
+          <div style={{ position: 'relative', maxWidth: '90vw', maxHeight: '90vh' }}>
+            <img 
+              src={viewingImage} 
+              alt="Menu item preview"
+              style={{
+                maxWidth: '100%',
+                maxHeight: '100%',
+                borderRadius: '12px',
+                boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)'
+              }}
+              onClick={(e) => e.stopPropagation()}
+            />
+            <button
+              onClick={() => setViewingImage(null)}
+              style={{
+                position: 'absolute',
+                top: '-10px',
+                right: '-10px',
+                background: 'rgba(255, 255, 255, 0.9)',
+                border: 'none',
+                borderRadius: '50%',
+                width: '40px',
+                height: '40px',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '20px',
+                fontWeight: 'bold',
+                color: '#333'
+              }}
+            >
+              ×
+            </button>
+          </div>
+        </div>
+      )}
 
     </div>
   );
@@ -851,6 +990,8 @@ const ItemEditor: React.FC<{
   const [imageUrl, setImageUrl] = useState(item.imageUrl || '');
   const [isUploadingImage, setIsUploadingImage] = useState(false);
   const [translating, setTranslating] = useState<string | null>(null);
+  const [itemImageValidation, setItemImageValidation] = useState<ImageValidationResult | null>(null);
+  const [showItemImageRules, setShowItemImageRules] = useState(false);
 
   const translateText = async (text: string, context: string = 'edit-item'): Promise<string> => {
     if (!text?.trim()) {
@@ -890,15 +1031,15 @@ const ItemEditor: React.FC<{
 
   const handleImageUpload = async (file: File): Promise<void> => {
     setIsUploadingImage(true);
+    setItemImageValidation(null);
+    
     try {
-      // Validate file type
-      if (!file.type.startsWith('image/')) {
-        throw new Error('Ju mund të ngarkoni vetëm imazhe');
-      }
+      // Validate image with comprehensive rules
+      const validation = await validateImage(file, MENU_ITEM_RULES);
+      setItemImageValidation(validation);
       
-      // Validate file size (max 5MB)
-      if (file.size > 5 * 1024 * 1024) {
-        throw new Error('Imazhi duhet të jetë më i vogël se 5MB');
+      if (!validation.isValid) {
+        throw new Error(validation.errors.join('\n'));
       }
       
       // Compress and convert to base64
@@ -1002,7 +1143,34 @@ const ItemEditor: React.FC<{
           placeholder="Çmimi"
         />
         <div className="form-group">
-          <label>Imazhi i Artikullit (Opsional)</label>
+          <label>
+            Imazhi i Artikullit (Opsional)
+            <button 
+              type="button"
+              onClick={() => setShowItemImageRules(!showItemImageRules)}
+              className="help-button"
+              style={{ marginLeft: '8px', fontSize: '12px', padding: '2px 6px' }}
+            >
+              {showItemImageRules ? '❌' : '❓'}
+            </button>
+          </label>
+          
+          {showItemImageRules && (
+            <div className="image-rules-help" style={{ 
+              background: '#f8f9fa', 
+              border: '1px solid #e9ecef', 
+              borderRadius: '4px', 
+              padding: '12px', 
+              marginBottom: '8px',
+              fontSize: '14px'
+            }}>
+              <h4 style={{ margin: '0 0 8px 0', color: '#495057' }}>📋 Rregullat e Imazhit:</h4>
+              {getImageRecommendations(MENU_ITEM_RULES).map((rule, index) => (
+                <div key={index} style={{ marginBottom: '4px', color: '#6c757d' }}>{rule}</div>
+              ))}
+            </div>
+          )}
+          
           <div className="image-upload-container">
             <input
               type="file"
@@ -1016,6 +1184,28 @@ const ItemEditor: React.FC<{
               disabled={isUploadingImage}
               className="image-input"
             />
+            
+            {itemImageValidation && (
+              <div className={`validation-feedback ${itemImageValidation.isValid ? 'valid' : 'invalid'}`} style={{
+                padding: '8px',
+                marginTop: '4px',
+                borderRadius: '4px',
+                fontSize: '13px',
+                background: itemImageValidation.isValid ? '#d1f2eb' : '#f8d7da',
+                color: itemImageValidation.isValid ? '#155724' : '#721c24',
+                border: `1px solid ${itemImageValidation.isValid ? '#c3e6cb' : '#f5c6cb'}`
+              }}>
+                {getImageValidationMessage(itemImageValidation)}
+                {itemImageValidation.warnings.length > 0 && (
+                  <div style={{ marginTop: '4px', fontStyle: 'italic' }}>
+                    {itemImageValidation.warnings.map((warning, index) => (
+                      <div key={index}>⚠️ {warning}</div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+            
             {isUploadingImage && (
               <div className="upload-progress">
                 <svg className="spinner" viewBox="0 0 24 24">
