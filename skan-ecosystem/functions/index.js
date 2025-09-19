@@ -1954,6 +1954,7 @@ app.post("/v1/auth/login",
       message: "Login successful",
       user,
       venue: venueData,
+      token: accessToken, // For backward compatibility
       accessToken,
       refreshToken,
       expiresIn: JWT_EXPIRE
@@ -4307,7 +4308,7 @@ app.use((error, req, res, _next) => {
 // Get user onboarding status
 app.get("/v1/onboarding/status", verifyAuth, async (req, res) => {
   try {
-    const userId = req.user.userId;
+    const userId = req.user.uid || req.user.userId; // Support both uid and userId for backward compatibility
     
     const userDoc = await db.collection("users").doc(userId).get();
     if (!userDoc.exists) {
@@ -4347,7 +4348,7 @@ app.get("/v1/onboarding/status", verifyAuth, async (req, res) => {
 // Update onboarding step
 app.put("/v1/onboarding/step/:stepName", verifyAuth, async (req, res) => {
   try {
-    const userId = req.user.userId;
+    const userId = req.user.uid || req.user.userId; // Support both uid and userId for backward compatibility
     const { stepName } = req.params;
     const { data, completed = true } = req.body;
     
@@ -4411,7 +4412,7 @@ app.put("/v1/onboarding/step/:stepName", verifyAuth, async (req, res) => {
 // Complete onboarding process
 app.post("/v1/onboarding/complete", verifyAuth, async (req, res) => {
   try {
-    const userId = req.user.userId;
+    const userId = req.user.uid || req.user.userId; // Support both uid and userId for backward compatibility
     
     const userRef = db.collection("users").doc(userId);
     const userDoc = await userRef.get();
