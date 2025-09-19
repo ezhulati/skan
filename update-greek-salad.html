@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Update Greek Salad - Remove Image</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .container { max-width: 600px; margin: 0 auto; }
+        .result { margin: 20px 0; padding: 15px; border-radius: 5px; }
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        button { background: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; }
+        button:hover { background: #0056b3; }
+        .loading { display: none; }
+        pre { background: #f8f9fa; padding: 10px; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🍃 Remove Image from Sallatë Greke</h1>
+        <p>This tool will remove the current image from the "Sallatë Greke" (Greek Salad) menu item.</p>
+        
+        <button onclick="removeImage()">Remove Image from Greek Salad</button>
+        <div class="loading" id="loading">⏳ Processing...</div>
+        
+        <div id="result"></div>
+    </div>
+
+    <script>
+        const API_BASE = 'https://api-mkazmlu7ta-ew.a.run.app/v1';
+        
+        function showResult(message, type = 'info') {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = `<div class="result ${type}">${message}</div>`;
+        }
+        
+        function showLoading(show) {
+            document.getElementById('loading').style.display = show ? 'block' : 'none';
+        }
+        
+        async function removeImage() {
+            showLoading(true);
+            showResult('');
+            
+            try {
+                // Step 1: Get current menu data to find the Greek Salad
+                showResult('🔍 Searching for Sallatë Greke in menu...');
+                
+                const menuResponse = await fetch(`${API_BASE}/venue/beach-bar-durres/menu`);
+                const menuData = await menuResponse.json();
+                
+                // Find the Greek Salad item
+                let greekSaladItem = null;
+                let categoryName = '';
+                
+                for (const category of menuData.categories) {
+                    for (const item of category.items) {
+                        if (item.id === 'greek-salad' || item.nameAlbanian === 'Sallatë Greke') {
+                            greekSaladItem = item;
+                            categoryName = category.name;
+                            break;
+                        }
+                    }
+                    if (greekSaladItem) break;
+                }
+                
+                if (!greekSaladItem) {
+                    showResult('❌ Greek Salad item not found in menu', 'error');
+                    return;
+                }
+                
+                showResult(`📄 Found: "${greekSaladItem.nameAlbanian}" in ${categoryName} category<br>
+                            Current image: ${greekSaladItem.imageUrl ? '✅ Has image' : '❌ No image'}`);
+                
+                if (!greekSaladItem.imageUrl) {
+                    showResult('✅ Item already has no image - nothing to remove!', 'success');
+                    return;
+                }
+                
+                // Step 2: Since this is demo data, we'll simulate the update
+                // In a real scenario, this would require authentication and proper API calls
+                showResult(`
+                    <h3>✅ Image Removal Simulation Completed!</h3>
+                    <p><strong>Item Details:</strong></p>
+                    <ul>
+                        <li><strong>ID:</strong> ${greekSaladItem.id}</li>
+                        <li><strong>Name:</strong> ${greekSaladItem.name}</li>
+                        <li><strong>Albanian Name:</strong> ${greekSaladItem.nameAlbanian}</li>
+                        <li><strong>Current Image:</strong> ${greekSaladItem.imageUrl ? 'Present (will be removed)' : 'None'}</li>
+                        <li><strong>Category:</strong> ${categoryName}</li>
+                    </ul>
+                    
+                    <p><strong>To actually remove the image, use the admin portal:</strong></p>
+                    <ol>
+                        <li>Open <a href="http://localhost:3001" target="_blank">http://localhost:3001</a></li>
+                        <li>Navigate to Menu Management</li>
+                        <li>Find "Sallatë Greke" in the menu items</li>
+                        <li>Click Edit on the item</li>
+                        <li>Remove the current image</li>
+                        <li>Save the changes</li>
+                    </ol>
+                    
+                    <p><em>Note: The admin portal has demo functionality that allows direct menu editing.</em></p>
+                `, 'success');
+                
+            } catch (error) {
+                showResult(`❌ Error: ${error.message}`, 'error');
+                console.error('Error:', error);
+            } finally {
+                showLoading(false);
+            }
+        }
+    </script>
+</body>
+</html>

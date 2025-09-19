@@ -23,7 +23,10 @@ const DashboardPage: React.FC = () => {
   const [undoOperation, setUndoOperation] = useState<UndoOperation | null>(null);
 
   const loadOrders = useCallback(async () => {
-    if (!auth.user?.venueId) return;
+    if (!auth.user?.venueId) {
+      setLoading(false);
+      return;
+    }
 
     try {
       setError(null);
@@ -317,6 +320,47 @@ const DashboardPage: React.FC = () => {
       return `${diffHours}h ${diffMinutes % 60}m ago`;
     }
   };
+
+  // Show venue setup if user has no venue
+  if (!auth.user?.venueId && !loading) {
+    return (
+      <div className="dashboard-page">
+        <div style={{ 
+          textAlign: 'center', 
+          padding: '60px 20px',
+          maxWidth: '600px',
+          margin: '0 auto'
+        }}>
+          <h1 style={{ fontSize: '28px', marginBottom: '16px', color: '#2c3e50' }}>
+            🏪 Welcome to SKAN.AL!
+          </h1>
+          <p style={{ fontSize: '18px', color: '#7f8c8d', marginBottom: '32px' }}>
+            To get started with order management, you need to set up your restaurant venue.
+          </p>
+          
+          <div style={{
+            background: '#f8f9fa',
+            border: '1px solid #e9ecef',
+            borderRadius: '12px',
+            padding: '24px',
+            marginBottom: '24px'
+          }}>
+            <h3 style={{ color: '#495057', marginBottom: '16px' }}>Next Steps:</h3>
+            <ol style={{ textAlign: 'left', color: '#6c757d', lineHeight: '1.6' }}>
+              <li>Contact your administrator to associate your account with a venue</li>
+              <li>Or create a new venue if you're setting up a new restaurant</li>
+              <li>Once associated, you'll be able to manage orders and view your dashboard</li>
+            </ol>
+          </div>
+          
+          <p style={{ fontSize: '14px', color: '#6c757d' }}>
+            📧 Your account: <strong>{auth.user?.email}</strong><br/>
+            👤 Role: <strong>{auth.user?.role}</strong>
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   if (loading) {
     return (
