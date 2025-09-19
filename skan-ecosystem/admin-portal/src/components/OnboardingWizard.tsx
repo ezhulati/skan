@@ -523,12 +523,13 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
             )}
 
             <div className="onboarding-tips">
-              <h4>Këshilla:</h4>
+              <h4>Për momentin:</h4>
               <ul>
-                <li>Përdorni përkthimin automatik për të krijuar versionet në anglisht</li>
-                <li>Ngarkoni foto tërheqëse për të rritur porosinë</li>
-                <li>Shtoni 3-5 artikuj të popullarë për të filluar</li>
+                <li>Shtoni 3-5 pjata të popullarizuara për të filluar</li>
+                <li>Përdorni emra të thjeshtë që klientët t'i kuptojnë lehtë</li>
+                <li>Vendosni çmime të sakta - mund t'i ndryshoni më vonë</li>
               </ul>
+              <p><strong>Më vonë në menunë komplete:</strong> Do të mund të shtoni foto, përkthime në anglisht, përshkrime dhe allergjenë.</p>
             </div>
 
             <div className="step-actions">
@@ -727,21 +728,34 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
     <div className="onboarding-wizard">
       <div className="onboarding-container">
         <div className="onboarding-header">
-          <div className="step-progress">
-            <div className="progress-line">
-              <div 
-                className="progress-fill" 
-                style={{ width: `${((currentStep - 1) / (steps.length - 1)) * 100}%` }}
-              ></div>
-            </div>
-            {steps.map((step) => (
-              <div key={step.id} className={`step ${currentStep >= step.id ? 'active' : ''}`}>
-                <div className="step-number">
-                  {step.id}
+          <div className="progress-container">
+            <div className="progress-bar">
+              {steps.map((step, index) => (
+                <div key={step.id} className="progress-step-wrapper">
+                  {/* Progress line segment */}
+                  {index > 0 && (
+                    <div className={`progress-line-segment ${currentStep > index ? 'completed' : ''}`}></div>
+                  )}
+                  
+                  {/* Step circle and content */}
+                  <div className={`progress-step ${
+                    currentStep > step.id ? 'completed' : 
+                    currentStep === step.id ? 'active' : 'pending'
+                  }`}>
+                    <div className="step-circle">
+                      {currentStep > step.id ? (
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                          <path d="M13.5 4.5L6 12L2.5 8.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                      ) : (
+                        <span className="step-number">{step.id}</span>
+                      )}
+                    </div>
+                    <div className="step-label">{step.title}</div>
+                  </div>
                 </div>
-                <div className="step-title">{step.title}</div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
 
@@ -781,104 +795,233 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
           border-radius: 16px 16px 0 0;
         }
 
-        .step-progress {
-          position: relative;
-          display: flex;
-          justify-content: space-between;
-          gap: 8px;
-          overflow-x: auto;
-          padding: 0 8px;
+        /* Progress Container */
+        .progress-container {
+          padding: 24px 32px;
+          background: rgba(255, 255, 255, 0.1);
+          border-radius: 12px;
+          margin: 16px 24px;
         }
 
-        .progress-line {
+        .progress-bar {
+          display: flex;
+          align-items: flex-start;
+          justify-content: space-between;
+          position: relative;
+          max-width: 600px;
+          margin: 0 auto;
+        }
+
+        .progress-step-wrapper {
+          display: flex;
+          align-items: center;
+          position: relative;
+          flex: 1;
+        }
+
+        .progress-step-wrapper:not(:last-child) {
+          margin-right: 16px;
+        }
+
+        /* Progress Line Segments */
+        .progress-line-segment {
           position: absolute;
-          top: 20px;
-          left: 28px;
-          right: 28px;
-          height: 2px;
-          background: rgba(255, 255, 255, 0.3);
+          top: 22px;
+          left: -50%;
+          right: 50%;
+          height: 3px;
+          background: rgba(255, 255, 255, 0.2);
+          transition: all 0.4s ease;
+          border-radius: 2px;
           z-index: 1;
         }
 
-        .progress-fill {
-          height: 100%;
-          background: white;
-          transition: width 0.4s ease;
+        .progress-line-segment.completed {
+          background: rgba(255, 255, 255, 0.8);
+          box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
         }
 
-        .step {
+        /* Step Components */
+        .progress-step {
           display: flex;
           flex-direction: column;
           align-items: center;
-          gap: 6px;
-          min-width: 60px;
-          opacity: 0.5;
-          transition: all 0.3s;
-          flex: 1;
-          text-align: center;
+          gap: 12px;
           position: relative;
           z-index: 2;
+          transition: all 0.3s ease;
+          min-width: 80px;
         }
 
-        .step.active {
-          opacity: 1;
-          transform: scale(1.05);
+        .step-circle {
+          width: 44px;
+          height: 44px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: all 0.3s ease;
+          position: relative;
+          border: 3px solid transparent;
         }
 
         .step-number {
           font-size: 16px;
-          font-weight: 600;
-          width: 36px;
-          height: 36px;
-          border-radius: 50%;
-          background: rgba(255, 255, 255, 0.2);
-          color: rgba(255, 255, 255, 0.7);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          transition: all 0.3s;
-          border: 2px solid rgba(255, 255, 255, 0.3);
+          font-weight: 700;
+          transition: all 0.3s ease;
         }
 
-        .step.active .step-number {
-          background: white;
-          color: #6366f1;
-          border-color: white;
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        }
-
-        .step-title {
+        .step-label {
+          font-size: 13px;
           font-weight: 600;
-          font-size: 12px;
+          text-align: center;
+          transition: all 0.3s ease;
+          line-height: 1.3;
           white-space: nowrap;
+        }
+
+        /* Step States */
+        .progress-step.pending .step-circle {
+          background: rgba(255, 255, 255, 0.1);
+          border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .progress-step.pending .step-number {
+          color: rgba(255, 255, 255, 0.6);
+        }
+
+        .progress-step.pending .step-label {
+          color: rgba(255, 255, 255, 0.6);
+        }
+
+        .progress-step.active .step-circle {
+          background: white;
+          border-color: white;
+          box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.2), 0 8px 24px rgba(0, 0, 0, 0.15);
+          transform: scale(1.1);
+        }
+
+        .progress-step.active .step-number {
+          color: #6366f1;
+        }
+
+        .progress-step.active .step-label {
+          color: white;
+          transform: translateY(-2px);
+        }
+
+        .progress-step.completed .step-circle {
+          background: rgba(255, 255, 255, 0.9);
+          border-color: rgba(255, 255, 255, 0.9);
+          color: #10b981;
+        }
+
+        .progress-step.completed .step-label {
+          color: rgba(255, 255, 255, 0.8);
         }
 
         /* Mobile responsive adjustments */
         @media (max-width: 768px) {
-          .step {
-            min-width: 50px;
-            gap: 4px;
+          .progress-container {
+            padding: 16px 20px;
+            margin: 12px 16px;
+          }
+
+          .progress-step {
+            min-width: 60px;
+            gap: 8px;
+          }
+
+          .step-circle {
+            width: 36px;
+            height: 36px;
           }
 
           .step-number {
-            width: 28px;
-            height: 28px;
             font-size: 14px;
           }
 
-          .step-title {
-            font-size: 10px;
+          .step-label {
+            font-size: 11px;
+            line-height: 1.2;
           }
 
-          .progress-line {
-            top: 16px;
-            left: 25px;
-            right: 25px;
+          .progress-line-segment {
+            top: 18px;
+            height: 2px;
           }
 
           .onboarding-header {
             padding: 16px;
           }
+        }
+
+        /* Tablet responsive adjustments */
+        @media (max-width: 1024px) and (min-width: 769px) {
+          .progress-container {
+            padding: 20px 28px;
+            margin: 14px 20px;
+          }
+
+          .progress-step {
+            min-width: 70px;
+            gap: 10px;
+          }
+
+          .step-circle {
+            width: 40px;
+            height: 40px;
+          }
+
+          .step-number {
+            font-size: 15px;
+          }
+
+          .step-label {
+            font-size: 12px;
+          }
+
+          .progress-line-segment {
+            top: 20px;
+            height: 2px;
+          }
+        }
+
+        /* Extra small screens */
+        @media (max-width: 480px) {
+          .progress-container {
+            padding: 12px 16px;
+            margin: 8px 12px;
+          }
+
+          .progress-step {
+            min-width: 50px;
+            gap: 6px;
+          }
+
+          .step-circle {
+            width: 32px;
+            height: 32px;
+          }
+
+          .step-number {
+            font-size: 13px;
+          }
+
+          .step-label {
+            font-size: 10px;
+            line-height: 1.1;
+          }
+
+          .progress-line-segment {
+            top: 16px;
+            height: 2px;
+          }
+
+          .progress-step.active .step-circle {
+            transform: scale(1.05);
+          }
+        }
 
           .onboarding-content {
             padding: 20px;
