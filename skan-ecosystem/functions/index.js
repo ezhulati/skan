@@ -14,6 +14,9 @@ const db = admin.firestore();
 
 const app = express();
 
+// Enable trust proxy for Firebase Functions
+app.set("trust proxy", true);
+
 // Security Configuration (Firebase Functions v2 compatible)
 const JWT_SECRET = process.env.JWT_SECRET || "your-super-secret-jwt-key-change-in-production";
 const JWT_EXPIRE = "15m"; // Access token expires in 15 minutes
@@ -51,7 +54,28 @@ app.use(cors({
     : true,
   credentials: true
 }));
-app.use(express.json({ limit: "1mb" })); // Reduced limit for security
+// JSON parsing with error handling
+app.use(express.json({ 
+  limit: "1mb",
+  verify: (req, res, buf) => {
+    try {
+      JSON.parse(buf.toString());
+    } catch (e) {
+      console.error("JSON parse error:", e.message);
+      const error = new Error("Invalid JSON");
+      error.statusCode = 400;
+      throw error;
+    }
+  }
+}));
+
+// JSON error handler
+app.use((error, req, res, next) => {
+  if (error instanceof SyntaxError && error.statusCode === 400) {
+    return res.status(400).json({ error: "Invalid JSON format in request body" });
+  }
+  next(error);
+});
 
 // HTTPS Enforcement (production only)
 app.use((req, res, next) => {
@@ -1540,11 +1564,14 @@ app.post("/v1/auth/register", async (req, res) => {
     
     const userRef = await db.collection("users").add(userData);
     
-    // Create custom token for immediate login
-    const customToken = await admin.auth().createCustomToken(userRef.id, {
+    // Create JWT token for immediate login instead of Firebase custom token
+    const tokenPayload = {
+      userId: userRef.id,
+      email: userData.email,
       venueId: userData.venueId,
       role: userData.role
-    });
+    };
+    const customToken = jwt.sign(tokenPayload, JWT_SECRET, { expiresIn: JWT_EXPIRE });
     
     res.status(201).json({
       message: "User registered successfully",
@@ -2338,11 +2365,14 @@ app.post("/v1/auth/accept-invitation", async (req, res) => {
       userId: userRef.id
     });
     
-    // Create custom token for immediate login
-    const customToken = await admin.auth().createCustomToken(userRef.id, {
+    // Create JWT token for immediate login instead of Firebase custom token
+    const tokenPayload = {
+      userId: userRef.id,
+      email: userData.email,
       venueId: userData.venueId,
       role: userData.role
-    });
+    };
+    const customToken = jwt.sign(tokenPayload, JWT_SECRET, { expiresIn: JWT_EXPIRE });
     
     res.status(201).json({
       message: "Account created successfully",
