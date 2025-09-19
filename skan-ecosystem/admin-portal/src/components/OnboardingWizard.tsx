@@ -636,7 +636,7 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
                     setSaving(false);
                     // Complete onboarding and go to dashboard
                     console.log('Completing onboarding');
-                    handleCompleteOnboarding();
+                    onComplete();
                   }
                 }}
                 disabled={!tableCount || parseInt(tableCount) < 1 || saving}
