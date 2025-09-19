@@ -835,7 +835,7 @@ All endpoints return consistent error responses:
 
 **Demo Manager Login:**
 - Email: `manager_email1@gmail.com`
-- Password: `demo123`
+- Password: `admin123`
 - Venue ID: `demo-venue-1`
 
 **Demo Venue:**

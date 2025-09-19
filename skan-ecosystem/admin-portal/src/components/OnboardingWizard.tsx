@@ -460,13 +460,13 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
 
       case 2:
         return (
-          <div className="onboarding-step" style={{ padding: '32px', maxWidth: '600px', margin: '0 auto' }}>
-            <div style={{ textAlign: 'center', marginBottom: '32px' }}>
-              <h2 style={{ color: '#1a1a1a', fontSize: '28px', fontWeight: '600', marginBottom: '12px' }}>Shtoni Pjatat Kryesore</h2>
-              <p style={{ color: '#666', fontSize: '16px', lineHeight: '1.5' }}>Shtoni të paktën 3 pjata popullore për të nisur menjën tuaj dixhitale.</p>
+          <div style={{ padding: '40px 24px', maxWidth: '500px', margin: '0 auto' }}>
+            <div style={{ marginBottom: '40px' }}>
+              <h2 style={{ color: '#1a1a1a', fontSize: '24px', fontWeight: '700', marginBottom: '8px', textAlign: 'left' }}>Shtoni Pjatat Kryesore</h2>
+              <p style={{ color: '#64748b', fontSize: '15px', lineHeight: '1.6', textAlign: 'left' }}>Shtoni të paktën 3 pjata për të nisur menjën tuaj dixhitale.</p>
             </div>
             
-            <div className="menu-items-form" style={{ marginBottom: '32px' }}>
+            <div style={{ marginBottom: '40px' }}>
               {menuItems.map((item, index) => (
                 <div key={index} className="menu-item-card">
                   <div className="item-header">
@@ -525,38 +525,38 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
                   category: 'main' 
                 }])}
                 style={{
-                  background: '#f8f9fa',
-                  border: '2px dashed #dee2e6',
-                  color: '#6c757d',
-                  padding: '20px',
-                  borderRadius: '12px',
-                  fontSize: '16px',
+                  background: '#f1f5f9',
+                  border: '2px dashed #cbd5e1',
+                  color: '#475569',
+                  padding: '16px',
+                  borderRadius: '8px',
+                  fontSize: '14px',
                   fontWeight: '500',
                   cursor: 'pointer',
-                  marginBottom: '32px',
+                  marginBottom: '24px',
                   width: '100%',
-                  transition: 'all 0.2s ease'
+                  transition: 'all 0.15s ease'
                 }}
               >
                 + Shto Pjatë të Re
               </button>
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
               <button 
                 onClick={() => setCurrentStep(3)}
                 disabled={menuItems.length < 3 || menuItems.some(item => !item.nameAlbanian || !item.price)}
                 style={{
-                  background: menuItems.length >= 3 && menuItems.every(item => item.nameAlbanian && item.price) ? '#667eea' : '#ccc',
-                  color: 'white',
+                  background: menuItems.length >= 3 && menuItems.every(item => item.nameAlbanian && item.price) ? '#3b82f6' : '#e2e8f0',
+                  color: menuItems.length >= 3 && menuItems.every(item => item.nameAlbanian && item.price) ? 'white' : '#9ca3af',
                   border: 'none',
-                  padding: '16px 24px',
-                  borderRadius: '12px',
-                  fontSize: '16px',
+                  padding: '14px 20px',
+                  borderRadius: '8px',
+                  fontSize: '15px',
                   fontWeight: '600',
                   cursor: menuItems.length >= 3 && menuItems.every(item => item.nameAlbanian && item.price) ? 'pointer' : 'not-allowed',
                   width: '100%',
-                  transition: 'all 0.2s ease'
+                  transition: 'all 0.15s ease'
                 }}
               >
                 Vazhdo te Tavolinat → ({menuItems.length}/3 minimum)
@@ -565,31 +565,29 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
               <button
                 onClick={() => setCurrentStep(3)}
                 style={{
-                  background: 'transparent',
-                  color: '#666',
-                  border: '2px solid #e2e8f0',
-                  padding: '14px 24px',
-                  borderRadius: '12px',
-                  fontSize: '15px',
+                  background: 'white',
+                  color: '#374151',
+                  border: '1px solid #d1d5db',
+                  padding: '12px 20px',
+                  borderRadius: '8px',
+                  fontSize: '14px',
                   fontWeight: '500',
                   cursor: 'pointer',
                   width: '100%',
-                  transition: 'all 0.2s ease'
+                  transition: 'all 0.15s ease'
                 }}
                 onMouseOver={(e) => {
                   const target = e.target as HTMLElement;
-                  target.style.background = '#f8f9fa';
-                  target.style.borderColor = '#cbd5e0';
-                  target.style.color = '#333';
+                  target.style.background = '#f9fafb';
+                  target.style.borderColor = '#9ca3af';
                 }}
                 onMouseOut={(e) => {
                   const target = e.target as HTMLElement;
-                  target.style.background = 'transparent';
-                  target.style.borderColor = '#e2e8f0';
-                  target.style.color = '#666';
+                  target.style.background = 'white';
+                  target.style.borderColor = '#d1d5db';
                 }}
               >
-                Kalo këtë hap (mund të shtosh më vonë)
+                Kalo këtë hap dhe shtoji më vonë
               </button>
             </div>
           </div>

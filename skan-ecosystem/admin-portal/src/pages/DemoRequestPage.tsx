@@ -203,7 +203,7 @@ const DemoRequestPage: React.FC = () => {
                 setError(null);
                 
                 try {
-                  const response = await fetch('/api/v1/auth/login', {
+                  const response = await fetch('https://api-mkazmlu7ta-ew.a.run.app/v1/auth/login', {
                     method: 'POST',
                     headers: {
                       'Content-Type': 'application/json',
