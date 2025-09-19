@@ -571,12 +571,14 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
                 transition: 'all 0.2s ease'
               }}
               onMouseOver={(e) => {
-                e.target.style.background = 'rgba(255, 255, 255, 0.1)';
-                e.target.style.color = 'white';
+                const target = e.target as HTMLElement;
+                target.style.background = 'rgba(255, 255, 255, 0.1)';
+                target.style.color = 'white';
               }}
               onMouseOut={(e) => {
-                e.target.style.background = 'transparent';
-                e.target.style.color = 'rgba(255, 255, 255, 0.7)';
+                const target = e.target as HTMLElement;
+                target.style.background = 'transparent';
+                target.style.color = 'rgba(255, 255, 255, 0.7)';
               }}
             >
               Kalo këtë hap (mund të shtosh më vonë)
