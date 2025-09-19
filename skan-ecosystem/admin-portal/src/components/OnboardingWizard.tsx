@@ -171,8 +171,7 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
   const steps = [
     { id: 1, title: 'Informacioni' },
     { id: 2, title: 'Menyja' },
-    { id: 3, title: 'Tavolinat' },
-    { id: 4, title: 'Testimi' }
+    { id: 3, title: 'Tavolinat' }
   ];
 
   const nextStep = () => {
@@ -635,113 +634,16 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
                     // The user can set this up later in the actual dashboard
                   } finally {
                     setSaving(false);
-                    // Always advance to next step in onboarding, regardless of API success
-                    console.log('Advancing to next step');
-                    nextStep();
+                    // Complete onboarding and go to dashboard
+                    console.log('Completing onboarding');
+                    handleCompleteOnboarding();
                   }
                 }}
                 disabled={!tableCount || parseInt(tableCount) < 1 || saving}
               >
-                {saving ? 'Duke ruajtur...' : 'Gjenero Kodrat QR →'}
+                {saving ? 'Duke ruajtur...' : 'Përfundo dhe Hap Dashboard ✓'}
               </button>
             </div>
-          </div>
-        );
-
-      case 4:
-        return (
-          <div className="onboarding-step">
-            <h2>Testimi i Sistemit</h2>
-            <p className="step-description">Le ta testojmë sistemin për të siguruar që gjithçka funksionon si duhet.</p>
-            
-            <div className="testing-checklist">
-              <div className="test-section">
-                <h4>✅ Të dhënat e restorantit:</h4>
-                <ul>
-                  <li>📍 {restaurantInfo.name} - {restaurantInfo.address}</li>
-                  <li>📞 {restaurantInfo.phone}</li>
-                  <li>🍽️ {restaurantInfo.cuisineType}</li>
-                </ul>
-              </div>
-              
-              <div className="test-section">
-                <h4>✅ Menyja dixhitale:</h4>
-                <ul>
-                  {menuItems.map((item, index) => (
-                    <li key={index}>🍽️ {item.nameAlbanian} - €{item.price}</li>
-                  ))}
-                </ul>
-              </div>
-              
-              <div className="test-section">
-                <h4>✅ Konfigurimi i tavolinave:</h4>
-                <ul>
-                  <li>🪑 {tableCount} tavolina me kodra QR</li>
-                  <li>📱 Gati për porositje dixhitale</li>
-                </ul>
-              </div>
-            </div>
-
-            <div className="ready-status">
-              <div className="status-badge" style={{
-                background: '#d4edda',
-                color: '#155724',
-                padding: '16px',
-                borderRadius: '8px',
-                border: '1px solid #c3e6cb',
-                marginBottom: '16px',
-                fontSize: '18px',
-                textAlign: 'center'
-              }}>
-                🎉 Restoranti juaj është gati për porositje dixhitale!
-              </div>
-              <p>Tani mund të merrni porosi direkt nga klientët përmes kodrave QR.</p>
-            </div>
-
-            <div className="next-steps">
-              <h4>Hapat e ardhshëm në dashboard:</h4>
-              <ol>
-                <li>Shikoni dhe menaxhoni porositë e reja</li>
-                <li>Shtoni më shumë pjata në menyjë</li>
-                <li>Printoni kodrat QR për tavolinat</li>
-                <li>Konfiguroni njoftimet për porosi</li>
-              </ol>
-            </div>
-
-            <button 
-              className="complete-button" 
-              onClick={async () => {
-                try {
-                  setSaving(true);
-                  // Save final onboarding completion
-                  localStorage.setItem('onboarding_completed', 'true');
-                  localStorage.setItem('onboarding_completion_date', new Date().toISOString());
-                  localStorage.setItem('onboarding_menu_items', JSON.stringify(menuItems));
-                  
-                  onComplete();
-                } catch (err) {
-                  console.error('Error completing onboarding:', err);
-                } finally {
-                  setSaving(false);
-                  // Always call onComplete to navigate to dashboard
-                  onComplete();
-                }
-              }}
-              disabled={saving}
-              style={{
-                background: '#28a745',
-                color: 'white',
-                border: 'none',
-                padding: '16px 32px',
-                borderRadius: '8px',
-                fontSize: '18px',
-                fontWeight: 'bold',
-                cursor: 'pointer',
-                marginTop: '24px'
-              }}
-            >
-              {saving ? 'Duke përfunduar...' : '🚀 Hapni Dashboardin!'}
-            </button>
           </div>
         );
 
