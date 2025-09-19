@@ -111,7 +111,17 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
             address: venueData.address || '',
             phone: venueData.phone || '',
             cuisineType: venueData.cuisineType || '',
-            description: venueData.description || ''
+            description: venueData.description || '',
+            operatingHours: {
+              monday: { open: '09:00', close: '22:00', closed: false },
+              tuesday: { open: '09:00', close: '22:00', closed: false },
+              wednesday: { open: '09:00', close: '22:00', closed: false },
+              thursday: { open: '09:00', close: '22:00', closed: false },
+              friday: { open: '09:00', close: '22:00', closed: false },
+              saturday: { open: '09:00', close: '22:00', closed: false },
+              sunday: { open: '09:00', close: '22:00', closed: false }
+            },
+            paymentMethods: ['cash']
           });
           
           // Clear localStorage since we got fresh data from API

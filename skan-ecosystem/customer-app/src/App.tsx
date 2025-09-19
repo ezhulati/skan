@@ -1,5 +1,5 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate, useParams, useNavigate } from 'react-router-dom';
 import { LanguageProvider, useLanguage } from './contexts/LanguageContext';
 import { VenueProvider } from './contexts/VenueContext';
 import { CartProvider } from './contexts/CartContext';
@@ -10,6 +10,8 @@ import { Confirmation } from './pages/Confirmation';
 import { OrderTracking } from './pages/OrderTracking';
 import { CompactLanguagePicker } from './components/LanguagePicker';
 import ScrollToTop from './components/ScrollToTop';
+import { api } from './services/api';
+import { OrderTracking as OrderTrackingType } from './types';
 import './index.css';
 
 function VenueRoutes() {
