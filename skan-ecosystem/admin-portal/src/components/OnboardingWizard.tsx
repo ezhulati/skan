@@ -460,11 +460,13 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
 
       case 2:
         return (
-          <div className="onboarding-step">
-            <h2>Shtoni Pjatat Kryesore</h2>
-            <p className="step-description">Shtoni të paktën 3 pjata popullore për të nisur menjën tuaj dixhitale.</p>
+          <div className="onboarding-step" style={{ padding: '32px', maxWidth: '600px', margin: '0 auto' }}>
+            <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+              <h2 style={{ color: '#1a1a1a', fontSize: '28px', fontWeight: '600', marginBottom: '12px' }}>Shtoni Pjatat Kryesore</h2>
+              <p style={{ color: '#666', fontSize: '16px', lineHeight: '1.5' }}>Shtoni të paktën 3 pjata popullore për të nisur menjën tuaj dixhitale.</p>
+            </div>
             
-            <div className="menu-items-form">
+            <div className="menu-items-form" style={{ marginBottom: '32px' }}>
               {menuItems.map((item, index) => (
                 <div key={index} className="menu-item-card">
                   <div className="item-header">
@@ -522,68 +524,74 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
                   price: '', 
                   category: 'main' 
                 }])}
-                className="add-button"
                 style={{
                   background: '#f8f9fa',
                   border: '2px dashed #dee2e6',
                   color: '#6c757d',
-                  padding: '16px',
-                  borderRadius: '8px',
+                  padding: '20px',
+                  borderRadius: '12px',
                   fontSize: '16px',
+                  fontWeight: '500',
                   cursor: 'pointer',
-                  marginBottom: '24px',
-                  width: '100%'
+                  marginBottom: '32px',
+                  width: '100%',
+                  transition: 'all 0.2s ease'
                 }}
               >
                 + Shto Pjatë të Re
               </button>
             </div>
 
-            <button 
-              className="next-button"
-              onClick={() => setCurrentStep(3)}
-              disabled={menuItems.length < 3 || menuItems.some(item => !item.nameAlbanian || !item.price)}
-              style={{
-                background: menuItems.length >= 3 && menuItems.every(item => item.nameAlbanian && item.price) ? '#667eea' : '#ccc',
-                color: 'white',
-                border: 'none',
-                padding: '12px 24px',
-                borderRadius: '8px',
-                fontSize: '16px',
-                cursor: menuItems.length >= 3 && menuItems.every(item => item.nameAlbanian && item.price) ? 'pointer' : 'not-allowed',
-                marginTop: '24px'
-              }}
-            >
-              Vazhdo te Tavolinat → ({menuItems.length}/3 minimum)
-            </button>
-            
-            <button
-              onClick={() => setCurrentStep(3)}
-              style={{
-                background: 'transparent',
-                color: 'rgba(255, 255, 255, 0.8)',
-                border: '1px solid rgba(255, 255, 255, 0.4)',
-                padding: '10px 20px',
-                borderRadius: '6px',
-                fontSize: '14px',
-                cursor: 'pointer',
-                marginTop: '16px',
-                width: '100%',
-                transition: 'all 0.2s ease'
-              }}
-              onMouseOver={(e) => {
-                const target = e.target as HTMLElement;
-                target.style.background = 'rgba(255, 255, 255, 0.1)';
-                target.style.color = 'white';
-              }}
-              onMouseOut={(e) => {
-                const target = e.target as HTMLElement;
-                target.style.background = 'transparent';
-                target.style.color = 'rgba(255, 255, 255, 0.7)';
-              }}
-            >
-              Kalo këtë hap (mund të shtosh më vonë)
-            </button>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <button 
+                onClick={() => setCurrentStep(3)}
+                disabled={menuItems.length < 3 || menuItems.some(item => !item.nameAlbanian || !item.price)}
+                style={{
+                  background: menuItems.length >= 3 && menuItems.every(item => item.nameAlbanian && item.price) ? '#667eea' : '#ccc',
+                  color: 'white',
+                  border: 'none',
+                  padding: '16px 24px',
+                  borderRadius: '12px',
+                  fontSize: '16px',
+                  fontWeight: '600',
+                  cursor: menuItems.length >= 3 && menuItems.every(item => item.nameAlbanian && item.price) ? 'pointer' : 'not-allowed',
+                  width: '100%',
+                  transition: 'all 0.2s ease'
+                }}
+              >
+                Vazhdo te Tavolinat → ({menuItems.length}/3 minimum)
+              </button>
+              
+              <button
+                onClick={() => setCurrentStep(3)}
+                style={{
+                  background: 'transparent',
+                  color: '#666',
+                  border: '2px solid #e2e8f0',
+                  padding: '14px 24px',
+                  borderRadius: '12px',
+                  fontSize: '15px',
+                  fontWeight: '500',
+                  cursor: 'pointer',
+                  width: '100%',
+                  transition: 'all 0.2s ease'
+                }}
+                onMouseOver={(e) => {
+                  const target = e.target as HTMLElement;
+                  target.style.background = '#f8f9fa';
+                  target.style.borderColor = '#cbd5e0';
+                  target.style.color = '#333';
+                }}
+                onMouseOut={(e) => {
+                  const target = e.target as HTMLElement;
+                  target.style.background = 'transparent';
+                  target.style.borderColor = '#e2e8f0';
+                  target.style.color = '#666';
+                }}
+              >
+                Kalo këtë hap (mund të shtosh më vonë)
+              </button>
+            </div>
           </div>
         );
 
