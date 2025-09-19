@@ -16,6 +16,7 @@ import { AuthProvider } from './contexts/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import Navigation from './components/Navigation';
 import ScrollToTop from './components/ScrollToTop';
+import DevTools from './components/DevTools';
 
 function App() {
   return (
@@ -98,6 +99,7 @@ function App() {
             />
             <Route path="/" element={<Navigate to="/login" replace />} />
           </Routes>
+          <DevTools />
         </div>
       </Router>
     </AuthProvider>

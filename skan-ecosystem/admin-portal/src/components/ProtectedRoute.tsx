@@ -23,8 +23,12 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
     return <Navigate to="/login" replace />;
   }
 
+  // Check for dev force onboarding flag
+  const devForceOnboarding = process.env.NODE_ENV === 'development' && 
+    localStorage.getItem('dev_force_onboarding') === 'true';
+  
   // If user needs onboarding and is not already on onboarding page
-  if (auth.needsOnboarding && location.pathname !== '/onboarding') {
+  if ((auth.needsOnboarding || devForceOnboarding) && location.pathname !== '/onboarding') {
     return <Navigate to="/onboarding" replace />;
   }
 

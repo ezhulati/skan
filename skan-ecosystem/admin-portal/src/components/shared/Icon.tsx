@@ -24,7 +24,7 @@ export const iconMap: Record<string, IconType> = {
   'filter': Icons.MdFilterList,
   
   // UI Elements
-  'menu': Icons.MdMenu,
+  'hamburger-menu': Icons.MdMenu,
   'home': Icons.MdHome,
   'user': Icons.MdPerson,
   'settings': Icons.MdSettings,
@@ -40,6 +40,10 @@ export const iconMap: Record<string, IconType> = {
   'receipt': Icons.MdReceipt,
   'qr-code': Icons.MdQrCode,
   'table': Icons.MdTableRestaurant,
+  'store': Icons.MdStore,
+  'menu-book': Icons.MdMenuBook,
+  'category': Icons.MdCategory,
+  'restaurant-menu': Icons.MdRestaurantMenu,
   
   // Admin Specific
   'dashboard': Icons.MdDashboard,

@@ -1,0 +1,34 @@
+{
+  "timestamp": "2025-09-19T14:34:58.114Z",
+  "tests": [
+    {
+      "testName": "Login successful",
+      "passed": true,
+      "details": "URL: http://localhost:3000/dashboard",
+      "timestamp": "2025-09-19T14:35:06.961Z"
+    },
+    {
+      "testName": "Onboarding page accessible",
+      "passed": false,
+      "details": "Redirected to: http://localhost:3000/login",
+      "timestamp": "2025-09-19T14:35:10.910Z"
+    },
+    {
+      "testName": "Forced onboarding access",
+      "passed": false,
+      "details": "Final URL: http://localhost:3000/login",
+      "timestamp": "2025-09-19T14:35:14.086Z"
+    },
+    {
+      "testName": "API health check",
+      "passed": true,
+      "details": "Status: 200, Response: {\"status\":\"OK\",\"timestamp\":\"2025-09-19T14:35:14.18",
+      "timestamp": "2025-09-19T14:35:14.281Z"
+    }
+  ],
+  "summary": {
+    "passed": 2,
+    "failed": 2,
+    "total": 4
+  }
+}

@@ -41,22 +41,73 @@ class OnboardingApiService {
 
   async getOnboardingStatus(): Promise<OnboardingApiResponse> {
     try {
+      const token = restaurantApiService.getToken();
+      console.log('Making onboarding status request to:', `${this.baseUrl}/v1/onboarding/status`);
+      console.log('Using token:', token ? 'Present' : 'Missing');
+
       const response = await fetch(`${this.baseUrl}/v1/onboarding/status`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${restaurantApiService.getToken()}`
+          'Authorization': `Bearer ${token}`
         }
       });
 
+      console.log('Onboarding status response:', response.status, response.statusText);
+
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
+        const errorText = await response.text();
+        console.error('Onboarding status error response:', errorText);
+        console.error('Response status:', response.status);
+        
+        // Handle 404 specifically - this means the onboarding endpoint doesn't exist or user data not found
+        // This is normal for new users who haven't started onboarding yet
+        if (response.status === 404 || errorText.includes('User not found')) {
+          console.log('Onboarding data not found (normal for new users), returning default structure');
+          return {
+            onboarding: {
+              isComplete: false,
+              currentStep: 1,
+              completedSteps: [],
+              steps: {
+                profileComplete: { completed: false, data: {} },
+                venueSetup: { completed: false, data: {} },
+                menuCategories: { completed: false, data: {} },
+                menuItems: { completed: false, data: {} },
+                tableSetup: { completed: false, data: {} },
+                staffSetup: { completed: false, data: {} }
+              }
+            },
+            user: {
+              email: '',
+              fullName: '',
+              role: '',
+              venueId: null
+            }
+          };
+        }
+        
+        let errorData;
+        try {
+          errorData = JSON.parse(errorText);
+        } catch {
+          errorData = { error: errorText || `HTTP ${response.status}: ${response.statusText}` };
+        }
+        
         throw new Error(errorData.error || `HTTP ${response.status}: ${response.statusText}`);
       }
 
-      return await response.json();
+      const result = await response.json();
+      console.log('Onboarding status result:', result);
+      return result;
     } catch (error) {
       console.error('Error getting onboarding status:', error);
+      
+      // Re-throw with more context if it's a network error
+      if (error instanceof TypeError && error.message.includes('fetch')) {
+        throw new Error('Network error: Could not connect to the server. Please check your internet connection.');
+      }
+      
       throw error;
     }
   }
@@ -67,23 +118,50 @@ class OnboardingApiService {
     completed: boolean = true
   ): Promise<{ onboarding: OnboardingStatus }> {
     try {
-      const response = await fetch(`${this.baseUrl}/v1/onboarding/step/${stepName}`, {
+      const token = restaurantApiService.getToken();
+      const url = `${this.baseUrl}/v1/onboarding/step/${stepName}`;
+      
+      console.log(`Updating onboarding step: ${stepName}`);
+      console.log('URL:', url);
+      console.log('Data:', data);
+      console.log('Token available:', !!token);
+
+      const response = await fetch(url, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${restaurantApiService.getToken()}`
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({ data, completed })
       });
 
+      console.log(`Response for ${stepName}:`, response.status, response.statusText);
+
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
+        const errorText = await response.text();
+        console.error(`Error response for ${stepName}:`, errorText);
+        
+        let errorData;
+        try {
+          errorData = JSON.parse(errorText);
+        } catch {
+          errorData = { error: errorText || `HTTP ${response.status}: ${response.statusText}` };
+        }
+        
         throw new Error(errorData.error || `HTTP ${response.status}: ${response.statusText}`);
       }
 
-      return await response.json();
+      const result = await response.json();
+      console.log(`Success for ${stepName}:`, result);
+      return result;
     } catch (error) {
-      console.error('Error updating onboarding step:', error);
+      console.error(`Error updating onboarding step ${stepName}:`, error);
+      
+      // Re-throw with more context if it's a network error
+      if (error instanceof TypeError && error.message.includes('fetch')) {
+        throw new Error(`Network error updating ${stepName}: Could not connect to the server`);
+      }
+      
       throw error;
     }
   }

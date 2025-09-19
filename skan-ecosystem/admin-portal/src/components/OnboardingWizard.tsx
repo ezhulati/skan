@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { onboardingApiService } from '../services/onboardingApi';
 import { useAuth } from '../contexts/AuthContext';
+import { Icon, IconName } from './shared/Icon';
 
 interface OnboardingWizardProps {
   onComplete: () => void;
@@ -95,18 +96,25 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
         }
       } catch (err) {
         console.error('Error loading onboarding status:', err);
+        console.error('Error details:', JSON.stringify(err, null, 2));
         
         // Provide more detailed error message
         let errorMessage = 'Failed to load onboarding progress';
         if (err instanceof Error) {
-          if (err.message.includes('401') || err.message.includes('Unauthorized')) {
+          // Check for common error patterns
+          if (err.message.includes('401') || err.message.includes('Unauthorized') || err.message.includes('Invalid token')) {
             errorMessage = 'Authentication failed. Please try logging in again.';
-          } else if (err.message.includes('404')) {
-            errorMessage = 'Onboarding data not found. Starting fresh setup.';
+          } else if (err.message.includes('404') || err.message.includes('User not found') || err.message.includes('not found')) {
+            errorMessage = 'Starting fresh onboarding setup.';
+            console.log('User not found in onboarding system - this is normal for new users');
+            // Clear the error since this is expected for new users
+            setError(null);
+            setLoading(false);
+            return;
           } else if (err.message.includes('network') || err.message.includes('fetch')) {
             errorMessage = 'Connection error. Using saved data if available.';
           } else {
-            errorMessage = `Failed to load onboarding progress: ${err.message}`;
+            errorMessage = `Connection issue: ${err.message}`;
           }
         }
         
@@ -123,11 +131,11 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
   }, [auth.token]);
 
   const steps = [
-    { id: 1, title: 'Info', icon: '🏪' },
-    { id: 2, title: 'Menu', icon: '📋' },
-    { id: 3, title: 'Items', icon: '🍕' },
-    { id: 4, title: 'Tables', icon: '🪑' },
-    { id: 5, title: 'Done', icon: '✅' }
+    { id: 1, title: 'Informacioni', icon: 'store' as IconName },
+    { id: 2, title: 'Kategoritë', icon: 'category' as IconName },
+    { id: 3, title: 'Pjatet', icon: 'restaurant-menu' as IconName },
+    { id: 4, title: 'Tavolinat', icon: 'table' as IconName },
+    { id: 5, title: 'Perfunduar', icon: 'success' as IconName }
   ];
 
   const nextStep = () => {
@@ -154,12 +162,12 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
 
       // Basic validation
       if (!restaurantInfo.name || !restaurantInfo.address || !restaurantInfo.phone || !restaurantInfo.cuisineType) {
-        throw new Error('Please fill in all required fields.');
+        throw new Error('Ju lutemi plotësoni të gjitha fushat e detyrueshme.');
       }
 
       // Ensure token is set
       if (!auth.token) {
-        throw new Error('Authentication required. Please log in again.');
+        throw new Error('Kërkohet vërtetimi. Ju lutemi kyçuni përsëri.');
       }
 
       onboardingApiService.setToken(auth.token);
@@ -214,7 +222,7 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
           
           // For network errors, still allow them to proceed
           localStorage.setItem('onboarding_restaurant_info', JSON.stringify(restaurantInfo));
-          setError(errorMessage + ' Click "Continue anyway" to proceed.');
+          setError(errorMessage + ' Klikoni "Vazhdo gjithsesi" për të vazhduar.');
         } else {
           errorMessage = `Setup error: ${err.message}`;
         }
@@ -231,61 +239,61 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
       case 1:
         return (
           <div className="onboarding-step">
-            <h2>🏪 Welcome to SKAN.AL!</h2>
-            <p>Let's set up your restaurant for digital ordering. This will only take a few minutes.</p>
+            <h2>Mirë se vini në SKAN.AL!</h2>
+            <p>Le të konfigurojmë restorantin tuaj për porositje dixhitale. Kjo do të marrë vetëm disa minuta.</p>
             
             <div className="form-group">
-              <label>Restaurant Name *</label>
+              <label>Emri i Restorantit *</label>
               <input
                 type="text"
                 value={restaurantInfo.name}
                 onChange={(e) => setRestaurantInfo({...restaurantInfo, name: e.target.value})}
-                placeholder="e.g., Taverna Durrësi"
+                placeholder="p.sh., Taverna Durrësi"
               />
             </div>
 
             <div className="form-group">
-              <label>Address *</label>
+              <label>Adresa *</label>
               <input
                 type="text"
                 value={restaurantInfo.address}
                 onChange={(e) => setRestaurantInfo({...restaurantInfo, address: e.target.value})}
-                placeholder="e.g., Rruga Taulantia, Durrës"
+                placeholder="p.sh., Rruga Taulantia, Durrës"
               />
             </div>
 
             <div className="form-group">
-              <label>Phone Number *</label>
+              <label>Numri i Telefonit *</label>
               <input
                 type="tel"
                 value={restaurantInfo.phone}
                 onChange={(e) => setRestaurantInfo({...restaurantInfo, phone: e.target.value})}
-                placeholder="e.g., +355 67 123 4567"
+                placeholder="p.sh., +355 67 123 4567"
               />
             </div>
 
             <div className="form-group">
-              <label>Cuisine Type *</label>
+              <label>Lloji i Kuzhinës *</label>
               <select
                 value={restaurantInfo.cuisineType}
                 onChange={(e) => setRestaurantInfo({...restaurantInfo, cuisineType: e.target.value})}
               >
-                <option value="">Select cuisine type...</option>
-                <option value="traditional">Traditional Albanian</option>
-                <option value="mediterranean">Mediterranean</option>
-                <option value="italian">Italian</option>
-                <option value="seafood">Seafood</option>
-                <option value="international">International</option>
-                <option value="cafe">Café/Bar</option>
+                <option value="">Zgjidhni llojin e kuzhinës...</option>
+                <option value="traditional">Tradicionale Shqiptare</option>
+                <option value="mediterranean">Mesdhetare</option>
+                <option value="italian">Italiane</option>
+                <option value="seafood">Peshku dhe Deti</option>
+                <option value="international">Ndërkombëtare</option>
+                <option value="cafe">Kafe/Bar</option>
               </select>
             </div>
 
             <div className="form-group">
-              <label>Short Description</label>
+              <label>Përshkrimi i Shkurtër</label>
               <textarea
                 value={restaurantInfo.description}
                 onChange={(e) => setRestaurantInfo({...restaurantInfo, description: e.target.value})}
-                placeholder="Describe your restaurant in a few words..."
+                placeholder="Përshkruani restorantin tuaj në disa fjalë..."
                 rows={3}
               />
             </div>
@@ -360,7 +368,7 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
                     }}
                     title="Dismiss and continue"
                   >
-                    Continue anyway
+                    Vazhdo gjithsesi
                   </button>
                 </div>
               </div>
@@ -372,7 +380,7 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
                 onClick={handleRestaurantInfoSubmit}
                 disabled={!restaurantInfo.name || !restaurantInfo.address || !restaurantInfo.phone || !restaurantInfo.cuisineType || saving}
               >
-                {saving ? 'Saving...' : 'Continue to Menu Setup →'}
+                {saving ? 'Duke ruajtur...' : 'Vazhdo te Menyja →'}
               </button>
               
               {error && (
@@ -394,7 +402,7 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
                     fontSize: '14px'
                   }}
                 >
-                  Skip & Continue
+                  Kalo & Vazhdo
                 </button>
               )}
             </div>
@@ -404,8 +412,8 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
       case 2:
         return (
           <div className="onboarding-step">
-            <h2>📋 Menu Categories</h2>
-            <p>We'll create these basic categories for your menu. You can customize them later.</p>
+            <h2>Kategoritë e Menusë</h2>
+            <p>Do të krijojmë këto kategori bazë për menunë tuaj. Mund t'i personalizoni më vonë.</p>
             
             <div className="category-preview">
               <div className="category-item">
@@ -429,7 +437,7 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
             <p><strong>Perfect for {restaurantInfo.cuisineType} cuisine!</strong></p>
 
             <div className="step-actions">
-              <button className="prev-button" onClick={prevStep}>← Back</button>
+              <button className="prev-button" onClick={prevStep}>← Mbrapa</button>
               <button className="next-button" onClick={nextStep}>
                 Create Categories →
               </button>
@@ -440,24 +448,24 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
       case 3:
         return (
           <div className="onboarding-step">
-            <h2>🍕 Add Your First Menu Items</h2>
-            <p>Let's add a few items to get you started. You can add more later!</p>
+            <h2>Shtoni Artikujt e Parë të Menusë</h2>
+            <p>Le të shtojmë disa artikuj për t'ju ndihmuar të filloni. Mund të shtoni më shumë më vonë!</p>
             
             <div className="sample-item-form">
-              <h4>Add a popular dish:</h4>
+              <h4>Shtoni një pjatë të njohur:</h4>
               <div className="form-row">
                 <input
                   type="text"
-                  placeholder="Item name in Albanian"
+                  placeholder="Emri i pjatës në shqip"
                   style={{ flex: 1, marginRight: '8px' }}
                 />
                 <input
                   type="text"
-                  placeholder="Price (€)"
+                  placeholder="Çmimi (€)"
                   style={{ width: '100px' }}
                 />
               </div>
-              <button className="add-item-button">+ Add Item</button>
+              <button className="add-item-button">+ Shto Artikull</button>
             </div>
 
             <div className="onboarding-tips">
@@ -470,9 +478,9 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
             </div>
 
             <div className="step-actions">
-              <button className="prev-button" onClick={prevStep}>← Back</button>
+              <button className="prev-button" onClick={prevStep}>← Mbrapa</button>
               <button className="next-button" onClick={nextStep}>
-                Continue to Tables →
+                Vazhdo te Tavolinat →
               </button>
             </div>
           </div>
@@ -481,16 +489,16 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
       case 4:
         return (
           <div className="onboarding-step">
-            <h2>🪑 Table Setup</h2>
-            <p>How many tables does your restaurant have?</p>
+            <h2>Konfigurimi i Tavolinave</h2>
+            <p>Sa tavolina ka restoranti juaj?</p>
             
             <div className="form-group">
-              <label>Number of Tables *</label>
+              <label>Numri i Tavolinave *</label>
               <input
                 type="number"
                 value={tableCount}
                 onChange={(e) => setTableCount(e.target.value)}
-                placeholder="e.g., 12"
+                placeholder="p.sh., 12"
                 min="1"
                 max="100"
               />
@@ -516,7 +524,7 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
             </div>
 
             <div className="step-actions">
-              <button className="prev-button" onClick={prevStep}>← Back</button>
+              <button className="prev-button" onClick={prevStep}>← Mbrapa</button>
               <button 
                 className="next-button" 
                 onClick={async () => {
@@ -543,8 +551,8 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
       case 5:
         return (
           <div className="onboarding-step">
-            <h2>🎉 You're All Set!</h2>
-            <p>Your restaurant is ready for digital ordering. Here's what we've set up:</p>
+            <h2>Gati për përdorim!</h2>
+            <p>Restoranti juaj është gati për porositje dixhitale. Ja çfarë kemi konfiguruar:</p>
             
             <div className="setup-summary">
               <div className="summary-item">
@@ -597,14 +605,14 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
                   onComplete();
                 } catch (err) {
                   console.error('Error completing onboarding:', err);
-                  setError('Failed to complete onboarding. Please try again.');
+                  setError('Dështoi plotësimi i konfigurimit. Ju lutemi provoni përsëri.');
                 } finally {
                   setSaving(false);
                 }
               }}
               disabled={saving}
             >
-              {saving ? 'Completing Setup...' : 'Go to Dashboard →'}
+              {saving ? 'Duke përfunduar konfigurimin...' : 'Shko te Dashboard →'}
             </button>
           </div>
         );
@@ -660,7 +668,9 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
             </div>
             {steps.map((step) => (
               <div key={step.id} className={`step ${currentStep >= step.id ? 'active' : ''}`}>
-                <div className="step-icon">{step.icon}</div>
+                <div className="step-icon">
+                  <Icon name={step.icon} size={20} />
+                </div>
                 <div className="step-title">{step.title}</div>
               </div>
             ))}
