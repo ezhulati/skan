@@ -26,6 +26,10 @@ class RestaurantApiService {
     this.token = token;
   }
 
+  getToken(): string | null {
+    return this.token;
+  }
+
   private async request<T>(url: string, options?: RequestInit): Promise<T> {
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',

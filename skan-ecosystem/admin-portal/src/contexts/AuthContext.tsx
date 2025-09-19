@@ -48,7 +48,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://api-mkazmlu7ta-ew.a.run.app/v1';
     
     try {
-      const response = await fetch(`${API_BASE_URL}/venue/setup-status`, {
+      const response = await fetch(`${API_BASE_URL}/onboarding/status`, {
         headers: {
           'Authorization': `Bearer ${auth.token}`,
           'Content-Type': 'application/json'
@@ -59,11 +59,23 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         const data = await response.json();
         setAuth(prev => ({
           ...prev,
-          needsOnboarding: !data.setup.onboardingCompleted
+          needsOnboarding: !data.onboarding.isComplete
+        }));
+      } else {
+        // If onboarding API is not available, fall back to checking if user has venue
+        console.log('New onboarding API not available, falling back to venue check');
+        setAuth(prev => ({
+          ...prev,
+          needsOnboarding: !prev.user?.venueId
         }));
       }
     } catch (error) {
       console.error('Error checking onboarding status:', error);
+      // Fallback: if user has no venue, they need onboarding
+      setAuth(prev => ({
+        ...prev,
+        needsOnboarding: !prev.user?.venueId
+      }));
     }
   }, [auth.token]);
 

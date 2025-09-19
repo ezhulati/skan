@@ -1578,19 +1578,40 @@ app.post("/v1/auth/register", async (req, res) => {
       isActive: true,
       emailVerified: false,
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
-      updatedAt: admin.firestore.FieldValue.serverTimestamp()
+      updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+      onboarding: {
+        isComplete: false,
+        currentStep: 1,
+        completedSteps: [],
+        steps: {
+          profileComplete: { completed: false, data: {} },
+          venueSetup: { completed: false, data: {} },
+          menuCategories: { completed: false, data: {} },
+          menuItems: { completed: false, data: {} },
+          tableSetup: { completed: false, data: {} },
+          staffSetup: { completed: false, data: {} }
+        },
+        startedAt: admin.firestore.FieldValue.serverTimestamp(),
+        completedAt: null
+      }
     };
     
     const userRef = await db.collection("users").add(userData);
     
     // Create JWT token for immediate login instead of Firebase custom token
     const tokenPayload = {
-      userId: userRef.id,
+      uid: userRef.id,
+      userId: userRef.id, // Keep for backward compatibility
       email: userData.email,
       venueId: userData.venueId,
-      role: userData.role
+      role: userData.role,
+      type: "access"
     };
-    const customToken = jwt.sign(tokenPayload, JWT_SECRET, { expiresIn: JWT_EXPIRE });
+    const customToken = jwt.sign(tokenPayload, JWT_SECRET, { 
+      expiresIn: JWT_EXPIRE,
+      issuer: "skan.al",
+      audience: "skan-api"
+    });
     
     res.status(201).json({
       message: "User registered successfully",
@@ -2372,7 +2393,22 @@ app.post("/v1/auth/accept-invitation", async (req, res) => {
       isActive: true,
       emailVerified: true, // Pre-verified through invitation
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
-      updatedAt: admin.firestore.FieldValue.serverTimestamp()
+      updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+      onboarding: {
+        isComplete: inviteData.venueId ? true : false, // If invited to existing venue, skip onboarding
+        currentStep: inviteData.venueId ? 6 : 1,
+        completedSteps: inviteData.venueId ? [1, 2, 3, 4, 5, 6] : [],
+        steps: {
+          profileComplete: { completed: inviteData.venueId ? true : false, data: {} },
+          venueSetup: { completed: inviteData.venueId ? true : false, data: {} },
+          menuCategories: { completed: inviteData.venueId ? true : false, data: {} },
+          menuItems: { completed: inviteData.venueId ? true : false, data: {} },
+          tableSetup: { completed: inviteData.venueId ? true : false, data: {} },
+          staffSetup: { completed: inviteData.venueId ? true : false, data: {} }
+        },
+        startedAt: admin.firestore.FieldValue.serverTimestamp(),
+        completedAt: inviteData.venueId ? admin.firestore.FieldValue.serverTimestamp() : null
+      }
     };
     
     const userRef = await db.collection("users").add(userData);
@@ -2386,12 +2422,18 @@ app.post("/v1/auth/accept-invitation", async (req, res) => {
     
     // Create JWT token for immediate login instead of Firebase custom token
     const tokenPayload = {
-      userId: userRef.id,
+      uid: userRef.id,
+      userId: userRef.id, // Keep for backward compatibility
       email: userData.email,
       venueId: userData.venueId,
-      role: userData.role
+      role: userData.role,
+      type: "access"
     };
-    const customToken = jwt.sign(tokenPayload, JWT_SECRET, { expiresIn: JWT_EXPIRE });
+    const customToken = jwt.sign(tokenPayload, JWT_SECRET, { 
+      expiresIn: JWT_EXPIRE,
+      issuer: "skan.al",
+      audience: "skan-api"
+    });
     
     res.status(201).json({
       message: "Account created successfully",
@@ -2789,7 +2831,22 @@ app.post("/v1/register/venue", async (req, res) => {
       isActive: true,
       emailVerified: false, // Will need email verification
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
-      updatedAt: admin.firestore.FieldValue.serverTimestamp()
+      updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+      onboarding: {
+        isComplete: true, // Venue registration completes most onboarding steps
+        currentStep: 6,
+        completedSteps: [1, 2, 3, 4, 5],
+        steps: {
+          profileComplete: { completed: true, data: { fullName: ownerName.trim() } },
+          venueSetup: { completed: true, data: { venueName, address, phone, description } },
+          menuCategories: { completed: true, data: { categoriesCreated: 4 } },
+          menuItems: { completed: false, data: {} }, // Still needs menu items
+          tableSetup: { completed: true, data: { tableCount } },
+          staffSetup: { completed: false, data: {} } // Optional but recommended
+        },
+        startedAt: admin.firestore.FieldValue.serverTimestamp(),
+        completedAt: null // Not fully complete until menu items added
+      }
     };
     
     const userRef = await db.collection("users").add(userData);
@@ -4240,6 +4297,163 @@ app.use((error, req, res, _next) => {
       stack: error.stack,
       requestId: req.requestId
     });
+  }
+});
+
+// ============================================================================
+// USER ONBOARDING ENDPOINTS
+// ============================================================================
+
+// Get user onboarding status
+app.get("/v1/onboarding/status", verifyAuth, async (req, res) => {
+  try {
+    const userId = req.user.userId;
+    
+    const userDoc = await db.collection("users").doc(userId).get();
+    if (!userDoc.exists) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    
+    const userData = userDoc.data();
+    const onboarding = userData.onboarding || {
+      isComplete: false,
+      currentStep: 1,
+      completedSteps: [],
+      steps: {
+        profileComplete: { completed: false, data: {} },
+        venueSetup: { completed: false, data: {} },
+        menuCategories: { completed: false, data: {} },
+        menuItems: { completed: false, data: {} },
+        tableSetup: { completed: false, data: {} },
+        staffSetup: { completed: false, data: {} }
+      }
+    };
+    
+    res.json({
+      onboarding,
+      user: {
+        email: userData.email,
+        fullName: userData.fullName,
+        role: userData.role,
+        venueId: userData.venueId
+      }
+    });
+  } catch (error) {
+    console.error("Error getting onboarding status:", error);
+    res.status(500).json({ error: "Failed to get onboarding status" });
+  }
+});
+
+// Update onboarding step
+app.put("/v1/onboarding/step/:stepName", verifyAuth, async (req, res) => {
+  try {
+    const userId = req.user.userId;
+    const { stepName } = req.params;
+    const { data, completed = true } = req.body;
+    
+    const validSteps = ["profileComplete", "venueSetup", "menuCategories", "menuItems", "tableSetup", "staffSetup"];
+    if (!validSteps.includes(stepName)) {
+      return res.status(400).json({ error: "Invalid step name" });
+    }
+    
+    const userRef = db.collection("users").doc(userId);
+    const userDoc = await userRef.get();
+    
+    if (!userDoc.exists) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    
+    const userData = userDoc.data();
+    const onboarding = userData.onboarding || {};
+    
+    // Update the specific step
+    onboarding.steps = onboarding.steps || {};
+    onboarding.steps[stepName] = {
+      completed,
+      data: data || {},
+      updatedAt: admin.firestore.FieldValue.serverTimestamp()
+    };
+    
+    // Update completed steps array
+    onboarding.completedSteps = onboarding.completedSteps || [];
+    if (completed && !onboarding.completedSteps.includes(stepName)) {
+      onboarding.completedSteps.push(stepName);
+    } else if (!completed) {
+      onboarding.completedSteps = onboarding.completedSteps.filter(step => step !== stepName);
+    }
+    
+    // Calculate current step and completion status
+    const completedCount = onboarding.completedSteps.length;
+    onboarding.currentStep = Math.min(completedCount + 1, 6);
+    onboarding.isComplete = completedCount >= 4; // Profile, venue, categories, and items are required
+    
+    if (onboarding.isComplete && !onboarding.completedAt) {
+      onboarding.completedAt = admin.firestore.FieldValue.serverTimestamp();
+    } else if (!onboarding.isComplete) {
+      onboarding.completedAt = null;
+    }
+    
+    await userRef.update({
+      onboarding,
+      updatedAt: admin.firestore.FieldValue.serverTimestamp()
+    });
+    
+    res.json({
+      message: "Onboarding step updated successfully",
+      onboarding
+    });
+  } catch (error) {
+    console.error("Error updating onboarding step:", error);
+    res.status(500).json({ error: "Failed to update onboarding step" });
+  }
+});
+
+// Complete onboarding process
+app.post("/v1/onboarding/complete", verifyAuth, async (req, res) => {
+  try {
+    const userId = req.user.userId;
+    
+    const userRef = db.collection("users").doc(userId);
+    const userDoc = await userRef.get();
+    
+    if (!userDoc.exists) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    
+    const userData = userDoc.data();
+    const onboarding = userData.onboarding || {};
+    
+    // Check if required steps are completed
+    const requiredSteps = ["profileComplete", "venueSetup", "menuCategories", "menuItems"];
+    const requiredCompleted = requiredSteps.every(step => 
+      onboarding.steps?.[step]?.completed === true
+    );
+    
+    if (!requiredCompleted) {
+      return res.status(400).json({ 
+        error: "Cannot complete onboarding: required steps not finished",
+        requiredSteps,
+        currentStatus: onboarding.steps
+      });
+    }
+    
+    // Mark onboarding as complete
+    onboarding.isComplete = true;
+    onboarding.currentStep = 6;
+    onboarding.completedAt = admin.firestore.FieldValue.serverTimestamp();
+    
+    await userRef.update({
+      onboarding,
+      updatedAt: admin.firestore.FieldValue.serverTimestamp()
+    });
+    
+    res.json({
+      message: "Onboarding completed successfully",
+      onboarding
+    });
+  } catch (error) {
+    console.error("Error completing onboarding:", error);
+    res.status(500).json({ error: "Failed to complete onboarding" });
   }
 });
 

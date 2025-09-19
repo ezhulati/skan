@@ -313,8 +313,7 @@ const MenuManagementPage: React.FC = () => {
       setMessage('Artikulli u përditësua me sukses!');
       setTimeout(() => setMessage(null), 500);
       
-      // Uncomment when API endpoint is available:
-      /*
+      // Enable API endpoint for live database updates:
       const headers: HeadersInit = {
         'Content-Type': 'application/json'
       };
@@ -331,7 +330,6 @@ const MenuManagementPage: React.FC = () => {
 
       if (!response.ok) throw new Error('Dështoi të përditësoj artikullin');
       await loadMenu();
-      */
     } catch (err) {
       console.error('Error updating item:', err);
       alert('Dështoi të përditësoj artikullin');

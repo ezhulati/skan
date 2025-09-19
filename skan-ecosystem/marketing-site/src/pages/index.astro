@@ -53,6 +53,17 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       
       <!-- Hero Visual -->
       <div class="mt-16 relative">
+        <!-- Real Product Image -->
+        <div class="relative rounded-2xl overflow-hidden shadow-2xl mx-auto max-w-5xl mb-8">
+          <img 
+            src="/skan_al_1.jpg" 
+            alt="Customer using SKAN.AL QR ordering system at beachside restaurant"
+            class="w-full h-auto object-cover"
+            loading="eager"
+          />
+          <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+        </div>
+
         <div class="bg-white rounded-2xl shadow-2xl mx-auto max-w-4xl overflow-hidden">
           <div class="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2">
             <!-- QR Code Side -->
@@ -464,6 +475,17 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           </ul>
         </div>
         <div class="relative">
+          <!-- Product Image for Features -->
+          <div class="relative rounded-2xl overflow-hidden shadow-xl mb-6">
+            <img 
+              src="/skan_al_2.jpg" 
+              alt="Restaurant table setup with SKAN.AL QR code ordering system"
+              class="w-full h-64 lg:h-80 object-cover"
+              loading="lazy"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
+          </div>
+          
           <div class="bg-white rounded-2xl shadow-xl p-8">
             <div class="text-center mb-6">
               <div class="w-24 h-24 bg-white rounded-xl mx-auto mb-4 flex items-center justify-center border-2 border-gray-200">
@@ -618,6 +640,23 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         <p class="text-xl text-gray-600 max-w-3xl mx-auto" data-sq="Shikoni ndikimin që porosite me QR kanë në efikasitetin e restorantit dhe kënaqësinë e klientëve" data-en="See the impact QR ordering has on restaurant efficiency and customer satisfaction">
           Shikoni ndikimin që porosite me QR kanë në efikasitetin e restorantit dhe kënaqësinë e klientëve
         </p>
+      </div>
+
+      <!-- Happy Customers Image -->
+      <div class="relative rounded-2xl overflow-hidden shadow-xl mx-auto max-w-4xl mb-16">
+        <img 
+          src="/skan_al_3.jpg" 
+          alt="Happy family enjoying their meal using SKAN.AL QR ordering system"
+          class="w-full h-64 lg:h-80 object-cover"
+          loading="lazy"
+        />
+        <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+        <div class="absolute bottom-8 left-8 right-8 text-white">
+          <p class="text-lg font-semibold mb-2" data-sq="'Familja ime tani mund të porosis menjëherë pa pritur kamarierin. Fëmijët e mi e duan!'" data-en="'My family can now order immediately without waiting for the waiter. My kids love it!'">
+            "Familja ime tani mund të porosis menjëherë pa pritur kamarierin. Fëmijët e mi e duan!"
+          </p>
+          <p class="text-blue-200" data-sq="— Familjja Krasniqi, Tirana" data-en="— Krasniqi Family, Tirana">— Familjja Krasniqi, Tirana</p>
+        </div>
       </div>
       
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -799,8 +838,18 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   </section>
 
   <!-- CTA Section -->
-  <section class="py-20 bg-blue-600">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+  <section class="relative py-20 bg-blue-600 overflow-hidden">
+    <!-- Background Image -->
+    <div class="absolute inset-0">
+      <img 
+        src="/skan_al_4.jpg" 
+        alt="Friends enjoying QR ordering at outdoor cafe"
+        class="w-full h-full object-cover"
+      />
+      <div class="absolute inset-0 bg-blue-600/85"></div>
+    </div>
+    
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
       <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4" data-sq="Gati për të Modernizuar Restorantin Tuaj?" data-en="Ready to Modernize Your Restaurant?">
         Gati për të Modernizuar Restorantin Tuaj?
       </h2>
