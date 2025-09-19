@@ -1177,8 +1177,27 @@ app.post("/v1/orders", async (req, res) => {
       return res.status(400).json({ error: "Missing required fields" });
     }
     
+    // Convert items to array if it's an object with numeric keys
+    let itemsArray = items;
+    if (!Array.isArray(items)) {
+      console.error("Items is not an array:", typeof items, items);
+      // Try to convert object with numeric keys to array
+      if (typeof items === "object" && items !== null) {
+        const keys = Object.keys(items);
+        const isNumericKeys = keys.every(key => !isNaN(parseInt(key)));
+        if (isNumericKeys) {
+          itemsArray = keys.sort((a, b) => parseInt(a) - parseInt(b)).map(key => items[key]);
+          console.log("Converted object to array:", itemsArray);
+        } else {
+          return res.status(400).json({ error: "Items must be an array" });
+        }
+      } else {
+        return res.status(400).json({ error: "Items must be an array" });
+      }
+    }
+    
     // Calculate total amount
-    const totalAmount = items.reduce((sum, item) => {
+    const totalAmount = itemsArray.reduce((sum, item) => {
       return sum + (item.price * item.quantity);
     }, 0);
     
@@ -1191,7 +1210,7 @@ app.post("/v1/orders", async (req, res) => {
       tableNumber,
       customerName: customerName || "Anonymous Customer",
       orderNumber,
-      items,
+      items: itemsArray,
       totalAmount: Math.round(totalAmount * 100) / 100, // Round to 2 decimals
       specialInstructions: specialInstructions || "",
       status: "new",

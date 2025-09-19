@@ -33,16 +33,6 @@
       ]
     },
     {
-      "collectionGroup": "orders",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "orderNumber",
-          "order": "ASCENDING"
-        }
-      ]
-    },
-    {
       "collectionGroup": "menuItem",
       "queryScope": "COLLECTION_GROUP",
       "fields": [
@@ -85,24 +75,6 @@
       ]
     },
     {
-      "collectionGroup": "table",
-      "queryScope": "COLLECTION_GROUP",
-      "fields": [
-        {
-          "fieldPath": "venueId",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "name",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "__name__",
-          "order": "ASCENDING"
-        }
-      ]
-    },
-    {
       "collectionGroup": "users",
       "queryScope": "COLLECTION",
       "fields": [
@@ -117,11 +89,15 @@
       ]
     },
     {
-      "collectionGroup": "venue",
+      "collectionGroup": "tables",
       "queryScope": "COLLECTION",
       "fields": [
         {
-          "fieldPath": "slug",
+          "fieldPath": "venueId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "name",
           "order": "ASCENDING"
         }
       ]
