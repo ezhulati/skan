@@ -422,6 +422,23 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
               <div className="category-item">Desserts</div>
               <div className="category-item">Beverages</div>
             </div>
+
+            <button 
+              className="next-button"
+              onClick={() => setCurrentStep(3)}
+              style={{
+                background: '#667eea',
+                color: 'white',
+                border: 'none',
+                padding: '12px 24px',
+                borderRadius: '8px',
+                fontSize: '16px',
+                cursor: 'pointer',
+                marginTop: '24px'
+              }}
+            >
+              Vazhdo te Artikujt →
+            </button>
           </div>
         );
 
@@ -431,9 +448,22 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
             <h2>Artikujt e Menusë</h2>
             <p className="step-description">Mund të shtoni artikujt e menusë më vonë në panelin kryesor. Le të vazhdojmë me konfigurimin.</p>
             
-
-
-
+            <button 
+              className="next-button"
+              onClick={() => setCurrentStep(4)}
+              style={{
+                background: '#667eea',
+                color: 'white',
+                border: 'none',
+                padding: '12px 24px',
+                borderRadius: '8px',
+                fontSize: '16px',
+                cursor: 'pointer',
+                marginTop: '24px'
+              }}
+            >
+              Vazhdo te Tavolinat →
+            </button>
           </div>
         );
 
