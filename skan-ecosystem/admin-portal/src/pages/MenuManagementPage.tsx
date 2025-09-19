@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { validateImage, processImageForUpload, MENU_ITEM_RULES, getImageValidationMessage, getImageRecommendations, ImageValidationResult } from '../utils/imageValidation';
+import { processImageForUpload, validateImage, MENU_ITEM_RULES } from '../utils/imageValidation';
 
 interface MenuItem {
   id: string;
@@ -43,8 +43,6 @@ const MenuManagementPage: React.FC = () => {
   const [uploadingImage, setUploadingImage] = useState<string | null>(null);
   const [translating, setTranslating] = useState<string | null>(null);
   const [hasLocalChanges, setHasLocalChanges] = useState(false); // Track if we have local changes
-  const [imageValidation, setImageValidation] = useState<ImageValidationResult | null>(null);
-  const [showImageRules, setShowImageRules] = useState(false);
   const [viewingImage, setViewingImage] = useState<string | null>(null);
 
   const baseUrl = process.env.REACT_APP_API_URL || 'https://api-mkazmlu7ta-ew.a.run.app/v1';
@@ -58,55 +56,14 @@ const MenuManagementPage: React.FC = () => {
     setTimeout(() => setMessage(null), 500);
   };
 
-  // Image upload helper function with compression
-  const uploadImage = async (file: File): Promise<string> => {
-    // For now, we'll use a compressed base64 approach
-    // In production, this would upload to Firebase Storage or similar
-    return new Promise((resolve, reject) => {
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
-      const img = new Image();
-      
-      img.onload = () => {
-        // Calculate new dimensions (max 800px width/height)
-        let { width, height } = img;
-        const maxSize = 800;
-        
-        if (width > height) {
-          if (width > maxSize) {
-            height = (height * maxSize) / width;
-            width = maxSize;
-          }
-        } else {
-          if (height > maxSize) {
-            width = (width * maxSize) / height;
-            height = maxSize;
-          }
-        }
-        
-        canvas.width = width;
-        canvas.height = height;
-        
-        // Draw and compress
-        ctx?.drawImage(img, 0, 0, width, height);
-        const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.7); // 70% quality
-        resolve(compressedDataUrl);
-      };
-      
-      img.onerror = () => reject(new Error('Failed to load image'));
-      img.src = URL.createObjectURL(file);
-    });
-  };
 
   const handleImageUpload = async (file: File, itemId?: string): Promise<string> => {
     setUploadingImage(itemId || 'new');
     setError(null);
-    setImageValidation(null);
     
     try {
       // Quick validation - only check if it's actually an image
       const validation = await validateImage(file, MENU_ITEM_RULES);
-      setImageValidation(validation);
       
       if (!validation.isValid) {
         throw new Error(validation.errors.join('\n'));
@@ -673,26 +630,6 @@ const MenuManagementPage: React.FC = () => {
                           className="image-input"
                         />
                         
-                        {imageValidation && (
-                          <div className={`validation-feedback ${imageValidation.isValid ? 'valid' : 'invalid'}`} style={{
-                            padding: '8px',
-                            marginTop: '4px',
-                            borderRadius: '4px',
-                            fontSize: '13px',
-                            background: imageValidation.isValid ? '#d1f2eb' : '#f8d7da',
-                            color: imageValidation.isValid ? '#155724' : '#721c24',
-                            border: `1px solid ${imageValidation.isValid ? '#c3e6cb' : '#f5c6cb'}`
-                          }}>
-                            {getImageValidationMessage(imageValidation)}
-                            {imageValidation.warnings.length > 0 && (
-                              <div style={{ marginTop: '4px', fontStyle: 'italic' }}>
-                                {imageValidation.warnings.map((warning, index) => (
-                                  <div key={index}>⚠️ {warning}</div>
-                                ))}
-                              </div>
-                            )}
-                          </div>
-                        )}
                         
                         {uploadingImage === 'new' && (
                           <div className="upload-progress">
@@ -778,7 +715,7 @@ const MenuManagementPage: React.FC = () => {
                                     border: '1px solid #e0e0e0',
                                     flexShrink: 0
                                   }}
-                                  onClick={() => setViewingImage(item.imageUrl || '')}
+                                  onClick={() => setViewingImage(item.imageUrl!)}
                                   onError={(e) => {
                                     // Hide image if it fails to load
                                     e.currentTarget.style.display = 'none';
@@ -967,8 +904,6 @@ const ItemEditor: React.FC<{
   const [imageUrl, setImageUrl] = useState(item.imageUrl || '');
   const [isUploadingImage, setIsUploadingImage] = useState(false);
   const [translating, setTranslating] = useState<string | null>(null);
-  const [itemImageValidation, setItemImageValidation] = useState<ImageValidationResult | null>(null);
-  const [showItemImageRules, setShowItemImageRules] = useState(false);
 
   const translateText = async (text: string, context: string = 'edit-item'): Promise<string> => {
     if (!text?.trim()) {
@@ -1008,12 +943,10 @@ const ItemEditor: React.FC<{
 
   const handleImageUpload = async (file: File): Promise<void> => {
     setIsUploadingImage(true);
-    setItemImageValidation(null);
     
     try {
       // Quick validation - only check if it's actually an image
       const validation = await validateImage(file, MENU_ITEM_RULES);
-      setItemImageValidation(validation);
       
       if (!validation.isValid) {
         throw new Error(validation.errors.join('\n'));
@@ -1088,33 +1021,10 @@ const ItemEditor: React.FC<{
           placeholder="Çmimi"
         />
         <div className="form-group">
-          <label>
-            Imazhi i Artikullit (Opsional)
-            <button 
-              type="button"
-              onClick={() => setShowItemImageRules(!showItemImageRules)}
-              className="help-button"
-              style={{ marginLeft: '8px', fontSize: '12px', padding: '2px 6px' }}
-            >
-              {showItemImageRules ? '❌' : '❓'}
-            </button>
-          </label>
-          
-          {showItemImageRules && (
-            <div className="image-rules-help" style={{ 
-              background: '#f8f9fa', 
-              border: '1px solid #e9ecef', 
-              borderRadius: '4px', 
-              padding: '12px', 
-              marginBottom: '8px',
-              fontSize: '14px'
-            }}>
-              <h4 style={{ margin: '0 0 8px 0', color: '#495057' }}>📋 Rregullat e Imazhit:</h4>
-              {getImageRecommendations(MENU_ITEM_RULES).map((rule, index) => (
-                <div key={index} style={{ marginBottom: '4px', color: '#6c757d' }}>{rule}</div>
-              ))}
-            </div>
-          )}
+          <label>Imazhi i Artikullit (Opsional)</label>
+          <p style={{ fontSize: '14px', color: '#6c757d', margin: '4px 0 8px 0' }}>
+            📸 Just upload any image - we'll automatically optimize it for you!
+          </p>
           
           <div className="image-upload-container">
             <input
@@ -1130,26 +1040,6 @@ const ItemEditor: React.FC<{
               className="image-input"
             />
             
-            {itemImageValidation && (
-              <div className={`validation-feedback ${itemImageValidation.isValid ? 'valid' : 'invalid'}`} style={{
-                padding: '8px',
-                marginTop: '4px',
-                borderRadius: '4px',
-                fontSize: '13px',
-                background: itemImageValidation.isValid ? '#d1f2eb' : '#f8d7da',
-                color: itemImageValidation.isValid ? '#155724' : '#721c24',
-                border: `1px solid ${itemImageValidation.isValid ? '#c3e6cb' : '#f5c6cb'}`
-              }}>
-                {getImageValidationMessage(itemImageValidation)}
-                {itemImageValidation.warnings.length > 0 && (
-                  <div style={{ marginTop: '4px', fontStyle: 'italic' }}>
-                    {itemImageValidation.warnings.map((warning, index) => (
-                      <div key={index}>⚠️ {warning}</div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            )}
             
             {isUploadingImage && (
               <div className="upload-progress">
