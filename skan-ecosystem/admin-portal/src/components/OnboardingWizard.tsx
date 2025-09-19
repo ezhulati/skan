@@ -240,27 +240,6 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
     }
   };
 
-  const addMenuItem = () => {
-    console.log('addMenuItem called with:', { name: newItemName, price: newItemPrice });
-    
-    if (!newItemName.trim()) {
-      console.log('Validation failed: empty name');
-      alert('Ju lutemi shkruani emrin e pjatës');
-      return;
-    }
-    
-    if (!newItemPrice.trim()) {
-      console.log('Validation failed: empty price');
-      alert('Ju lutemi shkruani çmimin');
-      return;
-    }
-    
-    console.log('Adding menu item:', { name: newItemName.trim(), price: newItemPrice.trim() });
-    setMenuItems([...menuItems, { name: newItemName.trim(), price: newItemPrice.trim() }]);
-    setNewItemName('');
-    setNewItemPrice('');
-    console.log('Menu item added successfully');
-  };
 
   const renderStepContent = () => {
     switch (currentStep) {
