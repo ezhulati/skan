@@ -1,0 +1,404 @@
+{
+  "timestamp": "2025-09-19T19:37:05.851Z",
+  "preSubmitState": {
+    "emailValue": "manager_email1@gmail.com",
+    "passwordLength": 7,
+    "submitDisabled": false,
+    "formValid": true
+  },
+  "postSubmitState": {
+    "currentUrl": "https://admin.skan.al/login",
+    "pageTitle": "SKAN Restaurant Admin Portal",
+    "errorMessages": [],
+    "foundErrors": [
+      "invalid"
+    ],
+    "bodyLength": 270,
+    "bodyPreview": "You need to enable JavaScript to run this app.Skan.alPaneli i RestorantitMenaxho operacionet e restorantit tënd me lehtësiAdresa e EmailitFjalëkalimiInvalid inputHyrKeni harruar fjalëkalimin?Nuk keni llogari? Kërkoni akses demo për të testuar platformën.Kërko Akses Demo"
+  },
+  "dashboardState": {
+    "currentUrl": "https://admin.skan.al/login",
+    "pageTitle": "SKAN Restaurant Admin Portal",
+    "bodyLength": 257,
+    "bodyPreview": "You need to enable JavaScript to run this app.Skan.alPaneli i RestorantitMenaxho operacionet e restorantit tënd me lehtësiAdresa e EmailitFjalëkalimiHyrKeni harruar fjalëkalimin?Nuk keni llogari? Kërk"
+  },
+  "networkLogs": [
+    {
+      "url": "https://admin.skan.al/login",
+      "status": 200,
+      "headers": {
+        "accept-ranges": "bytes",
+        "age": "0",
+        "cache-control": "public,max-age=0,must-revalidate",
+        "cache-status": "\"Netlify Edge\"; fwd=miss",
+        "content-encoding": "br",
+        "content-length": "624",
+        "content-type": "text/html; charset=UTF-8",
+        "date": "Fri, 19 Sep 2025 19:36:36 GMT",
+        "etag": "\"a1557068d1a60b06ca5d120a77757c0a-ssl-df\"",
+        "server": "Netlify",
+        "strict-transport-security": "max-age=31536000",
+        "vary": "Accept-Encoding",
+        "x-nf-request-id": "01K5HQMZFS5BWVE31GA2EPGF8M"
+      }
+    },
+    {
+      "url": "https://admin.skan.al/static/css/main.a620c44a.css",
+      "status": 200,
+      "headers": {
+        "accept-ranges": "bytes",
+        "age": "0",
+        "cache-control": "public,max-age=0,must-revalidate",
+        "cache-status": "\"Netlify Edge\"; fwd=stale",
+        "content-encoding": "br",
+        "content-length": "5290",
+        "content-type": "text/css; charset=UTF-8",
+        "date": "Fri, 19 Sep 2025 19:36:36 GMT",
+        "etag": "\"fe6a190b2d2b5fb0b777d42e1ff34e21-ssl-df\"",
+        "server": "Netlify",
+        "strict-transport-security": "max-age=31536000",
+        "vary": "Accept-Encoding",
+        "x-nf-request-id": "01K5HQMZJ1AWV87KEEV6YF0EBA"
+      }
+    },
+    {
+      "url": "https://admin.skan.al/static/js/main.ff5267fc.js",
+      "status": 200,
+      "headers": {
+        "accept-ranges": "bytes",
+        "age": "0",
+        "cache-control": "public,max-age=0,must-revalidate",
+        "cache-status": "\"Netlify Edge\"; fwd=miss",
+        "content-encoding": "br",
+        "content-type": "application/javascript; charset=UTF-8",
+        "date": "Fri, 19 Sep 2025 19:36:36 GMT",
+        "etag": "\"e94ea7ec27ee76dc59384179df7cc716-ssl-df\"",
+        "server": "Netlify",
+        "strict-transport-security": "max-age=31536000",
+        "vary": "Accept-Encoding",
+        "x-nf-request-id": "01K5HQMZJ11KGYDXFPFR0TKAKM"
+      }
+    },
+    {
+      "url": "https://www.google-analytics.com/g/collect?v=2&tid=G-N7LLSGZ3JV&gtm=45je59h0v9230274487za200zd9230274487&_p=1758310596132&gcd=13l3l3l3l1l1&npa=0&dma=0&cid=2010874790.1758310596&ul=en-us&sr=1728x1117&uaa=arm&uab=64&uafvl=Not%253DA%253FBrand%3B24.0.0.0%7CChromium%3B140.0.7339.82&uamb=0&uam=&uap=macOS&uapv=26.0.0&uaw=0&are=1&frm=0&pscdl=&_s=1&tag_exp=101509157~103116026~103200004~103233427~104527906~104528501~104684208~104684211~104948813~115480710&sid=1758310596&sct=1&seg=0&dl=https%3A%2F%2Fadmin.skan.al%2Flogin&dt=SKAN%20Restaurant%20Admin%20Portal&en=page_view&_fv=1&_nsi=1&_ss=1&_ee=1&tfd=473",
+      "status": 204,
+      "headers": {
+        "access-control-allow-credentials": "true",
+        "access-control-allow-origin": "https://admin.skan.al",
+        "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
+        "cache-control": "no-cache, no-store, must-revalidate",
+        "content-length": "0",
+        "content-security-policy-report-only": "script-src 'none'; form-action 'none'; frame-src 'none'; report-uri https://csp.withgoogle.com/csp/scaffolding/ascnsrsggc:102:0",
+        "content-type": "text/plain",
+        "cross-origin-opener-policy-report-only": "same-origin; report-to=ascnsrsggc:102:0",
+        "cross-origin-resource-policy": "cross-origin",
+        "date": "Fri, 19 Sep 2025 19:36:36 GMT",
+        "expires": "Fri, 01 Jan 1990 00:00:00 GMT",
+        "pragma": "no-cache",
+        "report-to": "{\"group\":\"ascnsrsggc:102:0\",\"max_age\":2592000,\"endpoints\":[{\"url\":\"https://csp.withgoogle.com/csp/report-to/scaffolding/ascnsrsggc:102:0\"}],}",
+        "server": "Golfe2"
+      }
+    },
+    {
+      "url": "https://admin.skan.al/favicon.svg",
+      "status": 200,
+      "headers": {
+        "accept-ranges": "bytes",
+        "age": "0",
+        "cache-control": "public,max-age=0,must-revalidate",
+        "cache-status": "\"Netlify Edge\"; fwd=stale",
+        "content-encoding": "br",
+        "content-length": "474",
+        "content-type": "image/svg+xml",
+        "date": "Fri, 19 Sep 2025 19:36:36 GMT",
+        "etag": "\"bd4b56bbc5f32936a732d00fa128d06d-ssl-df\"",
+        "server": "Netlify",
+        "strict-transport-security": "max-age=31536000",
+        "vary": "Accept-Encoding",
+        "x-nf-request-id": "01K5HQMZT1ATXCTSYZZHG8DV7V"
+      }
+    },
+    {
+      "url": "https://admin.skan.al/manifest.json",
+      "status": 200,
+      "headers": {
+        "accept-ranges": "bytes",
+        "age": "87",
+        "cache-control": "public,max-age=0,must-revalidate",
+        "cache-status": "\"Netlify Edge\"; hit",
+        "content-length": "492",
+        "content-type": "application/json",
+        "date": "Fri, 19 Sep 2025 19:36:36 GMT",
+        "etag": "\"349926a665a86927b27cf16a88387fbb-ssl\"",
+        "server": "Netlify",
+        "strict-transport-security": "max-age=31536000",
+        "x-nf-request-id": "01K5HQMZWCSEV86K3PZFK5TC3K"
+      }
+    },
+    {
+      "url": "https://admin.skan.al/logo192.png",
+      "status": 200,
+      "headers": {
+        "accept-ranges": "bytes",
+        "age": "0",
+        "cache-control": "public,max-age=0,must-revalidate",
+        "cache-status": "\"Netlify Edge\"; fwd=stale",
+        "content-length": "5347",
+        "content-type": "image/png",
+        "date": "Fri, 19 Sep 2025 19:36:36 GMT",
+        "etag": "\"9956db8188dce4e25af1b23d376a3c8f-ssl\"",
+        "server": "Netlify",
+        "strict-transport-security": "max-age=31536000",
+        "x-nf-request-id": "01K5HQMZXJWSYWSM696HM5PCRN"
+      }
+    },
+    {
+      "url": "https://www.google-analytics.com/g/collect?v=2&tid=G-N7LLSGZ3JV&gtm=45je59h0v9230274487za200zd9230274487&_p=1758310596132&gcd=13l3l3l3l1l1&npa=0&dma=0&cid=2010874790.1758310596&ul=en-us&sr=1728x1117&uaa=arm&uab=64&uafvl=Not%253DA%253FBrand%3B24.0.0.0%7CChromium%3B140.0.7339.82&uamb=0&uam=&uap=macOS&uapv=26.0.0&uaw=0&are=1&frm=0&pscdl=&_eu=AEAAAAQ&_s=2&tag_exp=101509157~103116026~103200004~103233427~104527906~104528501~104684208~104684211~104948813~115480710&sid=1758310596&sct=1&seg=0&dl=https%3A%2F%2Fadmin.skan.al%2Flogin&dt=SKAN%20Restaurant%20Admin%20Portal&en=scroll&epn.percent_scrolled=90&tfd=5261",
+      "status": 204,
+      "headers": {
+        "access-control-allow-credentials": "true",
+        "access-control-allow-origin": "https://admin.skan.al",
+        "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
+        "cache-control": "no-cache, no-store, must-revalidate",
+        "content-length": "0",
+        "content-security-policy-report-only": "script-src 'none'; form-action 'none'; frame-src 'none'; report-uri https://csp.withgoogle.com/csp/scaffolding/ascnsrsggc:102:0",
+        "content-type": "text/plain",
+        "cross-origin-opener-policy-report-only": "same-origin; report-to=ascnsrsggc:102:0",
+        "cross-origin-resource-policy": "cross-origin",
+        "date": "Fri, 19 Sep 2025 19:36:41 GMT",
+        "expires": "Fri, 01 Jan 1990 00:00:00 GMT",
+        "pragma": "no-cache",
+        "report-to": "{\"group\":\"ascnsrsggc:102:0\",\"max_age\":2592000,\"endpoints\":[{\"url\":\"https://csp.withgoogle.com/csp/report-to/scaffolding/ascnsrsggc:102:0\"}],}",
+        "server": "Golfe2"
+      }
+    },
+    {
+      "url": "https://www.google-analytics.com/g/collect?v=2&tid=G-N7LLSGZ3JV&gtm=45je59h0v9230274487za200zd9230274487&_p=1758310596132&gcd=13l3l3l3l1l1&npa=0&dma=0&cid=2010874790.1758310596&ul=en-us&sr=1728x1117&uaa=arm&uab=64&uafvl=Not%253DA%253FBrand%3B24.0.0.0%7CChromium%3B140.0.7339.82&uamb=0&uam=&uap=macOS&uapv=26.0.0&uaw=0&are=1&frm=0&pscdl=&_eu=AEEAAAQ&_s=3&tag_exp=101509157~103116026~103200004~103233427~104527906~104528501~104684208~104684211~104948813~115480710&sid=1758310596&sct=1&seg=0&dl=https%3A%2F%2Fadmin.skan.al%2Flogin&dt=SKAN%20Restaurant%20Admin%20Portal&en=form_start&ep.form_id=&ep.form_name=&ep.form_destination=https%3A%2F%2Fadmin.skan.al%2Flogin&epn.form_length=3&ep.first_field_id=email&ep.first_field_name=&ep.first_field_type=email&epn.first_field_position=1&tfd=10262",
+      "status": 204,
+      "headers": {
+        "access-control-allow-credentials": "true",
+        "access-control-allow-origin": "https://admin.skan.al",
+        "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
+        "cache-control": "no-cache, no-store, must-revalidate",
+        "content-length": "0",
+        "content-security-policy-report-only": "script-src 'none'; form-action 'none'; frame-src 'none'; report-uri https://csp.withgoogle.com/csp/scaffolding/ascnsrsggc:102:0",
+        "content-type": "text/plain",
+        "cross-origin-opener-policy-report-only": "same-origin; report-to=ascnsrsggc:102:0",
+        "cross-origin-resource-policy": "cross-origin",
+        "date": "Fri, 19 Sep 2025 19:36:46 GMT",
+        "expires": "Fri, 01 Jan 1990 00:00:00 GMT",
+        "pragma": "no-cache",
+        "report-to": "{\"group\":\"ascnsrsggc:102:0\",\"max_age\":2592000,\"endpoints\":[{\"url\":\"https://csp.withgoogle.com/csp/report-to/scaffolding/ascnsrsggc:102:0\"}],}",
+        "server": "Golfe2"
+      }
+    },
+    {
+      "url": "https://api-mkazmlu7ta-ew.a.run.app/v1/auth/login",
+      "status": 204,
+      "headers": {
+        "access-control-allow-headers": "content-type",
+        "access-control-allow-methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
+        "access-control-allow-origin": "https://admin.skan.al",
+        "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
+        "content-type": "text/html",
+        "date": "Fri, 19 Sep 2025 19:36:47 GMT",
+        "server": "Google Frontend",
+        "vary": "Origin, Access-Control-Request-Headers",
+        "x-cloud-trace-context": "24bdf3da7bda551127cbeb5fcc5bc3ca;o=1"
+      }
+    },
+    {
+      "url": "https://api-mkazmlu7ta-ew.a.run.app/v1/auth/login",
+      "status": 400,
+      "headers": {
+        "access-control-allow-credentials": "true",
+        "access-control-allow-origin": "https://admin.skan.al",
+        "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
+        "content-length": "236",
+        "content-security-policy": "default-src 'self';script-src 'self';style-src 'self' 'unsafe-inline';img-src 'self' data: https:;connect-src 'self';font-src 'self';object-src 'none';media-src 'self';frame-src 'none';base-uri 'self';form-action 'self';frame-ancestors 'self';script-src-attr 'none';upgrade-insecure-requests",
+        "content-type": "application/json; charset=utf-8",
+        "cross-origin-opener-policy": "same-origin",
+        "cross-origin-resource-policy": "same-origin",
+        "date": "Fri, 19 Sep 2025 19:36:47 GMT",
+        "etag": "W/\"ec-JOHMkD5WjD8JDtlRrKyFgBHLNps\"",
+        "origin-agent-cluster": "?1",
+        "ratelimit-limit": "5",
+        "ratelimit-policy": "5;w=900",
+        "ratelimit-remaining": "1",
+        "ratelimit-reset": "813",
+        "referrer-policy": "no-referrer",
+        "server": "Google Frontend",
+        "strict-transport-security": "max-age=15552000; includeSubDomains",
+        "vary": "Origin",
+        "x-cloud-trace-context": "7f1e39ce4a22ce4f27cbeb5fcc5bce23",
+        "x-content-type-options": "nosniff",
+        "x-dns-prefetch-control": "off",
+        "x-download-options": "noopen",
+        "x-frame-options": "SAMEORIGIN",
+        "x-permitted-cross-domain-policies": "none",
+        "x-request-id": "07280146-992f-4600-850e-1855d60e6c88",
+        "x-xss-protection": "0"
+      }
+    },
+    {
+      "url": "https://admin.skan.al/dashboard",
+      "status": 200,
+      "headers": {
+        "accept-ranges": "bytes",
+        "age": "0",
+        "cache-control": "public,max-age=0,must-revalidate",
+        "cache-status": "\"Netlify Edge\"; fwd=miss",
+        "content-encoding": "br",
+        "content-type": "text/html; charset=UTF-8",
+        "date": "Fri, 19 Sep 2025 19:36:58 GMT",
+        "etag": "\"a1557068d1a60b06ca5d120a77757c0a-ssl-df\"",
+        "server": "Netlify",
+        "strict-transport-security": "max-age=31536000",
+        "vary": "Accept-Encoding",
+        "x-nf-request-id": "01K5HQNNFGZMBS7N9GSM4GD71Z"
+      }
+    },
+    {
+      "url": "https://admin.skan.al/static/css/main.a620c44a.css",
+      "status": 304,
+      "headers": {
+        "cache-control": "public,max-age=0,must-revalidate",
+        "cache-status": "\"Netlify Edge\"; hit",
+        "date": "Fri, 19 Sep 2025 19:36:58 GMT",
+        "etag": "\"fe6a190b2d2b5fb0b777d42e1ff34e21-ssl-df\"",
+        "server": "Netlify",
+        "strict-transport-security": "max-age=31536000",
+        "vary": "Accept-Encoding",
+        "x-nf-request-id": "01K5HQNNHN34BJPYMN4C8M51YX"
+      }
+    },
+    {
+      "url": "https://admin.skan.al/static/js/main.ff5267fc.js",
+      "status": 304,
+      "headers": {
+        "cache-control": "public,max-age=0,must-revalidate",
+        "cache-status": "\"Netlify Edge\"; hit",
+        "date": "Fri, 19 Sep 2025 19:36:58 GMT",
+        "etag": "\"e94ea7ec27ee76dc59384179df7cc716-ssl-df\"",
+        "server": "Netlify",
+        "strict-transport-security": "max-age=31536000",
+        "vary": "Accept-Encoding",
+        "x-nf-request-id": "01K5HQNNHM4KPTQTWEB38QXTF2"
+      }
+    },
+    {
+      "url": "https://www.google-analytics.com/g/collect?v=2&tid=G-N7LLSGZ3JV&gtm=45je59h0v9230274487za200zd9230274487&_p=1758310618647&gcd=13l3l3l3l1l1&npa=0&dma=0&cid=2010874790.1758310596&ul=en-us&sr=1728x1117&uaa=arm&uab=64&uafvl=Not%253DA%253FBrand%3B24.0.0.0%7CChromium%3B140.0.7339.82&uamb=0&uam=&uap=macOS&uapv=26.0.0&uaw=0&are=1&frm=0&pscdl=&_eu=AAAAAAQ&_s=1&tag_exp=101509157~103116026~103200004~103233427~104527907~104528501~104684208~104684211~104948813~115480709~115616986&sid=1758310596&sct=1&seg=1&dl=https%3A%2F%2Fadmin.skan.al%2Fdashboard&dt=SKAN%20Restaurant%20Admin%20Portal&en=page_view&_ee=1&tfd=98",
+      "status": 204,
+      "headers": {
+        "access-control-allow-credentials": "true",
+        "access-control-allow-origin": "https://admin.skan.al",
+        "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
+        "cache-control": "no-cache, no-store, must-revalidate",
+        "content-length": "0",
+        "content-security-policy-report-only": "script-src 'none'; form-action 'none'; frame-src 'none'; report-uri https://csp.withgoogle.com/csp/scaffolding/ascnsrsggc:102:0",
+        "content-type": "text/plain",
+        "cross-origin-opener-policy-report-only": "same-origin; report-to=ascnsrsggc:102:0",
+        "cross-origin-resource-policy": "cross-origin",
+        "date": "Fri, 19 Sep 2025 19:36:58 GMT",
+        "expires": "Fri, 01 Jan 1990 00:00:00 GMT",
+        "pragma": "no-cache",
+        "report-to": "{\"group\":\"ascnsrsggc:102:0\",\"max_age\":2592000,\"endpoints\":[{\"url\":\"https://csp.withgoogle.com/csp/report-to/scaffolding/ascnsrsggc:102:0\"}],}",
+        "server": "Golfe2"
+      }
+    },
+    {
+      "url": "https://admin.skan.al/manifest.json",
+      "status": 304,
+      "headers": {
+        "cache-control": "public,max-age=0,must-revalidate",
+        "cache-status": "\"Netlify Edge\"; hit",
+        "date": "Fri, 19 Sep 2025 19:36:58 GMT",
+        "etag": "\"349926a665a86927b27cf16a88387fbb-ssl\"",
+        "server": "Netlify",
+        "strict-transport-security": "max-age=31536000",
+        "x-nf-request-id": "01K5HQNNPXC9Y3ANA84P1Z0E1J"
+      }
+    },
+    {
+      "url": "https://admin.skan.al/logo192.png",
+      "status": 304,
+      "headers": {
+        "cache-control": "public,max-age=0,must-revalidate",
+        "cache-status": "\"Netlify Edge\"; hit",
+        "date": "Fri, 19 Sep 2025 19:36:58 GMT",
+        "etag": "\"9956db8188dce4e25af1b23d376a3c8f-ssl\"",
+        "server": "Netlify",
+        "strict-transport-security": "max-age=31536000",
+        "x-nf-request-id": "01K5HQNNR23V5GG9ZCTZ07Q3B8"
+      }
+    },
+    {
+      "url": "https://www.google-analytics.com/g/collect?v=2&tid=G-N7LLSGZ3JV&gtm=45je59h0v9230274487za200zd9230274487&_p=1758310618647&gcd=13l3l3l3l1l1&npa=0&dma=0&cid=2010874790.1758310596&ul=en-us&sr=1728x1117&uaa=arm&uab=64&uafvl=Not%253DA%253FBrand%3B24.0.0.0%7CChromium%3B140.0.7339.82&uamb=0&uam=&uap=macOS&uapv=26.0.0&uaw=0&are=1&frm=0&pscdl=&_eu=AEAAAAQ&tag_exp=101509157~103116026~103200004~103233427~104527907~104528501~104684208~104684211~104948813~115480709~115616986&sid=1758310596&sct=1&seg=1&dl=https%3A%2F%2Fadmin.skan.al%2Fdashboard&dt=SKAN%20Restaurant%20Admin%20Portal&_s=2&tfd=5100",
+      "status": 204,
+      "headers": {
+        "access-control-allow-credentials": "true",
+        "access-control-allow-origin": "https://admin.skan.al",
+        "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
+        "cache-control": "no-cache, no-store, must-revalidate",
+        "content-length": "0",
+        "content-security-policy-report-only": "script-src 'none'; form-action 'none'; frame-src 'none'; report-uri https://csp.withgoogle.com/csp/scaffolding/ascnsrsggc:102:0",
+        "content-type": "text/plain",
+        "cross-origin-opener-policy-report-only": "same-origin; report-to=ascnsrsggc:102:0",
+        "cross-origin-resource-policy": "cross-origin",
+        "date": "Fri, 19 Sep 2025 19:37:03 GMT",
+        "expires": "Fri, 01 Jan 1990 00:00:00 GMT",
+        "pragma": "no-cache",
+        "report-to": "{\"group\":\"ascnsrsggc:102:0\",\"max_age\":2592000,\"endpoints\":[{\"url\":\"https://csp.withgoogle.com/csp/report-to/scaffolding/ascnsrsggc:102:0\"}],}",
+        "server": "Golfe2"
+      }
+    }
+  ],
+  "consoleMessages": [
+    {
+      "type": "error",
+      "text": "Error: <path> attribute d: Expected arc flag ('0' or '1'), \"…0a5.38,5.38,0,1,5,5v10a5.38,5.38…\".",
+      "location": {
+        "url": "https://admin.skan.al/static/js/main.ff5267fc.js",
+        "lineNumber": 1
+      }
+    },
+    {
+      "type": "verbose",
+      "text": "[DOM] Input elements should have autocomplete attributes (suggested: \"current-password\"): (More info: https://goo.gl/9p2vKq) %o",
+      "location": {
+        "url": "https://admin.skan.al/login"
+      }
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 400 ()",
+      "location": {
+        "url": "https://api-mkazmlu7ta-ew.a.run.app/v1/auth/login"
+      }
+    },
+    {
+      "type": "error",
+      "text": "Login error: JSHandle@error",
+      "location": {
+        "url": "https://admin.skan.al/static/js/main.ff5267fc.js",
+        "lineNumber": 1,
+        "columnNumber": 255969
+      }
+    },
+    {
+      "type": "error",
+      "text": "Error: <path> attribute d: Expected arc flag ('0' or '1'), \"…0a5.38,5.38,0,1,5,5v10a5.38,5.38…\".",
+      "location": {
+        "url": "https://admin.skan.al/static/js/main.ff5267fc.js",
+        "lineNumber": 1
+      }
+    },
+    {
+      "type": "verbose",
+      "text": "[DOM] Input elements should have autocomplete attributes (suggested: \"current-password\"): (More info: https://goo.gl/9p2vKq) %o",
+      "location": {
+        "url": "https://admin.skan.al/login"
+      }
+    }
+  ]
+}

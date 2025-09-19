@@ -1,0 +1,41 @@
+{
+  "name": "skan-puppeteer-e2e-tests",
+  "version": "1.0.0",
+  "description": "Puppeteer E2E tests for SKAN.AL QR ordering system",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest --config=config/jest.config.js",
+    "test:watch": "jest --config=config/jest.config.js --watch",
+    "test:debug": "jest --config=config/jest.config.js --detectOpenHandles --forceExit",
+    "test:headed": "HEADLESS=false jest --config=config/jest.config.js",
+    "test:slow": "SLOWMO=100 jest --config=config/jest.config.js",
+    "test:customer": "jest --config=config/jest.config.js tests/customer-journey",
+    "test:admin": "jest --config=config/jest.config.js tests/restaurant-operations",
+    "test:onboarding": "jest --config=config/jest.config.js tests/onboarding",
+    "test:all": "node scripts/run-all-tests.js",
+    "setup": "node scripts/setup-test-environment.js",
+    "clean": "rm -rf reports screenshots node_modules/.cache"
+  },
+  "keywords": [
+    "e2e",
+    "testing",
+    "puppeteer",
+    "skan",
+    "qr-ordering",
+    "restaurant"
+  ],
+  "author": "SKAN.AL Development Team",
+  "license": "ISC",
+  "dependencies": {
+    "puppeteer": "^24.10.2",
+    "jest": "^29.7.0",
+    "jest-puppeteer": "^10.1.1",
+    "axios": "^1.6.0"
+  },
+  "devDependencies": {
+    "jest-html-reporters": "^3.1.5"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

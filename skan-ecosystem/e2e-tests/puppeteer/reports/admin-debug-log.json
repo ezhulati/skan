@@ -1,0 +1,22 @@
+{
+  "timestamp": "2025-09-19T19:35:41.582Z",
+  "consoleMessages": [
+    {
+      "type": "error",
+      "text": "Error: <path> attribute d: Expected arc flag ('0' or '1'), \"…0a5.38,5.38,0,1,5,5v10a5.38,5.38…\".",
+      "location": {
+        "url": "https://admin.skan.al/static/js/main.ff5267fc.js",
+        "lineNumber": 1
+      }
+    },
+    {
+      "type": "verbose",
+      "text": "[DOM] Input elements should have autocomplete attributes (suggested: \"current-password\"): (More info: https://goo.gl/9p2vKq) %o",
+      "location": {
+        "url": "https://admin.skan.al/login"
+      }
+    }
+  ],
+  "jsErrors": [],
+  "url": "https://admin.skan.al/login"
+}

@@ -88,7 +88,7 @@ This comprehensive test plan covers **100% of all user types**, **all possible f
 
 ### 1. CUSTOMER TESTS (order.skan.al)
 
-**Flow A: QR Code Ordering (Test Cases 1.A.1 - 1.A.5)**
+#### Flow A: QR Code Ordering (Test Cases 1.A.1 - 1.A.5)
 ```
 ✅ QR Landing Page - Language selection, venue display, auto-redirect
 ✅ Menu Browsing - Categories, items, prices, translations, cart interaction
@@ -97,12 +97,12 @@ This comprehensive test plan covers **100% of all user types**, **all possible f
 ✅ Order Tracking - Real-time status, progression monitoring
 ```
 
-**Flow B: Direct Order Tracking (Test Case 1.B.1)**
+#### Flow B: Direct Order Tracking (Test Case 1.B.1)
 ```
 ✅ Public Order Tracking - Order lookup by number, status display
 ```
 
-**Flow C: Help & Support (Test Cases 1.C.1 - 1.C.2)**
+#### Flow C: Help & Support (Test Cases 1.C.1 - 1.C.2)
 ```
 ✅ Help Page - Instructions, language switching, support info
 ✅ Offline Support - Connection handling, retry functionality
@@ -110,13 +110,13 @@ This comprehensive test plan covers **100% of all user types**, **all possible f
 
 ### 2. RESTAURANT OWNER TESTS (admin.skan.al)
 
-**Flow A: Initial Registration (Test Cases 2.A.1 - 2.A.2)**
+#### Flow A: Initial Registration (Test Cases 2.A.1 - 2.A.2)
 ```
 ✅ Account Creation - Registration form, validation, email verification
 ✅ First Login - Authentication, session management, onboarding redirect
 ```
 
-**Flow B: Onboarding Setup (Test Case 2.B.1)**
+#### Flow B: Onboarding Setup (Test Case 2.B.1)
 ```
 ✅ Onboarding Wizard - Complete 6-step setup process
   - Welcome and introduction
@@ -127,7 +127,7 @@ This comprehensive test plan covers **100% of all user types**, **all possible f
   - System testing (order flow validation)
 ```
 
-**Flow C: Daily Operations (Test Cases 2.C.1 - 2.C.7)**
+#### Flow C: Daily Operations (Test Cases 2.C.1 - 2.C.7)
 ```
 ✅ Dashboard Overview - Real-time orders, statistics, notifications
 ✅ Order Management - Status updates, filtering, search, queue management
@@ -138,14 +138,14 @@ This comprehensive test plan covers **100% of all user types**, **all possible f
 ✅ Payment Settings - Billing info, subscription management
 ```
 
-**Flow D: Password Recovery (Test Cases 2.D.1)**
+#### Flow D: Password Recovery (Test Cases 2.D.1)
 ```
 ✅ Password Reset - Email request, reset link, new password confirmation
 ```
 
 ### 3. RESTAURANT MANAGER TESTS (admin.skan.al)
 
-**Flow A: Daily Operations (Test Cases 3.A.1 - 3.A.5)**
+#### Flow A: Daily Operations (Test Cases 3.A.1 - 3.A.5)
 ```
 ✅ Manager Login - Authentication, venue access, permission verification
 ✅ Order Processing - Queue management, status updates, kitchen coordination
@@ -156,7 +156,7 @@ This comprehensive test plan covers **100% of all user types**, **all possible f
 
 ### 4. RESTAURANT STAFF TESTS (admin.skan.al)
 
-**Flow A: Order Processing (Test Cases 4.A.1 - 4.A.4)**
+#### Flow A: Order Processing (Test Cases 4.A.1 - 4.A.4)
 ```
 ✅ Staff Login - Limited access authentication
 ✅ Order Handling - Assigned orders, status updates, customer service
@@ -166,7 +166,7 @@ This comprehensive test plan covers **100% of all user types**, **all possible f
 
 ### 5. SYSTEM ADMIN TESTS (admin.skan.al)
 
-**Flow A: Multi-Venue Management (Test Cases 5.A.1 - 5.A.4)**
+#### Flow A: Multi-Venue Management (Test Cases 5.A.1 - 5.A.4)
 ```
 ✅ System Overview - Global statistics, performance monitoring
 ✅ Venue Management - Multi-venue operations, subscription control
@@ -176,7 +176,7 @@ This comprehensive test plan covers **100% of all user types**, **all possible f
 
 ### 6. PROSPECTIVE CUSTOMER TESTS (skan.al)
 
-**Flow A: Service Discovery (Test Cases 6.A.1 - 6.A.4)**
+#### Flow A: Service Discovery (Test Cases 6.A.1 - 6.A.4)
 ```
 ✅ Homepage - Service overview, benefits, pricing access
 ✅ Features Page - Detailed features, testimonials, specifications
@@ -184,19 +184,19 @@ This comprehensive test plan covers **100% of all user types**, **all possible f
 ✅ About Page - Company info, team, mission, credentials
 ```
 
-**Flow B: Registration Process (Test Cases 6.B.1 - 6.B.2)**
+#### Flow B: Registration Process (Test Cases 6.B.1 - 6.B.2)
 ```
 ✅ Registration Form - Account creation, plan selection, validation
 ✅ Registration Success - Confirmation, next steps, credential access
 ```
 
-**Flow C: Demo Request (Test Cases 6.C.1 - 6.C.2)**
+#### Flow C: Demo Request (Test Cases 6.C.1 - 6.C.2)
 ```
 ✅ Demo Request - System demonstration scheduling
 ✅ Customer Demo Request - Ordering experience testing
 ```
 
-**Flow D: Information Gathering (Test Cases 6.D.1 - 6.D.4)**
+#### Flow D: Information Gathering (Test Cases 6.D.1 - 6.D.4)
 ```
 ✅ Contact - Inquiry submission, sales support, consultation scheduling
 ✅ Contact Success - Confirmation, response expectations
