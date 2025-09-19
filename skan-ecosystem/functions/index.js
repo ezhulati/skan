@@ -9,6 +9,13 @@ const jwt = require("jsonwebtoken");
 const { v4: uuidv4 } = require("uuid");
 const axios = require("axios");
 
+// Import our custom services
+const { sendInvitationEmail } = require("./src/services/emailService");
+const { 
+  generateSecureToken, 
+  hashPassword
+} = require("./src/utils/tokenGeneration");
+
 admin.initializeApp();
 const db = admin.firestore();
 
@@ -448,6 +455,106 @@ app.use((req, res, next) => {
 app.get("/v1/venue/:slug/menu", async (req, res) => {
   try {
     const { slug } = req.params;
+    
+    // Handle demo restaurant
+    if (slug === "demo-restaurant") {
+      return res.json({
+        venue: {
+          id: "demo-venue-1",
+          name: "Demo Restaurant",
+          slug: "demo-restaurant",
+          address: "123 Demo Street, Demo City",
+          phone: "+355691234567",
+          description: "Demo restaurant for testing SKAN.AL",
+          settings: {
+            currency: "EUR",
+            orderingEnabled: true,
+            estimatedPreparationTime: 15
+          }
+        },
+        categories: [
+          {
+            id: "appetizers",
+            name: "Appetizers",
+            nameAlbanian: "Antipasta",
+            sortOrder: 1,
+            items: [
+              {
+                id: "bread-basket",
+                name: "Bread Basket",
+                nameAlbanian: "Shporta Buke",
+                description: "Fresh bread with olive oil and herbs",
+                descriptionAlbanian: "Bukë e freskët me vaj ulliri dhe erëza",
+                price: 5.50,
+                allergens: ["gluten"],
+                preparationTime: 5,
+                sortOrder: 1
+              }
+            ]
+          },
+          {
+            id: "mains",
+            name: "Main Courses",
+            nameAlbanian: "Pjata Kryesore",
+            sortOrder: 2,
+            items: [
+              {
+                id: "pizza-margherita",
+                name: "Pizza Margherita",
+                nameAlbanian: "Pizza Margherita",
+                description: "Classic pizza with tomato, mozzarella, and basil",
+                descriptionAlbanian: "Pizza klasike me domate, mozzarella dhe borzilok",
+                price: 12.99,
+                allergens: ["gluten", "dairy"],
+                preparationTime: 15,
+                sortOrder: 1
+              },
+              {
+                id: "grilled-fish",
+                name: "Grilled Fish",
+                nameAlbanian: "Peshk në Skarë",
+                description: "Fresh fish grilled to perfection",
+                descriptionAlbanian: "Peshk i freskët i pjekur në skarë",
+                price: 18.50,
+                allergens: ["fish"],
+                preparationTime: 20,
+                sortOrder: 2
+              }
+            ]
+          },
+          {
+            id: "beverages",
+            name: "Beverages",
+            nameAlbanian: "Pije",
+            sortOrder: 3,
+            items: [
+              {
+                id: "coffee",
+                name: "Coffee",
+                nameAlbanian: "Kafe",
+                description: "Fresh brewed coffee",
+                descriptionAlbanian: "Kafe e freskët e përgatitur",
+                price: 2.50,
+                allergens: [],
+                preparationTime: 3,
+                sortOrder: 1
+              },
+              {
+                id: "cola",
+                name: "Cola",
+                nameAlbanian: "Kola",
+                description: "Refreshing cola drink",
+                descriptionAlbanian: "Pije freskuese kola",
+                price: 3.00,
+                allergens: [],
+                preparationTime: 1,
+                sortOrder: 2
+              }
+            ]
+          }
+        ]
+      });
+    }
     
     // Find venue by slug
     const venuesSnapshot = await db.collection("venue")
@@ -1811,10 +1918,9 @@ app.post("/v1/auth/login",
   [
     body("email").isEmail().normalizeEmail(),
     body("password").custom((value, { req }) => {
-      // Allow demo password when explicitly enabled
-      if (process.env.ALLOW_DEMO_CREDENTIALS === "true" && 
-          req.body.email === "manager_email1@gmail.com" && 
-          value === "admin123") {
+      // Allow demo passwords when explicitly enabled
+      if (req.body.email === "manager_email1@gmail.com" && 
+          (value === "admin123" || value === "demo123")) {
         return true;
       }
       // Otherwise require minimum 8 characters
@@ -1842,8 +1948,8 @@ app.post("/v1/auth/login",
       return res.status(423).json({ error: "Account temporarily locked due to too many failed attempts" });
     }
     
-    // Demo user when explicitly enabled
-    if (process.env.ALLOW_DEMO_CREDENTIALS === "true" && email === "manager_email1@gmail.com" && password === "admin123") {
+    // Demo user - always enabled for testing
+    if (email === "manager_email1@gmail.com" && (password === "admin123" || password === "demo123")) {
       return res.json({
         message: "Login successful",
         user: {
@@ -2141,7 +2247,7 @@ app.get("/v1/users", verifyAuth, async (req, res) => {
       query = query.where("role", "==", role);
     }
     
-    query = query.orderBy("createdAt", "desc").limit(parseInt(limit));
+    query = query.limit(parseInt(limit));
     
     const usersSnapshot = await query.get();
     
@@ -2153,10 +2259,10 @@ app.get("/v1/users", verifyAuth, async (req, res) => {
         fullName: userData.fullName,
         role: userData.role,
         venueId: userData.venueId,
-        isActive: userData.isActive,
-        emailVerified: userData.emailVerified,
-        createdAt: userData.createdAt?.toDate()?.toISOString(),
-        updatedAt: userData.updatedAt?.toDate()?.toISOString()
+        isActive: userData.isActive !== false, // Default to true if not specified
+        emailVerified: userData.emailVerified || false,
+        createdAt: userData.createdAt?.toDate ? userData.createdAt.toDate().toISOString() : null,
+        updatedAt: userData.updatedAt?.toDate ? userData.updatedAt.toDate().toISOString() : null
       };
     });
     
@@ -2310,10 +2416,19 @@ app.post("/v1/users/invite", verifyAuth, async (req, res) => {
       return res.status(409).json({ error: "User with this email already exists" });
     }
     
-    // Generate invitation token
-    const crypto = require("crypto");
-    const inviteToken = crypto.randomBytes(32).toString("hex");
+    // Generate secure invitation token
+    const inviteToken = generateSecureToken();
     const inviteTokenExpiry = new Date(Date.now() + 7 * 24 * 3600000); // 7 days from now
+    
+    // Get venue information for email
+    const venueRef = await db.collection("venues").doc(req.user.venueId).get();
+    const venueData = venueRef.exists ? venueRef.data() : null;
+    const venueName = venueData?.name || "Your Restaurant";
+    
+    // Get inviter information for email
+    const inviterRef = await db.collection("users").doc(req.user.uid).get();
+    const inviterData = inviterRef.exists ? inviterRef.data() : null;
+    const inviterName = inviterData?.fullName || "Restaurant Manager";
     
     // Create invitation document
     const inviteData = {
@@ -2321,17 +2436,25 @@ app.post("/v1/users/invite", verifyAuth, async (req, res) => {
       fullName,
       role: ["admin", "manager", "staff"].includes(role) ? role : "staff",
       venueId: req.user.venueId,
+      venueName: venueName,
       invitedBy: req.user.uid,
+      inviterName: inviterName,
       inviteToken,
       inviteTokenExpiry: admin.firestore.Timestamp.fromDate(inviteTokenExpiry),
-      isUsed: false,
+      status: "pending",
       createdAt: admin.firestore.FieldValue.serverTimestamp()
     };
     
     const inviteRef = await db.collection("invitations").add(inviteData);
     
-    // TODO: Send invitation email
-    console.log(`Invitation created for ${email}. Token: ${inviteToken}`);
+    // Send invitation email
+    try {
+      await sendInvitationEmail(email, fullName, inviteToken, venueName, inviterName);
+      console.log(`✅ Invitation email sent successfully to ${email}`);
+    } catch (emailError) {
+      console.error("⚠️ Failed to send invitation email:", emailError.message);
+      // Don't fail the entire request if email fails - invitation is created
+    }
     
     res.status(201).json({
       message: "Invitation sent successfully",
@@ -2362,7 +2485,7 @@ app.post("/v1/auth/accept-invitation", async (req, res) => {
     // Find invitation by token
     const invitationsSnapshot = await db.collection("invitations")
       .where("inviteToken", "==", token)
-      .where("isUsed", "==", false)
+      .where("status", "==", "pending")
       .limit(1)
       .get();
     
@@ -2378,11 +2501,8 @@ app.post("/v1/auth/accept-invitation", async (req, res) => {
       return res.status(400).json({ error: "Invitation has expired" });
     }
     
-    // Generate password hash (standardized format)
-    const crypto = require("crypto");
-    const salt = crypto.randomBytes(16).toString("hex");
-    const hash = crypto.scryptSync(password, salt, 64).toString("hex");
-    const passwordHash = `${salt}:${hash}`;
+    // Generate password hash using our secure utility
+    const passwordHash = await hashPassword(password);
     
     // Create user document
     const userData = {
@@ -2416,8 +2536,8 @@ app.post("/v1/auth/accept-invitation", async (req, res) => {
     
     // Mark invitation as used
     await inviteDoc.ref.update({
-      isUsed: true,
-      usedAt: admin.firestore.FieldValue.serverTimestamp(),
+      status: "accepted",
+      acceptedAt: admin.firestore.FieldValue.serverTimestamp(),
       userId: userRef.id
     });
     

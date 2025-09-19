@@ -46,6 +46,16 @@ service cloud.firestore {
         request.auth.token.role in ['manager', 'owner'];
     }
     
+    // Invitations: managers can create, public read for acceptance
+    match /invitations/{invitationId} {
+      allow create: if request.auth != null && 
+        request.auth.token.role in ['manager', 'owner'];
+      allow read: if true; // Public read for invitation acceptance
+      allow update: if true; // Allow updates for invitation acceptance
+      allow delete: if request.auth != null && 
+        request.auth.token.role in ['manager', 'owner'];
+    }
+    
     // Analytics and reports (role-based access)
     match /analytics/{docId} {
       allow read, write: if request.auth != null && 
