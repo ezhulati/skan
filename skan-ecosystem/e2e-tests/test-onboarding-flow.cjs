@@ -113,7 +113,7 @@ async function testOnboardingFlow() {
         data: {
           venueName: 'Test Restaurant',
           address: '123 Test Street, Test City',
-          phone: '+355 69 123 4567',
+          phone: '+355 67 123 4567',
           description: 'A test restaurant for onboarding',
           cuisineType: 'mediterranean'
         },

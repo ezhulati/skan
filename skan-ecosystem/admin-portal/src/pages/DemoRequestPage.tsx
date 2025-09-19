@@ -365,7 +365,7 @@ const DemoRequestPage: React.FC = () => {
               fontSize: '12px',
               opacity: '0.8'
             }}>
-              📞 +355 69 123 4567 | 📧 hello@skan.al
+              📧 hello@skan.al
             </div>
           </div>
 

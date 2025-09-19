@@ -35,32 +35,85 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
   useEffect(() => {
     const loadOnboardingStatus = async () => {
       try {
-        if (auth.token) {
-          onboardingApiService.setToken(auth.token);
-          const response = await onboardingApiService.getOnboardingStatus();
-          
-          // Resume from the current step
+        // First, try to load from localStorage
+        const savedRestaurantInfo = localStorage.getItem('onboarding_restaurant_info');
+        const savedCurrentStep = localStorage.getItem('onboarding_current_step');
+        
+        if (savedRestaurantInfo) {
+          try {
+            const parsedInfo = JSON.parse(savedRestaurantInfo);
+            setRestaurantInfo(parsedInfo);
+            console.log('Loaded restaurant info from localStorage:', parsedInfo);
+          } catch (e) {
+            console.warn('Failed to parse saved restaurant info:', e);
+          }
+        }
+        
+        if (savedCurrentStep) {
+          const stepNumber = parseInt(savedCurrentStep);
+          if (stepNumber >= 1 && stepNumber <= 5) {
+            setCurrentStep(stepNumber);
+            console.log('Loaded current step from localStorage:', stepNumber);
+          }
+        }
+
+        if (!auth.token) {
+          console.log('No auth token available, using local data only');
+          setLoading(false);
+          return;
+        }
+
+        console.log('Loading onboarding status with token:', auth.token?.substring(0, 20) + '...');
+        onboardingApiService.setToken(auth.token);
+        
+        const response = await onboardingApiService.getOnboardingStatus();
+        console.log('Onboarding status loaded:', response);
+        
+        // Resume from the current step (prefer API data over localStorage)
+        if (response?.onboarding?.currentStep) {
           setCurrentStep(response.onboarding.currentStep);
+        }
+        
+        // Load existing data if available (prefer API data over localStorage)
+        if (response?.onboarding?.steps?.venueSetup?.data) {
+          const venueData = response.onboarding.steps.venueSetup.data;
+          setRestaurantInfo({
+            name: venueData.venueName || '',
+            address: venueData.address || '',
+            phone: venueData.phone || '',
+            cuisineType: venueData.cuisineType || '',
+            description: venueData.description || ''
+          });
           
-          // Load existing data if available
-          if (response.onboarding.steps.venueSetup.data) {
-            const venueData = response.onboarding.steps.venueSetup.data;
-            setRestaurantInfo({
-              name: venueData.venueName || '',
-              address: venueData.address || '',
-              phone: venueData.phone || '',
-              cuisineType: venueData.cuisineType || '',
-              description: venueData.description || ''
-            });
-          }
-          
-          if (response.onboarding.steps.tableSetup.data) {
-            setTableCount(response.onboarding.steps.tableSetup.data.tableCount || '');
-          }
+          // Clear localStorage since we got fresh data from API
+          localStorage.removeItem('onboarding_restaurant_info');
+          localStorage.removeItem('onboarding_current_step');
+        }
+        
+        if (response?.onboarding?.steps?.tableSetup?.data) {
+          setTableCount(response.onboarding.steps.tableSetup.data.tableCount || '');
         }
       } catch (err) {
         console.error('Error loading onboarding status:', err);
-        setError('Failed to load onboarding progress');
+        
+        // Provide more detailed error message
+        let errorMessage = 'Failed to load onboarding progress';
+        if (err instanceof Error) {
+          if (err.message.includes('401') || err.message.includes('Unauthorized')) {
+            errorMessage = 'Authentication failed. Please try logging in again.';
+          } else if (err.message.includes('404')) {
+            errorMessage = 'Onboarding data not found. Starting fresh setup.';
+          } else if (err.message.includes('network') || err.message.includes('fetch')) {
+            errorMessage = 'Connection error. Using saved data if available.';
+          } else {
+            errorMessage = `Failed to load onboarding progress: ${err.message}`;
+          }
+        }
+        
+        setError(errorMessage);
+        
+        // Don't block the user - allow them to continue with onboarding even if loading fails
+        console.log('Continuing with local/fresh onboarding setup due to error');
       } finally {
         setLoading(false);
       }
@@ -70,11 +123,11 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
   }, [auth.token]);
 
   const steps = [
-    { id: 1, title: 'Restaurant Information', desc: 'Tell us about your restaurant' },
-    { id: 2, title: 'Menu Categories', desc: 'Set up your menu structure' },
-    { id: 3, title: 'Sample Menu Items', desc: 'Add your first menu items' },
-    { id: 4, title: 'Table Setup', desc: 'Configure your tables and QR codes' },
-    { id: 5, title: 'Ready to Go!', desc: 'Test your setup and go live' }
+    { id: 1, title: 'Info', icon: '🏪' },
+    { id: 2, title: 'Menu', icon: '📋' },
+    { id: 3, title: 'Items', icon: '🍕' },
+    { id: 4, title: 'Tables', icon: '🪑' },
+    { id: 5, title: 'Done', icon: '✅' }
   ];
 
   const nextStep = () => {
@@ -94,31 +147,80 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
     setError(null);
     
     try {
-      // Update profile completion step with user's full name
-      await onboardingApiService.updateOnboardingStep('profileComplete', {
-        fullName: auth.user?.fullName || '',
-        email: auth.user?.email || ''
-      });
+      console.log('Starting restaurant info submission...');
+      console.log('Auth user:', auth.user);
+      console.log('Auth token available:', !!auth.token);
+      console.log('Restaurant info:', restaurantInfo);
+
+      // Basic validation
+      if (!restaurantInfo.name || !restaurantInfo.address || !restaurantInfo.phone || !restaurantInfo.cuisineType) {
+        throw new Error('Please fill in all required fields.');
+      }
+
+      // Ensure token is set
+      if (!auth.token) {
+        throw new Error('Authentication required. Please log in again.');
+      }
+
+      onboardingApiService.setToken(auth.token);
+
+      try {
+        // Update profile completion step with user's full name
+        console.log('Updating profile completion step...');
+        await onboardingApiService.updateOnboardingStep('profileComplete', {
+          fullName: auth.user?.fullName || '',
+          email: auth.user?.email || ''
+        });
+        
+        // Update venue setup step with restaurant info
+        console.log('Updating venue setup step...');
+        await onboardingApiService.updateOnboardingStep('venueSetup', {
+          venueName: restaurantInfo.name,
+          address: restaurantInfo.address,
+          phone: restaurantInfo.phone,
+          description: restaurantInfo.description,
+          cuisineType: restaurantInfo.cuisineType
+        });
+        
+        // Auto-complete menu categories step (default categories)
+        console.log('Updating menu categories step...');
+        await onboardingApiService.updateOnboardingStep('menuCategories', {
+          categoriesCreated: 4,
+          categories: ['Appetizers & Salads', 'Main Courses', 'Desserts', 'Beverages']
+        });
+        
+        console.log('All steps completed successfully, moving to next step');
+      } catch (apiError) {
+        console.warn('API save failed, but continuing with local data:', apiError);
+        // Store data locally if API fails, but don't block the user
+        localStorage.setItem('onboarding_restaurant_info', JSON.stringify(restaurantInfo));
+        localStorage.setItem('onboarding_current_step', '2');
+      }
       
-      // Update venue setup step with restaurant info
-      await onboardingApiService.updateOnboardingStep('venueSetup', {
-        venueName: restaurantInfo.name,
-        address: restaurantInfo.address,
-        phone: restaurantInfo.phone,
-        description: restaurantInfo.description,
-        cuisineType: restaurantInfo.cuisineType
-      });
-      
-      // Auto-complete menu categories step (default categories)
-      await onboardingApiService.updateOnboardingStep('menuCategories', {
-        categoriesCreated: 4,
-        categories: ['Appetizers & Salads', 'Main Courses', 'Desserts', 'Beverages']
-      });
-      
+      // Always proceed to next step regardless of API success/failure
       nextStep();
     } catch (err) {
-      console.error('Error saving restaurant info:', err);
-      setError('Failed to save restaurant information. Please try again.');
+      console.error('Error in restaurant info submission:', err);
+      
+      // Provide more specific error messages
+      let errorMessage = 'Failed to save restaurant information. Please try again.';
+      if (err instanceof Error) {
+        if (err.message.includes('required fields')) {
+          errorMessage = err.message;
+        } else if (err.message.includes('Authentication')) {
+          errorMessage = 'Authentication failed. Please refresh the page and try again.';
+        } else if (err.message.includes('network') || err.message.includes('fetch')) {
+          errorMessage = 'Connection error. You can continue setup and we\'ll save your data later.';
+          
+          // For network errors, still allow them to proceed
+          localStorage.setItem('onboarding_restaurant_info', JSON.stringify(restaurantInfo));
+          setError(errorMessage + ' Click "Continue anyway" to proceed.');
+        } else {
+          errorMessage = `Setup error: ${err.message}`;
+        }
+      }
+      
+      setError(errorMessage);
     } finally {
       setSaving(false);
     }
@@ -158,7 +260,7 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
                 type="tel"
                 value={restaurantInfo.phone}
                 onChange={(e) => setRestaurantInfo({...restaurantInfo, phone: e.target.value})}
-                placeholder="e.g., +355 69 123 4567"
+                placeholder="e.g., +355 67 123 4567"
               />
             </div>
 
@@ -189,18 +291,113 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
             </div>
 
             {error && (
-              <div className="error-message" style={{ color: '#dc3545', marginBottom: '16px', padding: '8px', backgroundColor: '#f8d7da', borderRadius: '4px' }}>
-                {error}
+              <div className="error-message" style={{ 
+                color: '#856404', 
+                marginBottom: '16px', 
+                padding: '12px', 
+                backgroundColor: '#fff3cd', 
+                border: '1px solid #ffeaa7',
+                borderRadius: '6px'
+              }}>
+                <div style={{ marginBottom: '8px' }}>{error}</div>
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <button 
+                    onClick={async () => {
+                      setError(null);
+                      setLoading(true);
+                      try {
+                        if (auth.token) {
+                          onboardingApiService.setToken(auth.token);
+                          const response = await onboardingApiService.getOnboardingStatus();
+                          
+                          if (response?.onboarding?.currentStep) {
+                            setCurrentStep(response.onboarding.currentStep);
+                          }
+                          
+                          if (response?.onboarding?.steps?.venueSetup?.data) {
+                            const venueData = response.onboarding.steps.venueSetup.data;
+                            setRestaurantInfo({
+                              name: venueData.venueName || '',
+                              address: venueData.address || '',
+                              phone: venueData.phone || '',
+                              cuisineType: venueData.cuisineType || '',
+                              description: venueData.description || ''
+                            });
+                          }
+                          
+                          if (response?.onboarding?.steps?.tableSetup?.data) {
+                            setTableCount(response.onboarding.steps.tableSetup.data.tableCount || '');
+                          }
+                        }
+                      } catch (err) {
+                        setError('Failed to retry loading onboarding progress');
+                      } finally {
+                        setLoading(false);
+                      }
+                    }}
+                    style={{
+                      background: '#856404',
+                      color: 'white',
+                      border: 'none',
+                      padding: '4px 8px',
+                      borderRadius: '4px',
+                      cursor: 'pointer',
+                      fontSize: '12px'
+                    }}
+                  >
+                    Retry
+                  </button>
+                  <button 
+                    onClick={() => setError(null)}
+                    style={{
+                      background: 'none',
+                      border: '1px solid #856404',
+                      color: '#856404',
+                      cursor: 'pointer',
+                      fontSize: '12px',
+                      padding: '4px 8px',
+                      borderRadius: '4px'
+                    }}
+                    title="Dismiss and continue"
+                  >
+                    Continue anyway
+                  </button>
+                </div>
               </div>
             )}
             
-            <button 
-              className="next-button"
-              onClick={handleRestaurantInfoSubmit}
-              disabled={!restaurantInfo.name || !restaurantInfo.address || !restaurantInfo.phone || !restaurantInfo.cuisineType || saving}
-            >
-              {saving ? 'Saving...' : 'Continue to Menu Setup →'}
-            </button>
+            <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+              <button 
+                className="next-button"
+                onClick={handleRestaurantInfoSubmit}
+                disabled={!restaurantInfo.name || !restaurantInfo.address || !restaurantInfo.phone || !restaurantInfo.cuisineType || saving}
+              >
+                {saving ? 'Saving...' : 'Continue to Menu Setup →'}
+              </button>
+              
+              {error && (
+                <button 
+                  className="skip-button"
+                  onClick={() => {
+                    // Save locally and continue
+                    localStorage.setItem('onboarding_restaurant_info', JSON.stringify(restaurantInfo));
+                    setError(null);
+                    nextStep();
+                  }}
+                  style={{
+                    background: 'none',
+                    border: '1px solid #6c757d',
+                    color: '#6c757d',
+                    padding: '12px 16px',
+                    borderRadius: '8px',
+                    cursor: 'pointer',
+                    fontSize: '14px'
+                  }}
+                >
+                  Skip & Continue
+                </button>
+              )}
+            </div>
           </div>
         );
 
@@ -455,13 +652,16 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
       <div className="onboarding-container">
         <div className="onboarding-header">
           <div className="step-progress">
+            <div className="progress-line">
+              <div 
+                className="progress-fill" 
+                style={{ width: `${((currentStep - 1) / (steps.length - 1)) * 100}%` }}
+              ></div>
+            </div>
             {steps.map((step) => (
               <div key={step.id} className={`step ${currentStep >= step.id ? 'active' : ''}`}>
-                <div className="step-number">{step.id}</div>
-                <div className="step-info">
-                  <div className="step-title">{step.title}</div>
-                  <div className="step-desc">{step.desc}</div>
-                </div>
+                <div className="step-icon">{step.icon}</div>
+                <div className="step-title">{step.title}</div>
               </div>
             ))}
           </div>
@@ -504,48 +704,102 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
         }
 
         .step-progress {
+          position: relative;
           display: flex;
-          gap: 16px;
+          justify-content: space-between;
+          gap: 8px;
           overflow-x: auto;
+          padding: 0 8px;
+        }
+
+        .progress-line {
+          position: absolute;
+          top: 20px;
+          left: 28px;
+          right: 28px;
+          height: 2px;
+          background: rgba(255, 255, 255, 0.3);
+          z-index: 1;
+        }
+
+        .progress-fill {
+          height: 100%;
+          background: white;
+          transition: width 0.4s ease;
         }
 
         .step {
           display: flex;
+          flex-direction: column;
           align-items: center;
-          gap: 8px;
-          min-width: 140px;
-          opacity: 0.6;
-          transition: opacity 0.3s;
+          gap: 6px;
+          min-width: 60px;
+          opacity: 0.5;
+          transition: all 0.3s;
+          flex: 1;
+          text-align: center;
+          position: relative;
+          z-index: 2;
         }
 
         .step.active {
           opacity: 1;
+          transform: scale(1.05);
         }
 
-        .step-number {
-          width: 32px;
-          height: 32px;
+        .step-icon {
+          font-size: 24px;
+          width: 40px;
+          height: 40px;
           border-radius: 50%;
           background: rgba(255, 255, 255, 0.2);
           display: flex;
           align-items: center;
           justify-content: center;
-          font-weight: bold;
+          transition: all 0.3s;
         }
 
-        .step.active .step-number {
+        .step.active .step-icon {
           background: white;
-          color: #667eea;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
 
         .step-title {
           font-weight: 600;
-          font-size: 14px;
+          font-size: 12px;
+          white-space: nowrap;
         }
 
-        .step-desc {
-          font-size: 12px;
-          opacity: 0.8;
+        /* Mobile responsive adjustments */
+        @media (max-width: 768px) {
+          .step {
+            min-width: 50px;
+            gap: 4px;
+          }
+
+          .step-icon {
+            width: 32px;
+            height: 32px;
+            font-size: 18px;
+          }
+
+          .step-title {
+            font-size: 10px;
+          }
+
+          .progress-line {
+            top: 16px;
+            left: 25px;
+            right: 25px;
+          }
+
+          .onboarding-header {
+            padding: 16px;
+          }
+
+          .onboarding-content {
+            padding: 20px;
+          }
         }
 
         .onboarding-content {
