@@ -556,6 +556,31 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
             >
               Vazhdo te Tavolinat → ({menuItems.length}/3 minimum)
             </button>
+            
+            <button
+              onClick={() => setCurrentStep(3)}
+              style={{
+                background: 'transparent',
+                color: 'rgba(255, 255, 255, 0.7)',
+                border: '1px solid rgba(255, 255, 255, 0.3)',
+                padding: '12px 24px',
+                borderRadius: '8px',
+                fontSize: '14px',
+                cursor: 'pointer',
+                marginTop: '12px',
+                transition: 'all 0.2s ease'
+              }}
+              onMouseOver={(e) => {
+                e.target.style.background = 'rgba(255, 255, 255, 0.1)';
+                e.target.style.color = 'white';
+              }}
+              onMouseOut={(e) => {
+                e.target.style.background = 'transparent';
+                e.target.style.color = 'rgba(255, 255, 255, 0.7)';
+              }}
+            >
+              Kalo këtë hap (mund të shtosh më vonë)
+            </button>
           </div>
         );
 
@@ -834,13 +859,14 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
         /* Background Progress Line */
         .progress-line-background {
           position: absolute;
-          top: 22px;
+          top: 50%;
           left: 22px;
           right: 22px;
           height: 2px;
           background: rgba(255, 255, 255, 0.2);
           border-radius: 1px;
           z-index: 1;
+          transform: translateY(-50%);
         }
 
         .progress-line-fill {
@@ -872,6 +898,7 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
           justify-content: center;
           transition: all 0.3s ease;
           position: relative;
+          z-index: 10;
           border: 3px solid transparent;
           z-index: 10;
         }
@@ -957,9 +984,10 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
           }
 
           .progress-line-background {
-            top: 18px;
+            top: 50%;
             left: 18px;
             right: 18px;
+            transform: translateY(-50%);
           }
 
           .onboarding-header {
@@ -992,9 +1020,10 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
           }
 
           .progress-line-background {
-            top: 20px;
+            top: 50%;
             left: 20px;
             right: 20px;
+            transform: translateY(-50%);
           }
         }
 
@@ -1024,9 +1053,10 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
           }
 
           .progress-line-background {
-            top: 16px;
+            top: 50%;
             left: 16px;
             right: 16px;
+            transform: translateY(-50%);
           }
 
           .progress-step.active .step-circle {
