@@ -561,13 +561,14 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
               onClick={() => setCurrentStep(3)}
               style={{
                 background: 'transparent',
-                color: 'rgba(255, 255, 255, 0.7)',
-                border: '1px solid rgba(255, 255, 255, 0.3)',
-                padding: '12px 24px',
-                borderRadius: '8px',
+                color: 'rgba(255, 255, 255, 0.8)',
+                border: '1px solid rgba(255, 255, 255, 0.4)',
+                padding: '10px 20px',
+                borderRadius: '6px',
                 fontSize: '14px',
                 cursor: 'pointer',
-                marginTop: '12px',
+                marginTop: '16px',
+                width: '100%',
                 transition: 'all 0.2s ease'
               }}
               onMouseOver={(e) => {
@@ -782,14 +783,6 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
       <div className="onboarding-container">
         <div className="onboarding-header">
           <div className="progress-bar">
-              {/* Background progress line */}
-              <div className="progress-line-background">
-                <div 
-                  className="progress-line-fill" 
-                  style={{ width: `${((currentStep - 1) / (steps.length - 1)) * 100}%` }}
-                ></div>
-              </div>
-              
               {/* Step circles */}
               {steps.map((step, index) => (
                 <div key={step.id} className={`progress-step ${
@@ -858,26 +851,7 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
           padding: 20px 24px;
         }
 
-        /* Background Progress Line */
-        .progress-line-background {
-          position: absolute;
-          top: 50%;
-          left: 22px;
-          right: 22px;
-          height: 2px;
-          background: rgba(255, 255, 255, 0.2);
-          border-radius: 1px;
-          z-index: 1;
-          transform: translateY(-50%);
-        }
-
-        .progress-line-fill {
-          height: 100%;
-          background: rgba(255, 255, 255, 0.8);
-          border-radius: 1px;
-          transition: width 0.5s ease;
-          box-shadow: 0 0 6px rgba(255, 255, 255, 0.3);
-        }
+        /* Progress bar without line - cleaner look */
 
         /* Step Components */
         .progress-step {
@@ -985,12 +959,7 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
             line-height: 1.2;
           }
 
-          .progress-line-background {
-            top: 50%;
-            left: 18px;
-            right: 18px;
-            transform: translateY(-50%);
-          }
+          /* No progress line needed */
 
           .onboarding-header {
             padding: 16px;
@@ -1021,12 +990,7 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
             font-size: 12px;
           }
 
-          .progress-line-background {
-            top: 50%;
-            left: 20px;
-            right: 20px;
-            transform: translateY(-50%);
-          }
+          /* No progress line needed */
         }
 
         /* Extra small screens */
@@ -1054,12 +1018,7 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
             line-height: 1.1;
           }
 
-          .progress-line-background {
-            top: 50%;
-            left: 16px;
-            right: 16px;
-            transform: translateY(-50%);
-          }
+          /* No progress line needed */
 
           .progress-step.active .step-circle {
             transform: scale(1.05);
