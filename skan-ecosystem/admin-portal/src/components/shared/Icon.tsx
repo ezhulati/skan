@@ -40,7 +40,7 @@ export const iconMap: Record<string, IconType> = {
   'receipt': Icons.MdReceipt,
   'qr-code': Icons.MdQrCode,
   'table': Icons.MdTableRestaurant,
-  'store': Icons.MdStore,
+  'store': Icons.MdStore, 
   'menu-book': Icons.MdMenuBook,
   'category': Icons.MdCategory,
   'restaurant-menu': Icons.MdRestaurantMenu,

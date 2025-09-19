@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { onboardingApiService } from '../services/onboardingApi';
 import { useAuth } from '../contexts/AuthContext';
-import { Icon, IconName } from './shared/Icon';
+import { Icon } from './shared/Icon';
 
 interface OnboardingWizardProps {
   onComplete: () => void;
@@ -31,6 +31,9 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
     description: ''
   });
   const [tableCount, setTableCount] = useState('');
+  const [menuItems, setMenuItems] = useState<Array<{name: string, price: string}>>([]);
+  const [newItemName, setNewItemName] = useState('');
+  const [newItemPrice, setNewItemPrice] = useState('');
 
   // Load onboarding status on mount
   useEffect(() => {
@@ -131,16 +134,20 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
   }, [auth.token]);
 
   const steps = [
-    { id: 1, title: 'Informacioni', icon: 'store' as IconName },
-    { id: 2, title: 'Kategoritë', icon: 'category' as IconName },
-    { id: 3, title: 'Pjatet', icon: 'restaurant-menu' as IconName },
-    { id: 4, title: 'Tavolinat', icon: 'table' as IconName },
-    { id: 5, title: 'Perfunduar', icon: 'success' as IconName }
+    { id: 1, title: 'Informacioni' },
+    { id: 2, title: 'Kategoritë' },
+    { id: 3, title: 'Pjatet' },
+    { id: 4, title: 'Tavolinat' },
+    { id: 5, title: 'Perfunduar' }
   ];
 
   const nextStep = () => {
+    console.log('nextStep called, currentStep:', currentStep, 'steps.length:', steps.length);
     if (currentStep < steps.length) {
+      console.log('Advancing from step', currentStep, 'to step', currentStep + 1);
       setCurrentStep(currentStep + 1);
+    } else {
+      console.log('Already at last step, not advancing');
     }
   };
 
@@ -231,6 +238,14 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
       setError(errorMessage);
     } finally {
       setSaving(false);
+    }
+  };
+
+  const addMenuItem = () => {
+    if (newItemName.trim() && newItemPrice.trim()) {
+      setMenuItems([...menuItems, { name: newItemName.trim(), price: newItemPrice.trim() }]);
+      setNewItemName('');
+      setNewItemPrice('');
     }
   };
 
@@ -417,19 +432,27 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
             
             <div className="category-preview">
               <div className="category-item">
-                <span className="category-icon">🥗</span>
+                <div className="category-icon">
+                  <Icon name="restaurant" size={20} />
+                </div>
                 <span>Appetizers & Salads</span>
               </div>
               <div className="category-item">
-                <span className="category-icon">🍽️</span>
+                <div className="category-icon">
+                  <Icon name="food" size={20} />
+                </div>
                 <span>Main Courses</span>
               </div>
               <div className="category-item">
-                <span className="category-icon">🍰</span>
+                <div className="category-icon">
+                  <Icon name="restaurant-menu" size={20} />
+                </div>
                 <span>Desserts</span>
               </div>
               <div className="category-item">
-                <span className="category-icon">🥤</span>
+                <div className="category-icon">
+                  <Icon name="receipt" size={20} />
+                </div>
                 <span>Beverages</span>
               </div>
             </div>
@@ -457,23 +480,41 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
                 <input
                   type="text"
                   placeholder="Emri i pjatës në shqip"
+                  value={newItemName}
+                  onChange={(e) => setNewItemName(e.target.value)}
                   style={{ flex: 1, marginRight: '8px' }}
                 />
                 <input
                   type="text"
                   placeholder="Çmimi (€)"
+                  value={newItemPrice}
+                  onChange={(e) => setNewItemPrice(e.target.value)}
                   style={{ width: '100px' }}
                 />
               </div>
-              <button className="add-item-button">+ Shto Artikull</button>
+              <button className="add-item-button" onClick={addMenuItem}>+ Shto Artikull</button>
             </div>
 
+            {menuItems.length > 0 && (
+              <div className="added-items">
+                <h4>Artikujt e Shtuar:</h4>
+                <div className="items-list">
+                  {menuItems.map((item, index) => (
+                    <div key={index} className="item-card">
+                      <span className="item-name">{item.name}</span>
+                      <span className="item-price">€{item.price}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
             <div className="onboarding-tips">
-              <h4>💡 Pro Tips:</h4>
+              <h4>Këshilla:</h4>
               <ul>
-                <li>Use our AI translation to automatically create English versions</li>
-                <li>Upload appetizing photos to increase orders</li>
-                <li>Add 3-5 popular items to start</li>
+                <li>Përdorni përkthimin automatik për të krijuar versionet në anglisht</li>
+                <li>Ngarkoni foto tërheqëse për të rritur porosinë</li>
+                <li>Shtoni 3-5 artikuj të popullarë për të filluar</li>
               </ul>
             </div>
 
@@ -505,19 +546,19 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
             </div>
 
             <div className="qr-preview">
-              <h4>We'll generate QR codes for each table:</h4>
+              <h4>Do të gjenerojmë kodra QR për çdo tavolinë:</h4>
               <div className="qr-sample">
                 <div className="qr-code-placeholder">
-                  <span>📱</span>
-                  <p>QR Code</p>
-                  <small>Table 1</small>
+                  <div className="qr-icon"></div>
+                  <p>Kodi QR</p>
+                  <small>Tavolinë 1</small>
                 </div>
                 <div className="qr-explanation">
-                  <p>Customers scan this to:</p>
+                  <p>Klientët skanojnë këtë për të:</p>
                   <ul>
-                    <li>See your menu instantly</li>
-                    <li>Place orders directly</li>
-                    <li>No app download needed!</li>
+                    <li>Parë menunë tuaj menjëherë</li>
+                    <li>Bërë porosi drejtpërdrejt</li>
+                    <li>Pa nevojë për aplikacion!</li>
                   </ul>
                 </div>
               </div>
@@ -529,20 +570,24 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
                 className="next-button" 
                 onClick={async () => {
                   setSaving(true);
+                  setError(null);
                   try {
+                    console.log('Saving table setup with count:', tableCount);
                     await onboardingApiService.updateOnboardingStep('tableSetup', {
                       tableCount: parseInt(tableCount)
                     });
+                    console.log('Table setup saved successfully, advancing to next step');
                     nextStep();
-                  } catch (err) {
-                    setError('Failed to save table setup');
+                  } catch (err: any) {
+                    console.error('Failed to save table setup:', err);
+                    setError(`Failed to save table setup: ${err.message || 'Unknown error'}`);
                   } finally {
                     setSaving(false);
                   }
                 }}
                 disabled={!tableCount || parseInt(tableCount) < 1 || saving}
               >
-                {saving ? 'Saving...' : 'Generate QR Codes →'}
+                {saving ? 'Duke ruajtur...' : 'Gjenero Kodrat QR →'}
               </button>
             </div>
           </div>
@@ -556,21 +601,27 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
             
             <div className="setup-summary">
               <div className="summary-item">
-                <span className="summary-icon">🏪</span>
+                <div className="summary-icon">
+                  <Icon name="store" size={16} />
+                </div>
                 <div>
                   <strong>{restaurantInfo.name}</strong>
                   <p>{restaurantInfo.address}</p>
                 </div>
               </div>
               <div className="summary-item">
-                <span className="summary-icon">📋</span>
+                <div className="summary-icon">
+                  <Icon name="category" size={16} />
+                </div>
                 <div>
                   <strong>4 Menu Categories</strong>
                   <p>Ready for your items</p>
                 </div>
               </div>
               <div className="summary-item">
-                <span className="summary-icon">🪑</span>
+                <div className="summary-icon">
+                  <Icon name="table" size={16} />
+                </div>
                 <div>
                   <strong>{tableCount} Tables</strong>
                   <p>With QR codes generated</p>
@@ -668,8 +719,8 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
             </div>
             {steps.map((step) => (
               <div key={step.id} className={`step ${currentStep >= step.id ? 'active' : ''}`}>
-                <div className="step-icon">
-                  <Icon name={step.icon} size={20} />
+                <div className="step-number">
+                  {step.id}
                 </div>
                 <div className="step-title">{step.title}</div>
               </div>
@@ -757,20 +808,25 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
           transform: scale(1.05);
         }
 
-        .step-icon {
-          font-size: 24px;
-          width: 40px;
-          height: 40px;
+        .step-number {
+          font-size: 16px;
+          font-weight: 600;
+          width: 36px;
+          height: 36px;
           border-radius: 50%;
           background: rgba(255, 255, 255, 0.2);
+          color: rgba(255, 255, 255, 0.7);
           display: flex;
           align-items: center;
           justify-content: center;
           transition: all 0.3s;
+          border: 2px solid rgba(255, 255, 255, 0.3);
         }
 
-        .step.active .step-icon {
+        .step.active .step-number {
           background: white;
+          color: #6366f1;
+          border-color: white;
           box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
 
@@ -787,10 +843,10 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
             gap: 4px;
           }
 
-          .step-icon {
-            width: 32px;
-            height: 32px;
-            font-size: 18px;
+          .step-number {
+            width: 28px;
+            height: 28px;
+            font-size: 14px;
           }
 
           .step-title {
@@ -964,6 +1020,122 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
         .onboarding-tips h4 {
           margin: 0 0 12px 0;
           color: #f57c00;
+        }
+
+        .add-item-button {
+          background: #4CAF50;
+          color: white;
+          border: none;
+          padding: 12px 24px;
+          border-radius: 8px;
+          cursor: pointer;
+          font-weight: 600;
+          margin-top: 12px;
+          transition: background 0.3s;
+        }
+
+        .add-item-button:hover {
+          background: #45a049;
+        }
+
+        .form-row {
+          display: flex;
+          gap: 8px;
+          margin-bottom: 12px;
+        }
+
+        .form-row input {
+          padding: 12px;
+          border: 2px solid #e0e0e0;
+          border-radius: 8px;
+          font-size: 14px;
+          outline: none;
+          transition: border-color 0.3s;
+        }
+
+        .form-row input:focus {
+          border-color: #6c5ce7;
+        }
+
+        .added-items {
+          margin: 20px 0;
+          padding: 20px;
+          background: #f8f9fa;
+          border-radius: 12px;
+          border: 1px solid #e9ecef;
+        }
+
+        .added-items h4 {
+          margin: 0 0 16px 0;
+          color: #495057;
+          font-size: 16px;
+        }
+
+        .items-list {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+        }
+
+        .item-card {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          background: white;
+          padding: 12px 16px;
+          border-radius: 8px;
+          border: 1px solid #dee2e6;
+          box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .item-name {
+          font-weight: 500;
+          color: #495057;
+        }
+
+        .item-price {
+          font-weight: 600;
+          color: #28a745;
+          font-size: 14px;
+        }
+
+        .sample-item-form {
+          background: white;
+          padding: 20px;
+          border-radius: 12px;
+          border: 1px solid #e9ecef;
+          margin-bottom: 20px;
+        }
+
+        .sample-item-form h4 {
+          margin: 0 0 16px 0;
+          color: #495057;
+          font-size: 16px;
+        }
+
+        .qr-icon {
+          width: 24px;
+          height: 24px;
+          background: #6c5ce7;
+          border-radius: 4px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          position: relative;
+        }
+
+        .qr-icon::before {
+          content: "";
+          width: 16px;
+          height: 16px;
+          background: white;
+          border-radius: 2px;
+          background-image: linear-gradient(45deg, #6c5ce7 25%, transparent 25%), 
+                            linear-gradient(-45deg, #6c5ce7 25%, transparent 25%), 
+                            linear-gradient(45deg, transparent 75%, #6c5ce7 75%), 
+                            linear-gradient(-45deg, transparent 75%, #6c5ce7 75%);
+          background-size: 4px 4px;
+          background-position: 0 0, 0 2px, 2px -2px, -2px 0px;
         }
       `}</style>
     </div>
