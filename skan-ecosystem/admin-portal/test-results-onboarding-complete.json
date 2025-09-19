@@ -1,0 +1,148 @@
+{
+  "timestamp": "2025-09-19T16:34:52.965Z",
+  "tests": [
+    {
+      "testName": "Navigate to onboarding page",
+      "passed": true,
+      "details": "Page title: SKAN Restaurant Admin Portal",
+      "timestamp": "2025-09-19T16:34:54.676Z"
+    },
+    {
+      "testName": "Onboarding wizard element exists",
+      "passed": false,
+      "details": "Error: Waiting for selector `.onboarding-wizard` failed",
+      "timestamp": "2025-09-19T16:35:04.678Z"
+    },
+    {
+      "testName": "Onboarding content loaded",
+      "passed": false,
+      "details": "Error: Waiting for selector `.onboarding-content` failed",
+      "timestamp": "2025-09-19T16:35:14.679Z"
+    },
+    {
+      "testName": "Loading state completed",
+      "passed": true,
+      "details": "Component ready for interaction",
+      "timestamp": "2025-09-19T16:35:16.683Z"
+    },
+    {
+      "testName": "Step 1 title in Albanian",
+      "passed": false,
+      "details": "Title: Paneli i Restorantit",
+      "timestamp": "2025-09-19T16:35:16.686Z"
+    },
+    {
+      "testName": "Restaurant name field exists",
+      "passed": false,
+      "details": "",
+      "timestamp": "2025-09-19T16:35:16.686Z"
+    },
+    {
+      "testName": "Address field exists",
+      "passed": false,
+      "details": "",
+      "timestamp": "2025-09-19T16:35:16.686Z"
+    },
+    {
+      "testName": "Phone field exists",
+      "passed": false,
+      "details": "",
+      "timestamp": "2025-09-19T16:35:16.687Z"
+    },
+    {
+      "testName": "Cuisine select exists",
+      "passed": false,
+      "details": "",
+      "timestamp": "2025-09-19T16:35:16.687Z"
+    },
+    {
+      "testName": "Restaurant name entered correctly",
+      "passed": false,
+      "details": "Entered: ",
+      "timestamp": "2025-09-19T16:35:16.688Z"
+    },
+    {
+      "testName": "Continue button exists",
+      "passed": false,
+      "details": "",
+      "timestamp": "2025-09-19T16:35:16.688Z"
+    },
+    {
+      "testName": "Category preview exists",
+      "passed": false,
+      "details": "",
+      "timestamp": "2025-09-19T16:35:16.688Z"
+    },
+    {
+      "testName": "Category items displayed",
+      "passed": false,
+      "details": "Found 0 categories",
+      "timestamp": "2025-09-19T16:35:16.691Z"
+    },
+    {
+      "testName": "Step 3 title in Albanian",
+      "passed": false,
+      "details": "Title: Paneli i Restorantit",
+      "timestamp": "2025-09-19T16:35:16.692Z"
+    },
+    {
+      "testName": "Menu item name input exists",
+      "passed": false,
+      "details": "",
+      "timestamp": "2025-09-19T16:35:16.693Z"
+    },
+    {
+      "testName": "Menu item price input exists",
+      "passed": false,
+      "details": "",
+      "timestamp": "2025-09-19T16:35:16.693Z"
+    },
+    {
+      "testName": "Add item button exists",
+      "passed": false,
+      "details": "",
+      "timestamp": "2025-09-19T16:35:16.693Z"
+    },
+    {
+      "testName": "Step 4 title in Albanian",
+      "passed": false,
+      "details": "Title: Paneli i Restorantit",
+      "timestamp": "2025-09-19T16:35:16.694Z"
+    },
+    {
+      "testName": "Table count input exists",
+      "passed": false,
+      "details": "",
+      "timestamp": "2025-09-19T16:35:16.695Z"
+    },
+    {
+      "testName": "Setup summary exists",
+      "passed": false,
+      "details": "",
+      "timestamp": "2025-09-19T16:35:16.695Z"
+    },
+    {
+      "testName": "Summary items displayed",
+      "passed": false,
+      "details": "Found 0 summary items",
+      "timestamp": "2025-09-19T16:35:16.696Z"
+    },
+    {
+      "testName": "Complete button exists",
+      "passed": false,
+      "details": "",
+      "timestamp": "2025-09-19T16:35:16.696Z"
+    },
+    {
+      "testName": "Albanian translations present",
+      "passed": false,
+      "details": "Found 1/5 Albanian texts",
+      "timestamp": "2025-09-19T16:35:19.764Z"
+    }
+  ],
+  "summary": {
+    "passed": 2,
+    "failed": 21,
+    "total": 23
+  }
+}

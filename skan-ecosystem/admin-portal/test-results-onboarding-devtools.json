@@ -1,29 +1,29 @@
 {
-  "timestamp": "2025-09-19T14:39:03.646Z",
+  "timestamp": "2025-09-19T15:45:50.447Z",
   "tests": [
     {
       "testName": "Initial login successful",
       "passed": true,
       "details": "URL: http://localhost:3000/dashboard",
-      "timestamp": "2025-09-19T14:39:17.313Z"
+      "timestamp": "2025-09-19T15:46:04.174Z"
     },
     {
       "testName": "DevTools available in development",
       "passed": true,
       "details": "DevTools found: window.dataLayer = window.dataLayer || [];\n      f",
-      "timestamp": "2025-09-19T14:39:17.414Z"
+      "timestamp": "2025-09-19T15:46:04.279Z"
     },
     {
       "testName": "DevTools Force Onboarding button found",
       "passed": false,
       "details": "Force button clicked: false",
-      "timestamp": "2025-09-19T14:39:18.618Z"
+      "timestamp": "2025-09-19T15:46:05.488Z"
     },
     {
       "testName": "API health check passes",
       "passed": true,
-      "details": "Status: 200, Response: {\"status\":\"OK\",\"timestamp\":\"2025-09-19T14:39:18.70",
-      "timestamp": "2025-09-19T14:39:18.853Z"
+      "details": "Status: 200, Response: {\"status\":\"OK\",\"timestamp\":\"2025-09-19T15:46:05.59",
+      "timestamp": "2025-09-19T15:46:05.721Z"
     }
   ],
   "summary": {

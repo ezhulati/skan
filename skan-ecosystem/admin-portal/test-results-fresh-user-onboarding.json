@@ -1,29 +1,29 @@
 {
-  "timestamp": "2025-09-19T14:34:58.114Z",
+  "timestamp": "2025-09-19T15:45:17.582Z",
   "tests": [
     {
       "testName": "Login successful",
       "passed": true,
       "details": "URL: http://localhost:3000/dashboard",
-      "timestamp": "2025-09-19T14:35:06.961Z"
+      "timestamp": "2025-09-19T15:45:26.291Z"
     },
     {
       "testName": "Onboarding page accessible",
       "passed": false,
       "details": "Redirected to: http://localhost:3000/login",
-      "timestamp": "2025-09-19T14:35:10.910Z"
+      "timestamp": "2025-09-19T15:45:30.369Z"
     },
     {
       "testName": "Forced onboarding access",
       "passed": false,
       "details": "Final URL: http://localhost:3000/login",
-      "timestamp": "2025-09-19T14:35:14.086Z"
+      "timestamp": "2025-09-19T15:45:33.540Z"
     },
     {
       "testName": "API health check",
       "passed": true,
-      "details": "Status: 200, Response: {\"status\":\"OK\",\"timestamp\":\"2025-09-19T14:35:14.18",
-      "timestamp": "2025-09-19T14:35:14.281Z"
+      "details": "Status: 200, Response: {\"status\":\"OK\",\"timestamp\":\"2025-09-19T15:45:33.65",
+      "timestamp": "2025-09-19T15:45:33.730Z"
     }
   ],
   "summary": {

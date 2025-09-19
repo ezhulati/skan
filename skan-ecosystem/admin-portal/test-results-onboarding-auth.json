@@ -1,0 +1,186 @@
+{
+  "timestamp": "2025-09-19T16:36:53.696Z",
+  "tests": [
+    {
+      "testName": "Login page loaded",
+      "passed": true,
+      "details": "Page title: SKAN Restaurant Admin Portal",
+      "timestamp": "2025-09-19T16:36:54.869Z"
+    },
+    {
+      "testName": "Login form elements exist",
+      "passed": {
+        "handle": {}
+      },
+      "details": "",
+      "timestamp": "2025-09-19T16:36:54.879Z"
+    },
+    {
+      "testName": "Login successful",
+      "passed": true,
+      "details": "Current URL: http://localhost:3000/dashboard",
+      "timestamp": "2025-09-19T16:36:57.984Z"
+    },
+    {
+      "testName": "Onboarding wizard element exists",
+      "passed": true,
+      "details": "",
+      "timestamp": "2025-09-19T16:37:01.295Z"
+    },
+    {
+      "testName": "Onboarding content loaded",
+      "passed": true,
+      "details": "",
+      "timestamp": "2025-09-19T16:37:01.298Z"
+    },
+    {
+      "testName": "Step 1 title in Albanian",
+      "passed": true,
+      "details": "Title: Mirë se vini në SKAN.AL!",
+      "timestamp": "2025-09-19T16:37:03.306Z"
+    },
+    {
+      "testName": "Restaurant name field exists",
+      "passed": true,
+      "details": "",
+      "timestamp": "2025-09-19T16:37:03.308Z"
+    },
+    {
+      "testName": "Address field exists",
+      "passed": true,
+      "details": "",
+      "timestamp": "2025-09-19T16:37:03.309Z"
+    },
+    {
+      "testName": "Phone field exists",
+      "passed": true,
+      "details": "",
+      "timestamp": "2025-09-19T16:37:03.311Z"
+    },
+    {
+      "testName": "Cuisine select exists",
+      "passed": true,
+      "details": "",
+      "timestamp": "2025-09-19T16:37:03.312Z"
+    },
+    {
+      "testName": "Restaurant name entered correctly",
+      "passed": true,
+      "details": "Entered: Test Restaurant E2E",
+      "timestamp": "2025-09-19T16:37:03.608Z"
+    },
+    {
+      "testName": "Continue button exists",
+      "passed": true,
+      "details": "",
+      "timestamp": "2025-09-19T16:37:03.609Z"
+    },
+    {
+      "testName": "Progressed to Step 2",
+      "passed": true,
+      "details": "Current title: Kategoritë e Menusë",
+      "timestamp": "2025-09-19T16:37:06.697Z"
+    },
+    {
+      "testName": "Category preview exists",
+      "passed": true,
+      "details": "",
+      "timestamp": "2025-09-19T16:37:06.700Z"
+    },
+    {
+      "testName": "Category items displayed",
+      "passed": true,
+      "details": "Found 4 categories",
+      "timestamp": "2025-09-19T16:37:06.706Z"
+    },
+    {
+      "testName": "Step 3 title in Albanian",
+      "passed": true,
+      "details": "Title: Shtoni Artikujt e Parë të Menusë",
+      "timestamp": "2025-09-19T16:37:08.731Z"
+    },
+    {
+      "testName": "Menu item name input exists",
+      "passed": true,
+      "details": "",
+      "timestamp": "2025-09-19T16:37:08.733Z"
+    },
+    {
+      "testName": "Menu item price input exists",
+      "passed": true,
+      "details": "",
+      "timestamp": "2025-09-19T16:37:08.733Z"
+    },
+    {
+      "testName": "Add item button exists",
+      "passed": true,
+      "details": "",
+      "timestamp": "2025-09-19T16:37:08.733Z"
+    },
+    {
+      "testName": "Menu item added successfully",
+      "passed": true,
+      "details": "Added 1 items",
+      "timestamp": "2025-09-19T16:37:09.824Z"
+    },
+    {
+      "testName": "Step 4 title in Albanian",
+      "passed": true,
+      "details": "Title: Konfigurimi i Tavolinave",
+      "timestamp": "2025-09-19T16:37:11.851Z"
+    },
+    {
+      "testName": "Table count input exists",
+      "passed": true,
+      "details": "",
+      "timestamp": "2025-09-19T16:37:11.852Z"
+    },
+    {
+      "testName": "Table count entered correctly",
+      "passed": true,
+      "details": "Entered: 8",
+      "timestamp": "2025-09-19T16:37:11.890Z"
+    },
+    {
+      "testName": "QR generate button has Albanian text",
+      "passed": true,
+      "details": "Button text: Gjenero Kodrat QR →",
+      "timestamp": "2025-09-19T16:37:11.892Z"
+    },
+    {
+      "testName": "QR generation and step 5 progression",
+      "passed": true,
+      "details": "Current title: Gati për përdorim!",
+      "timestamp": "2025-09-19T16:37:14.907Z"
+    },
+    {
+      "testName": "Setup summary exists",
+      "passed": true,
+      "details": "",
+      "timestamp": "2025-09-19T16:37:14.909Z"
+    },
+    {
+      "testName": "Summary items displayed",
+      "passed": true,
+      "details": "Found 3 summary items",
+      "timestamp": "2025-09-19T16:37:14.913Z"
+    },
+    {
+      "testName": "Complete button exists",
+      "passed": true,
+      "details": "",
+      "timestamp": "2025-09-19T16:37:14.915Z"
+    },
+    {
+      "testName": "Albanian translations present",
+      "passed": false,
+      "details": "Found 1/5 Albanian texts",
+      "timestamp": "2025-09-19T16:37:14.916Z"
+    }
+  ],
+  "summary": {
+    "passed": 28,
+    "failed": 1,
+    "total": 29
+  }
+}

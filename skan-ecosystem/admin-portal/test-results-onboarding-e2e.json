@@ -1,23 +1,23 @@
 {
-  "timestamp": "2025-09-19T14:29:20.693Z",
+  "timestamp": "2025-09-19T16:25:54.186Z",
   "tests": [
     {
       "testName": "Navigate to onboarding page",
       "passed": true,
       "details": "Page title: SKAN Restaurant Admin Portal",
-      "timestamp": "2025-09-19T14:29:22.042Z"
+      "timestamp": "2025-09-19T16:25:55.315Z"
     },
     {
       "testName": "Onboarding wizard element exists",
       "passed": false,
       "details": "",
-      "timestamp": "2025-09-19T14:29:22.047Z"
+      "timestamp": "2025-09-19T16:25:55.320Z"
     },
     {
       "testName": "Test execution completed without crashes",
       "passed": false,
       "details": "Error: Waiting for selector `.onboarding-content` failed",
-      "timestamp": "2025-09-19T14:29:27.049Z"
+      "timestamp": "2025-09-19T16:26:00.322Z"
     }
   ],
   "summary": {
