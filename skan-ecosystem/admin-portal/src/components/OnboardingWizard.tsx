@@ -544,36 +544,97 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
       case 4:
         return (
           <div className="onboarding-step">
-            <h2>Konfigurimi i Tavolinave</h2>
-            <p>Sa tavolina ka restoranti juaj?</p>
-            
-            <div className="form-group">
-              <label>Numri i Tavolinave *</label>
-              <input
-                type="number"
-                value={tableCount}
-                onChange={(e) => setTableCount(e.target.value)}
-                placeholder="p.sh., 12"
-                min="1"
-                max="100"
-              />
+            <div className="step-header">
+              <h2>Konfigurimi i Tavolinave</h2>
+              <p className="step-description">Vendosni numrin e tavolinave për të gjeneruar kodrat QR për porositjet dixhitale.</p>
             </div>
 
-            <div className="qr-preview">
-              <h4>Do të gjenerojmë kodra QR për çdo tavolinë:</h4>
-              <div className="qr-sample">
-                <div className="qr-code-placeholder">
-                  <div className="qr-icon"></div>
-                  <p>Kodi QR</p>
-                  <small>Tavolinë 1</small>
+            <div className="table-setup-container">
+              <div className="table-input-section">
+                <div className="input-group-modern">
+                  <label className="input-label">Numri i Tavolinave</label>
+                  <div className="input-wrapper">
+                    <input
+                      type="number"
+                      value={tableCount}
+                      onChange={(e) => setTableCount(e.target.value)}
+                      placeholder="12"
+                      min="1"
+                      max="100"
+                      className="number-input-modern"
+                    />
+                    <span className="input-suffix">tavolina</span>
+                  </div>
+                  <small className="input-hint">Mund të shtoni ose hiqni tavolina më vonë</small>
                 </div>
-                <div className="qr-explanation">
-                  <p>Klientët skanojnë këtë për të:</p>
-                  <ul>
-                    <li>Parë menunë tuaj menjëherë</li>
-                    <li>Bërë porosi drejtpërdrejt</li>
-                    <li>Pa nevojë për aplikacion!</li>
-                  </ul>
+              </div>
+
+              <div className="qr-preview-section">
+                <div className="qr-preview-card">
+                  <div className="qr-preview-header">
+                    <h4>Çdo tavolinë do të ketë kodin e vet QR</h4>
+                  </div>
+                  
+                  <div className="qr-demo-layout">
+                    <div className="qr-code-visual">
+                      <div className="qr-code-square">
+                        <div className="qr-pattern">
+                          <div className="qr-corner qr-corner-tl"></div>
+                          <div className="qr-corner qr-corner-tr"></div>
+                          <div className="qr-corner qr-corner-bl"></div>
+                          <div className="qr-dots">
+                            <span></span><span></span><span></span>
+                            <span></span><span></span><span></span>
+                            <span></span><span></span><span></span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="table-label">Tavolinë 1</div>
+                    </div>
+                    
+                    <div className="qr-benefits">
+                      <div className="benefit-item">
+                        <div className="benefit-icon">
+                          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <path d="M2 3C2 2.44772 2.44772 2 3 2H7C7.55228 2 8 2.44772 8 3V7C8 7.55228 7.55228 8 7 8H3C2.44772 8 2 7.55228 2 7V3Z" fill="currentColor"/>
+                            <path d="M12 3C12 2.44772 12.4477 2 13 2H17C17.5523 2 18 2.44772 18 3V7C18 7.55228 17.5523 8 17 8H13C12.4477 8 12 7.55228 12 7V3Z" fill="currentColor"/>
+                            <path d="M2 13C2 12.4477 2.44772 12 3 12H7C7.55228 12 8 12.4477 8 13V17C8 17.5523 7.55228 18 7 18H3C2.44772 18 2 17.5523 2 17V13Z" fill="currentColor"/>
+                          </svg>
+                        </div>
+                        <div className="benefit-text">
+                          <strong>Skanimi i menjëhershëm</strong>
+                          <p>Klientët skanojnë dhe shohin menunë</p>
+                        </div>
+                      </div>
+                      <div className="benefit-item">
+                        <div className="benefit-icon">
+                          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <path d="M3 3C3 1.89543 3.89543 1 5 1H15C16.1046 1 17 1.89543 17 3V5.26756C16.4022 5.09668 15.7625 5 15.1 5C11.7721 5 9.1 7.91015 9.1 11.5C9.1 13.4825 9.97131 15.2385 11.3596 16.4472L10 17.9999L3 17.9999V3Z" fill="currentColor"/>
+                            <circle cx="15.1" cy="11.5" r="5.5" fill="currentColor"/>
+                            <path d="M13.3 11.5L14.6 12.8L16.9 10.2" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                          </svg>
+                        </div>
+                        <div className="benefit-text">
+                          <strong>Porositje pa pritje</strong>
+                          <p>Porosia dërgohet direkt në kuzhinë</p>
+                        </div>
+                      </div>
+                      <div className="benefit-item">
+                        <div className="benefit-icon">
+                          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <rect x="3" y="2" width="14" height="16" rx="2" fill="currentColor"/>
+                            <rect x="6" y="6" width="8" height="1" fill="white"/>
+                            <rect x="6" y="8" width="6" height="1" fill="white"/>
+                            <rect x="6" y="10" width="8" height="1" fill="white"/>
+                          </svg>
+                        </div>
+                        <div className="benefit-text">
+                          <strong>Pa aplikacion</strong>
+                          <p>Funksionon në çdo telefon</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -730,29 +791,30 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
         <div className="onboarding-header">
           <div className="progress-container">
             <div className="progress-bar">
+              {/* Background progress line */}
+              <div className="progress-line-background">
+                <div 
+                  className="progress-line-fill" 
+                  style={{ width: `${((currentStep - 1) / (steps.length - 1)) * 100}%` }}
+                ></div>
+              </div>
+              
+              {/* Step circles */}
               {steps.map((step, index) => (
-                <div key={step.id} className="progress-step-wrapper">
-                  {/* Progress line segment */}
-                  {index > 0 && (
-                    <div className={`progress-line-segment ${currentStep > index ? 'completed' : ''}`}></div>
-                  )}
-                  
-                  {/* Step circle and content */}
-                  <div className={`progress-step ${
-                    currentStep > step.id ? 'completed' : 
-                    currentStep === step.id ? 'active' : 'pending'
-                  }`}>
-                    <div className="step-circle">
-                      {currentStep > step.id ? (
-                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                          <path d="M13.5 4.5L6 12L2.5 8.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                        </svg>
-                      ) : (
-                        <span className="step-number">{step.id}</span>
-                      )}
-                    </div>
-                    <div className="step-label">{step.title}</div>
+                <div key={step.id} className={`progress-step ${
+                  currentStep > step.id ? 'completed' : 
+                  currentStep === step.id ? 'active' : 'pending'
+                }`}>
+                  <div className="step-circle">
+                    {currentStep > step.id ? (
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path d="M13.5 4.5L6 12L2.5 8.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    ) : (
+                      <span className="step-number">{step.id}</span>
+                    )}
                   </div>
+                  <div className="step-label">{step.title}</div>
                 </div>
               ))}
             </div>
@@ -812,33 +874,24 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
           margin: 0 auto;
         }
 
-        .progress-step-wrapper {
-          display: flex;
-          align-items: center;
-          position: relative;
-          flex: 1;
-        }
-
-        .progress-step-wrapper:not(:last-child) {
-          margin-right: 16px;
-        }
-
-        /* Progress Line Segments */
-        .progress-line-segment {
+        /* Background Progress Line */
+        .progress-line-background {
           position: absolute;
           top: 22px;
-          left: -50%;
-          right: 50%;
-          height: 3px;
+          left: 22px;
+          right: 22px;
+          height: 2px;
           background: rgba(255, 255, 255, 0.2);
-          transition: all 0.4s ease;
-          border-radius: 2px;
+          border-radius: 1px;
           z-index: 1;
         }
 
-        .progress-line-segment.completed {
+        .progress-line-fill {
+          height: 100%;
           background: rgba(255, 255, 255, 0.8);
-          box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+          border-radius: 1px;
+          transition: width 0.5s ease;
+          box-shadow: 0 0 6px rgba(255, 255, 255, 0.3);
         }
 
         /* Step Components */
@@ -863,6 +916,7 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
           transition: all 0.3s ease;
           position: relative;
           border: 3px solid transparent;
+          z-index: 10;
         }
 
         .step-number {
@@ -946,9 +1000,10 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
             line-height: 1.2;
           }
 
-          .progress-line-segment {
+          .progress-line-background {
             top: 18px;
-            height: 2px;
+            left: 18px;
+            right: 18px;
           }
 
           .onboarding-header {
@@ -981,9 +1036,10 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
             font-size: 12px;
           }
 
-          .progress-line-segment {
+          .progress-line-background {
             top: 20px;
-            height: 2px;
+            left: 20px;
+            right: 20px;
           }
         }
 
@@ -1013,9 +1069,10 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
             line-height: 1.1;
           }
 
-          .progress-line-segment {
+          .progress-line-background {
             top: 16px;
-            height: 2px;
+            left: 16px;
+            right: 16px;
           }
 
           .progress-step.active .step-circle {
@@ -1296,6 +1353,285 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
                             linear-gradient(-45deg, transparent 75%, #6c5ce7 75%);
           background-size: 4px 4px;
           background-position: 0 0, 0 2px, 2px -2px, -2px 0px;
+        }
+
+        /* Professional Table Setup Layout */
+        .step-header {
+          margin-bottom: 32px;
+        }
+
+        .step-description {
+          font-size: 16px;
+          color: #6c757d;
+          line-height: 1.5;
+          margin: 8px 0 0 0;
+        }
+
+        .table-setup-container {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 40px;
+          align-items: start;
+        }
+
+        .table-input-section {
+          background: #f8f9fa;
+          border-radius: 16px;
+          padding: 32px;
+          border: 1px solid #e9ecef;
+        }
+
+        .input-group-modern {
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+        }
+
+        .input-label {
+          font-weight: 600;
+          font-size: 16px;
+          color: #343a40;
+          margin: 0;
+        }
+
+        .input-wrapper {
+          position: relative;
+          display: flex;
+          align-items: center;
+        }
+
+        .number-input-modern {
+          width: 100%;
+          padding: 16px 20px;
+          font-size: 24px;
+          font-weight: 600;
+          border: 3px solid #e9ecef;
+          border-radius: 12px;
+          background: white;
+          color: #495057;
+          text-align: center;
+          transition: all 0.2s ease;
+        }
+
+        .number-input-modern:focus {
+          outline: none;
+          border-color: #007bff;
+          box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+        }
+
+        .input-suffix {
+          position: absolute;
+          right: 20px;
+          font-size: 16px;
+          color: #6c757d;
+          font-weight: 500;
+          pointer-events: none;
+        }
+
+        .input-hint {
+          font-size: 14px;
+          color: #6c757d;
+          margin: 0;
+        }
+
+        .qr-preview-section {
+          display: flex;
+          flex-direction: column;
+        }
+
+        .qr-preview-card {
+          background: white;
+          border-radius: 16px;
+          padding: 32px;
+          border: 1px solid #e9ecef;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .qr-preview-header {
+          margin-bottom: 24px;
+        }
+
+        .qr-preview-header h4 {
+          margin: 0;
+          font-size: 18px;
+          font-weight: 600;
+          color: #343a40;
+        }
+
+        .qr-demo-layout {
+          display: flex;
+          flex-direction: column;
+          gap: 24px;
+        }
+
+        .qr-code-visual {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 12px;
+          padding: 20px;
+          background: #f8f9fa;
+          border-radius: 12px;
+          border: 2px dashed #dee2e6;
+        }
+
+        .qr-code-square {
+          width: 80px;
+          height: 80px;
+          background: white;
+          border-radius: 8px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border: 2px solid #e9ecef;
+        }
+
+        .qr-pattern {
+          width: 60px;
+          height: 60px;
+          position: relative;
+          background: white;
+        }
+
+        .qr-corner {
+          position: absolute;
+          width: 16px;
+          height: 16px;
+          border: 3px solid #212529;
+        }
+
+        .qr-corner-tl {
+          top: 2px;
+          left: 2px;
+          border-right: none;
+          border-bottom: none;
+        }
+
+        .qr-corner-tr {
+          top: 2px;
+          right: 2px;
+          border-left: none;
+          border-bottom: none;
+        }
+
+        .qr-corner-bl {
+          bottom: 2px;
+          left: 2px;
+          border-right: none;
+          border-top: none;
+        }
+
+        .qr-dots {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 2px;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+        }
+
+        .qr-dots span {
+          width: 3px;
+          height: 3px;
+          background: #212529;
+          border-radius: 1px;
+        }
+
+        .table-label {
+          font-size: 14px;
+          font-weight: 600;
+          color: #495057;
+        }
+
+        .qr-benefits {
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+        }
+
+        .benefit-item {
+          display: flex;
+          align-items: flex-start;
+          gap: 12px;
+        }
+
+        .benefit-icon {
+          width: 40px;
+          height: 40px;
+          border-radius: 10px;
+          background: #e3f2fd;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #1976d2;
+          flex-shrink: 0;
+        }
+
+        .benefit-icon svg {
+          width: 20px;
+          height: 20px;
+        }
+
+        .benefit-text {
+          flex: 1;
+        }
+
+        .benefit-text strong {
+          display: block;
+          font-size: 14px;
+          font-weight: 600;
+          color: #343a40;
+          margin-bottom: 4px;
+        }
+
+        .benefit-text p {
+          margin: 0;
+          font-size: 13px;
+          color: #6c757d;
+          line-height: 1.4;
+        }
+
+        /* Responsive adjustments for table setup */
+        @media (max-width: 1024px) {
+          .table-setup-container {
+            grid-template-columns: 1fr;
+            gap: 24px;
+          }
+
+          .table-input-section,
+          .qr-preview-card {
+            padding: 24px;
+          }
+        }
+
+        @media (max-width: 768px) {
+          .table-setup-container {
+            gap: 20px;
+          }
+
+          .table-input-section,
+          .qr-preview-card {
+            padding: 20px;
+          }
+
+          .number-input-modern {
+            font-size: 20px;
+            padding: 14px 16px;
+          }
+
+          .qr-demo-layout {
+            gap: 20px;
+          }
+
+          .benefit-item {
+            gap: 10px;
+          }
+
+          .benefit-icon {
+            width: 36px;
+            height: 36px;
+          }
         }
       `}</style>
     </div>
