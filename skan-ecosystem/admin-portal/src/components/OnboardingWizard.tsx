@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { onboardingApiService, OnboardingStatus } from '../services/onboardingApi';
+import { onboardingApiService } from '../services/onboardingApi';
 import { useAuth } from '../contexts/AuthContext';
 
 interface OnboardingWizardProps {
@@ -14,19 +14,12 @@ interface RestaurantInfo {
   description: string;
 }
 
-interface MenuItem {
-  name: string;
-  nameAlbanian: string;
-  price: string;
-  category: string;
-}
 
 const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
   const { auth } = useAuth();
   const [currentStep, setCurrentStep] = useState(1);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [onboardingStatus, setOnboardingStatus] = useState<OnboardingStatus | null>(null);
   const [error, setError] = useState<string | null>(null);
   
   const [restaurantInfo, setRestaurantInfo] = useState<RestaurantInfo>({
@@ -37,7 +30,6 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
     description: ''
   });
   const [tableCount, setTableCount] = useState('');
-  const [sampleItems, setSampleItems] = useState<MenuItem[]>([]);
 
   // Load onboarding status on mount
   useEffect(() => {
@@ -46,7 +38,6 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
         if (auth.token) {
           onboardingApiService.setToken(auth.token);
           const response = await onboardingApiService.getOnboardingStatus();
-          setOnboardingStatus(response.onboarding);
           
           // Resume from the current step
           setCurrentStep(response.onboarding.currentStep);
