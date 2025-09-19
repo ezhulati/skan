@@ -1,0 +1,580 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout 
+  title="Kërko Demo të Porositjes - SKAN.AL"
+  description="Kërkoni akses në demon tonë të porositjes së klientit për të testuar përvojën e plotë të QR ordering në restorantin tuaj."
+>
+  <div class="login-page">
+    <div class="login-container">
+      <div class="login-header">
+        <div class="login-logo">
+          <div class="logo-container">
+            <svg class="login-icon" fill="currentColor" viewBox="0 0 200 200">
+              <path d="M75,15H35A20.06,20.06,0,0,0,15,35V75A20.06,20.06,0,0,0,35,95H75A20.06,20.06,0,0,0,95,75V35A20.06,20.06,0,0,0,75,15Zm0,60H35V35H75Zm0,30H35a20.06,20.06,0,0,0-20,20v40a20.06,20.06,0,0,0,20,20H75a20.06,20.06,0,0,0,20-20V125A20.06,20.06,0,0,0,75,105Zm0,60H35V125H75ZM165,15H125a20.06,20.06,0,0,0-20,20V75a20.06,20.06,0,0,0,20,20h40a20.06,20.06,0,0,0,20-20V35A20.06,20.06,0,0,0,165,15Zm0,60H125V35h40ZM50,65H60a5.38,5.38,0,0,0,5-5V50a5.38,5.38,0,0,0-5-5H50a5.38,5.38,0,0,0-5,5V60A5.38,5.38,0,0,0,50,65Zm0,90H60a5.38,5.38,0,0,0,5-5V140a5.38,5.38,0,0,0-5-5H50a5.38,5.38,0,0,0-5,5v10A5.38,5.38,0,0,0,50,155Zm90-90h10a5.38,5.38,0,0,0,5-5V50a5.38,5.38,0,0,0-5-5H140a5.38,5.38,0,0,0-5,5V60A5.38,5.38,0,0,0,140,65Zm-30,80h10a5.38,5.38,0,0,0,5-5V130a5.38,5.38,0,0,1,5-5h10a5.38,5.38,0,0,0,5-5V110a5.38,5.38,0,0,0-5-5H110a5.38,5.38,0,0,0-5,5v30a5.38,5.38,0,0,0,5,5Zm70-40H170a5.38,5.38,0,0,0-5,5v30a5.38,5.38,0,0,0,5,5h10a5.38,5.38,0,0,0,5-5V110A5.38,5.38,0,0,0,180,105Zm-60,60H110a5.38,5.38,0,0,0-5,5v10a5.38,5.38,0,0,0,5,5h10a5.38,5.38,0,0,0,5-5V170A5.38,5.38,0,0,0,120,165Zm60,0H170a5.38,5.38,0,1-5-5V150a5.38,5.38,0,0,0-5-5H130a5.38,5.38,0,0,0-5,5v10a5.38,5.38,0,0,0,5,5h10a5.38,5.38,0,1,5,5v10a5.38,5.38,0,0,0,5,5h30a5.38,5.38,0,0,0,5-5V170A5.38,5.38,0,0,0,180,165Z"/>
+            </svg>
+          </div>
+          <h1>Skan.al</h1>
+        </div>
+        <h2>Kërko Demo të Porositjes</h2>
+        <p class="login-subtitle">
+          Plotësoni të dhënat tuaja për të marrë akses në demon e porositjes së klientit
+        </p>
+      </div>
+
+      <!-- Success View (hidden by default) -->
+      <div id="success-view" class="demo-success-container" style="display: none;">
+        <!-- Success Icon -->
+        <div style="
+          width: 80px;
+          height: 80px;
+          background: rgba(255, 255, 255, 0.2);
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin: 0 auto 24px;
+          backdrop-filter: blur(10px);
+        ">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M9 11l3 3L22 4" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+
+        <h2 style="margin: 0 0 8px 0; font-size: 28px; font-weight: 700; text-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+          🎉 Demo e Klientit u aktivizua!
+        </h2>
+        
+        <p style="margin: 0 0 24px 0; font-size: 16px; opacity: 0.9; line-height: 1.5;">
+          Ju keni tani akses në demon e porositjes së klientit të SKAN.AL për të testuar përvojën e plotë.
+        </p>
+
+        <!-- Demo Access -->
+        <div style="
+          background: rgba(255, 255, 255, 0.15);
+          border-radius: 12px;
+          padding: 24px;
+          margin-bottom: 24px;
+          backdrop-filter: blur(10px);
+          border: 1px solid rgba(255, 255, 255, 0.2);
+        ">
+          <h4 style="margin: 0 0 16px 0; font-size: 18px; font-weight: 600;">
+            Aksesi juaj i Demo-s:
+          </h4>
+          
+          <div style="display: grid; grid-template-columns: 1fr; gap: 16px; text-align: left;">
+            <div>
+              <label style="
+                display: block;
+                font-size: 12px;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                margin-bottom: 4px;
+                opacity: 0.8;
+              ">
+                Restoranti Demo
+              </label>
+              <div style="
+                background: rgba(255, 255, 255, 0.9);
+                color: #2c3e50;
+                padding: 8px 12px;
+                border-radius: 6px;
+                font-family: monospace;
+                font-size: 14px;
+                font-weight: 600;
+              ">
+                Beach Bar Durrës - Tavolina A1
+              </div>
+            </div>
+            
+            <div>
+              <label style="
+                display: block;
+                font-size: 12px;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                margin-bottom: 4px;
+                opacity: 0.8;
+              ">
+                Demo URL
+              </label>
+              <div style="
+                background: rgba(255, 255, 255, 0.9);
+                color: #2c3e50;
+                padding: 8px 12px;
+                border-radius: 6px;
+                font-family: monospace;
+                font-size: 12px;
+                font-weight: 600;
+                word-break: break-all;
+              ">
+                http://localhost:3002/beach-bar-durres/a1
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Direct Access Button -->
+        <a
+          href="http://localhost:3002/beach-bar-durres/a1"
+          target="_blank"
+          style="
+            background: rgba(255, 255, 255, 0.95);
+            color: #667eea;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+            text-decoration: none;
+          "
+          onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 12px 30px rgba(0, 0, 0, 0.3)';"
+          onmouseout="this.style.transform='translateY(0px)'; this.style.boxShadow='0 8px 20px rgba(0, 0, 0, 0.2)';"
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Hyr në Demo të Klientit
+        </a>
+
+        <p style="font-size: 14px; opacity: 0.8; margin: 0; line-height: 1.4;">
+          Kjo do të hapë demon e porositjes në një dritare të re
+        </p>
+      </div>
+
+      <!-- Error message display -->
+      <div id="error-message" class="error-message" style="margin-bottom: 24px; display: none;">
+        <svg class="error-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+          <line x1="15" y1="9" x2="9" y2="15" stroke="currentColor" stroke-width="2"/>
+          <line x1="9" y1="9" x2="15" y2="15" stroke="currentColor" stroke-width="2"/>
+        </svg>
+        <span id="error-text"></span>
+      </div>
+      
+      <!-- Request Form -->
+      <form 
+        id="demo-form"
+        name="customer-demo-request"
+        method="POST"
+        data-netlify="true"
+        data-netlify-honeypot="bot-field"
+        class="login-form"
+      >
+        <!-- Honeypot field for spam protection -->
+        <input type="hidden" name="form-name" value="customer-demo-request" />
+        <div style="display: none;">
+          <label>Don't fill this out if you're human: <input name="bot-field" /></label>
+        </div>
+        <input type="hidden" name="admin-email" value="enrizhulati@gmail.com" />
+        <input type="hidden" name="demo-type" value="customer" />
+        
+        <div class="form-group">
+          <label for="firstName">Emri</label>
+          <input
+            type="text"
+            id="firstName"
+            name="firstName"
+            required
+            placeholder="Shkruaj emrin tënd"
+            class="clean-input"
+          />
+        </div>
+        
+        <div class="form-group">
+          <label for="lastName">Mbiemri</label>
+          <input
+            type="text"
+            id="lastName"
+            name="lastName"
+            required
+            placeholder="Shkruaj mbiemrin tënd"
+            class="clean-input"
+          />
+        </div>
+        
+        <div class="form-group">
+          <label for="email">Adresa e Emailit</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            required
+            placeholder="Shkruaj email-in tënd"
+            class="clean-input"
+          />
+        </div>
+        
+        <div class="form-group">
+          <label for="businessName">Emri i Biznesit</label>
+          <input
+            type="text"
+            id="businessName"
+            name="businessName"
+            required
+            placeholder="Shkruaj emrin e restorantit ose biznesit tënd"
+            class="clean-input"
+          />
+        </div>
+        
+        <button 
+          type="submit" 
+          id="submit-btn"
+          class="login-button"
+        >
+          <svg class="login-arrow" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4 12l8-8 8 8M12 4v16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Dërgo Kërkesën
+        </button>
+      </form>
+
+      <!-- What to Expect -->
+      <div style="
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 24px;
+        margin-top: 24px;
+      ">
+        <h4 style="margin: 0 0 16px 0; color: #2c3e50; font-size: 18px; font-weight: 600;">
+          Çfarë mund të testoni në demo:
+        </h4>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+          <div style="display: flex; align-items: flex-start; gap: 8px;">
+            <span style="font-size: 16px;">📱</span>
+            <div>
+              <strong style="color: #2c3e50;">Menu Skanimin QR</strong>
+              <p style="margin: 4px 0 0 0; font-size: 14px; color: #64748b;">
+                Përvojë reale e skanimit të QR kodit
+              </p>
+            </div>
+          </div>
+          
+          <div style="display: flex; align-items: flex-start; gap: 8px;">
+            <span style="font-size: 16px;">🍽️</span>
+            <div>
+              <strong style="color: #2c3e50;">Shfletim Menuje</strong>
+              <p style="margin: 4px 0 0 0; font-size: 14px; color: #64748b;">
+                Artikuj realë nga Beach Bar Durrës
+              </p>
+            </div>
+          </div>
+          
+          <div style="display: flex; align-items: flex-start; gap: 8px;">
+            <span style="font-size: 16px;">🛒</span>
+            <div>
+              <strong style="color: #2c3e50;">Porositja Dixhitale</strong>
+              <p style="margin: 4px 0 0 0; font-size: 14px; color: #64748b;">
+                Shtim artikujsh dhe dërgim porosish
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div style="text-align: center; margin-top: 24px;">
+        <a 
+          href="/demo"
+          style="
+            color: #667eea;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.2s ease;
+          "
+          onmouseover="this.style.color='#764ba2'"
+          onmouseout="this.style.color='#667eea'"
+        >
+          ← Kthehu tek Demot
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    .login-page {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .login-container {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 20px 40px rgba(102, 126, 234, 0.3);
+      width: 100%;
+      max-width: 500px;
+      padding: 40px;
+    }
+
+    .login-header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .login-logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .logo-container {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .login-icon {
+      width: 32px;
+      height: 32px;
+      color: white;
+    }
+
+    .login-logo h1 {
+      font-size: 32px;
+      font-weight: 700;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin: 0;
+    }
+
+    .login-header h2 {
+      font-size: 24px;
+      font-weight: 600;
+      color: #2c3e50;
+      margin: 0 0 8px 0;
+    }
+
+    .login-subtitle {
+      font-size: 16px;
+      color: #64748b;
+      margin: 0;
+    }
+
+    .demo-success-container {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 16px;
+      padding: 32px;
+      color: white;
+      text-align: center;
+      margin-bottom: 24px;
+      box-shadow: 0 20px 40px rgba(102, 126, 234, 0.3);
+    }
+
+    .login-form {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .form-group label {
+      font-size: 14px;
+      font-weight: 600;
+      color: #374151;
+    }
+
+    .clean-input {
+      padding: 12px 16px;
+      border: 2px solid #e5e7eb;
+      border-radius: 8px;
+      font-size: 16px;
+      transition: all 0.2s ease;
+      background: white;
+      color: #1f2937;
+    }
+
+    .clean-input:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .login-button {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 14px 24px;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .login-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+    }
+
+    .login-button:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .login-arrow {
+      width: 20px;
+      height: 20px;
+    }
+
+    .error-message {
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      border-radius: 8px;
+      padding: 12px 16px;
+      color: #dc2626;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+    }
+
+    .error-icon {
+      width: 20px;
+      height: 20px;
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .loading-icon {
+      animation: spin 1s linear infinite;
+    }
+
+    @media (max-width: 768px) {
+      .login-container {
+        padding: 32px 24px;
+      }
+      
+      .demo-success-container {
+        padding: 24px 20px !important;
+        margin-bottom: 20px !important;
+      }
+      
+      .demo-success-container h2 {
+        font-size: 24px !important;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .login-container {
+        padding: 24px 16px;
+      }
+      
+      .demo-success-container {
+        padding: 20px 16px !important;
+        border-radius: 12px !important;
+      }
+      
+      .demo-success-container h2 {
+        font-size: 20px !important;
+      }
+    }
+  </style>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const form = document.getElementById('demo-form');
+      const submitBtn = document.getElementById('submit-btn');
+      const errorMessage = document.getElementById('error-message');
+      const errorText = document.getElementById('error-text');
+      const successView = document.getElementById('success-view');
+
+      // Check if form was successfully submitted via URL params
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('success') === 'true') {
+        form.style.display = 'none';
+        successView.style.display = 'block';
+        return;
+      }
+
+      form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        // Show loading state
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = `
+          <svg class="loading-icon" style="animation: spin 1s linear infinite; width: 20px; height: 20px;" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" stroke-dasharray="31.416" stroke-dashoffset="31.416">
+              <animate attributeName="stroke-dasharray" dur="2s" values="0 31.416;15.708 15.708;0 31.416" repeatCount="indefinite"/>
+              <animate attributeName="stroke-dashoffset" dur="2s" values="0;-15.708;-31.416" repeatCount="indefinite"/>
+            </circle>
+          </svg>
+          Duke dërguar...
+        `;
+        
+        // Hide any previous errors
+        errorMessage.style.display = 'none';
+        
+        try {
+          // Get form data
+          const formData = new FormData(form);
+          
+          // Submit to Netlify for lead capture
+          const response = await fetch('/customer-demo-request', {
+            method: 'POST',
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: new URLSearchParams(formData).toString()
+          });
+          
+          if (response.ok) {
+            // Show success view
+            form.style.display = 'none';
+            successView.style.display = 'block';
+          } else {
+            throw new Error('Form submission failed');
+          }
+        } catch (error) {
+          console.error('Form submission error:', error);
+          errorText.textContent = 'Kishte një problem me dërgimin e formës. Ju lutemi provoni përsëri.';
+          errorMessage.style.display = 'flex';
+          
+          // Reset button
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = `
+            <svg class="login-arrow" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M4 12l8-8 8 8M12 4v16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Dërgo Kërkesën
+          `;
+        }
+      });
+    });
+  </script>
+</BaseLayout>
