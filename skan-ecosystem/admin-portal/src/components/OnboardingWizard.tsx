@@ -30,9 +30,6 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
     description: ''
   });
   const [tableCount, setTableCount] = useState('');
-  const [menuItems, setMenuItems] = useState<Array<{name: string, price: string}>>([]);
-  const [newItemName, setNewItemName] = useState('');
-  const [newItemPrice, setNewItemPrice] = useState('');
 
   // Load onboarding status on mount
   useEffect(() => {
