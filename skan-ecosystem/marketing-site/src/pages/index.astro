@@ -23,8 +23,11 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           Klientët skanojnë QR kodin, porosisin vetë në meny dixhitale dhe paguajnë stafit tuaj. €35/muaj - ju zotëroni 100% të të ardhurave dhe shërbeni më shumë tavolina.
         </p>
         <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
-          <a href="/register" class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white px-10 py-5 rounded-xl text-lg font-semibold transition-colors shadow-lg hover:shadow-xl flex items-center justify-center gap-2 min-h-touch" data-sq="🚀 Filloni Sot" data-en="🚀 Start Today">
-            🚀 Filloni Sot
+          <a href="/register" class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white px-10 py-5 rounded-xl text-lg font-semibold transition-colors shadow-lg hover:shadow-xl flex items-center justify-center gap-2 min-h-touch" data-sq="Filloni Sot" data-en="Start Today">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+            </svg>
+            Filloni Sot
           </a>
           <a href="/demo" class="w-full sm:w-auto border border-gray-300 hover:border-gray-400 text-gray-700 px-8 py-5 rounded-xl text-lg font-semibold transition-colors min-h-touch flex items-center justify-center" data-sq="Shihni Si Funksionon" data-en="See How It Works">
             Shihni Si Funksionon
@@ -200,19 +203,12 @@ import BaseLayout from '../layouts/BaseLayout.astro';
                   </div>
                 </div>
                 <!-- Demo Button - Clearly Non-Interactive -->
-                <div class="relative mt-4">
-                  <div class="w-full bg-gray-300 text-gray-500 py-3 rounded-lg font-semibold text-center border-2 border-dashed border-gray-400 cursor-not-allowed">
-                    <div class="flex items-center justify-center gap-2">
-                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                      </svg>
-                      Add to Cart (Demo)
-                    </div>
-                  </div>
-                  <div class="absolute inset-0 flex items-center justify-center">
-                    <div class="bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-semibold text-gray-600 border">
-                      Preview Only
-                    </div>
+                <div class="w-full bg-gray-300 text-gray-500 py-3 rounded-lg font-semibold text-center border-2 border-dashed border-gray-400 cursor-not-allowed mt-4">
+                  <div class="flex items-center justify-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                    </svg>
+                    Add to Cart (Demo)
                   </div>
                 </div>
               </div>
@@ -299,25 +295,41 @@ import BaseLayout from '../layouts/BaseLayout.astro';
                 <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
                   <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
                 </svg>
-                <span data-sq="💰 100% e fitimit mbetet tek ju" data-en="💰 100% of profit stays with you">💰 100% e fitimit mbetet tek ju</span>
+                <span data-sq="<svg class="w-5 h-5 text-green-600 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"/>
+                  </svg>100% e fitimit mbetet tek ju" data-en="100% of profit stays with you"><svg class="w-5 h-5 text-green-600 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"/>
+                  </svg>100% e fitimit mbetet tek ju</span>
               </div>
               <div class="flex items-center">
                 <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
                   <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
                 </svg>
-                <span data-sq="🏪 Klientët paguajnë stafit tuaj" data-en="🏪 Customers pay your staff">🏪 Klientët paguajnë stafit tuaj</span>
+                <span data-sq="<svg class="w-5 h-5 text-blue-600 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                  </svg>Klientët paguajnë stafit tuaj" data-en="Customers pay your staff"><svg class="w-5 h-5 text-blue-600 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                  </svg>Klientët paguajnë stafit tuaj</span>
               </div>
               <div class="flex items-center">
                 <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
                   <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
                 </svg>
-                <span data-sq="🔒 Zero tarifa transaksioni" data-en="🔒 Zero transaction fees">🔒 Zero tarifa transaksioni</span>
+                <span data-sq="<svg class="w-5 h-5 text-green-600 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                  </svg>Zero tarifa transaksioni" data-en="Zero transaction fees"><svg class="w-5 h-5 text-green-600 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                  </svg>Zero tarifa transaksioni</span>
               </div>
               <div class="flex items-center">
                 <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
                   <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
                 </svg>
-                <span data-sq="📱 Tavolina të pakufizuara dhe kode QR" data-en="📱 Unlimited tables and QR codes">📱 Tavolina të pakufizuara dhe kode QR</span>
+                <span data-sq="<svg class="w-5 h-5 text-blue-600 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                  </svg>Tavolina të pakufizuara dhe kode QR" data-en="Unlimited tables and QR codes"><svg class="w-5 h-5 text-blue-600 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                  </svg>Tavolina të pakufizuara dhe kode QR</span>
               </div>
             </div>
             <div class="space-y-4">
@@ -325,19 +337,33 @@ import BaseLayout from '../layouts/BaseLayout.astro';
                 <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
                   <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
                 </svg>
-                <span data-sq="📊 Analitika dhe raporte të detajuara" data-en="📊 Detailed analytics and reports">📊 Analitika dhe raporte të detajuara</span>
+                <span data-sq="<svg class="w-5 h-5 text-purple-600 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                  </svg>Analitika dhe raporte të detajuara" data-en="Detailed analytics and reports"><svg class="w-5 h-5 text-purple-600 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                  </svg>Analitika dhe raporte të detajuara</span>
               </div>
               <div class="flex items-center">
                 <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
                   <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
                 </svg>
-                <span data-sq="⭐ Mbështetje prioritare 24/7" data-en="⭐ Priority 24/7 support">⭐ Mbështetje prioritare 24/7</span>
+                <span data-sq="<svg class="w-5 h-5 text-yellow-500 inline mr-2" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                  </svg>Mbështetje prioritare 24/7" data-en="Priority 24/7 support"><svg class="w-5 h-5 text-yellow-500 inline mr-2" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                  </svg>Mbështetje prioritare 24/7</span>
               </div>
               <div class="flex items-center">
                 <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
                   <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
                 </svg>
-                <span data-sq="🔧 Instalim dhe trajnim pa pagesë" data-en="🔧 Free setup and training">🔧 Instalim dhe trajnim pa pagesë</span>
+                <span data-sq="<svg class="w-5 h-5 text-gray-600 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                  </svg>Instalim dhe trajnim pa pagesë" data-en="Free setup and training"><svg class="w-5 h-5 text-gray-600 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                  </svg>Instalim dhe trajnim pa pagesë</span>
               </div>
               <div class="flex items-center">
                 <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
@@ -349,7 +375,11 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           </div>
           
           <div class="bg-blue-50 p-6 rounded-lg mb-8">
-            <h4 class="font-semibold text-blue-900 text-center mb-2" data-sq="💡 Përse €35/muaj është çmimi i drejtë?" data-en="💡 Why €35/month is the right price?">💡 Përse €35/muaj është çmimi i drejtë?</h4>
+            <h4 class="font-semibold text-blue-900 text-center mb-2" data-sq="<svg class="w-5 h-5 text-yellow-500 inline mr-2" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.94-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+            </svg>Përse €35/muaj është çmimi i drejtë?" data-en="Why €35/month is the right price?"><svg class="w-5 h-5 text-yellow-500 inline mr-2" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.94-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+            </svg>Përse €35/muaj është çmimi i drejtë?</h4>
             <p class="text-blue-800 text-center" data-sq="Më pak se kostoja e një mesi në muaj, por rrit efikasitetin tuaj me 40% dhe zvogëlon stresin e stafit me 60%. Përfitimi juaj i parë do të jetë shumë herë më i madh." data-en="Less than one meal's cost per month, but increases your efficiency by 40% and reduces staff stress by 60%. Your first benefit will be many times greater.">
               Më pak se kostoja e një mesi në muaj, por rrit efikasitetin tuaj me 40% dhe zvogëlon stresin e stafit me 60%. Përfitimi juaj i parë do të jetë shumë herë më i madh.
             </p>
@@ -364,8 +394,20 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       </div>
 
       <div class="text-center mt-12">
-        <p class="text-blue-100 text-lg mb-6" data-sq="✅ Asnjë kontratë afatgjatë • ✅ Anuloni në çdo kohë • ✅ Mbështetje e plotë shqip" data-en="✅ No long-term contracts • ✅ Cancel anytime • ✅ Full Albanian support">
-          ✅ Asnjë kontratë afatgjatë • ✅ Anuloni në çdo kohë • ✅ Mbështetje e plotë shqip
+        <p class="text-blue-100 text-lg mb-6" data-sq="<svg class="w-4 h-4 text-green-600 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+          </svg>Asnjë kontratë afatgjatë • <svg class="w-4 h-4 text-green-600 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+          </svg>Anuloni në çdo kohë • <svg class="w-4 h-4 text-green-600 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+          </svg>Mbështetje e plotë shqip" data-en="No long-term contracts • Cancel anytime • Full Albanian support">
+          <svg class="w-4 h-4 text-green-600 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+          </svg>Asnjë kontratë afatgjatë • <svg class="w-4 h-4 text-green-600 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+          </svg>Anuloni në çdo kohë • <svg class="w-4 h-4 text-green-600 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+          </svg>Mbështetje e plotë shqip
         </p>
       </div>
     </div>
@@ -637,151 +679,6 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     </div>
   </section>
 
-  <!-- Operational Efficiency Section -->
-  <section class="py-20 bg-gray-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="text-center mb-16">
-        <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-4" data-sq="Më Shumë Tavolina, Më Pak Stres, €35/muaj" data-en="More Tables, Less Stress, €35/month">
-          Më Shumë Tavolina, Më Pak Stres, €35/muaj
-        </h2>
-        <p class="text-xl text-gray-600 max-w-3xl mx-auto" data-sq="Transformoni restaurantin tuaj në makinë fitimi. Stafi juaj fokuson në cilësi, jo në marrjen e porosive." data-en="Transform your restaurant into a profit machine. Your staff focuses on quality, not taking orders.">
-          Transformoni restaurantin tuaj në makinë fitimi. Stafi juaj fokuson në cilësi, jo në marrjen e porosive.
-        </p>
-      </div>
-      
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-        <!-- FREE Plan -->
-        <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
-          <div class="px-8 py-12">
-            <div class="text-center mb-8">
-              <div class="inline-block bg-green-100 text-green-800 px-4 py-2 rounded-full text-sm font-semibold mb-4">
-                <span data-sq="POPULLI" data-en="POPULAR">POPULLI</span>
-              </div>
-              <h3 class="text-3xl font-bold text-gray-900 mb-4" data-sq="Plan FALAS" data-en="FREE Plan">Plan FALAS</h3>
-              <div class="flex items-center justify-center mb-4">
-                <span class="text-6xl font-bold text-green-600">€0</span>
-                <span class="text-xl text-gray-600 ml-2">/muaj</span>
-              </div>
-              <p class="text-gray-600" data-sq="Për restorantet që preferojnë pagesa me karta" data-en="For restaurants preferring card payments">Për restorantet që preferojnë pagesa me karta</p>
-            </div>
-            
-            <ul class="space-y-4 mb-8">
-              <li class="flex items-center">
-                <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
-                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                </svg>
-                <span data-sq="✨ Sistema 100% FALAS për ju" data-en="✨ System 100% FREE for you">✨ Sistema 100% FALAS për ju</span>
-              </li>
-              <li class="flex items-center">
-                <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
-                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                </svg>
-                <span data-sq="💳 Pagesa me Visa/Mastercard" data-en="💳 Visa/Mastercard payments">💳 Pagesa me Visa/Mastercard</span>
-              </li>
-              <li class="flex items-center">
-                <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
-                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                </svg>
-                <span data-sq="⚡ Para në llogari brenda 2 ditësh" data-en="⚡ Money in account within 2 days">⚡ Para në llogari brenda 2 ditësh</span>
-              </li>
-              <li class="flex items-center">
-                <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
-                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                </svg>
-                <span data-sq="📱 Tavolina dhe kode QR të pakufizuara" data-en="📱 Unlimited tables and QR codes">📱 Tavolina dhe kode QR të pakufizuara</span>
-              </li>
-              <li class="flex items-center">
-                <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
-                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                </svg>
-                <span data-sq="🔧 Instalimi dhe trajnimi falas" data-en="🔧 Free setup and training">🔧 Instalimi dhe trajnimi falas</span>
-              </li>
-              <li class="flex items-center text-sm text-gray-600">
-                <svg class="w-5 h-5 text-blue-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
-                  <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
-                </svg>
-                <span data-sq="Verifone merr 2.9% nga çdo pagesë me kartë" data-en="Verifone takes 2.9% from each card payment">Verifone merr 2.9% nga çdo pagesë me kartë</span>
-              </li>
-            </ul>
-            
-            <a href="/register" class="w-full bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-xl text-lg font-semibold transition-colors block text-center" data-sq="Filloni FALAS Tani" data-en="Start FREE Now">
-              Filloni FALAS Tani
-            </a>
-          </div>
-        </div>
-
-        <!-- PREMIUM Plan -->
-        <div class="bg-white rounded-2xl shadow-xl overflow-hidden border-2 border-yellow-400">
-          <div class="px-8 py-12">
-            <div class="text-center mb-8">
-              <div class="inline-block bg-yellow-100 text-yellow-800 px-4 py-2 rounded-full text-sm font-semibold mb-4">
-                <span data-sq="PREMIUM" data-en="PREMIUM">PREMIUM</span>
-              </div>
-              <h3 class="text-3xl font-bold text-gray-900 mb-4" data-sq="Plan €35/muaj" data-en="€35/month Plan">Plan €35/muaj</h3>
-              <div class="flex items-center justify-center mb-4">
-                <span class="text-6xl font-bold text-yellow-600">€35</span>
-                <span class="text-xl text-gray-600 ml-2">/muaj</span>
-              </div>
-              <p class="text-gray-600" data-sq="Për restorantet që preferojnë kesh dhe kontroll total" data-en="For restaurants preferring cash and total control">Për restorantet që preferojnë kesh dhe kontroll total</p>
-            </div>
-            
-            <ul class="space-y-4 mb-8">
-              <li class="flex items-center">
-                <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
-                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                </svg>
-                <span data-sq="💰 100% e fitimit mbetet tek ju" data-en="💰 100% of profit stays with you">💰 100% e fitimit mbetet tek ju</span>
-              </li>
-              <li class="flex items-center">
-                <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
-                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                </svg>
-                <span data-sq="🏪 Vetëm pagesa kesh - kontroll total" data-en="🏪 Cash-only payments - total control">🏪 Vetëm pagesa kesh - kontroll total</span>
-              </li>
-              <li class="flex items-center">
-                <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
-                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                </svg>
-                <span data-sq="🔒 Zero tarifa transaksioni" data-en="🔒 Zero transaction fees">🔒 Zero tarifa transaksioni</span>
-              </li>
-              <li class="flex items-center">
-                <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
-                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                </svg>
-                <span data-sq="📊 Analitika dhe raporte të detajuara" data-en="📊 Detailed analytics and reports">📊 Analitika dhe raporte të detajuara</span>
-              </li>
-              <li class="flex items-center">
-                <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
-                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                </svg>
-                <span data-sq="⭐ Mbështetje prioritare 24/7" data-en="⭐ Priority 24/7 support">⭐ Mbështetje prioritare 24/7</span>
-              </li>
-              <li class="flex items-center text-sm text-green-600 font-semibold">
-                <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
-                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                </svg>
-                <span data-sq="Asnjë tarifë e fshehur apo përqindje" data-en="No hidden fees or percentages">Asnjë tarifë e fshehur apo përqindje</span>
-              </li>
-            </ul>
-            
-            <a href="/register?plan=premium" class="w-full bg-yellow-600 hover:bg-yellow-700 text-white px-8 py-4 rounded-xl text-lg font-semibold transition-colors block text-center" data-sq="Zgjidhni Premium" data-en="Choose Premium">
-              Zgjidhni Premium
-            </a>
-          </div>
-        </div>
-      </div>
-
-      <div class="text-center mt-12">
-        <div class="bg-blue-50 p-6 rounded-2xl max-w-3xl mx-auto">
-          <h4 class="text-lg font-semibold text-blue-900 mb-2" data-sq="💡 Fleksibilitet i Plotë" data-en="💡 Complete Flexibility">💡 Fleksibilitet i Plotë</h4>
-          <p class="text-blue-800" data-sq="Filloni me planin FALAS dhe ndryshoni në premium kur të doni. Ose filloni premium dhe kthehuni në falas. Ju vendosni!" data-en="Start with the FREE plan and switch to premium when you want. Or start premium and go back to free. You decide!">
-            Filloni me planin FALAS dhe ndryshoni në premium kur të doni. Ose filloni premium dhe kthehuni në falas. Ju vendosni!
-          </p>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <!-- Success Stories Section -->
   <section class="py-20 bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -812,14 +709,26 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           
           <div class="space-y-4 mb-6">
             <div class="bg-white rounded-lg p-4">
-              <h4 class="font-semibold text-gray-900 mb-2" data-sq="💡 Sfida Fillestare:" data-en="💡 Initial Challenge:">💡 Sfida Fillestare:</h4>
+              <h4 class="font-semibold text-gray-900 mb-2" data-sq="<svg class="w-5 h-5 text-yellow-500 inline mr-2" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.94-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+            </svg>Sfida Fillestare:" data-en="Initial Challenge:"><svg class="w-5 h-5 text-yellow-500 inline mr-2" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.94-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+            </svg>Sfida Fillestare:</h4>
               <p class="text-gray-700 text-sm" data-sq="Biznes i ri me buxhet të kufizuar, nevojë për modernizim pa kosto fillestare" data-en="New business with limited budget, needed modernization without upfront costs">
                 Biznes i ri me buxhet të kufizuar, nevojë për modernizim pa kosto fillestare
               </p>
             </div>
             
             <div class="bg-white rounded-lg p-4">
-              <h4 class="font-semibold text-gray-900 mb-2" data-sq="🎯 Zgjidhja SKAN.AL:" data-en="🎯 SKAN.AL Solution:">🎯 Zgjidhja SKAN.AL:</h4>
+              <h4 class="font-semibold text-gray-900 mb-2" data-sq="<svg class="w-5 h-5 text-red-500 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="10"/>
+              <circle cx="12" cy="12" r="6"/>
+              <circle cx="12" cy="12" r="2"/>
+            </svg>Zgjidhja SKAN.AL:" data-en="SKAN.AL Solution:"><svg class="w-5 h-5 text-red-500 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="10"/>
+              <circle cx="12" cy="12" r="6"/>
+              <circle cx="12" cy="12" r="2"/>
+            </svg>Zgjidhja SKAN.AL:</h4>
               <p class="text-gray-700 text-sm" data-sq="Plan FALAS me Verifone - pa kosto fillestare, vetëm 2.9% komision për pagesa kartë" data-en="FREE plan with Verifone - no upfront costs, only 2.9% commission on card payments">
                 Plan FALAS me Verifone - pa kosto fillestare, vetëm 2.9% komision për pagesa kartë
               </p>
@@ -861,14 +770,26 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           
           <div class="space-y-4 mb-6">
             <div class="bg-white rounded-lg p-4">
-              <h4 class="font-semibold text-gray-900 mb-2" data-sq="💡 Sfida Fillestare:" data-en="💡 Initial Challenge:">💡 Sfida Fillestare:</h4>
+              <h4 class="font-semibold text-gray-900 mb-2" data-sq="<svg class="w-5 h-5 text-yellow-500 inline mr-2" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.94-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+            </svg>Sfida Fillestare:" data-en="Initial Challenge:"><svg class="w-5 h-5 text-yellow-500 inline mr-2" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.94-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+            </svg>Sfida Fillestare:</h4>
               <p class="text-gray-700 text-sm" data-sq="Volum i lartë shitjesh, tarifa e komisionit po hanin fitimin, klientët paguanin kryesisht kesh" data-en="High sales volume, commission fees eating profits, customers mostly paying cash">
                 Volum i lartë shitjesh, tarifa e komisionit po hanin fitimin, klientët paguanin kryesisht kesh
               </p>
             </div>
             
             <div class="bg-white rounded-lg p-4">
-              <h4 class="font-semibold text-gray-900 mb-2" data-sq="🎯 Zgjidhja SKAN.AL:" data-en="🎯 SKAN.AL Solution:">🎯 Zgjidhja SKAN.AL:</h4>
+              <h4 class="font-semibold text-gray-900 mb-2" data-sq="<svg class="w-5 h-5 text-red-500 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="10"/>
+              <circle cx="12" cy="12" r="6"/>
+              <circle cx="12" cy="12" r="2"/>
+            </svg>Zgjidhja SKAN.AL:" data-en="SKAN.AL Solution:"><svg class="w-5 h-5 text-red-500 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="10"/>
+              <circle cx="12" cy="12" r="6"/>
+              <circle cx="12" cy="12" r="2"/>
+            </svg>Zgjidhja SKAN.AL:</h4>
               <p class="text-gray-700 text-sm" data-sq="Plan Premium €35/muaj - 0% komision, kontroll i plotë, kosto e parashikueshme" data-en="Premium plan €35/month - 0% commission, full control, predictable costs">
                 Plan Premium €35/muaj - 0% komision, kontroll i plotë, kosto e parashikueshme
               </p>
@@ -968,8 +889,12 @@ import BaseLayout from '../layouts/BaseLayout.astro';
             Ekip shqiptar që ju përgjigjet menjëherë në gjuhën tuaj
           </p>
           <div class="text-green-600 font-semibold">
-            <p>📞 +355 69 123 4567</p>
-            <p>📱 WhatsApp të gatshëm</p>
+            <p><svg class="w-5 h-5 text-blue-600 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+          </svg>+355 69 123 4567</p>
+            <p><svg class="w-5 h-5 text-green-600 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+          </svg>WhatsApp të gatshëm</p>
           </div>
         </div>
 
@@ -998,9 +923,21 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           </div>
           <h3 class="text-lg font-semibold text-gray-900 mb-2" data-sq="Instalim në 24 Orë" data-en="Setup in 24 Hours">Instalim në 24 Orë</h3>
           <div class="text-gray-600 text-sm space-y-2">
-            <p data-sq="📋 1-2 orë: Konfigurim initial" data-en="📋 1-2 hours: Initial setup">📋 1-2 orë: Konfigurim initial</p>
-            <p data-sq="👥 2-3 orë: Trajnim stafi" data-en="👥 2-3 hours: Staff training">👥 2-3 orë: Trajnim stafi</p>
-            <p data-sq="🚀 24 orë: Plotësisht funksional" data-en="🚀 24 hours: Fully operational">🚀 24 orë: Plotësisht funksional</p>
+            <p data-sq="<svg class="w-5 h-5 text-blue-600 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/>
+          </svg>1-2 orë: Konfigurim initial" data-en="1-2 hours: Initial setup"><svg class="w-5 h-5 text-blue-600 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/>
+          </svg>1-2 orë: Konfigurim initial</p>
+            <p data-sq="<svg class="w-5 h-5 text-purple-600 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"/>
+          </svg>2-3 orë: Trajnim stafi" data-en="2-3 hours: Staff training"><svg class="w-5 h-5 text-purple-600 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"/>
+          </svg>2-3 orë: Trajnim stafi</p>
+            <p data-sq="<svg class="w-5 h-5 text-green-600 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+          </svg>24 orë: Plotësisht funksional" data-en="24 hours: Fully operational"><svg class="w-5 h-5 text-green-600 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+          </svg>24 orë: Plotësisht funksional</p>
           </div>
         </div>
 
@@ -1060,7 +997,11 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div>
-            <h4 class="font-semibold text-gray-900 mb-4" data-sq="🛡️ Garantitë Teknike" data-en="🛡️ Technical Guarantees">🛡️ Garantitë Teknike</h4>
+            <h4 class="font-semibold text-gray-900 mb-4" data-sq="<svg class="w-5 h-5 text-blue-600 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+          </svg>Garantitë Teknike" data-en="Technical Guarantees"><svg class="w-5 h-5 text-blue-600 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+          </svg>Garantitë Teknike</h4>
             <ul class="space-y-2 text-gray-600">
               <li class="flex items-start">
                 <svg class="w-5 h-5 text-green-500 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
@@ -1084,7 +1025,11 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           </div>
 
           <div>
-            <h4 class="font-semibold text-gray-900 mb-4" data-sq="📞 Garantitë Mbështetje" data-en="📞 Support Guarantees">📞 Garantitë Mbështetje</h4>
+            <h4 class="font-semibold text-gray-900 mb-4" data-sq="<svg class="w-5 h-5 text-green-600 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+          </svg>Garantitë Mbështetje" data-en="Support Guarantees"><svg class="w-5 h-5 text-green-600 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+          </svg>Garantitë Mbështetje</h4>
             <ul class="space-y-2 text-gray-600">
               <li class="flex items-start">
                 <svg class="w-5 h-5 text-green-500 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
