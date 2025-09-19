@@ -267,64 +267,61 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
       case 1:
         return (
           <div className="onboarding-step">
-            <h2>Mirë se vini në SKAN.AL!</h2>
-            <p>Le të konfigurojmë restorantin tuaj për porositje dixhitale. Kjo do të marrë vetëm disa minuta.</p>
+            <h2>Informacioni i Restorantit</h2>
             
-            <div className="form-group">
-              <label>Emri i Restorantit *</label>
-              <input
-                type="text"
-                value={restaurantInfo.name}
-                onChange={(e) => setRestaurantInfo({...restaurantInfo, name: e.target.value})}
-                placeholder="p.sh., Taverna Durrësi"
-              />
+            <div className="form-fields">
+              <div className="field-group">
+                <label className="field-label">Emri i Restorantit</label>
+                <input
+                  type="text"
+                  value={restaurantInfo.name}
+                  onChange={(e) => setRestaurantInfo({...restaurantInfo, name: e.target.value})}
+                  className="field-input"
+                  required
+                />
+              </div>
+
+              <div className="field-group">
+                <label className="field-label">Adresa</label>
+                <input
+                  type="text"
+                  value={restaurantInfo.address}
+                  onChange={(e) => setRestaurantInfo({...restaurantInfo, address: e.target.value})}
+                  className="field-input"
+                  required
+                />
+              </div>
+
+              <div className="field-group">
+                <label className="field-label">Telefoni</label>
+                <input
+                  type="tel"
+                  value={restaurantInfo.phone}
+                  onChange={(e) => setRestaurantInfo({...restaurantInfo, phone: e.target.value})}
+                  className="field-input"
+                  required
+                />
+              </div>
+
+              <div className="field-group">
+                <label className="field-label">Lloji i Kuzhinës</label>
+                <select
+                  value={restaurantInfo.cuisineType}
+                  onChange={(e) => setRestaurantInfo({...restaurantInfo, cuisineType: e.target.value})}
+                  className="field-select"
+                  required
+                >
+                  <option value="">Zgjidhni llojin</option>
+                  <option value="traditional">Tradicionale Shqiptare</option>
+                  <option value="mediterranean">Mesdhetare</option>
+                  <option value="italian">Italiane</option>
+                  <option value="seafood">Peshku dhe Deti</option>
+                  <option value="international">Ndërkombëtare</option>
+                  <option value="cafe">Kafe/Bar</option>
+                </select>
+              </div>
             </div>
 
-            <div className="form-group">
-              <label>Adresa *</label>
-              <input
-                type="text"
-                value={restaurantInfo.address}
-                onChange={(e) => setRestaurantInfo({...restaurantInfo, address: e.target.value})}
-                placeholder="p.sh., Rruga Taulantia, Durrës"
-              />
-            </div>
-
-            <div className="form-group">
-              <label>Numri i Telefonit *</label>
-              <input
-                type="tel"
-                value={restaurantInfo.phone}
-                onChange={(e) => setRestaurantInfo({...restaurantInfo, phone: e.target.value})}
-                placeholder="p.sh., +355 67 123 4567"
-              />
-            </div>
-
-            <div className="form-group">
-              <label>Lloji i Kuzhinës *</label>
-              <select
-                value={restaurantInfo.cuisineType}
-                onChange={(e) => setRestaurantInfo({...restaurantInfo, cuisineType: e.target.value})}
-              >
-                <option value="">Zgjidhni llojin e kuzhinës...</option>
-                <option value="traditional">Tradicionale Shqiptare</option>
-                <option value="mediterranean">Mesdhetare</option>
-                <option value="italian">Italiane</option>
-                <option value="seafood">Peshku dhe Deti</option>
-                <option value="international">Ndërkombëtare</option>
-                <option value="cafe">Kafe/Bar</option>
-              </select>
-            </div>
-
-            <div className="form-group">
-              <label>Përshkrimi i Shkurtër</label>
-              <textarea
-                value={restaurantInfo.description}
-                onChange={(e) => setRestaurantInfo({...restaurantInfo, description: e.target.value})}
-                placeholder="Përshkruani restorantin tuaj në disa fjalë..."
-                rows={3}
-              />
-            </div>
 
             {error && (
               <div className="error-message" style={{ 
@@ -441,42 +438,13 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
         return (
           <div className="onboarding-step">
             <h2>Kategoritë e Menusë</h2>
-            <p>Do të krijojmë këto kategori bazë për menunë tuaj. Mund t'i personalizoni më vonë.</p>
+            <p className="step-description">Do të krijojmë këto kategori bazë për menunë tuaj. Mund t'i ndryshoni më vonë.</p>
             
-            <div className="category-preview">
-              <div className="category-item">
-                <div className="category-icon">
-                  •
-                </div>
-                <span>Appetizers & Salads</span>
-              </div>
-              <div className="category-item">
-                <div className="category-icon">
-                  •
-                </div>
-                <span>Main Courses</span>
-              </div>
-              <div className="category-item">
-                <div className="category-icon">
-                  •
-                </div>
-                <span>Desserts</span>
-              </div>
-              <div className="category-item">
-                <div className="category-icon">
-                  •
-                </div>
-                <span>Beverages</span>
-              </div>
-            </div>
-
-            <p><strong>Perfect for {restaurantInfo.cuisineType} cuisine!</strong></p>
-
-            <div className="step-actions">
-              <button className="prev-button" onClick={prevStep}>← Mbrapa</button>
-              <button className="next-button" onClick={nextStep}>
-                Create Categories →
-              </button>
+            <div className="category-list">
+              <div className="category-item">Appetizers & Salads</div>
+              <div className="category-item">Main Courses</div>
+              <div className="category-item">Desserts</div>
+              <div className="category-item">Beverages</div>
             </div>
           </div>
         );
@@ -484,60 +452,12 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
       case 3:
         return (
           <div className="onboarding-step">
-            <h2>Shtoni Artikujt e Parë të Menusë</h2>
-            <p>Le të shtojmë disa artikuj për t'ju ndihmuar të filloni. Mund të shtoni më shumë më vonë!</p>
+            <h2>Artikujt e Menusë</h2>
+            <p className="step-description">Mund të shtoni artikujt e menusë më vonë në panelin kryesor. Le të vazhdojmë me konfigurimin.</p>
             
-            <div className="sample-item-form">
-              <h4>Shtoni një pjatë të njohur:</h4>
-              <div className="form-row">
-                <input
-                  type="text"
-                  placeholder="Emri i pjatës në shqip"
-                  value={newItemName}
-                  onChange={(e) => setNewItemName(e.target.value)}
-                  style={{ flex: 1, marginRight: '8px' }}
-                />
-                <input
-                  type="text"
-                  placeholder="Çmimi (€)"
-                  value={newItemPrice}
-                  onChange={(e) => setNewItemPrice(e.target.value)}
-                  style={{ width: '100px' }}
-                />
-              </div>
-              <button className="add-item-button" onClick={addMenuItem}>+ Shto Artikull</button>
-            </div>
 
-            {menuItems.length > 0 && (
-              <div className="added-items">
-                <h4>Artikujt e Shtuar:</h4>
-                <div className="items-list">
-                  {menuItems.map((item, index) => (
-                    <div key={index} className="item-card">
-                      <span className="item-name">{item.name}</span>
-                      <span className="item-price">€{item.price}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
 
-            <div className="onboarding-tips">
-              <h4>Për momentin:</h4>
-              <ul>
-                <li>Shtoni 3-5 pjata të popullarizuara për të filluar</li>
-                <li>Përdorni emra të thjeshtë që klientët t'i kuptojnë lehtë</li>
-                <li>Vendosni çmime të sakta - mund t'i ndryshoni më vonë</li>
-              </ul>
-              <p><strong>Më vonë në menunë komplete:</strong> Do të mund të shtoni foto, përkthime në anglisht, përshkrime dhe allergjenë.</p>
-            </div>
 
-            <div className="step-actions">
-              <button className="prev-button" onClick={prevStep}>← Mbrapa</button>
-              <button className="next-button" onClick={nextStep}>
-                Vazhdo te Tavolinat →
-              </button>
-            </div>
           </div>
         );
 
@@ -549,94 +469,18 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
               <p className="step-description">Vendosni numrin e tavolinave për të gjeneruar kodrat QR për porositjet dixhitale.</p>
             </div>
 
-            <div className="table-setup-container">
-              <div className="table-input-section">
-                <div className="input-group-modern">
-                  <label className="input-label">Numri i Tavolinave</label>
-                  <div className="input-wrapper">
-                    <input
-                      type="number"
-                      value={tableCount}
-                      onChange={(e) => setTableCount(e.target.value)}
-                      placeholder="12"
-                      min="1"
-                      max="100"
-                      className="number-input-modern"
-                    />
-                    <span className="input-suffix">tavolina</span>
-                  </div>
-                  <small className="input-hint">Mund të shtoni ose hiqni tavolina më vonë</small>
-                </div>
-              </div>
-
-              <div className="qr-preview-section">
-                <div className="qr-preview-card">
-                  <div className="qr-preview-header">
-                    <h4>Çdo tavolinë do të ketë kodin e vet QR</h4>
-                  </div>
-                  
-                  <div className="qr-demo-layout">
-                    <div className="qr-code-visual">
-                      <div className="qr-code-square">
-                        <div className="qr-pattern">
-                          <div className="qr-corner qr-corner-tl"></div>
-                          <div className="qr-corner qr-corner-tr"></div>
-                          <div className="qr-corner qr-corner-bl"></div>
-                          <div className="qr-dots">
-                            <span></span><span></span><span></span>
-                            <span></span><span></span><span></span>
-                            <span></span><span></span><span></span>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="table-label">Tavolinë 1</div>
-                    </div>
-                    
-                    <div className="qr-benefits">
-                      <div className="benefit-item">
-                        <div className="benefit-icon">
-                          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                            <path d="M2 3C2 2.44772 2.44772 2 3 2H7C7.55228 2 8 2.44772 8 3V7C8 7.55228 7.55228 8 7 8H3C2.44772 8 2 7.55228 2 7V3Z" fill="currentColor"/>
-                            <path d="M12 3C12 2.44772 12.4477 2 13 2H17C17.5523 2 18 2.44772 18 3V7C18 7.55228 17.5523 8 17 8H13C12.4477 8 12 7.55228 12 7V3Z" fill="currentColor"/>
-                            <path d="M2 13C2 12.4477 2.44772 12 3 12H7C7.55228 12 8 12.4477 8 13V17C8 17.5523 7.55228 18 7 18H3C2.44772 18 2 17.5523 2 17V13Z" fill="currentColor"/>
-                          </svg>
-                        </div>
-                        <div className="benefit-text">
-                          <strong>Skanimi i menjëhershëm</strong>
-                          <p>Klientët skanojnë dhe shohin menunë</p>
-                        </div>
-                      </div>
-                      <div className="benefit-item">
-                        <div className="benefit-icon">
-                          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                            <path d="M3 3C3 1.89543 3.89543 1 5 1H15C16.1046 1 17 1.89543 17 3V5.26756C16.4022 5.09668 15.7625 5 15.1 5C11.7721 5 9.1 7.91015 9.1 11.5C9.1 13.4825 9.97131 15.2385 11.3596 16.4472L10 17.9999L3 17.9999V3Z" fill="currentColor"/>
-                            <circle cx="15.1" cy="11.5" r="5.5" fill="currentColor"/>
-                            <path d="M13.3 11.5L14.6 12.8L16.9 10.2" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                          </svg>
-                        </div>
-                        <div className="benefit-text">
-                          <strong>Porositje pa pritje</strong>
-                          <p>Porosia dërgohet direkt në kuzhinë</p>
-                        </div>
-                      </div>
-                      <div className="benefit-item">
-                        <div className="benefit-icon">
-                          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                            <rect x="3" y="2" width="14" height="16" rx="2" fill="currentColor"/>
-                            <rect x="6" y="6" width="8" height="1" fill="white"/>
-                            <rect x="6" y="8" width="6" height="1" fill="white"/>
-                            <rect x="6" y="10" width="8" height="1" fill="white"/>
-                          </svg>
-                        </div>
-                        <div className="benefit-text">
-                          <strong>Pa aplikacion</strong>
-                          <p>Funksionon në çdo telefon</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+            <div className="table-form">
+              <label className="form-label">Numri i Tavolinave</label>
+              <input
+                type="number"
+                value={tableCount}
+                onChange={(e) => setTableCount(e.target.value)}
+                className="table-input"
+                min="1"
+                max="100"
+                required
+              />
+              <p className="form-help">Do të gjenerojmë një kod QR për çdo tavolinë që klientët skanojnë për të porositur.</p>
             </div>
 
             <div className="step-actions">
@@ -675,45 +519,30 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
       case 5:
         return (
           <div className="onboarding-step">
-            <h2>Gati për përdorim!</h2>
-            <p>Restoranti juaj është gati për porositje dixhitale. Ja çfarë kemi konfiguruar:</p>
+            <h2>Konfigurimi Përfundoi</h2>
+            <p className="step-description">Restoranti juaj është gati për porositje dixhitale.</p>
             
-            <div className="setup-summary">
+            <div className="completion-summary">
               <div className="summary-item">
-                <div className="summary-icon">
-                  •
-                </div>
-                <div>
-                  <strong>{restaurantInfo.name}</strong>
-                  <p>{restaurantInfo.address}</p>
-                </div>
+                <strong>{restaurantInfo.name}</strong>
+                <span>{restaurantInfo.address}</span>
               </div>
               <div className="summary-item">
-                <div className="summary-icon">
-                  •
-                </div>
-                <div>
-                  <strong>4 Menu Categories</strong>
-                  <p>Ready for your items</p>
-                </div>
+                <strong>4 Kategori Menyje</strong>
+                <span>Gati për artikujt</span>
               </div>
               <div className="summary-item">
-                <div className="summary-icon">
-                  •
-                </div>
-                <div>
-                  <strong>{tableCount} Tables</strong>
-                  <p>With QR codes generated</p>
-                </div>
+                <strong>{tableCount} Tavolina</strong>
+                <span>Me kodra QR</span>
               </div>
             </div>
 
             <div className="next-steps">
-              <h4>🚀 What's Next:</h4>
+              <h4>Hapat e ardhshëm:</h4>
               <ol>
-                <li>Add your menu items in Menu Management</li>
-                <li>Print your table QR codes</li>
-                <li>Start receiving orders!</li>
+                <li>Shtoni artikujt e menusë</li>
+                <li>Printoni kodrat QR</li>
+                <li>Filloni të merrni porosi</li>
               </ol>
             </div>
 
@@ -791,8 +620,7 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
     <div className="onboarding-wizard">
       <div className="onboarding-container">
         <div className="onboarding-header">
-          <div className="progress-container">
-            <div className="progress-bar">
+          <div className="progress-bar">
               {/* Background progress line */}
               <div className="progress-line-background">
                 <div 
@@ -820,7 +648,6 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
                 </div>
               ))}
             </div>
-          </div>
         </div>
 
         <div className="onboarding-content">
@@ -860,13 +687,6 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
         }
 
         /* Progress Container */
-        .progress-container {
-          padding: 24px 32px;
-          background: rgba(255, 255, 255, 0.1);
-          border-radius: 12px;
-          margin: 16px 24px;
-        }
-
         .progress-bar {
           display: flex;
           align-items: flex-start;
@@ -874,6 +694,7 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
           position: relative;
           max-width: 600px;
           margin: 0 auto;
+          padding: 20px 24px;
         }
 
         /* Background Progress Line */
@@ -978,9 +799,8 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
 
         /* Mobile responsive adjustments */
         @media (max-width: 768px) {
-          .progress-container {
-            padding: 16px 20px;
-            margin: 12px 16px;
+          .progress-bar {
+            padding: 12px 16px;
           }
 
           .progress-step {
@@ -1015,9 +835,8 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
 
         /* Tablet responsive adjustments */
         @media (max-width: 1024px) and (min-width: 769px) {
-          .progress-container {
-            padding: 20px 28px;
-            margin: 14px 20px;
+          .progress-bar {
+            padding: 16px 20px;
           }
 
           .progress-step {
@@ -1047,9 +866,8 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
 
         /* Extra small screens */
         @media (max-width: 480px) {
-          .progress-container {
-            padding: 12px 16px;
-            margin: 8px 12px;
+          .progress-bar {
+            padding: 8px 12px;
           }
 
           .progress-step {
@@ -1357,283 +1175,167 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
           background-position: 0 0, 0 2px, 2px -2px, -2px 0px;
         }
 
-        /* Professional Table Setup Layout */
-        .step-header {
-          margin-bottom: 32px;
+        /* Clean Table Setup Form */
+        .table-form {
+          max-width: 400px;
+          margin: 32px 0;
         }
 
-        .step-description {
-          font-size: 16px;
-          color: #6c757d;
-          line-height: 1.5;
-          margin: 8px 0 0 0;
-        }
-
-        .table-setup-container {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 40px;
-          align-items: start;
-        }
-
-        .table-input-section {
-          background: #f8f9fa;
-          border-radius: 16px;
-          padding: 32px;
-          border: 1px solid #e9ecef;
-        }
-
-        .input-group-modern {
-          display: flex;
-          flex-direction: column;
-          gap: 12px;
-        }
-
-        .input-label {
-          font-weight: 600;
-          font-size: 16px;
-          color: #343a40;
-          margin: 0;
-        }
-
-        .input-wrapper {
-          position: relative;
-          display: flex;
-          align-items: center;
-        }
-
-        .number-input-modern {
-          width: 100%;
-          padding: 16px 20px;
-          font-size: 24px;
-          font-weight: 600;
-          border: 3px solid #e9ecef;
-          border-radius: 12px;
-          background: white;
-          color: #495057;
-          text-align: center;
-          transition: all 0.2s ease;
-        }
-
-        .number-input-modern:focus {
-          outline: none;
-          border-color: #007bff;
-          box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
-        }
-
-        .input-suffix {
-          position: absolute;
-          right: 20px;
-          font-size: 16px;
-          color: #6c757d;
-          font-weight: 500;
-          pointer-events: none;
-        }
-
-        .input-hint {
-          font-size: 14px;
-          color: #6c757d;
-          margin: 0;
-        }
-
-        .qr-preview-section {
-          display: flex;
-          flex-direction: column;
-        }
-
-        .qr-preview-card {
-          background: white;
-          border-radius: 16px;
-          padding: 32px;
-          border: 1px solid #e9ecef;
-          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-        }
-
-        .qr-preview-header {
-          margin-bottom: 24px;
-        }
-
-        .qr-preview-header h4 {
-          margin: 0;
-          font-size: 18px;
-          font-weight: 600;
-          color: #343a40;
-        }
-
-        .qr-demo-layout {
-          display: flex;
-          flex-direction: column;
-          gap: 24px;
-        }
-
-        .qr-code-visual {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 12px;
-          padding: 20px;
-          background: #f8f9fa;
-          border-radius: 12px;
-          border: 2px dashed #dee2e6;
-        }
-
-        .qr-code-square {
-          width: 80px;
-          height: 80px;
-          background: white;
-          border-radius: 8px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          border: 2px solid #e9ecef;
-        }
-
-        .qr-pattern {
-          width: 60px;
-          height: 60px;
-          position: relative;
-          background: white;
-        }
-
-        .qr-corner {
-          position: absolute;
-          width: 16px;
-          height: 16px;
-          border: 3px solid #212529;
-        }
-
-        .qr-corner-tl {
-          top: 2px;
-          left: 2px;
-          border-right: none;
-          border-bottom: none;
-        }
-
-        .qr-corner-tr {
-          top: 2px;
-          right: 2px;
-          border-left: none;
-          border-bottom: none;
-        }
-
-        .qr-corner-bl {
-          bottom: 2px;
-          left: 2px;
-          border-right: none;
-          border-top: none;
-        }
-
-        .qr-dots {
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          gap: 2px;
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-        }
-
-        .qr-dots span {
-          width: 3px;
-          height: 3px;
-          background: #212529;
-          border-radius: 1px;
-        }
-
-        .table-label {
-          font-size: 14px;
-          font-weight: 600;
-          color: #495057;
-        }
-
-        .qr-benefits {
-          display: flex;
-          flex-direction: column;
-          gap: 16px;
-        }
-
-        .benefit-item {
-          display: flex;
-          align-items: flex-start;
-          gap: 12px;
-        }
-
-        .benefit-icon {
-          width: 40px;
-          height: 40px;
-          border-radius: 10px;
-          background: #e3f2fd;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          color: #1976d2;
-          flex-shrink: 0;
-        }
-
-        .benefit-icon svg {
-          width: 20px;
-          height: 20px;
-        }
-
-        .benefit-text {
-          flex: 1;
-        }
-
-        .benefit-text strong {
+        .form-label {
           display: block;
-          font-size: 14px;
           font-weight: 600;
-          color: #343a40;
-          margin-bottom: 4px;
+          font-size: 16px;
+          color: #2c3e50;
+          margin-bottom: 8px;
         }
 
-        .benefit-text p {
-          margin: 0;
-          font-size: 13px;
+        .table-input {
+          width: 100%;
+          padding: 12px 16px;
+          font-size: 18px;
+          font-weight: 500;
+          border: 2px solid #e1e8ed;
+          border-radius: 8px;
+          background: white;
+          color: #2c3e50;
+          transition: border-color 0.2s ease;
+        }
+
+        .table-input:focus {
+          outline: none;
+          border-color: #667eea;
+          box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-help {
+          margin: 12px 0 0 0;
+          font-size: 14px;
           color: #6c757d;
           line-height: 1.4;
         }
 
-        /* Responsive adjustments for table setup */
-        @media (max-width: 1024px) {
-          .table-setup-container {
-            grid-template-columns: 1fr;
-            gap: 24px;
-          }
-
-          .table-input-section,
-          .qr-preview-card {
-            padding: 24px;
-          }
+        /* Consistent Form Styling */
+        .form-fields {
+          display: flex;
+          flex-direction: column;
+          gap: 20px;
+          max-width: 500px;
+          margin: 24px 0;
         }
 
-        @media (max-width: 768px) {
-          .table-setup-container {
-            gap: 20px;
-          }
+        .field-group {
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+        }
 
-          .table-input-section,
-          .qr-preview-card {
-            padding: 20px;
-          }
+        .field-label {
+          font-weight: 600;
+          font-size: 16px;
+          color: #2c3e50;
+        }
 
-          .number-input-modern {
-            font-size: 20px;
-            padding: 14px 16px;
-          }
+        .field-input,
+        .field-select {
+          padding: 12px 16px;
+          font-size: 16px;
+          border: 2px solid #e1e8ed;
+          border-radius: 8px;
+          background: white;
+          color: #2c3e50;
+          transition: border-color 0.2s ease;
+        }
 
-          .qr-demo-layout {
-            gap: 20px;
-          }
+        .field-input:focus,
+        .field-select:focus {
+          outline: none;
+          border-color: #667eea;
+          box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
 
-          .benefit-item {
-            gap: 10px;
-          }
+        .field-select {
+          cursor: pointer;
+        }
 
-          .benefit-icon {
-            width: 36px;
-            height: 36px;
-          }
+        .error-message {
+          background: #fef2f2;
+          border: 1px solid #fecaca;
+          color: #dc2626;
+          padding: 12px 16px;
+          border-radius: 8px;
+          margin: 16px 0;
+          font-size: 14px;
+        }
+
+        /* Step 2: Categories */
+        .category-list {
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+          max-width: 400px;
+          margin: 24px 0;
+        }
+
+        .category-item {
+          padding: 16px 20px;
+          background: #f8f9fa;
+          border: 1px solid #e9ecef;
+          border-radius: 8px;
+          font-weight: 500;
+          color: #495057;
+        }
+
+        /* Step 5: Completion */
+        .completion-summary {
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+          max-width: 500px;
+          margin: 24px 0;
+        }
+
+        .completion-summary .summary-item {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+          padding: 16px 20px;
+          background: #f8f9fa;
+          border: 1px solid #e9ecef;
+          border-radius: 8px;
+        }
+
+        .completion-summary .summary-item strong {
+          font-size: 16px;
+          font-weight: 600;
+          color: #2c3e50;
+        }
+
+        .completion-summary .summary-item span {
+          font-size: 14px;
+          color: #6c757d;
+        }
+
+        .next-steps {
+          margin: 32px 0;
+          max-width: 500px;
+        }
+
+        .next-steps h4 {
+          margin: 0 0 12px 0;
+          font-size: 16px;
+          font-weight: 600;
+          color: #2c3e50;
+        }
+
+        .next-steps ol {
+          margin: 0;
+          padding-left: 20px;
+          color: #495057;
+        }
+
+        .next-steps ol li {
+          margin-bottom: 8px;
+          line-height: 1.4;
         }
       `}</style>
     </div>
