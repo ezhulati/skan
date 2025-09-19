@@ -2921,9 +2921,12 @@ async function generateOrderNumber() {
   const now = new Date();
   const dateStr = now.toISOString().slice(0, 10).replace(/-/g, "");
   
-  // Get count of orders today
-  const startOfDay = new Date(now.setHours(0, 0, 0, 0));
-  const endOfDay = new Date(now.setHours(23, 59, 59, 999));
+  // Get count of orders today - fix date handling bug
+  const startOfDay = new Date(now);
+  startOfDay.setHours(0, 0, 0, 0);
+  
+  const endOfDay = new Date(now);
+  endOfDay.setHours(23, 59, 59, 999);
   
   const todayOrdersSnapshot = await db.collection("orders")
     .where("createdAt", ">=", startOfDay)

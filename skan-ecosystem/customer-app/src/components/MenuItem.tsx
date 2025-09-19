@@ -11,6 +11,7 @@ export function MenuItem({ item }: MenuItemProps) {
   const { addItem } = useCart();
   const { t, language } = useLanguage();
   const [isAdding, setIsAdding] = useState(false);
+  const [imageError, setImageError] = useState(false);
 
   const handleAddToCart = async () => {
     setIsAdding(true);
@@ -23,12 +24,13 @@ export function MenuItem({ item }: MenuItemProps) {
 
   return (
     <div className="bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow p-4 sm:p-6">
-      {item.imageUrl && (
+      {item.imageUrl && !imageError && (
         <div className="w-full aspect-w-16 aspect-h-9 bg-gray-200 rounded-lg mb-4 overflow-hidden">
           <img 
             src={item.imageUrl} 
             alt={item.name}
             className="w-full h-full object-cover"
+            onError={() => setImageError(true)}
           />
         </div>
       )}
