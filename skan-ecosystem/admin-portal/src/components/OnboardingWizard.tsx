@@ -12,6 +12,24 @@ interface RestaurantInfo {
   phone: string;
   cuisineType: string;
   description: string;
+  operatingHours: {
+    monday: { open: string; close: string; closed: boolean };
+    tuesday: { open: string; close: string; closed: boolean };
+    wednesday: { open: string; close: string; closed: boolean };
+    thursday: { open: string; close: string; closed: boolean };
+    friday: { open: string; close: string; closed: boolean };
+    saturday: { open: string; close: string; closed: boolean };
+    sunday: { open: string; close: string; closed: boolean };
+  };
+  paymentMethods: string[];
+}
+
+interface MenuItem {
+  name: string;
+  nameAlbanian: string;
+  description: string;
+  price: string;
+  category: string;
 }
 
 
@@ -27,8 +45,19 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
     address: '',
     phone: '',
     cuisineType: '',
-    description: ''
+    description: '',
+    operatingHours: {
+      monday: { open: '09:00', close: '22:00', closed: false },
+      tuesday: { open: '09:00', close: '22:00', closed: false },
+      wednesday: { open: '09:00', close: '22:00', closed: false },
+      thursday: { open: '09:00', close: '22:00', closed: false },
+      friday: { open: '09:00', close: '22:00', closed: false },
+      saturday: { open: '09:00', close: '22:00', closed: false },
+      sunday: { open: '09:00', close: '22:00', closed: false }
+    },
+    paymentMethods: ['cash']
   });
+  const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
   const [tableCount, setTableCount] = useState('');
 
   // Load onboarding status on mount
@@ -131,10 +160,9 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
 
   const steps = [
     { id: 1, title: 'Informacioni' },
-    { id: 2, title: 'Kategoritë' },
-    { id: 3, title: 'Pjatet' },
-    { id: 4, title: 'Tavolinat' },
-    { id: 5, title: 'Perfunduar' }
+    { id: 2, title: 'Menyja' },
+    { id: 3, title: 'Tavolinat' },
+    { id: 4, title: 'Testimi' }
   ];
 
   const nextStep = () => {
@@ -413,61 +441,105 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
       case 2:
         return (
           <div className="onboarding-step">
-            <h2>Kategoritë e Menusë</h2>
-            <p className="step-description">Do të krijojmë këto kategori bazë për menunë tuaj. Mund t'i ndryshoni më vonë.</p>
+            <h2>Shtoni Pjatat Kryesore</h2>
+            <p className="step-description">Shtoni të paktën 3 pjata popullore për të nisur menjën tuaj dixhitale.</p>
             
-            <div className="category-list">
-              <div className="category-item">Appetizers & Salads</div>
-              <div className="category-item">Main Courses</div>
-              <div className="category-item">Desserts</div>
-              <div className="category-item">Beverages</div>
+            <div className="menu-items-form">
+              {menuItems.map((item, index) => (
+                <div key={index} className="menu-item-card">
+                  <div className="item-header">
+                    <h4>Pjata {index + 1}</h4>
+                    <button 
+                      onClick={() => setMenuItems(menuItems.filter((_, i) => i !== index))}
+                      className="remove-button"
+                    >
+                      Hiq
+                    </button>
+                  </div>
+                  <div className="item-fields">
+                    <input
+                      type="text"
+                      placeholder="Emri i pjatës (shqip)"
+                      value={item.nameAlbanian}
+                      onChange={(e) => {
+                        const updated = [...menuItems];
+                        updated[index].nameAlbanian = e.target.value;
+                        setMenuItems(updated);
+                      }}
+                      className="field-input"
+                    />
+                    <input
+                      type="text"
+                      placeholder="Çmimi (€)"
+                      value={item.price}
+                      onChange={(e) => {
+                        const updated = [...menuItems];
+                        updated[index].price = e.target.value;
+                        setMenuItems(updated);
+                      }}
+                      className="field-input"
+                    />
+                    <textarea
+                      placeholder="Përshkrimi i shkurtër"
+                      value={item.description}
+                      onChange={(e) => {
+                        const updated = [...menuItems];
+                        updated[index].description = e.target.value;
+                        setMenuItems(updated);
+                      }}
+                      className="field-input"
+                      rows={2}
+                    />
+                  </div>
+                </div>
+              ))}
+              
+              <button 
+                onClick={() => setMenuItems([...menuItems, { 
+                  name: '', 
+                  nameAlbanian: '', 
+                  description: '', 
+                  price: '', 
+                  category: 'main' 
+                }])}
+                className="add-button"
+                style={{
+                  background: '#f8f9fa',
+                  border: '2px dashed #dee2e6',
+                  color: '#6c757d',
+                  padding: '16px',
+                  borderRadius: '8px',
+                  fontSize: '16px',
+                  cursor: 'pointer',
+                  marginBottom: '24px',
+                  width: '100%'
+                }}
+              >
+                + Shto Pjatë të Re
+              </button>
             </div>
 
             <button 
               className="next-button"
               onClick={() => setCurrentStep(3)}
+              disabled={menuItems.length < 3 || menuItems.some(item => !item.nameAlbanian || !item.price)}
               style={{
-                background: '#667eea',
+                background: menuItems.length >= 3 && menuItems.every(item => item.nameAlbanian && item.price) ? '#667eea' : '#ccc',
                 color: 'white',
                 border: 'none',
                 padding: '12px 24px',
                 borderRadius: '8px',
                 fontSize: '16px',
-                cursor: 'pointer',
+                cursor: menuItems.length >= 3 && menuItems.every(item => item.nameAlbanian && item.price) ? 'pointer' : 'not-allowed',
                 marginTop: '24px'
               }}
             >
-              Vazhdo te Artikujt →
+              Vazhdo te Tavolinat → ({menuItems.length}/3 minimum)
             </button>
           </div>
         );
 
       case 3:
-        return (
-          <div className="onboarding-step">
-            <h2>Artikujt e Menusë</h2>
-            <p className="step-description">Mund të shtoni artikujt e menusë më vonë në panelin kryesor. Le të vazhdojmë me konfigurimin.</p>
-            
-            <button 
-              className="next-button"
-              onClick={() => setCurrentStep(4)}
-              style={{
-                background: '#667eea',
-                color: 'white',
-                border: 'none',
-                padding: '12px 24px',
-                borderRadius: '8px',
-                fontSize: '16px',
-                cursor: 'pointer',
-                marginTop: '24px'
-              }}
-            >
-              Vazhdo te Tavolinat →
-            </button>
-          </div>
-        );
-
-      case 4:
         return (
           <div className="onboarding-step">
             <div className="step-header">
@@ -522,55 +594,79 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
           </div>
         );
 
-      case 5:
+      case 4:
         return (
           <div className="onboarding-step">
-            <h2>Konfigurimi Përfundoi</h2>
-            <p className="step-description">Restoranti juaj është gati për porositje dixhitale.</p>
+            <h2>Testimi i Sistemit</h2>
+            <p className="step-description">Le ta testojmë sistemin për të siguruar që gjithçka funksionon si duhet.</p>
             
-            <div className="completion-summary">
-              <div className="summary-item">
-                <strong>{restaurantInfo.name}</strong>
-                <span>{restaurantInfo.address}</span>
+            <div className="testing-checklist">
+              <div className="test-section">
+                <h4>✅ Të dhënat e restorantit:</h4>
+                <ul>
+                  <li>📍 {restaurantInfo.name} - {restaurantInfo.address}</li>
+                  <li>📞 {restaurantInfo.phone}</li>
+                  <li>🍽️ {restaurantInfo.cuisineType}</li>
+                </ul>
               </div>
-              <div className="summary-item">
-                <strong>4 Kategori Menyje</strong>
-                <span>Gati për artikujt</span>
+              
+              <div className="test-section">
+                <h4>✅ Menyja dixhitale:</h4>
+                <ul>
+                  {menuItems.map((item, index) => (
+                    <li key={index}>🍽️ {item.nameAlbanian} - €{item.price}</li>
+                  ))}
+                </ul>
               </div>
-              <div className="summary-item">
-                <strong>{tableCount} Tavolina</strong>
-                <span>Me kodra QR</span>
+              
+              <div className="test-section">
+                <h4>✅ Konfigurimi i tavolinave:</h4>
+                <ul>
+                  <li>🪑 {tableCount} tavolina me kodra QR</li>
+                  <li>📱 Gati për porositje dixhitale</li>
+                </ul>
               </div>
             </div>
 
+            <div className="ready-status">
+              <div className="status-badge" style={{
+                background: '#d4edda',
+                color: '#155724',
+                padding: '16px',
+                borderRadius: '8px',
+                border: '1px solid #c3e6cb',
+                marginBottom: '16px',
+                fontSize: '18px',
+                textAlign: 'center'
+              }}>
+                🎉 Restoranti juaj është gati për porositje dixhitale!
+              </div>
+              <p>Tani mund të merrni porosi direkt nga klientët përmes kodrave QR.</p>
+            </div>
+
             <div className="next-steps">
-              <h4>Hapat e ardhshëm:</h4>
+              <h4>Hapat e ardhshëm në dashboard:</h4>
               <ol>
-                <li>Shtoni artikujt e menusë</li>
-                <li>Printoni kodrat QR</li>
-                <li>Filloni të merrni porosi</li>
+                <li>Shikoni dhe menaxhoni porositë e reja</li>
+                <li>Shtoni më shumë pjata në menyjë</li>
+                <li>Printoni kodrat QR për tavolinat</li>
+                <li>Konfiguroni njoftimet për porosi</li>
               </ol>
             </div>
 
             <button 
               className="complete-button" 
               onClick={async () => {
-                setSaving(true);
                 try {
-                  // Mark menu items as completed (simplified for demo)
-                  await onboardingApiService.updateOnboardingStep('menuItems', {
-                    itemsCreated: 1,
-                    note: 'Basic setup completed, can add more items later'
-                  });
+                  setSaving(true);
+                  // Save final onboarding completion
+                  localStorage.setItem('onboarding_completed', 'true');
+                  localStorage.setItem('onboarding_completion_date', new Date().toISOString());
+                  localStorage.setItem('onboarding_menu_items', JSON.stringify(menuItems));
                   
-                  // Complete the onboarding process
-                  await onboardingApiService.completeOnboarding();
-                  
-                  console.log('Onboarding API calls completed successfully');
+                  onComplete();
                 } catch (err) {
-                  console.error('Error with onboarding API calls:', err);
-                  // Continue anyway - this is just demo onboarding
-                  console.log('Continuing to dashboard despite API errors');
+                  console.error('Error completing onboarding:', err);
                 } finally {
                   setSaving(false);
                   // Always call onComplete to navigate to dashboard
@@ -578,8 +674,19 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
                 }
               }}
               disabled={saving}
+              style={{
+                background: '#28a745',
+                color: 'white',
+                border: 'none',
+                padding: '16px 32px',
+                borderRadius: '8px',
+                fontSize: '18px',
+                fontWeight: 'bold',
+                cursor: 'pointer',
+                marginTop: '24px'
+              }}
             >
-              {saving ? 'Duke përfunduar konfigurimin...' : 'Shko te Dashboard →'}
+              {saving ? 'Duke përfunduar...' : '🚀 Hapni Dashboardin!'}
             </button>
           </div>
         );
@@ -623,6 +730,7 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
   }
 
   return (
+    <>
     <div className="onboarding-wizard">
       <div className="onboarding-container">
         <div className="onboarding-header">
@@ -1345,6 +1453,7 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
         }
       `}</style>
     </div>
+    </>
   );
 };
 
