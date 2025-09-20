@@ -19,7 +19,7 @@ function VenueRoutes() {
   return (
     <Routes>
       <Route path="/track/:orderNumber" element={<PublicOrderTracking />} />
-      <Route path="/:venueSlug/:tableNumber" element={<QRLanding />} />
+      <Route path="/:venueSlug/:tableNumber" element={<QRLandingWithContext />} />
       <Route path="/:venueSlug/:tableNumber/menu" element={<MenuWithContext />} />
       <Route path="/:venueSlug/:tableNumber/cart" element={<CartWithContext />} />
       <Route path="/:venueSlug/:tableNumber/confirmation" element={<ConfirmationWithContext />} />
@@ -28,6 +28,22 @@ function VenueRoutes() {
       <Route path="/help" element={<HelpPage />} />
       <Route path="/offline" element={<OfflinePage />} />
     </Routes>
+  );
+}
+
+function QRLandingWithContext() {
+  const pathParts = window.location.pathname.split('/').filter(Boolean);
+  const venueSlug = pathParts[0];
+  const tableNumber = pathParts[1];
+
+  if (!venueSlug || !tableNumber) {
+    return <Navigate to="/help" replace />;
+  }
+
+  return (
+    <VenueProvider venueSlug={venueSlug} tableNumber={tableNumber}>
+      <QRLanding />
+    </VenueProvider>
   );
 }
 
