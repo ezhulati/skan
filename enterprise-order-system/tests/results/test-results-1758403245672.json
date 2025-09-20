@@ -1,0 +1,53 @@
+{
+  "startTime": "2025-09-20T21:20:41.934Z",
+  "endTime": "2025-09-20T21:20:45.672Z",
+  "duration": 3738,
+  "totalTests": 0,
+  "passedTests": 0,
+  "failedTests": 0,
+  "skippedTests": 0,
+  "categories": {
+    "api": {
+      "passed": 0,
+      "failed": 0,
+      "skipped": 0
+    },
+    "frontend": {
+      "passed": 0,
+      "failed": 0,
+      "skipped": 0
+    },
+    "performance": {
+      "passed": 0,
+      "failed": 0,
+      "skipped": 0
+    },
+    "integration": {
+      "passed": 0,
+      "failed": 0,
+      "skipped": 0
+    },
+    "security": {
+      "passed": 0,
+      "failed": 0,
+      "skipped": 0
+    }
+  },
+  "errors": [
+    {
+      "type": "test_execution_error",
+      "message": "Command failed: npx playwright test /Users/mbp-ez/Desktop/AI Library/Apps/skan.al/enterprise-order-system/tests/enterprise-order-system.test.js --reporter=json",
+      "output": "{\n  \"config\": {\n    \"rootDir\": \"/Users/mbp-ez/Desktop/AI Library/Apps/skan.al/enterprise-order-system/tests\",\n    \"forbidOnly\": false,\n    \"fullyParallel\": false,\n    \"globalSetup\": null,\n    \"globalTeardown\": null,\n    \"globalTimeout\": 0,\n    \"grep\": {},\n    \"grepInvert\": null,\n    \"maxFailures\": 0,\n    \"metadata\": {},\n    \"preserveOutput\": \"always\",\n    \"reporter\": [\n      [\n        \"json\"\n      ]\n    ],\n    \"reportSlowTests\": {\n      \"max\": 5,\n      \"threshold\": 300000\n    },\n    \"quiet\": false,\n    \"projects\": [\n      {\n        \"outputDir\": \"/Users/mbp-ez/test-results\",\n        \"repeatEach\": 1,\n        \"retries\": 0,\n        \"metadata\": {},\n        \"id\": \"\",\n        \"name\": \"\",\n        \"testDir\": \"/Users/mbp-ez/Desktop/AI Library/Apps/skan.al/enterprise-order-system/tests\",\n        \"testIgnore\": [],\n        \"testMatch\": [\n          \"**/*.@(spec|test).?(c|m)[jt]s?(x)\"\n        ],\n        \"timeout\": 30000\n      }\n    ],\n    \"shard\": null,\n    \"updateSnapshots\": \"missing\",\n    \"updateSourceMethod\": \"patch\",\n    \"version\": \"1.55.0\",\n    \"workers\": 8,\n    \"webServer\": null\n  },\n  \"suites\": [],\n  \"errors\": [\n    {\n      \"message\": \"Error: Cannot find module '@playwright/test'\\nRequire stack:\\n- /Users/mbp-ez/Desktop/AI Library/Apps/skan.al/enterprise-order-system/tests/enterprise-order-system.test.cjs\\n- /Users/mbp-ez/.npm/_npx/e41f203b7505f1fb/node_modules/playwright/lib/transform/transform.js\\n- /Users/mbp-ez/.npm/_npx/e41f203b7505f1fb/node_modules/playwright/lib/common/configLoader.js\\n- /Users/mbp-ez/.npm/_npx/e41f203b7505f1fb/node_modules/playwright/lib/program.js\\n- /Users/mbp-ez/.npm/_npx/e41f203b7505f1fb/node_modules/playwright/cli.js\",\n      \"stack\": \"Error: Cannot find module '@playwright/test'\\nRequire stack:\\n- /Users/mbp-ez/Desktop/AI Library/Apps/skan.al/enterprise-order-system/tests/enterprise-order-system.test.cjs\\n- /Users/mbp-ez/.npm/_npx/e41f203b7505f1fb/node_modules/playwright/lib/transform/transform.js\\n- /Users/mbp-ez/.npm/_npx/e41f203b7505f1fb/node_modules/playwright/lib/common/configLoader.js\\n- /Users/mbp-ez/.npm/_npx/e41f203b7505f1fb/node_modules/playwright/lib/program.js\\n- /Users/mbp-ez/.npm/_npx/e41f203b7505f1fb/node_modules/playwright/cli.js\\n    at Object.<anonymous> (/Users/mbp-ez/Desktop/AI Library/Apps/skan.al/enterprise-order-system/tests/enterprise-order-system.test.cjs:4:26)\",\n      \"location\": {\n        \"file\": \"/Users/mbp-ez/Desktop/AI Library/Apps/skan.al/enterprise-order-system/tests/enterprise-order-system.test.cjs\",\n        \"column\": 26,\n        \"line\": 4\n      },\n      \"snippet\": \"\\u001b[90m   at \\u001b[39menterprise-order-system.test.cjs:4\\n\\n  2 | // Tests all components: API, frontend components, real-time updates, and archival services\\n  3 |\\n> 4 | const { test, expect } = require('@playwright/test');\\n    |                          ^\\n  5 |\\n  6 | // Test Configuration\\n  7 | const config = {\"\n    },\n    {\n      \"message\": \"Error: No tests found.\\nMake sure that arguments are regular expressions matching test files.\\nYou may need to escape symbols like \\\"$\\\" or \\\"*\\\" and quote the arguments.\",\n      \"stack\": \"Error: No tests found.\\nMake sure that arguments are regular expressions matching test files.\\nYou may need to escape symbols like \\\"$\\\" or \\\"*\\\" and quote the arguments.\"\n    }\n  ],\n  \"stats\": {\n    \"startTime\": \"2025-09-20T21:20:45.595Z\",\n    \"duration\": 59.391999999999996,\n    \"expected\": 0,\n    \"skipped\": 0,\n    \"unexpected\": 0,\n    \"flaky\": 0\n  }\n}\n"
+    }
+  ],
+  "warnings": [
+    {
+      "type": "dependency_warning",
+      "message": "Could not install packages: @playwright/test",
+      "suggestion": "Please install manually if tests fail"
+    }
+  ],
+  "recommendations": [
+    "System not ready for production - major fixes required"
+  ]
+}

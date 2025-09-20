@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useParams, useNavigate } from 'react-router-dom';
 import { LanguageProvider, useLanguage } from './contexts/LanguageContext';
 import { VenueProvider, useVenue } from './contexts/VenueContext';
@@ -158,12 +158,12 @@ function PublicOrderTracking() {
     }
   }, [orderNumber]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     fetchOrderStatus();
   }, [orderNumber, fetchOrderStatus]);
 
   // Auto-refresh order status every 30 seconds
-  React.useEffect(() => {
+  useEffect(() => {
     const interval = setInterval(() => {
       if (order && order.status !== 'served') {
         fetchOrderStatus();
