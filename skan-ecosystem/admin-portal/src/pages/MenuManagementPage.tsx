@@ -127,8 +127,10 @@ const MenuManagementPage: React.FC = () => {
       setError(null);
       
       // Use venue slug from authenticated user, fallback to demo venue
-      // Force use beach-bar-durres since demo-restaurant doesn't exist in API
-      const venueSlug = (auth.venue?.slug && auth.venue.slug !== 'demo-restaurant') 
+      // Force use beach-bar-durres since demo venues don't exist in API
+      const venueSlug = (auth.venue?.slug && 
+                        auth.venue.slug !== 'demo-restaurant' && 
+                        auth.venue.slug !== 'demo-venue-1') 
         ? auth.venue.slug 
         : 'beach-bar-durres';
       

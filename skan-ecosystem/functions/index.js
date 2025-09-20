@@ -50,12 +50,12 @@ const PAYPAL_CONFIG = {
 async function getPayPalAccessToken() {
   try {
     const response = await axios.post(`${PAYPAL_CONFIG.apiUrl}/v1/oauth2/token`, 
-      'grant_type=client_credentials',
+      "grant_type=client_credentials",
       {
         headers: {
-          'Accept': 'application/json',
-          'Accept-Language': 'en_US',
-          'Content-Type': 'application/x-www-form-urlencoded'
+          "Accept": "application/json",
+          "Accept-Language": "en_US",
+          "Content-Type": "application/x-www-form-urlencoded"
         },
         auth: {
           username: PAYPAL_CONFIG.clientId,
@@ -65,8 +65,8 @@ async function getPayPalAccessToken() {
     );
     return response.data.access_token;
   } catch (error) {
-    console.error('PayPal access token error:', error.response?.data || error.message);
-    throw new Error('Failed to get PayPal access token');
+    console.error("PayPal access token error:", error.response?.data || error.message);
+    throw new Error("Failed to get PayPal access token");
   }
 }
 
@@ -285,29 +285,29 @@ const sanitizeObject = (obj) => {
 };
 
 // Enhanced Rate Limiting
-const createRateLimiter = (windowMs, max, message) => {
-  return rateLimit({
-    windowMs,
-    max,
-    message: { error: message },
-    standardHeaders: true,
-    legacyHeaders: false,
-    handler: async (req, res) => {
-      await auditLog("RATE_LIMIT_EXCEEDED", req.user?.uid || null, {
-        ip: req.ip,
-        endpoint: req.path,
-        userAgent: req.headers["user-agent"]
-      }, req.ip);
-      res.status(429).json({ error: message });
-    }
-  });
-};
+// const createRateLimiter = (windowMs, max, message) => {
+//   return rateLimit({
+//     windowMs,
+//     max,
+//     message: { error: message },
+//     standardHeaders: true,
+//     legacyHeaders: false,
+//     handler: async (req, res) => {
+//       await auditLog("RATE_LIMIT_EXCEEDED", req.user?.uid || null, {
+//         ip: req.ip,
+//         endpoint: req.path,
+//         userAgent: req.headers["user-agent"]
+//       }, req.ip);
+//       res.status(429).json({ error: message });
+//     }
+//   });
+// };
 
 // Different rate limits for different endpoint types
-const generalLimiter = createRateLimiter(15 * 60 * 1000, 100, "Rate limit exceeded. Please try again later.");
+// const generalLimiter = createRateLimiter(15 * 60 * 1000, 100, "Rate limit exceeded. Please try again later.");
 
 // Apply global rate limiting
-app.use(generalLimiter);
+// app.use(generalLimiter); // DISABLED FOR DEVELOPMENT
 
 // ============================================================================
 // MIDDLEWARE FUNCTIONS
@@ -4742,10 +4742,10 @@ app.post("/v1/payments/plans", verifyAuth, async (req, res) => {
 
     const response = await axios.post(`${PAYPAL_CONFIG.apiUrl}/v1/billing/plans`, planData, {
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${accessToken}`,
-        'Accept': 'application/json',
-        'PayPal-Request-Id': uuidv4()
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${accessToken}`,
+        "Accept": "application/json",
+        "PayPal-Request-Id": uuidv4()
       }
     });
 
@@ -4774,8 +4774,8 @@ app.post("/v1/payments/subscriptions", verifyAuth, async (req, res) => {
       start_time: new Date(Date.now() + 60000).toISOString(), // Start in 1 minute
       subscriber: {
         name: {
-          given_name: user.fullName.split(' ')[0] || "Restaurant",
-          surname: user.fullName.split(' ')[1] || "Owner"
+          given_name: user.fullName.split(" ")[0] || "Restaurant",
+          surname: user.fullName.split(" ")[1] || "Owner"
         },
         email_address: user.email
       },
@@ -4795,15 +4795,15 @@ app.post("/v1/payments/subscriptions", verifyAuth, async (req, res) => {
 
     const response = await axios.post(`${PAYPAL_CONFIG.apiUrl}/v1/billing/subscriptions`, subscriptionData, {
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${accessToken}`,
-        'Accept': 'application/json',
-        'PayPal-Request-Id': uuidv4()
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${accessToken}`,
+        "Accept": "application/json",
+        "PayPal-Request-Id": uuidv4()
       }
     });
 
     // Store subscription info in Firestore
-    await db.collection('subscriptions').doc(response.data.id).set({
+    await db.collection("subscriptions").doc(response.data.id).set({
       subscriptionId: response.data.id,
       venueId: user.venueId,
       userId: user.id,
@@ -4834,7 +4834,7 @@ app.get("/v1/payments/subscriptions/:subscriptionId", verifyAuth, async (req, re
     const accessToken = await getPayPalAccessToken();
 
     // Check if user has access to this subscription
-    const subscriptionDoc = await db.collection('subscriptions').doc(subscriptionId).get();
+    const subscriptionDoc = await db.collection("subscriptions").doc(subscriptionId).get();
     if (!subscriptionDoc.exists) {
       return res.status(404).json({ error: "Subscription not found" });
     }
@@ -4846,14 +4846,14 @@ app.get("/v1/payments/subscriptions/:subscriptionId", verifyAuth, async (req, re
 
     const response = await axios.get(`${PAYPAL_CONFIG.apiUrl}/v1/billing/subscriptions/${subscriptionId}`, {
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${accessToken}`,
-        'Accept': 'application/json'
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${accessToken}`,
+        "Accept": "application/json"
       }
     });
 
     // Update local status
-    await db.collection('subscriptions').doc(subscriptionId).update({
+    await db.collection("subscriptions").doc(subscriptionId).update({
       status: response.data.status,
       lastChecked: admin.firestore.FieldValue.serverTimestamp()
     });
@@ -4880,7 +4880,7 @@ app.post("/v1/payments/subscriptions/:subscriptionId/cancel", verifyAuth, async 
     const accessToken = await getPayPalAccessToken();
 
     // Check if user has access to this subscription
-    const subscriptionDoc = await db.collection('subscriptions').doc(subscriptionId).get();
+    const subscriptionDoc = await db.collection("subscriptions").doc(subscriptionId).get();
     if (!subscriptionDoc.exists) {
       return res.status(404).json({ error: "Subscription not found" });
     }
@@ -4896,14 +4896,14 @@ app.post("/v1/payments/subscriptions/:subscriptionId/cancel", verifyAuth, async 
 
     await axios.post(`${PAYPAL_CONFIG.apiUrl}/v1/billing/subscriptions/${subscriptionId}/cancel`, cancelData, {
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${accessToken}`,
-        'Accept': 'application/json'
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${accessToken}`,
+        "Accept": "application/json"
       }
     });
 
     // Update local status
-    await db.collection('subscriptions').doc(subscriptionId).update({
+    await db.collection("subscriptions").doc(subscriptionId).update({
       status: "CANCELLED",
       cancelledAt: admin.firestore.FieldValue.serverTimestamp(),
       cancelReason: reason
@@ -4920,7 +4920,7 @@ app.post("/v1/payments/subscriptions/:subscriptionId/cancel", verifyAuth, async 
 });
 
 // PayPal webhook endpoint for subscription events
-app.post("/v1/payments/webhooks", express.raw({ type: 'application/json' }), async (req, res) => {
+app.post("/v1/payments/webhooks", express.raw({ type: "application/json" }), async (req, res) => {
   try {
     const webhookEvent = JSON.parse(req.body.toString());
     console.log("PayPal webhook received:", webhookEvent.event_type);
@@ -4953,7 +4953,7 @@ app.post("/v1/payments/webhooks", express.raw({ type: 'application/json' }), asy
 // Webhook event handlers
 async function handleSubscriptionActivated(event) {
   const subscription = event.resource;
-  await db.collection('subscriptions').doc(subscription.id).update({
+  await db.collection("subscriptions").doc(subscription.id).update({
     status: "ACTIVE",
     activatedAt: admin.firestore.FieldValue.serverTimestamp()
   });
@@ -4961,7 +4961,7 @@ async function handleSubscriptionActivated(event) {
 
 async function handleSubscriptionCancelled(event) {
   const subscription = event.resource;
-  await db.collection('subscriptions').doc(subscription.id).update({
+  await db.collection("subscriptions").doc(subscription.id).update({
     status: "CANCELLED",
     cancelledAt: admin.firestore.FieldValue.serverTimestamp()
   });
@@ -4971,7 +4971,7 @@ async function handlePaymentCompleted(event) {
   const payment = event.resource;
   const subscriptionId = payment.billing_agreement_id;
   
-  await db.collection('payments').add({
+  await db.collection("payments").add({
     subscriptionId: subscriptionId,
     paymentId: payment.id,
     amount: payment.amount.total,
@@ -4983,7 +4983,7 @@ async function handlePaymentCompleted(event) {
 
 async function handlePaymentFailed(event) {
   const subscription = event.resource;
-  await db.collection('subscriptions').doc(subscription.id).update({
+  await db.collection("subscriptions").doc(subscription.id).update({
     status: "PAYMENT_FAILED",
     lastFailedAt: admin.firestore.FieldValue.serverTimestamp()
   });
@@ -4996,15 +4996,15 @@ app.get("/v1/venue/:venueId/subscription", verifyAuth, async (req, res) => {
     const user = req.user;
 
     // Check access
-    if (user.venueId !== venueId && user.role !== 'admin') {
+    if (user.venueId !== venueId && user.role !== "admin") {
       return res.status(403).json({ error: "Access denied" });
     }
 
     // Get active subscription for venue
-    const subscriptionQuery = await db.collection('subscriptions')
-      .where('venueId', '==', venueId)
-      .where('status', '==', 'ACTIVE')
-      .orderBy('createdAt', 'desc')
+    const subscriptionQuery = await db.collection("subscriptions")
+      .where("venueId", "==", venueId)
+      .where("status", "==", "ACTIVE")
+      .orderBy("createdAt", "desc")
       .limit(1)
       .get();
 
@@ -5019,9 +5019,9 @@ app.get("/v1/venue/:venueId/subscription", verifyAuth, async (req, res) => {
     const subscriptionData = subscriptionDoc.data();
 
     // Get recent payments
-    const paymentsQuery = await db.collection('payments')
-      .where('subscriptionId', '==', subscriptionDoc.id)
-      .orderBy('paymentDate', 'desc')
+    const paymentsQuery = await db.collection("payments")
+      .where("subscriptionId", "==", subscriptionDoc.id)
+      .orderBy("paymentDate", "desc")
       .limit(5)
       .get();
 

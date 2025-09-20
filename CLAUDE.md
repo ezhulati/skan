@@ -48,6 +48,12 @@ skan.al/
 ### Development Tools
 - **Testing**: Playwright for E2E testing
 - **Code Quality**: ESLint + Prettier + TypeScript
+
+### Development Notes
+- **Rate Limiting**: Currently DISABLED in `/functions/index.js` lines 288-310 for development. 
+  - To re-enable: Uncomment `createRateLimiter` function and `app.use(generalLimiter)` 
+  - Deploy with `npm run deploy` in `/functions` directory
+  - Rate limit: 100 requests per 15 minutes
 - **Deployment**: Netlify (frontend) + Firebase (backend)
 
 ## Database Schema (Firestore)
