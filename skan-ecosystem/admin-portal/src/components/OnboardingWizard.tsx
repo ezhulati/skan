@@ -1377,6 +1377,7 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
           line-height: 1.4;
         }
         `}</style>
+      </div>
     </div>
   );
 };
