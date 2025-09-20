@@ -3,6 +3,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { api } from '../services/api';
 import { OrderTracking as OrderTrackingType } from '../types';
 import { useLanguage } from '../contexts/LanguageContext';
+import { useVenue } from '../contexts/VenueContext';
+import { formatPrice } from '../utils/currency';
 // import { CompactLanguagePicker } from '../components/LanguagePicker';
 
 export function OrderTracking() {
@@ -13,6 +15,7 @@ export function OrderTracking() {
   }>();
   const navigate = useNavigate();
   const { t, language } = useLanguage();
+  const { venue } = useVenue();
   
   const [order, setOrder] = useState<OrderTrackingType | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -318,10 +321,10 @@ export function OrderTracking() {
                 </div>
                 <div className="ml-4 text-right">
                   <div className="font-medium text-gray-900">
-                    {item.quantity}x {Math.round(item.price * 97)} Lek
+                    {item.quantity}x {formatPrice(item.price, venue?.settings?.currency)}
                   </div>
                   <div className="text-sm text-gray-600">
-                    {Math.round(item.quantity * item.price * 97)} Lek
+                    {formatPrice(item.quantity * item.price, venue?.settings?.currency)}
                   </div>
                 </div>
               </div>
@@ -331,7 +334,7 @@ export function OrderTracking() {
               <div className="flex justify-between items-center">
                 <span className="text-lg font-semibold text-gray-900">Total</span>
                 <span className="text-xl font-bold text-primary-600">
-                  {Math.round(order.totalAmount * 97)} Lek
+                  {formatPrice(order.totalAmount, venue?.settings?.currency)}
                 </span>
               </div>
             </div>

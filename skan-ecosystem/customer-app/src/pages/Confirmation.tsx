@@ -3,6 +3,7 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useVenue } from '../contexts/VenueContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import { CompactLanguagePicker } from '../components/LanguagePicker';
+import { formatPrice } from '../utils/currency';
 
 interface ConfirmationState {
   orderNumber: string;
@@ -131,7 +132,7 @@ export function Confirmation() {
             <div className="flex justify-between items-center py-2 border-b border-gray-100">
               <span className="text-gray-600">{t('total_amount')}</span>
               <span className="text-xl font-bold text-gray-900">
-                {Math.round(confirmationData.totalAmount * 97)} Lek
+                {formatPrice(confirmationData.totalAmount, venue?.settings?.currency)}
               </span>
             </div>
 

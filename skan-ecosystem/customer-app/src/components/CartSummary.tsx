@@ -2,10 +2,13 @@ import React from 'react';
 import { useCart } from '../contexts/CartContext';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
+import { useVenue } from '../contexts/VenueContext';
+import { formatPrice } from '../utils/currency';
 
 export function CartSummary() {
   const { totalAmount, itemCount } = useCart();
   const { t } = useLanguage();
+  const { venue } = useVenue();
   const navigate = useNavigate();
   const { venueSlug, tableNumber } = useParams<{ venueSlug: string; tableNumber: string }>();
 
@@ -37,7 +40,7 @@ export function CartSummary() {
           </div>
           
           <div className="text-lg font-bold">
-            {Math.round(totalAmount * 97)} Lek
+            {formatPrice(totalAmount, venue?.settings?.currency)}
           </div>
         </button>
       </div>

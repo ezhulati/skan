@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { MenuItem as MenuItemType } from '../types';
 import { useCart } from '../contexts/CartContext';
 import { useLanguage } from '../contexts/LanguageContext';
+import { useVenue } from '../contexts/VenueContext';
+import { formatPrice } from '../utils/currency';
 
 interface MenuItemProps {
   item: MenuItemType;
@@ -10,6 +12,7 @@ interface MenuItemProps {
 export function MenuItem({ item }: MenuItemProps) {
   const { addItem } = useCart();
   const { t, language } = useLanguage();
+  const { venue } = useVenue();
   const [isAdding, setIsAdding] = useState(false);
   const [imageError, setImageError] = useState(false);
 
@@ -82,7 +85,7 @@ export function MenuItem({ item }: MenuItemProps) {
 
         <div className="flex items-center justify-between pt-4 border-t border-gray-100">
           <div className="text-xl font-bold text-gray-900">
-            {item.price} Lek
+            {formatPrice(item.price, venue?.settings?.currency)}
           </div>
           
           <button

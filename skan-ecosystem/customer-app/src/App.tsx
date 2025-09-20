@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useParams, useNavigate } from 'react-router-dom';
 import { LanguageProvider, useLanguage } from './contexts/LanguageContext';
-import { VenueProvider } from './contexts/VenueContext';
+import { VenueProvider, useVenue } from './contexts/VenueContext';
 import { CartProvider } from './contexts/CartContext';
 import { QRLanding } from './pages/QRLanding';
 import { Menu } from './pages/Menu';
@@ -12,6 +12,7 @@ import { CompactLanguagePicker } from './components/LanguagePicker';
 import ScrollToTop from './components/ScrollToTop';
 import { api } from './services/api';
 import { OrderTracking as OrderTrackingType } from './types';
+import { formatPrice } from './utils/currency';
 import './index.css';
 
 function VenueRoutes() {
@@ -98,6 +99,7 @@ function OrderTrackingWithContext() {
 function PublicOrderTracking() {
   const { orderNumber } = useParams<{ orderNumber: string }>();
   const { t, language } = useLanguage();
+  const { venue } = useVenue();
   const navigate = useNavigate();
   
   const [order, setOrder] = useState<OrderTrackingType | null>(null);
@@ -136,7 +138,7 @@ function PublicOrderTracking() {
     }
   });
 
-  const fetchOrderStatus = async () => {
+  const fetchOrderStatus = useCallback(async () => {
     if (!orderNumber) {
       setError('Order number not provided');
       setIsLoading(false);
@@ -154,11 +156,11 @@ function PublicOrderTracking() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [orderNumber]);
 
   React.useEffect(() => {
     fetchOrderStatus();
-  }, [orderNumber]);
+  }, [orderNumber, fetchOrderStatus]);
 
   // Auto-refresh order status every 30 seconds
   React.useEffect(() => {
@@ -169,7 +171,7 @@ function PublicOrderTracking() {
     }, 30000);
 
     return () => clearInterval(interval);
-  }, [order]);
+  }, [order, fetchOrderStatus]);
 
   const handleBackToHome = () => {
     navigate('/help');
@@ -344,10 +346,10 @@ function PublicOrderTracking() {
                 </div>
                 <div className="ml-4 text-right">
                   <div className="font-medium text-gray-900">
-                    {item.quantity}x {Math.round(item.price * 97)} Lek
+                    {item.quantity}x {formatPrice(item.price, venue?.settings?.currency)}
                   </div>
                   <div className="text-sm text-gray-600">
-                    {Math.round(item.quantity * item.price * 97)} Lek
+                    {formatPrice(item.quantity * item.price, venue?.settings?.currency)}
                   </div>
                 </div>
               </div>
@@ -357,7 +359,7 @@ function PublicOrderTracking() {
               <div className="flex justify-between items-center">
                 <span className="text-lg font-semibold text-gray-900">Total</span>
                 <span className="text-xl font-bold text-primary-600">
-                  {Math.round(order.totalAmount * 97)} Lek
+                  {formatPrice(order.totalAmount, venue?.settings?.currency)}
                 </span>
               </div>
             </div>

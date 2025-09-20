@@ -6,6 +6,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { api } from '../services/api';
 import { Order } from '../types';
 import { CompactLanguagePicker } from '../components/LanguagePicker';
+import { formatPrice } from '../utils/currency';
 
 export function Cart() {
   const { items, totalAmount, updateQuantity, removeItem, updateSpecialInstructions, clearCart } = useCart();
@@ -188,7 +189,7 @@ export function Cart() {
                     <p className="text-sm text-gray-600 italic">{item.nameAlbanian}</p>
                   )}
                   <p className="text-lg font-semibold text-primary-600 mt-1">
-                    {Math.round(item.price * 97)} Lek
+                    {formatPrice(item.price, venue?.settings?.currency)}
                   </p>
                 </div>
                 <button
@@ -242,7 +243,7 @@ export function Cart() {
                 <div className="flex justify-between items-center">
                   <span className="text-sm text-gray-600">{t('total')}</span>
                   <span className="font-semibold text-gray-900">
-                    {Math.round(item.price * item.quantity * 97)} Lek
+                    {formatPrice(item.price * item.quantity, venue?.settings?.currency)}
                   </span>
                 </div>
               </div>
@@ -316,18 +317,18 @@ export function Cart() {
           <div className="space-y-2 mb-4">
             <div className="flex justify-between text-sm">
               <span className="text-gray-600">{t('items')} ({items.reduce((sum, item) => sum + item.quantity, 0)})</span>
-              <span className="text-gray-900">{Math.round(totalAmount * 97)} Lek</span>
+              <span className="text-gray-900">{formatPrice(totalAmount, venue?.settings?.currency)}</span>
             </div>
             <div className="flex justify-between text-sm">
               <span className="text-gray-600">Service fee</span>
-              <span className="text-gray-900">0 Lek</span>
+              <span className="text-gray-900">{formatPrice(0, venue?.settings?.currency)}</span>
             </div>
           </div>
           
           <div className="border-t border-gray-200 pt-4">
             <div className="flex justify-between items-center">
               <span className="text-lg font-semibold text-gray-900">{t('total')}</span>
-              <span className="text-xl font-bold text-primary-600">{Math.round(totalAmount * 97)} Lek</span>
+              <span className="text-xl font-bold text-primary-600">{formatPrice(totalAmount, venue?.settings?.currency)}</span>
             </div>
           </div>
         </div>
@@ -350,7 +351,7 @@ export function Cart() {
                 {t('loading')}
               </>
             ) : (
-              `${t('submit_order')} • ${Math.round(totalAmount * 97)} Lek`
+              `${t('submit_order')} • ${formatPrice(totalAmount, venue?.settings?.currency)}`
             )}
           </button>
         </div>
