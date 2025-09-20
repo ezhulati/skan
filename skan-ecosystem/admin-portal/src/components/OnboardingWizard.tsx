@@ -686,11 +686,18 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
   }
 
   return (
-    <>
     <div className="onboarding-wizard">
-      <div className="onboarding-container">
-        <div className="onboarding-header">
-          <div className="progress-bar">
+        <div className="onboarding-container">
+          <div className="onboarding-header">
+            <div className="progress-bar">
+              {/* Background progress line */}
+              <div className="progress-line-background">
+                <div 
+                  className="progress-line-fill" 
+                  style={{ width: `${((currentStep - 1) / (steps.length - 1)) * 100}%` }}
+                ></div>
+              </div>
+              
               {/* Step circles */}
               {steps.map((step, index) => (
                 <div key={step.id} className={`progress-step ${
@@ -715,9 +722,8 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
         <div className="onboarding-content">
           {renderStepContent()}
         </div>
-      </div>
 
-      <style>{`
+        <style>{`
         .onboarding-wizard {
           position: fixed;
           top: 0;
@@ -1370,9 +1376,8 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
           margin-bottom: 8px;
           line-height: 1.4;
         }
-      `}</style>
+        `}</style>
     </div>
-    </>
   );
 };
 
