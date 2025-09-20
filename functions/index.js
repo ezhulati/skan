@@ -304,14 +304,14 @@ app.post('/auth/login', async (req, res) => {
         user: {
           id: 'demo-user-1',
           email: 'manager_email1@gmail.com',
-          fullName: 'Demo Manager',
+          fullName: 'Beach Bar Manager',
           role: 'manager',
-          venueId: 'demo-venue-1'
+          venueId: 'beach-bar-durres'
         },
         venue: {
-          id: 'demo-venue-1',
-          name: 'Demo Restaurant',
-          slug: 'demo-restaurant'
+          id: 'beach-bar-durres',
+          name: 'Beach Bar Durrës',
+          slug: 'beach-bar-durres'
         }
       });
     }

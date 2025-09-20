@@ -67,7 +67,7 @@ const CustomerMenuPreviewModal: React.FC<CustomerMenuPreviewModalProps> = ({
       const isDemoAccount = auth.user?.email === 'demo.beachbar@skan.al' || 
                            auth.user?.email === 'manager_email1@gmail.com';
       const isNonExistentVenue = auth.venue?.slug === 'demo-restaurant' || 
-                                auth.venue?.slug === 'demo-venue-1';
+                                auth.venue?.slug === 'beach-bar-durres';
       
       let venueSlug = (auth.venue?.slug && !isDemoAccount && !isNonExistentVenue) 
         ? auth.venue.slug 

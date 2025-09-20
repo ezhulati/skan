@@ -131,7 +131,7 @@ const MenuManagementPage: React.FC = () => {
       const isDemoAccount = auth.user?.email === 'demo.beachbar@skan.al' || 
                            auth.user?.email === 'manager_email1@gmail.com';
       const isNonExistentVenue = auth.venue?.slug === 'demo-restaurant' || 
-                                auth.venue?.slug === 'demo-venue-1';
+                                auth.venue?.slug === 'beach-bar-durres';
       
       const venueSlug = (auth.venue?.slug && !isDemoAccount && !isNonExistentVenue) 
         ? auth.venue.slug 
@@ -205,7 +205,7 @@ const MenuManagementPage: React.FC = () => {
 
   const updateCategory = async (categoryId: string, name: string, nameAlbanian: string) => {
     try {
-      const venueId = auth.venue?.id || 'demo-venue-1';
+      const venueId = auth.venue?.id || 'beach-bar-durres';
       const headers: HeadersInit = {
         'Content-Type': 'application/json'
       };

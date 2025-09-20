@@ -9,10 +9,10 @@ class TestData {
       qrUrl: 'https://order.skan.al/beach-bar-durres/a1'
     },
     demo: {
-      slug: 'demo-restaurant',
-      name: 'Demo Restaurant',
-      tableNumber: 'T01',
-      qrUrl: 'https://order.skan.al/demo-restaurant/T01'
+      slug: 'beach-bar-durres',
+      name: 'Beach Bar Durrës',
+      tableNumber: 'a1',
+      qrUrl: 'https://order.skan.al/beach-bar-durres/a1'
     }
   };
 
@@ -56,7 +56,7 @@ class TestData {
     };
   }
 
-  static generateOrderData(venueId = 'demo-venue-1', tableNumber = 'a1') {
+  static generateOrderData(venueId = 'beach-bar-durres', tableNumber = 'a1') {
     const customer = this.generateCustomerData();
     return {
       venueId,

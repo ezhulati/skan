@@ -329,7 +329,7 @@ const verifyAuth = async (req, res, next) => {
         uid: "demo-user-1",
         email: "manager_email1@gmail.com",
         role: "manager",
-        venueId: "demo-venue-1"
+        venueId: "beach-bar-durres"
       };
       return next();
     }
@@ -494,8 +494,8 @@ app.get("/v1/venue/:slug/menu", async (req, res) => {
     if (slug === "demo-restaurant") {
       return res.json({
         venue: {
-          id: "demo-venue-1",
-          name: "Demo Restaurant",
+          id: "beach-bar-durres",
+          name: "Beach Bar Durrës",
           slug: "demo-restaurant",
           address: "123 Demo Street, Demo City",
           phone: "+355691234567",
@@ -1382,12 +1382,12 @@ app.get("/v1/venue/:venueId/orders", async (req, res) => {
     const { status, limit = 50 } = req.query;
     
     // Return demo orders for demo venue
-    if (venueId === "demo-venue-1") {
+    if (venueId === "beach-bar-durres") {
       const now = new Date();
       const demoOrders = [
         {
           id: "demo-order-1",
-          venueId: "demo-venue-1",
+          venueId: "beach-bar-durres",
           tableNumber: "5",
           orderNumber: "ORD-001",
           customerName: "John Smith",
@@ -1403,7 +1403,7 @@ app.get("/v1/venue/:venueId/orders", async (req, res) => {
         },
         {
           id: "demo-order-2",
-          venueId: "demo-venue-1",
+          venueId: "beach-bar-durres",
           tableNumber: "3",
           orderNumber: "ORD-002",
           customerName: "Sarah Johnson",
@@ -1418,7 +1418,7 @@ app.get("/v1/venue/:venueId/orders", async (req, res) => {
         },
         {
           id: "demo-order-3",
-          venueId: "demo-venue-1",
+          venueId: "beach-bar-durres",
           tableNumber: "7",
           orderNumber: "ORD-003",
           customerName: "Mike Davis",
@@ -1989,13 +1989,13 @@ app.post("/v1/auth/login",
         user: {
           id: "demo-user-1",
           email: "manager_email1@gmail.com",
-          fullName: "Demo Manager",
+          fullName: "Beach Bar Manager",
           role: "manager",
-          venueId: "demo-venue-1"
+          venueId: "beach-bar-durres"
         },
         venue: {
-          id: "demo-venue-1",
-          name: "Demo Restaurant",
+          id: "beach-bar-durres",
+          name: "Beach Bar Durrës",
           slug: "demo-restaurant"
         },
         token: `demo_token_${Date.now()}`
@@ -2209,14 +2209,14 @@ app.get("/v1/users", verifyAuth, async (req, res) => {
     const { venueId, role, limit = 50 } = req.query;
     
     // Return demo users for demo venue
-    if (venueId === "demo-venue-1") {
+    if (venueId === "beach-bar-durres") {
       const demoUsers = [
         {
           id: "demo-user-1",
           email: "manager_email1@gmail.com",
-          fullName: "Demo Manager",
+          fullName: "Beach Bar Manager",
           role: "manager",
-          venueId: "demo-venue-1",
+          venueId: "beach-bar-durres",
           isActive: true,
           emailVerified: true,
           createdAt: new Date("2024-01-15T10:00:00Z").toISOString(),
@@ -2227,7 +2227,7 @@ app.get("/v1/users", verifyAuth, async (req, res) => {
           email: "staff1@demo.com",
           fullName: "Ana Kelmendi",
           role: "staff",
-          venueId: "demo-venue-1",
+          venueId: "beach-bar-durres",
           isActive: true,
           emailVerified: true,
           createdAt: new Date("2024-02-10T14:30:00Z").toISOString(),
@@ -2238,7 +2238,7 @@ app.get("/v1/users", verifyAuth, async (req, res) => {
           email: "staff2@demo.com", 
           fullName: "Marko Vuković",
           role: "staff",
-          venueId: "demo-venue-1",
+          venueId: "beach-bar-durres",
           isActive: true,
           emailVerified: false,
           createdAt: new Date("2024-03-05T09:15:00Z").toISOString(),
@@ -2249,7 +2249,7 @@ app.get("/v1/users", verifyAuth, async (req, res) => {
           email: "waiter@demo.com",
           fullName: "Elvira Hoxha", 
           role: "staff",
-          venueId: "demo-venue-1",
+          venueId: "beach-bar-durres",
           isActive: false,
           emailVerified: true,
           createdAt: new Date("2024-01-20T16:45:00Z").toISOString(),
@@ -2318,9 +2318,9 @@ app.get("/v1/users/:userId", verifyAuth, async (req, res) => {
       return res.json({
         id: "demo-user-1",
         email: "manager_email1@gmail.com",
-        fullName: "Demo Manager",
+        fullName: "Beach Bar Manager",
         role: "manager",
-        venueId: "demo-venue-1",
+        venueId: "beach-bar-durres",
         isActive: true,
         emailVerified: true,
         createdAt: new Date("2024-01-15T10:00:00Z").toISOString(),
@@ -2372,9 +2372,9 @@ app.put("/v1/users/:userId", verifyAuth, async (req, res) => {
         user: {
           id: "demo-user-1",
           email: "manager_email1@gmail.com", 
-          fullName: fullName || "Demo Manager",
+          fullName: fullName || "Beach Bar Manager",
           role: role || "manager",
-          venueId: "demo-venue-1",
+          venueId: "beach-bar-durres",
           isActive: isActive !== undefined ? isActive : true,
           emailVerified: true,
           updatedAt: new Date().toISOString()

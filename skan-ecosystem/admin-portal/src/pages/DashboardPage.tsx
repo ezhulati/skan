@@ -86,7 +86,7 @@ const DashboardPage: React.FC = () => {
         const mockOrders: Order[] = [
           {
             id: "mock-order-1",
-            venueId: auth.user?.venueId || "demo-venue-1",
+            venueId: auth.user?.venueId || "beach-bar-durres",
             tableNumber: "T01",
             orderNumber: "SKN-20250918-001",
             customerName: "Demo Customer",
@@ -101,7 +101,7 @@ const DashboardPage: React.FC = () => {
           },
           {
             id: "mock-order-2",
-            venueId: auth.user?.venueId || "demo-venue-1", 
+            venueId: auth.user?.venueId || "beach-bar-durres", 
             tableNumber: "T03",
             orderNumber: "SKN-20250918-002",
             customerName: "Test User",
@@ -115,7 +115,7 @@ const DashboardPage: React.FC = () => {
           },
           {
             id: "mock-order-3",
-            venueId: auth.user?.venueId || "demo-venue-1",
+            venueId: auth.user?.venueId || "beach-bar-durres",
             tableNumber: "T05", 
             orderNumber: "SKN-20250918-003",
             customerName: "Another Customer",
