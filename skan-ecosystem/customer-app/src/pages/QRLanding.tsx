@@ -12,22 +12,15 @@ export function QRLanding() {
   const [showContent, setShowContent] = useState(false);
 
   useEffect(() => {
-    // Show the table confirmation for 2 seconds, then redirect
+    // Show the table confirmation after brief delay
     const timer = setTimeout(() => {
       setShowContent(true);
     }, 500);
 
-    const redirectTimer = setTimeout(() => {
-      if (venueSlug && tableNumber) {
-        navigate(`/${venueSlug}/${tableNumber}/menu`, { replace: true });
-      }
-    }, 2500);
-
     return () => {
       clearTimeout(timer);
-      clearTimeout(redirectTimer);
     };
-  }, [venueSlug, tableNumber, navigate]);
+  }, []);
 
   const handleViewMenu = () => {
     if (venueSlug && tableNumber) {
@@ -93,9 +86,6 @@ export function QRLanding() {
               {t('view_menu')}
             </button>
             
-            <p className="text-xs text-gray-500">
-              {t('automatically_redirecting')}
-            </p>
           </div>
         </div>
 
