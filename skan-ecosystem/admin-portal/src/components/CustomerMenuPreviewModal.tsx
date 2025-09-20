@@ -95,7 +95,7 @@ const CustomerMenuPreviewModal: React.FC<CustomerMenuPreviewModalProps> = ({
     } finally {
       setLoading(false);
     }
-  }, [auth.venue?.slug, auth.venue?.name]);
+  }, [auth.venue?.slug, auth.venue?.name, auth.user?.email]);
 
   useEffect(() => {
     if (isOpen && auth.venue?.slug) {

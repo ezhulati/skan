@@ -152,7 +152,7 @@ const MenuManagementPage: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  }, [baseUrl, auth.venue]);
+  }, [baseUrl, auth.venue, auth.user?.email]);
 
   useEffect(() => {
     // Only load menu on first visit, not when auth changes if we have local changes
