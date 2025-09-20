@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 
 interface SubscriptionData {
@@ -32,15 +32,9 @@ const PaymentSettingsPage: React.FC = () => {
   const [successMessage, setSuccessMessage] = useState('');
   const [error, setError] = useState('');
 
-  useEffect(() => {
-    if (auth.user?.venueId) {
-      loadSubscriptionInfo();
-    }
-  }, [auth.user?.venueId]);
-
   const API_BASE_URL = (typeof process !== 'undefined' && process.env?.REACT_APP_API_URL) || 'https://api-mkazmlu7ta-ew.a.run.app/v1';
 
-  const loadSubscriptionInfo = async () => {
+  const loadSubscriptionInfo = useCallback(async () => {
     setIsLoading(true);
     try {
       const response = await fetch(`${API_BASE_URL}/venue/${auth.user?.venueId}/subscription`, {
@@ -62,7 +56,13 @@ const PaymentSettingsPage: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [API_BASE_URL, auth.user?.venueId, auth.token]);
+
+  useEffect(() => {
+    if (auth.user?.venueId) {
+      loadSubscriptionInfo();
+    }
+  }, [auth.user?.venueId, loadSubscriptionInfo]);
 
   const createSubscription = async () => {
     setIsCreatingSubscription(true);

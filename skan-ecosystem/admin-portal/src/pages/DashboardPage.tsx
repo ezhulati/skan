@@ -110,7 +110,7 @@ const DashboardPage: React.FC = () => {
       setLoading(false);
       setRefreshing(false);
     }
-  }, [auth.user?.venueId]);
+  }, [auth.user?.venueId, checkForNewOrders]);
 
   // Initialize notification system
   useEffect(() => {

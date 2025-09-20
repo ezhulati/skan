@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 
 const DevTools: React.FC = () => {
-  const { auth, markOnboardingComplete, forceOnboardingRequired } = useAuth();
+  const { auth, forceOnboardingRequired } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState('');
 
