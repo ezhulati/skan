@@ -282,51 +282,53 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
           <div className="onboarding-step">
             <h2>Informacioni i Restorantit</h2>
             
-            <div className="form-fields">
-              <div className="field-group">
-                <label className="field-label">Emri i Restorantit</label>
-                <input
-                  type="text"
-                  value={restaurantInfo.name}
-                  onChange={(e) => setRestaurantInfo({...restaurantInfo, name: e.target.value})}
-                  className="field-input"
-                  required
-                />
-              </div>
+            <div className="step-intro">
+              <p>Plotësoni informacionet bazë për restorantin tuaj. Këto detaje do të përdoren për të krijuar profilin tuaj.</p>
+            </div>
+            
+            <div className="form-group">
+              <label>Emri i Restorantit</label>
+              <input
+                type="text"
+                value={restaurantInfo.name}
+                onChange={(e) => setRestaurantInfo({...restaurantInfo, name: e.target.value})}
+                placeholder="Shkruani emrin e restorantit"
+                required
+              />
+            </div>
 
-              <div className="field-group">
-                <label className="field-label">Adresa</label>
-                <input
-                  type="text"
-                  value={restaurantInfo.address}
-                  onChange={(e) => setRestaurantInfo({...restaurantInfo, address: e.target.value})}
-                  className="field-input"
-                  required
-                />
-              </div>
+            <div className="form-group">
+              <label>Adresa</label>
+              <input
+                type="text"
+                value={restaurantInfo.address}
+                onChange={(e) => setRestaurantInfo({...restaurantInfo, address: e.target.value})}
+                placeholder="Rruga, qyteti, shteti"
+                required
+              />
+            </div>
 
-              <div className="field-group">
-                <label className="field-label">Telefoni</label>
-                <input
-                  type="tel"
-                  value={restaurantInfo.phone}
-                  onChange={(e) => setRestaurantInfo({...restaurantInfo, phone: e.target.value})}
-                  className="field-input"
-                  required
-                />
-              </div>
+            <div className="form-group">
+              <label>Telefoni</label>
+              <input
+                type="tel"
+                value={restaurantInfo.phone}
+                onChange={(e) => setRestaurantInfo({...restaurantInfo, phone: e.target.value})}
+                placeholder="+355 69 123 4567"
+                required
+              />
+            </div>
 
-              <div className="field-group">
-                <label className="field-label">Lloji i Kuzhinës</label>
-                <select
-                  value={restaurantInfo.cuisineType}
-                  onChange={(e) => setRestaurantInfo({...restaurantInfo, cuisineType: e.target.value})}
-                  className="field-select"
-                  required
-                >
-                  <option value="">Zgjidhni llojin</option>
-                  <option value="traditional">Tradicionale Shqiptare</option>
-                  <option value="mediterranean">Mesdhetare</option>
+            <div className="form-group">
+              <label>Lloji i Kuzhinës</label>
+              <select
+                value={restaurantInfo.cuisineType}
+                onChange={(e) => setRestaurantInfo({...restaurantInfo, cuisineType: e.target.value})}
+                required
+              >
+                <option value="">Zgjidhni llojin e kuzhinës</option>
+                <option value="traditional">Tradicionale Shqiptare</option>
+                <option value="mediterranean">Mesdhetare</option>
                   <option value="italian">Italiane</option>
                   <option value="seafood">Peshku dhe Deti</option>
                   <option value="international">Ndërkombëtare</option>
@@ -422,9 +424,9 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
               </div>
             )}
             
-            <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+            <div className="form-buttons">
               <button 
-                className="next-button"
+                className="primary-button"
                 onClick={handleRestaurantInfoSubmit}
                 disabled={!restaurantInfo.name || !restaurantInfo.address || !restaurantInfo.phone || !restaurantInfo.cuisineType || saving}
               >
@@ -945,41 +947,74 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
         }
 
         .onboarding-content {
-          padding: 32px;
+          padding: 40px;
+          text-align: center;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          min-height: 400px;
+        }
+
+        .onboarding-step {
+          width: 100%;
+          max-width: 500px;
+          margin: 0 auto;
         }
 
         .onboarding-step h2 {
-          margin: 0 0 16px 0;
+          margin: 0 0 32px 0;
           color: #2c3e50;
+          font-size: 28px;
+          font-weight: 700;
+          text-align: center;
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
         }
 
         .form-group {
-          margin-bottom: 20px;
+          margin-bottom: 28px;
+          text-align: left;
         }
 
         .form-group label {
           display: block;
-          margin-bottom: 6px;
-          font-weight: 500;
-          color: #34495e;
+          margin-bottom: 12px;
+          font-weight: 600;
+          color: #2c3e50;
+          font-size: 16px;
+          letter-spacing: 0.5px;
         }
 
         .form-group input,
         .form-group select,
         .form-group textarea {
           width: 100%;
-          padding: 12px;
-          border: 2px solid #e1e8ed;
-          border-radius: 8px;
-          font-size: 14px;
-          transition: border-color 0.3s;
+          padding: 16px 20px;
+          border: 2px solid #e8ecf1;
+          border-radius: 12px;
+          font-size: 16px;
+          outline: none;
+          transition: all 0.3s ease;
+          box-sizing: border-box;
+          background: #fafbfc;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
         }
 
         .form-group input:focus,
         .form-group select:focus,
         .form-group textarea:focus {
-          outline: none;
           border-color: #667eea;
+          background: #ffffff;
+          box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+          transform: translateY(-2px);
+        }
+
+        .form-group input::placeholder {
+          color: #8892a6;
+          font-weight: 400;
         }
 
         .category-preview {
@@ -1375,6 +1410,110 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
         .next-steps ol li {
           margin-bottom: 8px;
           line-height: 1.4;
+        }
+
+        /* Enhanced Button Styles */
+        .form-buttons {
+          display: flex;
+          justify-content: center;
+          gap: 16px;
+          margin-top: 40px;
+          width: 100%;
+        }
+
+        .form-buttons button {
+          padding: 16px 32px;
+          border-radius: 12px;
+          font-size: 16px;
+          font-weight: 600;
+          border: none;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          position: relative;
+          overflow: hidden;
+          min-width: 160px;
+        }
+
+        .form-buttons button:before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: -100%;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+          transition: left 0.5s;
+        }
+
+        .form-buttons button:hover:before {
+          left: 100%;
+        }
+
+        .form-buttons .primary-button {
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          color: white;
+          box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .form-buttons .primary-button:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .form-buttons .secondary-button {
+          background: #f8f9fa;
+          color: #6c757d;
+          border: 2px solid #e9ecef;
+        }
+
+        .form-buttons .secondary-button:hover {
+          background: #e9ecef;
+          color: #495057;
+          transform: translateY(-1px);
+        }
+
+        /* Enhanced Visual Elements */
+        .step-intro {
+          text-align: center;
+          margin-bottom: 32px;
+          padding: 24px;
+          background: linear-gradient(135deg, #f8f9ff 0%, #fff5f7 100%);
+          border-radius: 16px;
+          border: 1px solid #e8ecf1;
+        }
+
+        .step-intro p {
+          color: #6c757d;
+          font-size: 16px;
+          line-height: 1.6;
+          margin: 0;
+        }
+
+        /* Enhanced Mobile Responsiveness */
+        @media (max-width: 768px) {
+          .onboarding-content {
+            padding: 24px;
+            min-height: 300px;
+          }
+
+          .onboarding-step h2 {
+            font-size: 24px;
+            margin-bottom: 24px;
+          }
+
+          .form-group {
+            margin-bottom: 20px;
+          }
+
+          .form-buttons {
+            flex-direction: column;
+            gap: 12px;
+          }
+
+          .form-buttons button {
+            width: 100%;
+            min-width: auto;
+          }
         }
         `}</style>
       </div>
