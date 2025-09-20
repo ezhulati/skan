@@ -29,6 +29,37 @@ const DashboardPage: React.FC = () => {
   }
   const [undoOperation, setUndoOperation] = useState<UndoOperation | null>(null);
 
+  // Check for new orders and trigger notifications
+  const checkForNewOrders = useCallback((newOrders: Order[]) => {
+    const newOrdersCount = newOrders.filter(order => order.status === 'new').length;
+    
+    if (previousOrderCount > 0 && newOrdersCount > previousOrderCount) {
+      const newOrdersAdded = newOrdersCount - previousOrderCount;
+      
+      // Play audio notification if enabled
+      if (audioEnabled && audioRef.current) {
+        audioRef.current.play().catch(e => console.log('Audio play failed:', e));
+      }
+      
+      // Show browser notification
+      if (notificationsEnabled) {
+        new Notification(`🔔 ${newOrdersAdded} porosinë të reja!`, {
+          body: 'Keni marrë porosinë të reja që duhen përpunuar.',
+          icon: '/favicon.ico',
+          tag: 'new-orders'
+        });
+      }
+      
+      // Add visual flash effect
+      document.body.style.backgroundColor = '#dc3545';
+      setTimeout(() => {
+        document.body.style.backgroundColor = '';
+      }, 200);
+    }
+    
+    setPreviousOrderCount(newOrdersCount);
+  }, [previousOrderCount, notificationsEnabled, audioEnabled]);
+
   const loadOrders = useCallback(async () => {
     if (!auth.user?.venueId) {
       setLoading(false);
@@ -165,36 +196,6 @@ const DashboardPage: React.FC = () => {
     }
   }, [notificationsEnabled]);
 
-  // Check for new orders and trigger notifications
-  const checkForNewOrders = useCallback((newOrders: Order[]) => {
-    const newOrdersCount = newOrders.filter(order => order.status === 'new').length;
-    
-    if (previousOrderCount > 0 && newOrdersCount > previousOrderCount) {
-      const newOrdersAdded = newOrdersCount - previousOrderCount;
-      
-      // Play audio notification if enabled
-      if (audioEnabled && audioRef.current) {
-        audioRef.current.play().catch(e => console.log('Audio play failed:', e));
-      }
-      
-      // Show browser notification
-      if (notificationsEnabled) {
-        new Notification(`🔔 ${newOrdersAdded} porosinë të reja!`, {
-          body: 'Keni marrë porosinë të reja që duhen përpunuar.',
-          icon: '/favicon.ico',
-          tag: 'new-orders'
-        });
-      }
-      
-      // Add visual flash effect
-      document.body.style.backgroundColor = '#dc3545';
-      setTimeout(() => {
-        document.body.style.backgroundColor = '';
-      }, 200);
-    }
-    
-    setPreviousOrderCount(newOrdersCount);
-  }, [previousOrderCount, notificationsEnabled, audioEnabled]);
 
   useEffect(() => {
     loadOrders();
