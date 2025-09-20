@@ -280,12 +280,12 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
     switch (currentStep) {
       case 1:
         return (
-          <div className="onboarding-step">
-            <h2>Informacioni i Restorantit</h2>
+          <div className="step-content">
+            <h2 className="step-title">Informacioni i Restorantit</h2>
             
-            <div className="step-intro">
-              <p>Plotësoni informacionet bazë për restorantin tuaj. Këto detaje do të përdoren për të krijuar profilin tuaj.</p>
-            </div>
+            <p className="step-description">
+              Plotësoni informacionet bazë për restorantin tuaj. Këto detaje do të përdoren për të krijuar profilin tuaj.
+            </p>
             
             <div className="form-group">
               <label>Emri i Restorantit</label>
@@ -423,7 +423,7 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
               </div>
             )}
             
-            <div className="form-buttons">
+            <div className="button-group">
               <button 
                 className="primary-button"
                 onClick={handleRestaurantInfoSubmit}
@@ -460,12 +460,12 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
 
       case 2:
         return (
-          <div className="onboarding-step">
-            <h2>Shtoni Pjatat Kryesore</h2>
+          <div className="step-content">
+            <h2 className="step-title">Shtoni Pjatat Kryesore</h2>
             
-            <div className="step-intro">
-              <p>Shtoni të paktën 3 pjata për të nisur menjën tuaj dixhitale.</p>
-            </div>
+            <p className="step-description">
+              Shtoni të paktën 3 pjata për të nisur menjën tuaj dixhitale.
+            </p>
             
             <div className="menu-items-section">
               {menuItems.map((item, index) => (
@@ -584,20 +584,19 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
 
       case 3:
         return (
-          <div className="onboarding-step">
-            <h2>Konfigurimi i Tavolinave</h2>
+          <div className="step-content">
+            <h2 className="step-title">Konfigurimi i Tavolinave</h2>
             
-            <div className="step-intro">
-              <p>Vendosni numrin e tavolinave për të gjeneruar kodrat QR për porositjet dixhitale.</p>
-            </div>
+            <p className="step-description">
+              Vendosni numrin e tavolinave për të gjeneruar kodrat QR për porositjet dixhitale.
+            </p>
 
-            <div className="table-form">
-              <label className="form-label">Numri i Tavolinave</label>
+            <div className="form-group">
+              <label>Numri i Tavolinave</label>
               <input
                 type="number"
                 value={tableCount}
                 onChange={(e) => setTableCount(e.target.value)}
-                className="table-input"
                 min="1"
                 max="100"
                 required
@@ -605,10 +604,10 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
               <p className="form-help">Do të gjenerojmë një kod QR për çdo tavolinë që klientët skanojnë për të porositur.</p>
             </div>
 
-            <div className="step-actions">
-              <button className="prev-button" onClick={prevStep}>← Mbrapa</button>
+            <div className="button-group">
+              <button className="secondary-button" onClick={prevStep}>← Mbrapa</button>
               <button 
-                className="next-button" 
+                className="primary-button" 
                 onClick={async () => {
                   setSaving(true);
                   setError(null);
