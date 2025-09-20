@@ -5,16 +5,15 @@
 /**
  * Format price according to venue currency settings
  */
-export function formatPrice(price: number, currency: string = 'EUR'): string {
-  // For EUR, display as €X.XX
-  if (currency === 'EUR') {
-    return `€${price}`;
+export function formatPrice(price: number, currency: string = 'ALL'): string {
+  // For Albanian Lek (default for Albanian restaurants)
+  if (currency === 'ALL' || currency === 'LEK') {
+    return `${Math.round(price)} Lek`;
   }
   
-  // For Albanian Lek, convert EUR to ALL (approximately 1 EUR = 100-105 ALL)
-  if (currency === 'ALL' || currency === 'LEK') {
-    const lekPrice = Math.round(price * 100); // Updated conversion rate
-    return `${lekPrice} Lek`;
+  // For EUR, display as €X.XX
+  if (currency === 'EUR') {
+    return `€${price.toFixed(2)}`;
   }
   
   // Default fallback
@@ -41,6 +40,6 @@ export function getCurrencySymbol(currency: string = 'EUR'): string {
 /**
  * Format total amount for order summary
  */
-export function formatTotalAmount(amount: number, currency: string = 'EUR'): string {
+export function formatTotalAmount(amount: number, currency: string = 'ALL'): string {
   return formatPrice(amount, currency);
 }

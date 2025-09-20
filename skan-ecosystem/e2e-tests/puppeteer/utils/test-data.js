@@ -32,17 +32,17 @@ class TestData {
   static menuItems = {
     albanianBeer: {
       name: 'Albanian Beer',
-      price: 3.50,
+      price: 350,
       category: 'Drinks'
     },
     greekSalad: {
-      name: 'Greek Salad',
-      price: 8.50,
+      name: 'Greek Salad', 
+      price: 900,
       category: 'Salads'
     },
     seafoodRisotto: {
       name: 'Seafood Risotto',
-      price: 18.50,
+      price: 1800,
       category: 'Main Courses'
     }
   };

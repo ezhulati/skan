@@ -63,7 +63,7 @@ skan.al/
 venues/
 ├── beach-bar-durres/         # Real venue data
 │   ├── menuCategory/         # Subcollection
-│   ├── menuItem/            # Subcollection (Albanian Beer €3.50, etc.)
+│   ├── menuItem/            # Subcollection (Albanian Beer 350 Lek, etc.)
 │   └── table/               # Subcollection for QR management
 
 users/
