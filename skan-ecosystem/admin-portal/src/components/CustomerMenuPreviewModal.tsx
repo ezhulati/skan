@@ -63,19 +63,19 @@ const CustomerMenuPreviewModal: React.FC<CustomerMenuPreviewModalProps> = ({
     setError(null);
 
     try {
-      let venueSlug = auth.venue.slug;
+      // Force use beach-bar-durres for demo accounts and non-existent venues
+      const isDemoAccount = auth.user?.email === 'demo.beachbar@skan.al' || 
+                           auth.user?.email === 'manager_email1@gmail.com';
+      const isNonExistentVenue = auth.venue?.slug === 'demo-restaurant' || 
+                                auth.venue?.slug === 'demo-venue-1';
+      
+      let venueSlug = (auth.venue?.slug && !isDemoAccount && !isNonExistentVenue) 
+        ? auth.venue.slug 
+        : 'beach-bar-durres';
+        
       let response = await fetch(
         `https://api-mkazmlu7ta-ew.a.run.app/v1/venue/${venueSlug}/menu`
       );
-
-      // If demo venue fails, fallback to beach-bar-durres for preview
-      if (!response.ok && venueSlug === 'demo-restaurant') {
-        console.log('Demo venue menu not found, using fallback venue for preview');
-        venueSlug = 'beach-bar-durres';
-        response = await fetch(
-          `https://api-mkazmlu7ta-ew.a.run.app/v1/venue/${venueSlug}/menu`
-        );
-      }
 
       if (!response.ok) {
         throw new Error('Failed to load menu');
@@ -83,9 +83,9 @@ const CustomerMenuPreviewModal: React.FC<CustomerMenuPreviewModalProps> = ({
 
       const data = await response.json();
       
-      // If using fallback, update venue name to indicate it's a demo
-      if (venueSlug === 'beach-bar-durres' && auth.venue.slug === 'demo-restaurant') {
-        data.venue.name = auth.venue.name + ' (Demo Menu)';
+      // If using fallback for demo accounts, update venue name to indicate it's a demo
+      if (venueSlug === 'beach-bar-durres' && (isDemoAccount || isNonExistentVenue)) {
+        data.venue.name = data.venue.name + ' (Demo Menu)';
       }
       
       setMenuData(data);
