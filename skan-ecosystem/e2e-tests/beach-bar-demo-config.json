@@ -1,0 +1,90 @@
+{
+  "venue": {
+    "name": "Beach Bar Durrës",
+    "slug": "beach-bar-durres",
+    "address": "Rruga e Plazhit, Durrës 2001, Albania",
+    "phone": "+355 52 222 333",
+    "description": "A beautiful beachfront bar and restaurant in Durrës offering fresh seafood, refreshing drinks, and stunning sea views. Perfect for sunset dining and relaxed beach atmosphere."
+  },
+  "credentials": {
+    "email": "demo.beachbar@skan.al",
+    "password": "BeachBarDemo2024!"
+  },
+  "urls": {
+    "customer": "https://order.skan.al/beach-bar-durres",
+    "admin": "https://admin.skan.al",
+    "qrCodes": [
+      "https://order.skan.al/beach-bar-durres/a1",
+      "https://order.skan.al/beach-bar-durres/a2",
+      "https://order.skan.al/beach-bar-durres/b1",
+      "https://order.skan.al/beach-bar-durres/b2"
+    ]
+  },
+  "menu": {
+    "categories": 5,
+    "totalItems": 10,
+    "sampleItems": [
+      {
+        "name": "Greek salad",
+        "price": "€8.5",
+        "category": "Appetizers"
+      },
+      {
+        "name": "Fried Calamari",
+        "price": "€12",
+        "category": "Appetizers"
+      },
+      {
+        "name": "Seafood Risotto",
+        "price": "€18.5",
+        "category": "Main Courses"
+      },
+      {
+        "name": "Grilled Lamb Chops",
+        "price": "€22",
+        "category": "Main Courses"
+      },
+      {
+        "name": "Grilled Sea Bass",
+        "price": "€24",
+        "category": "Fresh Seafood"
+      },
+      {
+        "name": "Albanian Beer",
+        "price": "€3.5",
+        "category": "Drinks"
+      },
+      {
+        "name": "Albanian Raki",
+        "price": "€4",
+        "category": "Drinks"
+      },
+      {
+        "name": "Tiramisu",
+        "price": "€6.5",
+        "category": "Desserts"
+      },
+      {
+        "name": "Baklava",
+        "price": "€5.5",
+        "category": "Desserts"
+      }
+    ]
+  },
+  "demoFlow": {
+    "customer": [
+      "Visit: https://order.skan.al/beach-bar-durres/a1",
+      "Browse authentic Albanian menu",
+      "Add items to cart (try Albanian Beer €3.50)",
+      "Submit order with customer name",
+      "Track order status in real-time"
+    ],
+    "admin": [
+      "Login at: https://admin.skan.al",
+      "Email: demo.beachbar@skan.al",
+      "Password: BeachBarDemo2024!",
+      "View incoming orders on dashboard",
+      "Update order status (new → preparing → ready → served)"
+    ]
+  }
+}

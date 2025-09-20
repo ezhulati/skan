@@ -1,0 +1,167 @@
+{
+  "venue": {
+    "id": "demo-bistro",
+    "name": "Demo Bistro",
+    "slug": "demo-bistro",
+    "address": "456 Demo Avenue, Tirana, Albania",
+    "phone": "+355691234568",
+    "description": "Try our QR ordering system with this interactive demo",
+    "settings": {
+      "currency": "EUR",
+      "orderingEnabled": true,
+      "estimatedPreparationTime": 15
+    }
+  },
+  "categories": [
+    {
+      "id": "appetizers",
+      "name": "Appetizers",
+      "nameAlbanian": "Antipastet",
+      "sortOrder": 1,
+      "items": [
+        {
+          "id": "bruschetta",
+          "name": "Classic Bruschetta",
+          "nameAlbanian": "Bruschetta Klasike",
+          "description": "Toasted bread with fresh tomatoes, basil, and olive oil",
+          "descriptionAlbanian": "Bukë e pjekur me domate të freskët, borzilok dhe vaj ulliri",
+          "price": 8.5,
+          "allergens": [
+            "gluten"
+          ],
+          "preparationTime": 10,
+          "sortOrder": 1
+        },
+        {
+          "id": "greek-salad",
+          "name": "Greek Salad",
+          "nameAlbanian": "Sallatë Greke",
+          "description": "Fresh cucumber, tomatoes, olives, and feta cheese",
+          "descriptionAlbanian": "Kastravec të freskët, domate, ullinj dhe djathë feta",
+          "price": 9.5,
+          "allergens": [
+            "dairy"
+          ],
+          "preparationTime": 8,
+          "sortOrder": 2
+        }
+      ]
+    },
+    {
+      "id": "main-courses",
+      "name": "Main Courses",
+      "nameAlbanian": "Pjatat Kryesore",
+      "sortOrder": 2,
+      "items": [
+        {
+          "id": "grilled-sea-bass",
+          "name": "Grilled Sea Bass",
+          "nameAlbanian": "Levrek në Skarë",
+          "description": "Fresh sea bass grilled to perfection with herbs and lemon",
+          "descriptionAlbanian": "Levrek i freskët në skarë me erëza dhe limon",
+          "price": 22,
+          "allergens": [
+            "fish"
+          ],
+          "preparationTime": 25,
+          "sortOrder": 1
+        },
+        {
+          "id": "seafood-risotto",
+          "name": "Seafood Risotto",
+          "nameAlbanian": "Risotto me Fruta Deti",
+          "description": "Creamy risotto with mixed seafood and saffron",
+          "descriptionAlbanian": "Risotto kremoz me fruta deti të përziera dhe shafran",
+          "price": 18.5,
+          "allergens": [
+            "dairy",
+            "shellfish"
+          ],
+          "preparationTime": 30,
+          "sortOrder": 2
+        }
+      ]
+    },
+    {
+      "id": "drinks",
+      "name": "Drinks",
+      "nameAlbanian": "Pije",
+      "sortOrder": 3,
+      "items": [
+        {
+          "id": "albanian-beer",
+          "name": "Albanian Beer",
+          "nameAlbanian": "Birrë Shqiptare",
+          "description": "Local craft beer brewed in Albania",
+          "descriptionAlbanian": "Birrë artizanale lokale e prodhuar në Shqipëri",
+          "price": 3.5,
+          "allergens": [
+            "gluten"
+          ],
+          "preparationTime": 2,
+          "sortOrder": 1
+        },
+        {
+          "id": "fresh-lemonade",
+          "name": "Fresh Lemonade",
+          "nameAlbanian": "Limonadë e Freskët",
+          "description": "Freshly squeezed lemons with mint",
+          "descriptionAlbanian": "Limon të shtrydhur të freskët me mente",
+          "price": 4,
+          "allergens": [],
+          "preparationTime": 5,
+          "sortOrder": 2
+        },
+        {
+          "id": "house-wine",
+          "name": "House Wine (Glass)",
+          "nameAlbanian": "Verë e Shtëpisë (Gotë)",
+          "description": "Local Albanian wine, red or white",
+          "descriptionAlbanian": "Verë lokale shqiptare, e kuqe ose e bardhë",
+          "price": 6.5,
+          "allergens": [
+            "sulfites"
+          ],
+          "preparationTime": 3,
+          "sortOrder": 3
+        }
+      ]
+    },
+    {
+      "id": "desserts",
+      "name": "Desserts",
+      "nameAlbanian": "Ëmbëlsira",
+      "sortOrder": 4,
+      "items": [
+        {
+          "id": "baklava",
+          "name": "Traditional Baklava",
+          "nameAlbanian": "Bakllava Tradicionale",
+          "description": "Layers of phyllo pastry with nuts and honey",
+          "descriptionAlbanian": "Shtresa brumi fillo me arra dhe mjaltë",
+          "price": 6,
+          "allergens": [
+            "nuts",
+            "gluten"
+          ],
+          "preparationTime": 5,
+          "sortOrder": 1
+        },
+        {
+          "id": "tiramisu",
+          "name": "Tiramisu",
+          "nameAlbanian": "Tiramisu",
+          "description": "Classic Italian dessert with coffee and mascarpone",
+          "descriptionAlbanian": "Ëmbëlsirë klasike italiane me kafe dhe mascarpone",
+          "price": 7.5,
+          "allergens": [
+            "dairy",
+            "eggs"
+          ],
+          "preparationTime": 3,
+          "sortOrder": 2
+        }
+      ]
+    }
+  ]
+}
