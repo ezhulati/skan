@@ -18,7 +18,7 @@ const beachBarData = {
     "phone": "+355 52 222 333",
     "description": "A beautiful beachfront bar and restaurant in Durrës offering fresh seafood, refreshing drinks, and stunning sea views. Perfect for sunset dining and relaxed beach atmosphere.",
     "settings": {
-      "currency": "EUR",
+      "currency": "ALL",
       "orderingEnabled": true,
       "estimatedPreparationTime": 15
     }
