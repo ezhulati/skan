@@ -150,6 +150,10 @@ const translations = {
     'table': 'Tavolina',
     'beachfront_terrace': 'Terrasa e Plazhit',
     'indoor_seating': 'Ulëse të Brendshme',
+    'welcome': 'Mirë se erdhi',
+    'table_confirmation': 'Konfirmoni se jeni ulur në këtë tavolinë',
+    'automatically_redirecting': 'Ridrejtimi automatik në menu...',
+    'qr_scanned_successfully': 'Kodi QR u skanua me sukses',
   },
   en: {
     // Common
@@ -281,6 +285,10 @@ const translations = {
     'table': 'Table',
     'beachfront_terrace': 'Beachfront Terrace',
     'indoor_seating': 'Indoor Seating',
+    'welcome': 'Welcome',
+    'table_confirmation': 'Please confirm you are seated at this table',
+    'automatically_redirecting': 'Automatically redirecting to menu...',
+    'qr_scanned_successfully': 'QR code scanned successfully',
   }
 };
 

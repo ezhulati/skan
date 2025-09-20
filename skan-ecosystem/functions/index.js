@@ -37,6 +37,39 @@ const TRANSLATOR_CONFIG = {
   region: process.env.TRANSLATOR_REGION || "westeurope"
 };
 
+// PayPal Configuration
+const PAYPAL_CONFIG = {
+  clientId: process.env.PAYPAL_CLIENT_ID || "sandbox_client_id",
+  clientSecret: process.env.PAYPAL_CLIENT_SECRET || "sandbox_client_secret",
+  environment: process.env.PAYPAL_ENVIRONMENT || "sandbox", // sandbox or live
+  apiUrl: process.env.PAYPAL_ENVIRONMENT === "live" ? 
+    "https://api.paypal.com" : "https://api.sandbox.paypal.com"
+};
+
+// PayPal helper functions
+async function getPayPalAccessToken() {
+  try {
+    const response = await axios.post(`${PAYPAL_CONFIG.apiUrl}/v1/oauth2/token`, 
+      'grant_type=client_credentials',
+      {
+        headers: {
+          'Accept': 'application/json',
+          'Accept-Language': 'en_US',
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        auth: {
+          username: PAYPAL_CONFIG.clientId,
+          password: PAYPAL_CONFIG.clientSecret
+        }
+      }
+    );
+    return response.data.access_token;
+  } catch (error) {
+    console.error('PayPal access token error:', error.response?.data || error.message);
+    throw new Error('Failed to get PayPal access token');
+  }
+}
+
 // Security Middleware
 app.use(helmet({
   contentSecurityPolicy: {
@@ -435,7 +468,8 @@ app.get("/", (req, res) => {
       venues: ["/v1/venue/:slug/menu", "/v1/venues"],
       orders: ["/v1/orders", "/v1/venue/:venueId/orders"],
       users: ["/v1/users", "/v1/auth/register"],
-      translation: ["/v1/translate/menu-item", "/v1/translate/menu-items/bulk"]
+      translation: ["/v1/translate/menu-item", "/v1/translate/menu-items/bulk"],
+      payments: ["/v1/payments/subscriptions", "/v1/payments/plans", "/v1/payments/webhooks"]
     }
   });
 });
@@ -3207,97 +3241,6 @@ app.get("/health", (req, res) => {
   });
 });
 
-// Root endpoint with API documentation
-app.get("/", (req, res) => {
-  res.json({ 
-    message: "Skan.al API - QR Code Ordering System",
-    version: "1.0.0",
-    documentation: "https://api.skan.al/docs",
-    endpoints: {
-      venues: {
-        "GET /v1/venue/:slug/menu": "Get venue menu by slug",
-        "GET /v1/venue/:slug/tables": "Get venue tables for QR generation",
-        "POST /v1/venues": "Create new venue (admin only)",
-        "GET /v1/venues": "Get all venues (admin only)",
-        "GET /v1/venues/:venueId": "Get single venue",
-        "PUT /v1/venues/:venueId": "Update venue",
-        "GET /v1/venues/:venueId/stats": "Get venue statistics"
-      },
-      menuManagement: {
-        "PUT /v1/venue/:venueId/categories/:categoryId": "Update menu category",
-        "POST /v1/venue/:venueId/categories": "Create new menu category",
-        "DELETE /v1/venue/:venueId/categories/:categoryId": "Delete menu category",
-        "PUT /v1/venue/:venueId/items/:itemId": "Update menu item",
-        "POST /v1/venue/:venueId/items": "Create new menu item",
-        "DELETE /v1/venue/:venueId/items/:itemId": "Delete menu item",
-        "PATCH /v1/venue/:venueId/items/:itemId/toggle": "Toggle menu item active status"
-      },
-      tableManagement: {
-        "POST /v1/venues/:venueId/tables": "Create new table",
-        "PUT /v1/venues/:venueId/tables/:tableId": "Update table information",
-        "DELETE /v1/venues/:venueId/tables/:tableId": "Delete table",
-        "GET /v1/venues/:venueId/tables/:tableId/qr": "Generate QR code for table",
-        "PUT /v1/venues/:venueId/tables/:tableId/status": "Enable/disable table"
-      },
-      orders: {
-        "POST /v1/orders": "Create new order",
-        "GET /v1/venue/:venueId/orders": "Get orders for restaurant dashboard",
-        "PUT /v1/orders/:orderId/status": "Update order status",
-        "GET /v1/orders/:orderId": "Get order details",
-        "GET /v1/track/:orderNumber": "Track order by number",
-        "PUT /v1/orders/:orderId/cancel": "Cancel order",
-        "POST /v1/orders/:orderId/refund": "Process refund",
-        "GET /v1/venues/:venueId/orders/summary": "Get order summary stats"
-      },
-      analytics: {
-        "GET /v1/venues/:venueId/analytics/daily": "Get daily sales reports",
-        "GET /v1/venues/:venueId/analytics/popular-items": "Get popular items report",
-        "GET /v1/venues/:venueId/analytics/peak-hours": "Get peak hours analysis",
-        "GET /v1/venues/:venueId/analytics/revenue": "Get revenue trends",
-        "GET /v1/venues/:venueId/analytics/orders/export": "Export order data"
-      },
-      settings: {
-        "PUT /v1/venues/:venueId/settings": "Update venue settings",
-        "GET /v1/venues/:venueId/settings/notifications": "Get notification preferences",
-        "PUT /v1/venues/:venueId/settings/notifications": "Update notification preferences",
-        "GET /v1/venues/:venueId/settings/operating-hours": "Get operating hours",
-        "PUT /v1/venues/:venueId/settings/operating-hours": "Update operating hours"
-      },
-      userManagement: {
-        "GET /v1/users": "Get all users (admin/manager only)",
-        "GET /v1/users/:userId": "Get single user",
-        "PUT /v1/users/:userId": "Update user",
-        "POST /v1/users/invite": "Invite new user"
-      },
-      auth: {
-        "POST /v1/auth/login": "Restaurant staff login",
-        "POST /v1/auth/register": "User registration",
-        "POST /v1/auth/reset-password": "Request password reset",
-        "POST /v1/auth/reset-password/confirm": "Confirm password reset",
-        "POST /v1/auth/change-password": "Change password",
-        "POST /v1/auth/accept-invitation": "Accept invitation"
-      },
-      registration: {
-        "POST /v1/register/venue": "Self-service venue registration",
-        "GET /v1/register/status/:venueId": "Get venue registration status"
-      },
-      fileManagement: {
-        "POST /v1/upload/menu-images": "Upload menu images (placeholder)",
-        "DELETE /v1/upload/:fileId": "Delete uploaded files (placeholder)",
-        "GET /v1/venues/:venueId/images": "List venue images (placeholder)"
-      },
-      system: {
-        "GET /health": "Health check",
-        "GET /": "API information"
-      }
-    },
-    exampleUsage: {
-      getMenu: "GET /v1/venue/beach-bar-durres/menu",
-      createOrder: "POST /v1/orders",
-      trackOrder: "GET /v1/track/SKN-20250915-001"
-    }
-  });
-});
 
 // ============================================================================
 // REAL-TIME FUNCTIONS (Optional for future)
@@ -4745,6 +4688,363 @@ app.use("*", (req, res) => {
     path: req.originalUrl,
     method: req.method
   });
+});
+
+// ====================================
+// PAYPAL SUBSCRIPTION ROUTES
+// ====================================
+
+// Test endpoint for PayPal routes
+app.get("/v1/payments/test", (req, res) => {
+  res.json({ message: "PayPal routes are working", timestamp: new Date().toISOString() });
+});
+
+// Create PayPal subscription plan
+app.post("/v1/payments/plans", verifyAuth, async (req, res) => {
+  try {
+    const { name, description } = req.body;
+    const accessToken = await getPayPalAccessToken();
+    
+    const planData = {
+      product_id: "SKAN_AL_SUBSCRIPTION", // This would be created in PayPal dashboard
+      name: name || "SKAN.AL Monthly Subscription",
+      description: description || "QR code ordering system for Albanian restaurants",
+      status: "ACTIVE",
+      billing_cycles: [{
+        frequency: {
+          interval_unit: "MONTH",
+          interval_count: 1
+        },
+        tenure_type: "REGULAR",
+        sequence: 1,
+        total_cycles: 0, // Infinite
+        pricing_scheme: {
+          fixed_price: {
+            value: "35.00",
+            currency_code: "EUR"
+          }
+        }
+      }],
+      payment_preferences: {
+        auto_bill_outstanding: true,
+        setup_fee: {
+          value: "0.00",
+          currency_code: "EUR"
+        },
+        setup_fee_failure_action: "CONTINUE",
+        payment_failure_threshold: 3
+      },
+      taxes: {
+        percentage: "0.00",
+        inclusive: false
+      }
+    };
+
+    const response = await axios.post(`${PAYPAL_CONFIG.apiUrl}/v1/billing/plans`, planData, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${accessToken}`,
+        'Accept': 'application/json',
+        'PayPal-Request-Id': uuidv4()
+      }
+    });
+
+    res.json({
+      message: "Subscription plan created successfully",
+      plan: response.data
+    });
+  } catch (error) {
+    console.error("PayPal plan creation error:", error.response?.data || error.message);
+    res.status(500).json({ 
+      error: "Failed to create subscription plan",
+      details: error.response?.data || error.message 
+    });
+  }
+});
+
+// Create PayPal subscription
+app.post("/v1/payments/subscriptions", verifyAuth, async (req, res) => {
+  try {
+    const { planId, returnUrl, cancelUrl } = req.body;
+    const user = req.user;
+    const accessToken = await getPayPalAccessToken();
+
+    const subscriptionData = {
+      plan_id: planId || "P-5ML4271244454362WXNWU5NQ", // Default plan ID
+      start_time: new Date(Date.now() + 60000).toISOString(), // Start in 1 minute
+      subscriber: {
+        name: {
+          given_name: user.fullName.split(' ')[0] || "Restaurant",
+          surname: user.fullName.split(' ')[1] || "Owner"
+        },
+        email_address: user.email
+      },
+      application_context: {
+        brand_name: "SKAN.AL",
+        locale: "en-US",
+        shipping_preference: "NO_SHIPPING",
+        user_action: "SUBSCRIBE_NOW",
+        payment_method: {
+          payer_selected: "PAYPAL",
+          payee_preferred: "IMMEDIATE_PAYMENT_REQUIRED"
+        },
+        return_url: returnUrl || "https://admin.skan.al/payment-success",
+        cancel_url: cancelUrl || "https://admin.skan.al/payment-cancelled"
+      }
+    };
+
+    const response = await axios.post(`${PAYPAL_CONFIG.apiUrl}/v1/billing/subscriptions`, subscriptionData, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${accessToken}`,
+        'Accept': 'application/json',
+        'PayPal-Request-Id': uuidv4()
+      }
+    });
+
+    // Store subscription info in Firestore
+    await db.collection('subscriptions').doc(response.data.id).set({
+      subscriptionId: response.data.id,
+      venueId: user.venueId,
+      userId: user.id,
+      planId: planId,
+      status: response.data.status,
+      createdAt: admin.firestore.FieldValue.serverTimestamp()
+    });
+
+    res.json({
+      message: "Subscription created successfully",
+      subscription: response.data,
+      approvalUrl: response.data.links.find(link => link.rel === "approve")?.href
+    });
+  } catch (error) {
+    console.error("PayPal subscription creation error:", error.response?.data || error.message);
+    res.status(500).json({ 
+      error: "Failed to create subscription",
+      details: error.response?.data || error.message 
+    });
+  }
+});
+
+// Get subscription status
+app.get("/v1/payments/subscriptions/:subscriptionId", verifyAuth, async (req, res) => {
+  try {
+    const { subscriptionId } = req.params;
+    const user = req.user;
+    const accessToken = await getPayPalAccessToken();
+
+    // Check if user has access to this subscription
+    const subscriptionDoc = await db.collection('subscriptions').doc(subscriptionId).get();
+    if (!subscriptionDoc.exists) {
+      return res.status(404).json({ error: "Subscription not found" });
+    }
+
+    const subscriptionData = subscriptionDoc.data();
+    if (subscriptionData.venueId !== user.venueId) {
+      return res.status(403).json({ error: "Access denied to this subscription" });
+    }
+
+    const response = await axios.get(`${PAYPAL_CONFIG.apiUrl}/v1/billing/subscriptions/${subscriptionId}`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${accessToken}`,
+        'Accept': 'application/json'
+      }
+    });
+
+    // Update local status
+    await db.collection('subscriptions').doc(subscriptionId).update({
+      status: response.data.status,
+      lastChecked: admin.firestore.FieldValue.serverTimestamp()
+    });
+
+    res.json({
+      subscription: response.data,
+      localData: subscriptionData
+    });
+  } catch (error) {
+    console.error("PayPal subscription get error:", error.response?.data || error.message);
+    res.status(500).json({ 
+      error: "Failed to get subscription",
+      details: error.response?.data || error.message 
+    });
+  }
+});
+
+// Cancel subscription
+app.post("/v1/payments/subscriptions/:subscriptionId/cancel", verifyAuth, async (req, res) => {
+  try {
+    const { subscriptionId } = req.params;
+    const { reason } = req.body;
+    const user = req.user;
+    const accessToken = await getPayPalAccessToken();
+
+    // Check if user has access to this subscription
+    const subscriptionDoc = await db.collection('subscriptions').doc(subscriptionId).get();
+    if (!subscriptionDoc.exists) {
+      return res.status(404).json({ error: "Subscription not found" });
+    }
+
+    const subscriptionData = subscriptionDoc.data();
+    if (subscriptionData.venueId !== user.venueId) {
+      return res.status(403).json({ error: "Access denied to this subscription" });
+    }
+
+    const cancelData = {
+      reason: reason || "User requested cancellation"
+    };
+
+    await axios.post(`${PAYPAL_CONFIG.apiUrl}/v1/billing/subscriptions/${subscriptionId}/cancel`, cancelData, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${accessToken}`,
+        'Accept': 'application/json'
+      }
+    });
+
+    // Update local status
+    await db.collection('subscriptions').doc(subscriptionId).update({
+      status: "CANCELLED",
+      cancelledAt: admin.firestore.FieldValue.serverTimestamp(),
+      cancelReason: reason
+    });
+
+    res.json({ message: "Subscription cancelled successfully" });
+  } catch (error) {
+    console.error("PayPal subscription cancel error:", error.response?.data || error.message);
+    res.status(500).json({ 
+      error: "Failed to cancel subscription",
+      details: error.response?.data || error.message 
+    });
+  }
+});
+
+// PayPal webhook endpoint for subscription events
+app.post("/v1/payments/webhooks", express.raw({ type: 'application/json' }), async (req, res) => {
+  try {
+    const webhookEvent = JSON.parse(req.body.toString());
+    console.log("PayPal webhook received:", webhookEvent.event_type);
+
+    // Handle different webhook events
+    switch (webhookEvent.event_type) {
+      case "BILLING.SUBSCRIPTION.ACTIVATED":
+        await handleSubscriptionActivated(webhookEvent);
+        break;
+      case "BILLING.SUBSCRIPTION.CANCELLED":
+        await handleSubscriptionCancelled(webhookEvent);
+        break;
+      case "PAYMENT.SALE.COMPLETED":
+        await handlePaymentCompleted(webhookEvent);
+        break;
+      case "BILLING.SUBSCRIPTION.PAYMENT.FAILED":
+        await handlePaymentFailed(webhookEvent);
+        break;
+      default:
+        console.log("Unhandled webhook event:", webhookEvent.event_type);
+    }
+
+    res.status(200).json({ message: "Webhook processed successfully" });
+  } catch (error) {
+    console.error("PayPal webhook error:", error);
+    res.status(500).json({ error: "Webhook processing failed" });
+  }
+});
+
+// Webhook event handlers
+async function handleSubscriptionActivated(event) {
+  const subscription = event.resource;
+  await db.collection('subscriptions').doc(subscription.id).update({
+    status: "ACTIVE",
+    activatedAt: admin.firestore.FieldValue.serverTimestamp()
+  });
+}
+
+async function handleSubscriptionCancelled(event) {
+  const subscription = event.resource;
+  await db.collection('subscriptions').doc(subscription.id).update({
+    status: "CANCELLED",
+    cancelledAt: admin.firestore.FieldValue.serverTimestamp()
+  });
+}
+
+async function handlePaymentCompleted(event) {
+  const payment = event.resource;
+  const subscriptionId = payment.billing_agreement_id;
+  
+  await db.collection('payments').add({
+    subscriptionId: subscriptionId,
+    paymentId: payment.id,
+    amount: payment.amount.total,
+    currency: payment.amount.currency,
+    status: "COMPLETED",
+    paymentDate: admin.firestore.FieldValue.serverTimestamp()
+  });
+}
+
+async function handlePaymentFailed(event) {
+  const subscription = event.resource;
+  await db.collection('subscriptions').doc(subscription.id).update({
+    status: "PAYMENT_FAILED",
+    lastFailedAt: admin.firestore.FieldValue.serverTimestamp()
+  });
+}
+
+// Get venue subscription status
+app.get("/v1/venue/:venueId/subscription", verifyAuth, async (req, res) => {
+  try {
+    const { venueId } = req.params;
+    const user = req.user;
+
+    // Check access
+    if (user.venueId !== venueId && user.role !== 'admin') {
+      return res.status(403).json({ error: "Access denied" });
+    }
+
+    // Get active subscription for venue
+    const subscriptionQuery = await db.collection('subscriptions')
+      .where('venueId', '==', venueId)
+      .where('status', '==', 'ACTIVE')
+      .orderBy('createdAt', 'desc')
+      .limit(1)
+      .get();
+
+    if (subscriptionQuery.empty) {
+      return res.json({ 
+        hasActiveSubscription: false,
+        message: "No active subscription found" 
+      });
+    }
+
+    const subscriptionDoc = subscriptionQuery.docs[0];
+    const subscriptionData = subscriptionDoc.data();
+
+    // Get recent payments
+    const paymentsQuery = await db.collection('payments')
+      .where('subscriptionId', '==', subscriptionDoc.id)
+      .orderBy('paymentDate', 'desc')
+      .limit(5)
+      .get();
+
+    const payments = paymentsQuery.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+
+    res.json({
+      hasActiveSubscription: true,
+      subscription: {
+        id: subscriptionDoc.id,
+        ...subscriptionData
+      },
+      recentPayments: payments
+    });
+  } catch (error) {
+    console.error("Get subscription status error:", error);
+    res.status(500).json({ 
+      error: "Failed to get subscription status",
+      details: error.message 
+    });
+  }
 });
 
 // Environment validation (non-blocking for Firebase Functions)

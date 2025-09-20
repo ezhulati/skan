@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 
 const DevTools: React.FC = () => {
-  const { auth } = useAuth();
+  const { auth, markOnboardingComplete, forceOnboardingRequired } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState('');
 
@@ -16,30 +16,20 @@ const DevTools: React.FC = () => {
       // Clear local storage
       localStorage.removeItem('onboarding_restaurant_info');
       localStorage.removeItem('onboarding_current_step');
+      localStorage.removeItem('dev_force_onboarding');
       
-      // Try to reset via API if possible
-      if (auth.token) {
-        const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://api-mkazmlu7ta-ew.a.run.app'}/v1/dev/reset-onboarding`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${auth.token}`
-          }
-        });
+      // Force onboarding required in auth state
+      forceOnboardingRequired();
+      
+      // Also set the dev force flag for double protection
+      localStorage.setItem('dev_force_onboarding', 'true');
+      
+      setMessage('✅ Onboarding status reset successfully');
 
-        if (response.ok) {
-          setMessage('✅ Onboarding status reset successfully via API');
-        } else {
-          setMessage('⚠️ API reset failed, but localStorage cleared');
-        }
-      } else {
-        setMessage('⚠️ No auth token, only localStorage cleared');
-      }
-
-      // Force page refresh to apply changes
+      // Navigate to onboarding
       setTimeout(() => {
-        window.location.reload();
-      }, 1500);
+        window.location.href = '/onboarding';
+      }, 1000);
     } catch (error) {
       setMessage(`❌ Error: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }

@@ -28,6 +28,8 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
   checkOnboardingStatus: () => Promise<void>;
+  markOnboardingComplete: () => void;
+  forceOnboardingRequired: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -190,6 +192,20 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   };
 
+  const markOnboardingComplete = () => {
+    setAuth(prev => ({
+      ...prev,
+      needsOnboarding: false
+    }));
+  };
+
+  const forceOnboardingRequired = () => {
+    setAuth(prev => ({
+      ...prev,
+      needsOnboarding: true
+    }));
+  };
+
   const logout = () => {
     setAuth({
       user: null,
@@ -203,7 +219,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   return (
-    <AuthContext.Provider value={{ auth, login, logout, checkOnboardingStatus }}>
+    <AuthContext.Provider value={{ auth, login, logout, checkOnboardingStatus, markOnboardingComplete, forceOnboardingRequired }}>
       {children}
     </AuthContext.Provider>
   );

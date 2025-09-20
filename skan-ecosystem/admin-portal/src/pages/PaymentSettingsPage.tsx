@@ -1,96 +1,177 @@
 import React, { useState, useEffect } from 'react';
-import { VERIFONE_CONFIG } from '../config/verifone';
+import { useAuth } from '../contexts/AuthContext';
 
-interface PaymentSettings {
-  digitalPaymentsEnabled: boolean;
-  checkoutAccountId?: string;
-  subscriptionTier: 'digital' | 'premium';
-  monthlyRevenue: number;
-  transactionFees: number;
-  totalOrders: number;
+interface SubscriptionData {
+  id: string;
+  status: string;
+  planId: string;
+  createdAt: any;
+  activatedAt?: any;
+  cancelledAt?: any;
+}
+
+interface PaymentData {
+  id: string;
+  amount: string;
+  currency: string;
+  status: string;
+  paymentDate: any;
+}
+
+interface SubscriptionInfo {
+  hasActiveSubscription: boolean;
+  subscription?: SubscriptionData;
+  recentPayments?: PaymentData[];
 }
 
 const PaymentSettingsPage: React.FC = () => {
-  // Note: useAuth will be used for venue-specific API calls in production
-  const [settings, setSettings] = useState<PaymentSettings>({
-    digitalPaymentsEnabled: false,
-    subscriptionTier: 'premium',
-    monthlyRevenue: 0,
-    transactionFees: 0,
-    totalOrders: 0
-  });
+  const { auth } = useAuth();
+  const [subscriptionInfo, setSubscriptionInfo] = useState<SubscriptionInfo>({ hasActiveSubscription: false });
   const [isLoading, setIsLoading] = useState(false);
+  const [isCreatingSubscription, setIsCreatingSubscription] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [error, setError] = useState('');
 
   useEffect(() => {
-    // Load current payment settings
-    loadPaymentSettings();
-  }, []);
-
-  const loadPaymentSettings = async () => {
-    try {
-      // Mock data for demo - in production, this would call the API
-      setSettings({
-        digitalPaymentsEnabled: false,
-        subscriptionTier: 'premium',
-        monthlyRevenue: 2480,
-        transactionFees: 72,
-        totalOrders: 156
-      });
-    } catch (error) {
-      setError('Dështoi të ngarkohen cilësimet e pagesës');
+    if (auth.user?.venueId) {
+      loadSubscriptionInfo();
     }
-  };
+  }, [auth.user?.venueId]);
 
-  const handleToggleDigitalPayments = async () => {
+  const API_BASE_URL = (typeof process !== 'undefined' && process.env?.REACT_APP_API_URL) || 'https://api-mkazmlu7ta-ew.a.run.app/v1';
+
+  const loadSubscriptionInfo = async () => {
     setIsLoading(true);
     try {
-      const newSubscriptionTier: 'digital' | 'premium' = !settings.digitalPaymentsEnabled ? 'digital' : 'premium';
-      const newSettings: PaymentSettings = {
-        ...settings,
-        digitalPaymentsEnabled: !settings.digitalPaymentsEnabled,
-        subscriptionTier: newSubscriptionTier
-      };
-      
-      // Mock API call - in production, this would save to Firebase
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      setSettings(newSettings);
-      setSuccessMessage('Cilësimet e pagesës u përditësuan me sukses!');
-      setTimeout(() => setSuccessMessage(''), 3000);
+      const response = await fetch(`${API_BASE_URL}/venue/${auth.user?.venueId}/subscription`, {
+        headers: {
+          'Authorization': `Bearer ${auth.token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setSubscriptionInfo(data);
+      } else {
+        throw new Error('Failed to load subscription info');
+      }
     } catch (error) {
-      setError('Dështoi të përditësohen cilësimet');
+      console.error('Error loading subscription:', error);
+      setError('Dështoi të ngarkohen informacionet e abonimit');
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleCheckoutConnect = () => {
-    // Demo mode - show success message instead of real Verifone Connect
-    alert('🎉 Demo Mode: Verifone u lidh me sukses!\n\nNë versionin real, kjo do të ju drejtojë në platformën Verifone për të lidhur llogarinë tuaj.');
+  const createSubscription = async () => {
+    setIsCreatingSubscription(true);
+    setError('');
     
-    // Simulate successful connection in demo mode
-    setSettings(prev => ({
-      ...prev,
-      checkoutAccountId: 'acct_demo_2checkout_account'
-    }));
-    setSuccessMessage('Llogaria 2Checkout u lidh me sukses në demo mode!');
-    setTimeout(() => setSuccessMessage(''), 3000);
+    try {
+      const response = await fetch(`${API_BASE_URL}/payments/subscriptions`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${auth.token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          returnUrl: `${window.location.origin}/payment-success`,
+          cancelUrl: `${window.location.origin}/payment-cancelled`
+        })
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data.approvalUrl) {
+          // Redirect to PayPal for approval
+          window.location.href = data.approvalUrl;
+        } else {
+          setSuccessMessage('Abonimi u krijua me sukses!');
+          loadSubscriptionInfo();
+        }
+      } else {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to create subscription');
+      }
+    } catch (error) {
+      console.error('Error creating subscription:', error);
+      setError('Dështoi të krijohet abonimi. Ju lutemi provoni përsëri.');
+    } finally {
+      setIsCreatingSubscription(false);
+    }
   };
 
-  const calculateMonthlySavings = () => {
-    const avgOrderValue = settings.monthlyRevenue / settings.totalOrders || 25;
-    const monthlyCommissionFees = settings.totalOrders * avgOrderValue * VERIFONE_CONFIG.platformCommissionRate;
-    const subscriptionCost = VERIFONE_CONFIG.subscriptionPlans.premium.price;
-    return Math.max(0, monthlyCommissionFees - subscriptionCost);
+  const cancelSubscription = async () => {
+    if (!subscriptionInfo.subscription?.id) return;
+    
+    const confirmed = window.confirm('Jeni të sigurt që doni të anuloni abonimin? Kjo veprim nuk mund të zhbëhet.');
+    if (!confirmed) return;
+
+    setIsLoading(true);
+    setError('');
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/payments/subscriptions/${subscriptionInfo.subscription.id}/cancel`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${auth.token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          reason: 'User requested cancellation'
+        })
+      });
+
+      if (response.ok) {
+        setSuccessMessage('Abonimi u anulua me sukses');
+        loadSubscriptionInfo();
+      } else {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to cancel subscription');
+      }
+    } catch (error) {
+      console.error('Error cancelling subscription:', error);
+      setError('Dështoi të anulohet abonimi. Ju lutemi provoni përsëri.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const formatDate = (timestamp: any) => {
+    if (!timestamp) return 'N/A';
+    const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+    return date.toLocaleDateString('sq-AL', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  };
+
+  const getStatusColor = (status: string) => {
+    switch (status.toLowerCase()) {
+      case 'active': return '#38a169';
+      case 'cancelled': return '#e53e3e';
+      case 'payment_failed': return '#d69e2e';
+      default: return '#718096';
+    }
+  };
+
+  const getStatusText = (status: string) => {
+    switch (status.toLowerCase()) {
+      case 'active': return 'Aktiv';
+      case 'cancelled': return 'I anuluar';
+      case 'payment_failed': return 'Pagesa dështoi';
+      case 'approval_pending': return 'Në pritje të miratimit';
+      default: return status;
+    }
   };
 
   return (
     <div className="payment-settings-page">
       <div className="page-header">
-        <h1>Cilësimet e Pagesës</h1>
-        <p>Menaxhoni metodat e pagesës dhe planin tuaj të abonimit</p>
+        <h1>Abonimi & Pagesat</h1>
+        <p>Menaxhoni abonimin tuaj PayPal dhe historikun e pagesave</p>
       </div>
 
       {error && (
@@ -111,184 +192,155 @@ const PaymentSettingsPage: React.FC = () => {
         </div>
       )}
 
-      {/* Current Plan Overview */}
-      <div className="plan-overview">
-        <div className="plan-card current-plan">
-          <div className="plan-header">
-            <div className="plan-icon">
-              {settings.subscriptionTier === 'digital' ? '💳' : '💵'}
-            </div>
-            <div>
-              <h3>Plani Aktual</h3>
-              <p className="plan-name">
-                {settings.subscriptionTier === 'digital' ? 'DIGITAL me 2Checkout' : 'PREMIUM - Vetëm Kesh'}
-              </p>
-            </div>
-          </div>
-          <div className="plan-cost">
-            {settings.subscriptionTier === 'digital' ? (
-              <div>
-                <span className="cost-amount">2.9%</span>
-                <span className="cost-period">për transaksion</span>
-              </div>
-            ) : (
-              <div>
-                <span className="cost-amount">€35</span>
-                <span className="cost-period">në muaj</span>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-
-      {/* Payment Methods Configuration */}
-      <div className="settings-section">
-        <h2>Metodat e Pagesës</h2>
-        
-        <div className="payment-method-card">
-          <div className="method-header">
-            <div className="method-icon cash-icon">💵</div>
-            <div className="method-info">
-              <h3>Pagesa me Para në Dorë</h3>
-              <p>Klientët paguajnë kur u shërbehet porosia</p>
-            </div>
-            <div className="method-status enabled">
-              <span className="status-dot"></span>
-              E Aktivizuar
-            </div>
-          </div>
-        </div>
-
-        <div className="payment-method-card">
-          <div className="method-header">
-            <div className="method-icon stripe-icon">💳</div>
-            <div className="method-info">
-              <h3>Pagesa me Kartë (Verifone)</h3>
-              <p>Pagesa të sigurta dhe të menjëhershme me kartë</p>
-            </div>
-            <div className="method-toggle">
-              <label className="toggle-switch">
-                <input
-                  type="checkbox"
-                  checked={settings.digitalPaymentsEnabled}
-                  onChange={handleToggleDigitalPayments}
-                  disabled={isLoading}
-                />
-                <span className="toggle-slider"></span>
-              </label>
-            </div>
-          </div>
-          
-          {settings.digitalPaymentsEnabled && !settings.checkoutAccountId && (
-            <div className="checkout-connect-section">
-              <div className="connect-prompt">
-                <p>Për të aktivizuar pagesat me kartë, lidhuni me Verifone:</p>
-                <button 
-                  className="checkout-connect-btn"
-                  onClick={handleCheckoutConnect}
-                >
-                  <span className="checkout-logo">Verifone</span>
-                  Lidhu me Verifone
-                </button>
-              </div>
-            </div>
-          )}
-
-          {settings.digitalPaymentsEnabled && settings.checkoutAccountId && (
-            <div className="checkout-connected">
-              <div className="connected-status">
-                <svg className="check-icon" viewBox="0 0 24 24" fill="none">
+      {/* Subscription Status */}
+      <div className="subscription-overview">
+        {subscriptionInfo.hasActiveSubscription ? (
+          <div className="subscription-card active">
+            <div className="subscription-header">
+              <div className="subscription-icon">
+                <svg viewBox="0 0 24 24" fill="none">
                   <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
-                Llogaria Verifone e lidhur me sukses
+              </div>
+              <div className="subscription-info">
+                <h2>Abonimi Aktiv</h2>
+                <p>SKAN.AL Monthly Subscription</p>
+              </div>
+              <div className="subscription-status" style={{ color: getStatusColor(subscriptionInfo.subscription?.status || '') }}>
+                {getStatusText(subscriptionInfo.subscription?.status || '')}
               </div>
             </div>
-          )}
-        </div>
-      </div>
+            
+            <div className="subscription-details">
+              <div className="detail-item">
+                <span className="detail-label">Çmimi Mujor</span>
+                <span className="detail-value">€35.00</span>
+              </div>
+              <div className="detail-item">
+                <span className="detail-label">Data e krijimit</span>
+                <span className="detail-value">{formatDate(subscriptionInfo.subscription?.createdAt)}</span>
+              </div>
+              {subscriptionInfo.subscription?.activatedAt && (
+                <div className="detail-item">
+                  <span className="detail-label">Data e aktivizimit</span>
+                  <span className="detail-value">{formatDate(subscriptionInfo.subscription.activatedAt)}</span>
+                </div>
+              )}
+            </div>
 
-      {/* Revenue Analytics */}
-      <div className="settings-section">
-        <h2>Analitika e të Ardhurave</h2>
-        <div className="analytics-grid">
-          <div className="analytics-card">
-            <div className="analytics-icon">📊</div>
-            <div className="analytics-content">
-              <h3>Të Ardhurat Mujore</h3>
-              <p className="analytics-value">€{settings.monthlyRevenue.toLocaleString()}</p>
+            <div className="subscription-actions">
+              <button 
+                className="btn btn-danger"
+                onClick={cancelSubscription}
+                disabled={isLoading}
+              >
+                {isLoading ? 'Duke anuluar...' : 'Anulo Abonimin'}
+              </button>
             </div>
           </div>
-          
-          <div className="analytics-card">
-            <div className="analytics-icon">💳</div>
-            <div className="analytics-content">
-              <h3>Tarifat e Transaksioneve</h3>
-              <p className="analytics-value">€{settings.transactionFees}</p>
+        ) : (
+          <div className="subscription-card inactive">
+            <div className="subscription-header">
+              <div className="subscription-icon inactive">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </div>
+              <div className="subscription-info">
+                <h2>Nuk ka Abonim Aktiv</h2>
+                <p>Krijoni një abonim për të përdorur të gjitha funksionet e SKAN.AL</p>
+              </div>
             </div>
-          </div>
-          
-          <div className="analytics-card">
-            <div className="analytics-icon">📦</div>
-            <div className="analytics-content">
-              <h3>Porosite Totale</h3>
-              <p className="analytics-value">{settings.totalOrders}</p>
-            </div>
-          </div>
-        </div>
-      </div>
 
-      {/* Cost Comparison */}
-      <div className="settings-section">
-        <h2>Krahasimi i Kostos</h2>
-        <div className="cost-comparison">
-          <div className="comparison-card">
-            <h3>Plan DIGITAL (Verifone)</h3>
-            <div className="cost-breakdown">
-              <div className="cost-item">
-                <span>Abonimi Mujor</span>
-                <span className="cost-free">€0</span>
+            <div className="subscription-pricing">
+              <div className="price-highlight">
+                <span className="price-amount">€35</span>
+                <span className="price-period">në muaj</span>
               </div>
-              <div className="cost-item">
-                <span>Tarifat e Transaksioneve (2.9%)</span>
-                <span>€{Math.round(settings.monthlyRevenue * 0.029)}</span>
-              </div>
-              <div className="cost-total">
-                <span>Totali Mujor</span>
-                <span>€{Math.round(settings.monthlyRevenue * 0.029)}</span>
-              </div>
+              <ul className="feature-list">
+                <li>✓ Porosi të pakufizuara</li>
+                <li>✓ QR code për të gjitha tavolinat</li>
+                <li>✓ Dashboard në kohë reale</li>
+                <li>✓ Menaxhim i stafit</li>
+                <li>✓ Statistika dhe raporte</li>
+                <li>✓ Mbështetje 24/7</li>
+              </ul>
             </div>
-          </div>
 
-          <div className="comparison-card">
-            <h3>Plan PREMIUM (Kesh)</h3>
-            <div className="cost-breakdown">
-              <div className="cost-item">
-                <span>Abonimi Mujor</span>
-                <span>€35</span>
-              </div>
-              <div className="cost-item">
-                <span>Tarifat e Transaksioneve</span>
-                <span className="cost-free">€0</span>
-              </div>
-              <div className="cost-total">
-                <span>Totali Mujor</span>
-                <span>€35</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {calculateMonthlySavings() > 0 && (
-          <div className="savings-highlight">
-            <svg className="savings-icon" viewBox="0 0 24 24" fill="none">
-              <path d="M12 2v20m8-18H4a2 2 0 00-2 2v12a2 2 0 002 2h16a2 2 0 002-2V6a2 2 0 00-2-2z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-            <div>
-              <h4>Rekomandim: Kaloni në planin PREMIUM</h4>
-              <p>Mund të kurseni €{Math.round(calculateMonthlySavings())} në muaj duke kaluar në planin cash-only</p>
+            <div className="subscription-actions">
+              <button 
+                className="btn btn-primary btn-paypal"
+                onClick={createSubscription}
+                disabled={isCreatingSubscription}
+              >
+                {isCreatingSubscription ? 'Duke krijuar...' : 'Krijo Abonim me PayPal'}
+              </button>
             </div>
           </div>
         )}
+      </div>
+
+      {/* Payment History */}
+      {subscriptionInfo.hasActiveSubscription && subscriptionInfo.recentPayments && subscriptionInfo.recentPayments.length > 0 && (
+        <div className="payment-history">
+          <h2>Historiku i Pagesave</h2>
+          <div className="payment-list">
+            {subscriptionInfo.recentPayments.map((payment) => (
+              <div key={payment.id} className="payment-item">
+                <div className="payment-icon">
+                  <svg viewBox="0 0 24 24" fill="none">
+                    <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </div>
+                <div className="payment-details">
+                  <div className="payment-amount">€{payment.amount}</div>
+                  <div className="payment-date">{formatDate(payment.paymentDate)}</div>
+                </div>
+                <div className="payment-status success">
+                  {getStatusText(payment.status)}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* PayPal Information */}
+      <div className="payment-info">
+        <h2>Informacion mbi Pagesat</h2>
+        <div className="info-grid">
+          <div className="info-card">
+            <div className="info-icon">🔒</div>
+            <div className="info-content">
+              <h3>Pagesa të Sigurta</h3>
+              <p>Të gjitha pagesat procesohen përmes PayPal me enkriptim SSL dhe mbrojtje të avancuar për dhënat.</p>
+            </div>
+          </div>
+          
+          <div className="info-card">
+            <div className="info-icon">💳</div>
+            <div className="info-content">
+              <h3>Metoda Pagese</h3>
+              <p>Pranojmë kartë krediti, kartë debiti, dhe llogari PayPal. Nuk ka tarifa të fshehura.</p>
+            </div>
+          </div>
+          
+          <div className="info-card">
+            <div className="info-icon">📧</div>
+            <div className="info-content">
+              <h3>Fatura Mujore</h3>
+              <p>Do të merrni faturë detale në email për çdo pagesë mujore që kryhet.</p>
+            </div>
+          </div>
+          
+          <div className="info-card">
+            <div className="info-icon">🔄</div>
+            <div className="info-content">
+              <h3>Anulim i Lehtë</h3>
+              <p>Mund të anuloni abonimin tuaj në çdo kohë. Nuk ka kontrata afatgjata ose penalitete.</p>
+            </div>
+          </div>
+        </div>
       </div>
 
       <style>{`
@@ -343,381 +395,313 @@ const PaymentSettingsPage: React.FC = () => {
           flex-shrink: 0;
         }
 
-        .plan-overview {
+        .subscription-overview {
           margin-bottom: 40px;
         }
 
-        .plan-card {
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          color: white;
-          padding: 24px;
+        .subscription-card {
+          background: white;
           border-radius: 16px;
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+          padding: 32px;
+          box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+          border: 1px solid #e2e8f0;
         }
 
-        .plan-header {
-          display: flex;
-          align-items: center;
-          gap: 16px;
+        .subscription-card.active {
+          border-color: #38a169;
+          background: linear-gradient(135deg, #f0fff4 0%, #c6f6d5 100%);
         }
 
-        .plan-icon {
-          width: 48px;
-          height: 48px;
-          background: rgba(255, 255, 255, 0.2);
-          border-radius: 12px;
+        .subscription-header {
+          display: flex;
+          align-items: center;
+          gap: 20px;
+          margin-bottom: 24px;
+        }
+
+        .subscription-icon {
+          width: 64px;
+          height: 64px;
+          background: linear-gradient(135deg, #38a169 0%, #2f855a 100%);
+          border-radius: 16px;
           display: flex;
           align-items: center;
           justify-content: center;
-          font-size: 24px;
+          color: white;
         }
 
-        .plan-header h3 {
+        .subscription-icon.inactive {
+          background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%);
+        }
+
+        .subscription-icon svg {
+          width: 32px;
+          height: 32px;
+        }
+
+        .subscription-info {
+          flex: 1;
+        }
+
+        .subscription-info h2 {
           margin: 0 0 4px 0;
+          font-size: 24px;
+          font-weight: 700;
+          color: #1a202c;
+        }
+
+        .subscription-info p {
+          margin: 0;
+          color: #718096;
+          font-size: 16px;
+        }
+
+        .subscription-status {
+          font-size: 16px;
+          font-weight: 600;
+          padding: 8px 16px;
+          border-radius: 8px;
+          background: rgba(255, 255, 255, 0.8);
+        }
+
+        .subscription-details {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+          gap: 16px;
+          margin-bottom: 24px;
+          padding: 24px;
+          background: rgba(255, 255, 255, 0.7);
+          border-radius: 12px;
+        }
+
+        .detail-item {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+        }
+
+        .detail-label {
+          font-size: 14px;
+          color: #718096;
+          font-weight: 500;
+        }
+
+        .detail-value {
           font-size: 18px;
           font-weight: 600;
+          color: #1a202c;
         }
 
-        .plan-name {
-          margin: 0;
-          font-size: 14px;
-          opacity: 0.9;
+        .subscription-pricing {
+          margin-bottom: 24px;
         }
 
-        .plan-cost {
-          text-align: right;
+        .price-highlight {
+          text-align: center;
+          margin-bottom: 24px;
         }
 
-        .cost-amount {
-          display: block;
-          font-size: 32px;
+        .price-amount {
+          font-size: 48px;
           font-weight: 700;
-          line-height: 1;
+          color: #1a202c;
         }
 
-        .cost-period {
-          font-size: 14px;
-          opacity: 0.9;
+        .price-period {
+          font-size: 18px;
+          color: #718096;
+          margin-left: 8px;
         }
 
-        .settings-section {
+        .feature-list {
+          list-style: none;
+          padding: 0;
+          margin: 0;
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+          gap: 12px;
+        }
+
+        .feature-list li {
+          font-size: 16px;
+          color: #4a5568;
+          padding: 8px 0;
+        }
+
+        .subscription-actions {
+          display: flex;
+          gap: 16px;
+          justify-content: center;
+        }
+
+        .btn {
+          padding: 16px 32px;
+          border-radius: 12px;
+          font-size: 16px;
+          font-weight: 600;
+          border: none;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          min-width: 180px;
+        }
+
+        .btn:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+        }
+
+        .btn-primary {
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+          transform: translateY(-2px);
+          box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-paypal {
+          background: linear-gradient(135deg, #0066cc 0%, #003d7a 100%);
+        }
+
+        .btn-paypal:hover:not(:disabled) {
+          box-shadow: 0 8px 20px rgba(0, 102, 204, 0.4);
+        }
+
+        .btn-danger {
+          background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%);
+          color: white;
+        }
+
+        .btn-danger:hover:not(:disabled) {
+          transform: translateY(-2px);
+          box-shadow: 0 8px 20px rgba(229, 62, 62, 0.4);
+        }
+
+        .payment-history {
           background: white;
           border-radius: 16px;
-          padding: 24px;
-          margin-bottom: 24px;
+          padding: 32px;
+          margin-bottom: 40px;
           box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
           border: 1px solid #e2e8f0;
         }
 
-        .settings-section h2 {
+        .payment-history h2 {
           margin: 0 0 24px 0;
           font-size: 24px;
           font-weight: 600;
           color: #1a202c;
         }
 
-        .payment-method-card {
-          border: 2px solid #e2e8f0;
-          border-radius: 12px;
-          padding: 20px;
-          margin-bottom: 16px;
-          transition: all 0.3s ease;
-        }
-
-        .payment-method-card:hover {
-          border-color: #cbd5e0;
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-
-        .method-header {
+        .payment-list {
           display: flex;
-          align-items: center;
+          flex-direction: column;
           gap: 16px;
         }
 
-        .method-icon {
-          width: 48px;
-          height: 48px;
+        .payment-item {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+          padding: 16px;
+          background: #f7fafc;
           border-radius: 12px;
+          border: 1px solid #e2e8f0;
+        }
+
+        .payment-icon {
+          width: 40px;
+          height: 40px;
+          background: linear-gradient(135deg, #38a169 0%, #2f855a 100%);
+          border-radius: 10px;
           display: flex;
           align-items: center;
           justify-content: center;
-          font-size: 24px;
-        }
-
-        .cash-icon {
-          background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
-        }
-
-        .stripe-icon {
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-
-        .method-info {
-          flex: 1;
-        }
-
-        .method-info h3 {
-          margin: 0 0 4px 0;
-          font-size: 18px;
-          font-weight: 600;
-          color: #1a202c;
-        }
-
-        .method-info p {
-          margin: 0;
-          color: #718096;
-          font-size: 14px;
-        }
-
-        .method-status {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          font-size: 14px;
-          font-weight: 500;
-        }
-
-        .method-status.enabled {
-          color: #38a169;
-        }
-
-        .status-dot {
-          width: 8px;
-          height: 8px;
-          background: #38a169;
-          border-radius: 50%;
-        }
-
-        .method-toggle {
-          display: flex;
-          align-items: center;
-        }
-
-        .toggle-switch {
-          position: relative;
-          display: inline-block;
-          width: 60px;
-          height: 34px;
-        }
-
-        .toggle-switch input {
-          opacity: 0;
-          width: 0;
-          height: 0;
-        }
-
-        .toggle-slider {
-          position: absolute;
-          cursor: pointer;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          background-color: #ccc;
-          transition: 0.4s;
-          border-radius: 34px;
-        }
-
-        .toggle-slider:before {
-          position: absolute;
-          content: "";
-          height: 26px;
-          width: 26px;
-          left: 4px;
-          bottom: 4px;
-          background-color: white;
-          transition: 0.4s;
-          border-radius: 50%;
-        }
-
-        input:checked + .toggle-slider {
-          background-color: #667eea;
-        }
-
-        input:checked + .toggle-slider:before {
-          transform: translateX(26px);
-        }
-
-        .checkout-connect-section {
-          margin-top: 16px;
-          padding-top: 16px;
-          border-top: 1px solid #e2e8f0;
-        }
-
-        .connect-prompt p {
-          margin: 0 0 16px 0;
-          color: #4a5568;
-        }
-
-        .checkout-connect-btn {
-          background: #0066cc;
           color: white;
-          border: none;
-          padding: 12px 24px;
-          border-radius: 8px;
-          font-weight: 600;
-          cursor: pointer;
-          transition: all 0.3s ease;
-          display: flex;
-          align-items: center;
-          gap: 8px;
         }
 
-        .checkout-connect-btn:hover {
-          background: #0052a3;
-          transform: translateY(-1px);
-        }
-
-        .checkout-logo {
-          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-          font-weight: 700;
-          letter-spacing: -0.5px;
-        }
-
-        .checkout-connected {
-          margin-top: 16px;
-          padding-top: 16px;
-          border-top: 1px solid #e2e8f0;
-        }
-
-        .connected-status {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          color: #38a169;
-          font-weight: 500;
-        }
-
-        .check-icon {
+        .payment-icon svg {
           width: 20px;
           height: 20px;
         }
 
-        .analytics-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-          gap: 20px;
+        .payment-details {
+          flex: 1;
         }
 
-        .analytics-card {
-          background: #f7fafc;
-          border: 1px solid #e2e8f0;
-          border-radius: 12px;
-          padding: 20px;
-          display: flex;
-          align-items: center;
-          gap: 16px;
-        }
-
-        .analytics-icon {
-          width: 48px;
-          height: 48px;
-          background: white;
-          border-radius: 12px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 24px;
-          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .analytics-content h3 {
-          margin: 0 0 4px 0;
-          font-size: 14px;
-          color: #718096;
-          font-weight: 500;
-        }
-
-        .analytics-value {
-          margin: 0;
-          font-size: 24px;
-          font-weight: 700;
-          color: #1a202c;
-        }
-
-        .cost-comparison {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-          gap: 24px;
-        }
-
-        .comparison-card {
-          border: 2px solid #e2e8f0;
-          border-radius: 12px;
-          padding: 20px;
-        }
-
-        .comparison-card h3 {
-          margin: 0 0 16px 0;
+        .payment-amount {
           font-size: 18px;
           font-weight: 600;
           color: #1a202c;
         }
 
-        .cost-breakdown {
-          space-y: 12px;
+        .payment-date {
+          font-size: 14px;
+          color: #718096;
         }
 
-        .cost-item {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          padding: 8px 0;
-          border-bottom: 1px solid #f1f5f9;
+        .payment-status.success {
+          color: #38a169;
+          font-weight: 600;
           font-size: 14px;
         }
 
-        .cost-item:last-of-type {
-          border-bottom: none;
+        .payment-info {
+          background: white;
+          border-radius: 16px;
+          padding: 32px;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+          border: 1px solid #e2e8f0;
         }
 
-        .cost-free {
-          color: #38a169;
+        .payment-info h2 {
+          margin: 0 0 24px 0;
+          font-size: 24px;
           font-weight: 600;
-        }
-
-        .cost-total {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          padding: 12px 0 0 0;
-          border-top: 2px solid #e2e8f0;
-          font-weight: 600;
-          font-size: 16px;
           color: #1a202c;
         }
 
-        .savings-highlight {
-          display: flex;
-          align-items: center;
-          gap: 16px;
-          background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
-          color: white;
-          padding: 20px;
-          border-radius: 12px;
-          margin-top: 24px;
+        .info-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+          gap: 24px;
         }
 
-        .savings-icon {
-          width: 32px;
-          height: 32px;
+        .info-card {
+          display: flex;
+          gap: 16px;
+          padding: 20px;
+          background: #f7fafc;
+          border-radius: 12px;
+          border: 1px solid #e2e8f0;
+        }
+
+        .info-icon {
+          font-size: 32px;
+          width: 48px;
+          height: 48px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
           flex-shrink: 0;
         }
 
-        .savings-highlight h4 {
-          margin: 0 0 4px 0;
+        .info-content h3 {
+          margin: 0 0 8px 0;
           font-size: 16px;
           font-weight: 600;
+          color: #1a202c;
         }
 
-        .savings-highlight p {
+        .info-content p {
           margin: 0;
           font-size: 14px;
-          opacity: 0.9;
+          color: #718096;
+          line-height: 1.6;
         }
 
         @media (max-width: 768px) {
@@ -725,17 +709,29 @@ const PaymentSettingsPage: React.FC = () => {
             padding: 16px;
           }
 
-          .plan-card {
-            flex-direction: column;
-            gap: 16px;
-            text-align: center;
+          .subscription-card {
+            padding: 20px;
           }
 
-          .analytics-grid {
+          .subscription-header {
+            flex-direction: column;
+            text-align: center;
+            gap: 16px;
+          }
+
+          .subscription-details {
             grid-template-columns: 1fr;
           }
 
-          .cost-comparison {
+          .feature-list {
+            grid-template-columns: 1fr;
+          }
+
+          .subscription-actions {
+            flex-direction: column;
+          }
+
+          .info-grid {
             grid-template-columns: 1fr;
           }
         }

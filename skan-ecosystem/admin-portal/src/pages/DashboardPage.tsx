@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { restaurantApiService, Order } from '../services/api';
 import WelcomeHeader from '../components/WelcomeHeader';
@@ -12,6 +12,13 @@ const DashboardPage: React.FC = () => {
   const [selectedStatus, setSelectedStatus] = useState<string>('all');
   const [refreshing, setRefreshing] = useState(false);
   const [usingMockData, setUsingMockData] = useState(false);
+  
+  // Notification system state
+  const [previousOrderCount, setPreviousOrderCount] = useState(0);
+  const [notificationsEnabled, setNotificationsEnabled] = useState(false);
+  const [audioEnabled, setAudioEnabled] = useState(true);
+  const [showNotificationSettings, setShowNotificationSettings] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
   
   // Undo functionality state
   interface UndoOperation {
@@ -32,10 +39,13 @@ const DashboardPage: React.FC = () => {
       setError(null);
       const ordersData = await restaurantApiService.getOrders(
         auth.user.venueId, 
-        selectedStatus
+        'all'  // Always load all orders, filter client-side
       );
       setOrders(ordersData);
       setUsingMockData(false); // We have real data
+      
+      // Check for new orders and trigger notifications
+      checkForNewOrders(ordersData);
     } catch (err) {
       console.error('Error loading orders:', err);
       
@@ -100,20 +110,104 @@ const DashboardPage: React.FC = () => {
       setLoading(false);
       setRefreshing(false);
     }
-  }, [auth.user?.venueId, selectedStatus]);
+  }, [auth.user?.venueId]);
+
+  // Initialize notification system
+  useEffect(() => {
+    // Load saved notification preferences
+    const savedAudioEnabled = localStorage.getItem('skan-audio-enabled');
+    const savedNotificationsEnabled = localStorage.getItem('skan-notifications-enabled');
+    
+    if (savedAudioEnabled !== null) {
+      setAudioEnabled(savedAudioEnabled === 'true');
+    }
+
+    // Request permission for browser notifications
+    if ('Notification' in window && Notification.permission === 'default') {
+      Notification.requestPermission().then(permission => {
+        const enabled = permission === 'granted';
+        setNotificationsEnabled(enabled);
+        localStorage.setItem('skan-notifications-enabled', enabled.toString());
+      });
+    } else if ('Notification' in window && Notification.permission === 'granted') {
+      const enabled = savedNotificationsEnabled !== 'false'; // Default to true if permission granted
+      setNotificationsEnabled(enabled);
+      localStorage.setItem('skan-notifications-enabled', enabled.toString());
+    }
+
+    // Initialize audio for notifications
+    if (!audioRef.current) {
+      audioRef.current = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmMcBzuY3e/AcCwCKHfN7tqROgcTU6Pe5qlXFAhJot3vs2AeBzOj0e7ItS4AH27Z7t2UOgYNVKzt56VZFgVFp9/xs2EcCjKX3O7JtW0ABSaA3fjPcywD');
+    }
+  }, []);
+
+  // Toggle handlers for notification preferences
+  const toggleAudioNotifications = useCallback(() => {
+    const newAudioEnabled = !audioEnabled;
+    setAudioEnabled(newAudioEnabled);
+    localStorage.setItem('skan-audio-enabled', newAudioEnabled.toString());
+  }, [audioEnabled]);
+
+  const toggleBrowserNotifications = useCallback(async () => {
+    if (!notificationsEnabled) {
+      // Request permission when enabling
+      if ('Notification' in window) {
+        const permission = await Notification.requestPermission();
+        if (permission === 'granted') {
+          setNotificationsEnabled(true);
+          localStorage.setItem('skan-notifications-enabled', 'true');
+        }
+      }
+    } else {
+      // Disable notifications
+      setNotificationsEnabled(false);
+      localStorage.setItem('skan-notifications-enabled', 'false');
+    }
+  }, [notificationsEnabled]);
+
+  // Check for new orders and trigger notifications
+  const checkForNewOrders = useCallback((newOrders: Order[]) => {
+    const newOrdersCount = newOrders.filter(order => order.status === 'new').length;
+    
+    if (previousOrderCount > 0 && newOrdersCount > previousOrderCount) {
+      const newOrdersAdded = newOrdersCount - previousOrderCount;
+      
+      // Play audio notification if enabled
+      if (audioEnabled && audioRef.current) {
+        audioRef.current.play().catch(e => console.log('Audio play failed:', e));
+      }
+      
+      // Show browser notification
+      if (notificationsEnabled) {
+        new Notification(`🔔 ${newOrdersAdded} porosinë të reja!`, {
+          body: 'Keni marrë porosinë të reja që duhen përpunuar.',
+          icon: '/favicon.ico',
+          tag: 'new-orders'
+        });
+      }
+      
+      // Add visual flash effect
+      document.body.style.backgroundColor = '#dc3545';
+      setTimeout(() => {
+        document.body.style.backgroundColor = '';
+      }, 200);
+    }
+    
+    setPreviousOrderCount(newOrdersCount);
+  }, [previousOrderCount, notificationsEnabled, audioEnabled]);
 
   useEffect(() => {
     loadOrders();
   }, [loadOrders]);
 
   useEffect(() => {
-    // Auto-refresh every 30 seconds
+    // Auto-refresh every 10 seconds for real-time updates
     const interval = setInterval(() => {
       if (auth.user?.venueId) {
         setRefreshing(true);
         loadOrders();
       }
-    }, 30000);
+    }, 10000);
 
     return () => clearInterval(interval);
   }, [auth.user?.venueId, loadOrders]);
@@ -321,6 +415,27 @@ const DashboardPage: React.FC = () => {
     }
   };
 
+  const getOrderUrgency = (dateString: string, status: string) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffMinutes = Math.floor((now.getTime() - date.getTime()) / (1000 * 60));
+    
+    // Only show urgency for active orders
+    if (!['new', 'preparing', 'ready'].includes(status)) {
+      return { level: 'normal', className: '' };
+    }
+    
+    if (diffMinutes > 20) {
+      return { level: 'critical', className: 'order-urgent-critical' };
+    } else if (diffMinutes > 10) {
+      return { level: 'warning', className: 'order-urgent-warning' };
+    } else if (diffMinutes > 5) {
+      return { level: 'attention', className: 'order-urgent-attention' };
+    }
+    
+    return { level: 'normal', className: '' };
+  };
+
   // Show venue setup if user has no venue
   if (!auth.user?.venueId && !loading) {
     return (
@@ -384,16 +499,34 @@ const DashboardPage: React.FC = () => {
           <h2>Paneli i Porosive</h2>
           <p>Menaxho porositë e ardhura dhe përditëso statusin e tyre</p>
         </div>
-        <button 
-          className="refresh-button"
-          onClick={() => {
-            setRefreshing(true);
-            loadOrders();
-          }}
-          disabled={refreshing}
-        >
-          {refreshing ? 'Duke rifreskuar...' : 'Rifresko'}
-        </button>
+        <div className="header-controls">
+          <button 
+            className="settings-button"
+            onClick={() => setShowNotificationSettings(!showNotificationSettings)}
+            style={{
+              background: 'none',
+              border: 'none',
+              fontSize: '20px',
+              cursor: 'pointer',
+              marginRight: '12px',
+              padding: '8px',
+              borderRadius: '4px'
+            }}
+            title="Cilësimet e njoftimeve"
+          >
+            🔔
+          </button>
+          <button 
+            className="refresh-button"
+            onClick={() => {
+              setRefreshing(true);
+              loadOrders();
+            }}
+            disabled={refreshing}
+          >
+            {refreshing ? 'Duke rifreskuar...' : 'Rifresko'}
+          </button>
+        </div>
       </div>
 
       <div className="status-filters">
@@ -408,6 +541,102 @@ const DashboardPage: React.FC = () => {
         ))}
       </div>
 
+      {/* Notification Settings Panel */}
+      {showNotificationSettings && (
+        <div className="notification-settings-panel" style={{
+          background: '#f8f9fa',
+          border: '1px solid #e9ecef',
+          borderRadius: '8px',
+          padding: '16px',
+          margin: '16px 0',
+          maxWidth: '600px'
+        }}>
+          <h3 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: '600' }}>
+            🔔 Cilësimet e Njoftimeve
+          </h3>
+          
+          <div className="notification-toggles" style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <div className="toggle-item" style={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'space-between',
+              padding: '8px 12px',
+              background: '#ffffff',
+              borderRadius: '6px',
+              border: '1px solid #dee2e6'
+            }}>
+              <div>
+                <div style={{ fontWeight: '500', fontSize: '14px' }}>🔊 Zërat e Njoftimeve</div>
+                <div style={{ fontSize: '12px', color: '#6c757d' }}>
+                  Luaj zë kur vijnë porosite të reja
+                </div>
+              </div>
+              <button
+                onClick={toggleAudioNotifications}
+                style={{
+                  background: audioEnabled ? '#28a745' : '#6c757d',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '20px',
+                  padding: '6px 16px',
+                  fontSize: '12px',
+                  cursor: 'pointer',
+                  minWidth: '60px',
+                  transition: 'background-color 0.2s'
+                }}
+              >
+                {audioEnabled ? 'ON' : 'OFF'}
+              </button>
+            </div>
+            
+            <div className="toggle-item" style={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'space-between',
+              padding: '8px 12px',
+              background: '#ffffff',
+              borderRadius: '6px',
+              border: '1px solid #dee2e6'
+            }}>
+              <div>
+                <div style={{ fontWeight: '500', fontSize: '14px' }}>🌐 Njoftimet e Browser-it</div>
+                <div style={{ fontSize: '12px', color: '#6c757d' }}>
+                  Shfaq njoftimet në browser për porosite e reja
+                </div>
+              </div>
+              <button
+                onClick={toggleBrowserNotifications}
+                style={{
+                  background: notificationsEnabled ? '#28a745' : '#6c757d',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '20px',
+                  padding: '6px 16px',
+                  fontSize: '12px',
+                  cursor: 'pointer',
+                  minWidth: '60px',
+                  transition: 'background-color 0.2s'
+                }}
+              >
+                {notificationsEnabled ? 'ON' : 'OFF'}
+              </button>
+            </div>
+          </div>
+          
+          <div style={{ 
+            marginTop: '12px', 
+            padding: '8px 12px', 
+            background: '#e3f2fd', 
+            borderRadius: '4px',
+            fontSize: '12px',
+            color: '#1565c0'
+          }}>
+            💡 <strong>Këshillë:</strong> Aktivizo njoftimet për të mos humbur porosite e reja. 
+            Sistemi kontrollon për përditësime çdo 10 sekonda.
+          </div>
+        </div>
+      )}
+
       {error && (
         <div className="error-message">
           {error}
@@ -421,8 +650,10 @@ const DashboardPage: React.FC = () => {
           </div>
         ) : (
           <div className="orders-grid">
-            {filteredOrders.map(order => (
-              <div key={order.id} className="order-card">
+            {filteredOrders.map(order => {
+              const urgency = getOrderUrgency(order.createdAt, order.status);
+              return (
+              <div key={order.id} className={`order-card ${urgency.className}`}>
                 <div className="order-header">
                   <div className="order-number">{order.orderNumber}</div>
                   <div 
@@ -471,7 +702,8 @@ const DashboardPage: React.FC = () => {
                   </button>
                 )}
               </div>
-            ))}
+            );
+            })}
           </div>
         )}
       </div>
@@ -484,6 +716,52 @@ const DashboardPage: React.FC = () => {
           onDismiss={() => setUndoOperation(null)}
         />
       )}
+      
+      {/* CSS for urgency indicators */}
+      <style>{`
+        .order-urgent-attention {
+          border-left: 4px solid #ffc107 !important;
+          background: linear-gradient(90deg, rgba(255, 193, 7, 0.05) 0%, transparent 100%);
+        }
+        
+        .order-urgent-warning {
+          border-left: 4px solid #ff6b35 !important;
+          background: linear-gradient(90deg, rgba(255, 107, 53, 0.1) 0%, transparent 100%);
+          animation: pulse-warning 2s infinite;
+        }
+        
+        .order-urgent-critical {
+          border-left: 4px solid #dc3545 !important;
+          background: linear-gradient(90deg, rgba(220, 53, 69, 0.15) 0%, transparent 100%);
+          animation: pulse-critical 1s infinite;
+          box-shadow: 0 0 20px rgba(220, 53, 69, 0.3) !important;
+        }
+        
+        @keyframes pulse-warning {
+          0%, 100% { transform: scale(1); }
+          50% { transform: scale(1.02); }
+        }
+        
+        @keyframes pulse-critical {
+          0%, 100% { transform: scale(1); box-shadow: 0 0 20px rgba(220, 53, 69, 0.3); }
+          50% { transform: scale(1.03); box-shadow: 0 0 30px rgba(220, 53, 69, 0.5); }
+        }
+        
+        .order-urgent-critical .order-time {
+          color: #dc3545 !important;
+          font-weight: bold !important;
+        }
+        
+        .order-urgent-warning .order-time {
+          color: #ff6b35 !important;
+          font-weight: 600 !important;
+        }
+        
+        .order-urgent-attention .order-time {
+          color: #ffc107 !important;
+          font-weight: 500 !important;
+        }
+      `}</style>
     </div>
   );
 };
