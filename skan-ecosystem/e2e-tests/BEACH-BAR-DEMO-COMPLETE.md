@@ -25,27 +25,27 @@
 
 ## 🍽️ MENU HIGHLIGHTS
 
-**5 Categories | 10 Menu Items | Real Albanian Pricing**
+**5 Categories | 10 Menu Items | Real Albanian Pricing in Lek**
 
 ### Appetizers (2 items)
-- Greek Salad - €8.50
-- Fried Calamari - €12.00
+- Greek Salad - 850 Lek
+- Fried Calamari - 1,200 Lek
 
 ### Main Courses (2 items)  
-- Seafood Risotto - €18.50
-- Grilled Lamb Chops - €22.00
+- Seafood Risotto - 1,850 Lek
+- Grilled Lamb Chops - 2,200 Lek
 
 ### Fresh Seafood (1 item)
-- Grilled Sea Bass - €24.00
+- Grilled Sea Bass - 2,400 Lek
 
 ### Drinks (3 items)
-- Albanian Beer - €3.50 ⭐️ *Perfect for demo orders*
-- Albanian Raki - €4.00
-- Mojito - €7.50
+- Albanian Beer - 350 Lek ⭐️ *Perfect for demo orders*
+- Albanian Raki - 400 Lek
+- Mojito - 750 Lek
 
 ### Desserts (2 items)
-- Tiramisu - €6.50
-- Baklava - €5.50
+- Tiramisu - 650 Lek
+- Baklava - 550 Lek
 
 ---
 
@@ -55,7 +55,7 @@
 1. **Open**: https://order.skan.al/beach-bar-durres/a1
 2. **Highlight**: "This is a real Albanian restaurant, not a demo"
 3. **Browse**: Show bilingual menu (Albanian/English)
-4. **Add Items**: Albanian Beer (€3.50) + Greek Salad (€8.50)
+4. **Add Items**: Albanian Beer (350 Lek) + Greek Salad (850 Lek)
 5. **Checkout**: Add customer name "Demo Customer"
 6. **Submit**: Order goes live instantly
 7. **Track**: Show real-time order tracking
@@ -161,7 +161,7 @@
 ### Menu Data
 - **Categories**: 5 fully populated
 - **Items**: 10 with Albanian/English translations
-- **Pricing**: Real Albanian restaurant prices in EUR
+- **Pricing**: Real Albanian restaurant prices in Lek
 - **Allergens**: Properly tagged for safety
 
 ---
