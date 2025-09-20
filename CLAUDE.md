@@ -840,13 +840,13 @@ All endpoints return consistent error responses:
 ### DEMO CREDENTIALS
 
 **Demo Manager Login:**
-- Email: `manager_email1@gmail.com`
-- Password: `admin123`
-- Venue ID: `demo-venue-1`
+- Email: `demo.beachbar@skan.al`
+- Password: `BeachBarDemo2024!`
+- Venue ID: `beach-bar-durres`
 
 **Demo Venue:**
-- Slug: `demo-restaurant`
-- Name: `Demo Restaurant`
+- Slug: `beach-bar-durres`
+- Name: `Beach Bar Durrës`
 
 ---
 
@@ -1606,7 +1606,7 @@ node setup-test-data.cjs                 # Environment validation
 
 #### **Test Accounts**
 ```
-manager_email1@gmail.com - Existing manager (Beach Bar Durrës)
+demo.beachbar@skan.al - Demo manager (Beach Bar Durrës)
 test-owner@skan.al - Test restaurant owner
 test-manager@skan.al - Test restaurant manager
 test-staff@skan.al - Test restaurant staff
