@@ -1,22 +1,30 @@
 # SKAN Customer App - Deployment Instructions
 
-## 🚨 URGENT: Deploy to order.skan.al to Fix Demo Experience
+## ✅ FIXED: Customer App Ready for Deployment
 
-### Current Issue
-The customer ordering demo at `https://order.skan.al/beach-bar-durres/a1` is showing a blank page, breaking the critical customer demo flow.
+### Issue Resolved
+Fixed critical bug where QRLanding component was missing VenueProvider wrapper, causing blank page at `https://order.skan.al/beach-bar-durres/a1`.
+
+### Root Cause
+The QRLanding component was using `useVenue()` hook without being wrapped in a VenueProvider, causing a runtime error that made the page blank.
+
+### Fix Applied
+- Added `QRLandingWithContext` wrapper component
+- QRLanding now properly receives venue data via VenueProvider
+- Updated routing in App.tsx to use wrapper component
 
 ### Files Ready for Deployment
-- ✅ Production build in `/build/` folder
+- ✅ Production build in `/build/` folder (with fix)
 - ✅ Netlify configuration in `netlify.toml`
 - ✅ SPA redirects in `public/_redirects`
-- ✅ Deployment package: `customer-app-deployment.tar.gz`
+- ✅ **NEW**: Fixed deployment package: `customer-app-deployment-fixed.tar.gz`
 
 ## Method 1: Manual Netlify Deployment (FASTEST)
 
 1. **Extract Build Files**:
    ```bash
    cd skan-ecosystem/customer-app
-   tar -xzf customer-app-deployment.tar.gz -C /tmp/customer-app-deploy
+   tar -xzf customer-app-deployment-fixed.tar.gz -C /tmp/customer-app-deploy
    ```
 
 2. **Deploy to Netlify**:
