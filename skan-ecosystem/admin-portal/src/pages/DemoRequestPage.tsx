@@ -164,7 +164,7 @@ const DemoRequestPage: React.FC = () => {
                     fontSize: '14px',
                     fontWeight: '600'
                   }}>
-                    demo.beachbar@skan.al
+                    manager_email1@gmail.com
                   </div>
                 </div>
                 
@@ -189,7 +189,7 @@ const DemoRequestPage: React.FC = () => {
                     fontSize: '14px',
                     fontWeight: '600'
                   }}>
-                    BeachBarDemo2024!
+                    admin123
                   </div>
                 </div>
               </div>
@@ -209,8 +209,8 @@ const DemoRequestPage: React.FC = () => {
                       'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                      email: 'demo.beachbar@skan.al',
-                      password: 'BeachBarDemo2024!'
+                      email: 'manager_email1@gmail.com',
+                      password: 'admin123'
                     }),
                   });
 
