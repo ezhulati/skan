@@ -32,7 +32,7 @@ async function testRestaurantDemoFlow() {
     });
     
     console.log('✅ Homepage demo buttons:', homepageDemo);
-    await page.waitForTimeout(2000);
+    await new Promise(resolve => setTimeout(resolve, 2000));
     
     // Step 2: Navigate to Demo Request Page
     console.log('\n🔍 Step 2: Testing Demo Request Flow');
@@ -65,7 +65,7 @@ async function testRestaurantDemoFlow() {
     // Wait for navigation or error
     await Promise.race([
       page.waitForNavigation({ timeout: 10000 }),
-      page.waitForTimeout(5000)
+      (() => new Promise(resolve => setTimeout(resolve, arguments[0])))(5000)
     ]);
     
     // Check if we're in the dashboard
@@ -83,14 +83,14 @@ async function testRestaurantDemoFlow() {
     });
     
     console.log('✅ Dashboard status:', dashboardStatus);
-    await page.waitForTimeout(3000);
+    await new Promise(resolve => setTimeout(resolve, 3000));
     
     // Step 4: Test Customer Ordering Experience
     console.log('\n🍽️ Step 4: Testing Customer Ordering Experience');
     await page.goto('https://order.skan.al/beach-bar-durres/a1', { waitUntil: 'networkidle2' });
     
     // Wait for React app to load
-    await page.waitForTimeout(3000);
+    await new Promise(resolve => setTimeout(resolve, 3000));
     
     const customerApp = await page.evaluate(() => {
       return {
@@ -114,7 +114,7 @@ async function testRestaurantDemoFlow() {
     
     // Look for menu button or auto-redirect
     try {
-      await page.waitForTimeout(2000);
+      await new Promise(resolve => setTimeout(resolve, 2000));
       
       // Check if we can find menu items
       const menuItems = await page.evaluate(() => {
@@ -212,7 +212,7 @@ async function testRestaurantDemoFlow() {
     
     // Keep browser open for manual inspection
     console.log('\n👀 Browser kept open for manual inspection...');
-    await page.waitForTimeout(5000);
+    await new Promise(resolve => setTimeout(resolve, 5000));
     
   } catch (error) {
     console.error('❌ Test failed:', error);
