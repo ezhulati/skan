@@ -1,7 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { onboardingApiService } from '../services/onboardingApi';
 import { useAuth } from '../contexts/AuthContext';
 import './OnboardingWizard.css';
+
+// PayPal types
+declare global {
+  interface Window {
+    paypal?: any;
+  }
+}
 
 interface OnboardingWizardProps {
   onComplete: () => void;
@@ -58,8 +65,16 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
     },
     paymentMethods: ['cash']
   });
-  const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
+  const [menuItems, setMenuItems] = useState<MenuItem[]>([
+    { name: '', nameAlbanian: '', description: '', price: '', category: 'main' }
+  ]);
   const [tableCount, setTableCount] = useState('');
+  
+  // PayPal subscription state
+  const [paypalLoaded, setPaypalLoaded] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState<'monthly' | 'annual'>('annual');
+  const [subscriptionProcessing, setSubscriptionProcessing] = useState(false);
+  const [subscriptionCompleted, setSubscriptionCompleted] = useState(false);
 
   // Load onboarding status on mount
   useEffect(() => {
@@ -81,7 +96,7 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
         
         if (savedCurrentStep) {
           const stepNumber = parseInt(savedCurrentStep);
-          if (stepNumber >= 1 && stepNumber <= 5) {
+          if (stepNumber >= 1 && stepNumber <= 4) {
             setCurrentStep(stepNumber);
             console.log('Loaded current step from localStorage:', stepNumber);
           }
@@ -100,8 +115,12 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
         console.log('Onboarding status loaded:', response);
         
         // Resume from the current step (prefer API data over localStorage)
+        // Cap at step 4 until subscription is completed
         if (response?.onboarding?.currentStep) {
-          setCurrentStep(response.onboarding.currentStep);
+          const apiStep = response.onboarding.currentStep;
+          const maxStep = subscriptionCompleted ? apiStep : Math.min(apiStep, 4);
+          console.log('API currentStep:', apiStep, 'subscriptionCompleted:', subscriptionCompleted, 'setting to:', maxStep);
+          setCurrentStep(maxStep);
         }
         
         // Load existing data if available (prefer API data over localStorage)
@@ -167,21 +186,193 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
     };
 
     loadOnboardingStatus();
-  }, [auth.token]);
+  }, [auth.token, subscriptionCompleted]);
+
+  // PayPal functions using useCallback for proper React hook dependencies
+  const handleSubscriptionSuccess = useCallback(async (subscriptionId: string, plan: string) => {
+    try {
+      console.log('Processing subscription success:', { subscriptionId, plan });
+      
+      // Here you would typically save the subscription info to the backend
+      // For now, we'll just mark subscription as completed
+      
+      await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate API call
+      
+      console.log('Subscription successful, marking as completed');
+      setSubscriptionProcessing(false);
+      setSubscriptionCompleted(true);
+      
+      // Complete onboarding and redirect to dashboard ONLY after successful subscription
+      onComplete();
+    } catch (error) {
+      console.error('Error processing subscription:', error);
+      setError('Subscription was successful but there was an error completing setup. Please contact support.');
+      setSubscriptionProcessing(false);
+    }
+  }, [onComplete, setSubscriptionProcessing, setSubscriptionCompleted, setError]);
+
+  const initializePayPalButtons = useCallback(() => {
+    if (!window.paypal) {
+      console.log('PayPal SDK not available yet');
+      return;
+    }
+
+    // Wait for DOM to be ready and find container
+    const container = document.getElementById('paypal-button-container');
+    if (!container) {
+      console.log('PayPal container not found, retrying...');
+      setTimeout(() => initializePayPalButtons(), 100);
+      return;
+    }
+    
+    // Clear existing buttons using React-safe approach
+    if (container.innerHTML.trim() !== '') {
+      console.log('Clearing existing PayPal buttons');
+      container.innerHTML = '';
+    }
+    
+    console.log('Initializing PayPal buttons for selected plan:', selectedPlan);
+
+    // Monthly plan ID: P-3JR08037XE6949820M7A4NXA
+    // Annual plan ID: P-9LN86568LJ779673UM7A4NXQ
+    const planId = selectedPlan === 'annual' ? 'P-9LN86568LJ779673UM7A4NXQ' : 'P-3JR08037XE6949820M7A4NXA';
+    console.log('Using PayPal plan ID:', planId, 'for plan type:', selectedPlan);
+
+    window.paypal.Buttons({
+      createSubscription: function(data: any, actions: any) {
+        console.log('PayPal createSubscription called with plan ID:', planId);
+        
+        // For localhost development, we'll let the normal PayPal flow try first
+        // The error handler will catch popup issues and offer simulation
+        
+        return actions.subscription.create({
+          'plan_id': planId
+        });
+      },
+      onApprove: function(data: any, actions: any) {
+        setSubscriptionProcessing(true);
+        console.log('PayPal subscription approved:', data);
+        
+        // Handle simulated subscription in development
+        if (data.subscriptionID && data.subscriptionID.startsWith('DEV_SUBSCRIPTION_')) {
+          console.log('Development mode: Simulating successful subscription');
+          setTimeout(() => {
+            handleSubscriptionSuccess(data.subscriptionID, selectedPlan);
+          }, 2000);
+        } else {
+          handleSubscriptionSuccess(data.subscriptionID, selectedPlan);
+        }
+      },
+      onCancel: function(data: any) {
+        console.log('PayPal subscription cancelled:', data);
+        setSubscriptionProcessing(false);
+      },
+      onError: function(err: any) {
+        console.error('PayPal subscription error:', err);
+        console.error('Error details:', JSON.stringify(err, null, 2));
+        
+        // In development mode, offer to simulate success
+        if (window.location.hostname === 'localhost') {
+          const simulateSuccess = window.confirm(
+            'PayPal error in development mode. Would you like to simulate a successful payment to continue testing? This is for development only.'
+          );
+          
+          if (simulateSuccess) {
+            console.log('Development mode: Simulating successful payment after error');
+            setSubscriptionProcessing(true);
+            setTimeout(() => {
+              handleSubscriptionSuccess('DEV_SUBSCRIPTION_' + Date.now(), selectedPlan);
+            }, 1000);
+            return;
+          }
+        }
+        
+        // Check for specific popup blocker errors
+        if (err.message && err.message.includes('popup')) {
+          setError('Please allow popups for this site and try again. PayPal needs to open a popup window to complete payment.');
+        } else if (err.message && err.message.includes('blocked')) {
+          setError('Payment window was blocked. Please disable popup blockers and try again.');
+        } else {
+          setError('Payment failed. Please try again. If this continues, check your popup blocker settings.');
+        }
+        setSubscriptionProcessing(false);
+      },
+      style: {
+        shape: 'rect',
+        color: 'blue',
+        layout: 'vertical',
+        label: 'subscribe'
+      }
+    }).render('#paypal-button-container');
+  }, [selectedPlan, setSubscriptionProcessing, setError, handleSubscriptionSuccess]);
+
+  // Load PayPal SDK when reaching subscription step - FIXED to prevent DOM conflicts
+  useEffect(() => {
+    if (currentStep === 4 && !paypalLoaded) {
+      const loadPayPalScript = () => {
+        // Check if PayPal is already available
+        if (window.paypal) {
+          console.log('PayPal SDK already available');
+          setPaypalLoaded(true);
+          // Delay button initialization to ensure DOM is ready
+          setTimeout(() => initializePayPalButtons(), 100);
+          return;
+        }
+
+        // Skip script removal to avoid React DOM conflicts
+        console.log('Skipping existing script cleanup to prevent React conflicts');
+
+        console.log('Loading fresh PayPal SDK...');
+        const script = document.createElement('script');
+        // Add debug mode for development environments
+        const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+        const debugParams = isLocalhost ? '&debug=true&disable-funding=venmo,sepa' : '';
+        script.src = `https://www.paypal.com/sdk/js?client-id=AX3Ulz4TGQNK0i7aSAiswjqNp6FG2Ox4Ewj3aXvKwQMjaB_euPr5Jl3GSozx5GTYSQvRwnnD2coNaLop&vault=true&intent=subscription${debugParams}`;
+        script.async = true;
+        script.id = 'paypal-sdk-script';
+        
+        script.onload = () => {
+          console.log('PayPal SDK loaded successfully');
+          setPaypalLoaded(true);
+          // Delay button initialization to ensure React render is complete
+          setTimeout(() => initializePayPalButtons(), 200);
+        };
+        
+        script.onerror = () => {
+          console.error('Failed to load PayPal SDK');
+          setError('Failed to load payment system. Please refresh and try again.');
+        };
+        
+        document.head.appendChild(script);
+      };
+
+      loadPayPalScript();
+    }
+  }, [currentStep, paypalLoaded, initializePayPalButtons]);
+
+  // Re-initialize PayPal buttons when plan selection changes
+  useEffect(() => {
+    if (paypalLoaded && selectedPlan && currentStep === 4) {
+      console.log('Plan selection changed, re-initializing PayPal buttons for:', selectedPlan);
+      // Delay to ensure any existing buttons are cleared first
+      setTimeout(() => initializePayPalButtons(), 300);
+    }
+  }, [selectedPlan, paypalLoaded, currentStep, initializePayPalButtons]);
 
   const steps = [
     { id: 1, title: 'Informacioni' },
     { id: 2, title: 'Menyja' },
-    { id: 3, title: 'Tavolinat' }
+    { id: 3, title: 'Tavolinat' },
+    { id: 4, title: 'Abonimi' }
   ];
 
   const nextStep = () => {
     console.log('nextStep called, currentStep:', currentStep, 'steps.length:', steps.length);
-    if (currentStep < steps.length) {
+    if (currentStep < steps.length && currentStep < 4) {
       console.log('Advancing from step', currentStep, 'to step', currentStep + 1);
       setCurrentStep(currentStep + 1);
     } else {
-      console.log('Already at last step, not advancing');
+      console.log('Already at last step or step 4 (subscription required), not advancing');
     }
   };
 
@@ -275,8 +466,8 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
     }
   };
 
-
   const renderStepContent = () => {
+    console.log('renderStepContent called, currentStep:', currentStep);
     switch (currentStep) {
       case 1:
         return (
@@ -358,7 +549,10 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
                           const response = await onboardingApiService.getOnboardingStatus();
                           
                           if (response?.onboarding?.currentStep) {
-                            setCurrentStep(response.onboarding.currentStep);
+                            const apiStep = response.onboarding.currentStep;
+                            const maxStep = subscriptionCompleted ? apiStep : Math.min(apiStep, 4);
+                            console.log('Refresh API currentStep:', apiStep, 'subscriptionCompleted:', subscriptionCompleted, 'setting to:', maxStep);
+                            setCurrentStep(maxStep);
                           }
                           
                           if (response?.onboarding?.steps?.venueSetup?.data) {
@@ -624,19 +818,176 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
                     // The user can set this up later in the actual dashboard
                   } finally {
                     setSaving(false);
-                    // Complete onboarding and go to dashboard
-                    console.log('Completing onboarding');
-                    onComplete();
+                    // Go to subscription step
+                    console.log('Moving to subscription step');
+                    nextStep();
                   }
                 }}
                 disabled={!tableCount || parseInt(tableCount) < 1 || saving}
               >
-                {saving ? 'Duke ruajtur...' : 'Përfundo dhe Hap Dashboard ✓'}
+                {saving ? 'Duke ruajtur...' : 'Vazhdo te Abonimi →'}
               </button>
             </div>
           </div>
         );
 
+      case 4:
+        return (
+          <div className="step-content">
+            <h2 className="step-title">Zgjidh Planin e Abonimit</h2>
+            
+            <p className="step-description">
+              Për të aksesuar dashboard-in tuaj, zgjidhni një plan abonimi. Keni një muaj falas për të provuar sistemin.
+            </p>
+            
+            <div className="plan-selection">
+              {/* Monthly Plan */}
+              <div className={`plan-card ${selectedPlan === 'monthly' ? 'selected' : ''}`} 
+                   onClick={() => setSelectedPlan('monthly')}>
+                <div className="plan-name">Plan Mujor</div>
+                <div className="plan-price">€35<span className="plan-period">/muaj</span></div>
+                <div className="plan-period">30 ditë falas për fillim</div>
+                <ul className="plan-features">
+                  <li>Tavolina të pakufizuara</li>
+                  <li>QR codes për çdo tavolinë</li>
+                  <li>Menu dixhitale me AI</li>
+                  <li>Analitika në kohë reale</li>
+                  <li>Mbështetje prioritare</li>
+                </ul>
+              </div>
+
+              {/* Annual Plan */}
+              <div className={`plan-card ${selectedPlan === 'annual' ? 'selected' : ''}`} 
+                   onClick={() => setSelectedPlan('annual')}>
+                <div className="popular-badge">Kurse 15%</div>
+                <div className="plan-name">Plan Vjetor</div>
+                <div className="plan-price">€357<span className="plan-period">/vit</span></div>
+                <div className="plan-period">Kurse €63 në vit</div>
+                <ul className="plan-features">
+                  <li>Gjithçka nga plani mujor</li>
+                  <li>Një faturë në vit</li>
+                  <li>Mbështetje prioritare</li>
+                  <li>15% zbritje</li>
+                  <li>Faturë e fiskalizuar</li>
+                </ul>
+              </div>
+            </div>
+
+
+            {subscriptionProcessing && (
+              <div className="processing-message">
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px', marginBottom: '8px' }}>
+                  <div className="loading-spinner"></div>
+                  <span style={{ fontWeight: '500' }}>Duke përpunuar abonimin...</span>
+                </div>
+                <div>
+                  Ju lutemi prisni deri sa të përfundojë pagesa dhe konfigurimi i llogarisë suaj.
+                </div>
+              </div>
+            )}
+
+            <div className="paypal-container" style={{ marginBottom: '24px' }}>
+              <div id="paypal-button-container" style={{ 
+                minHeight: paypalLoaded ? 'auto' : '200px',
+                display: 'flex',
+                alignItems: paypalLoaded ? 'stretch' : 'center',
+                justifyContent: 'center',
+                border: paypalLoaded ? 'none' : '1px dashed #d1d5db',
+                borderRadius: '8px',
+                backgroundColor: paypalLoaded ? 'transparent' : '#f9fafb',
+                flexDirection: 'column'
+              }}>
+                {!paypalLoaded && (
+                  <div style={{ textAlign: 'center', color: '#6b7280' }}>
+                    <div style={{
+                      width: '32px',
+                      height: '32px',
+                      border: '3px solid #e1e8ed',
+                      borderTop: '3px solid #3b82f6',
+                      borderRadius: '50%',
+                      animation: 'spin 1s linear infinite',
+                      margin: '0 auto 12px'
+                    }}></div>
+                    <div style={{ fontSize: '16px', marginBottom: '8px' }}>Duke ngarkuar sistemin e pagesave...</div>
+                    <div style={{ fontSize: '14px' }}>Zgjidhni planin tuaj dhe klikoni për të vazhduar</div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Development testing button - only show on localhost */}
+            {window.location.hostname === 'localhost' && (
+              <div className="dev-mode-warning">
+                <div className="dev-mode-title">
+                  🛠️ Development Mode: PayPal popups blocked?
+                </div>
+                <button
+                  className="dev-simulate-button"
+                  onClick={() => {
+                    console.log('Development mode: Bypassing PayPal and simulating successful subscription');
+                    setSubscriptionProcessing(true);
+                    setTimeout(() => {
+                      handleSubscriptionSuccess('DEV_SUBSCRIPTION_' + Date.now(), selectedPlan);
+                    }, 2000);
+                  }}
+                  disabled={subscriptionProcessing}
+                >
+                  {subscriptionProcessing ? 'Processing...' : 'Simulate Successful Payment (Dev Only)'}
+                </button>
+              </div>
+            )}
+
+            <div className="button-group">
+              <button 
+                className="secondary-button" 
+                onClick={prevStep}
+                disabled={subscriptionProcessing}
+              >
+                ← Mbrapa
+              </button>
+              <div style={{ 
+                fontSize: '14px', 
+                color: '#6b7280', 
+                textAlign: 'center',
+                padding: '12px'
+              }}>
+                {subscriptionProcessing 
+                  ? 'Pagesa në proces... Mos e mbyllni këtë dritare.'
+                  : 'Duhet të përfundoni pagimin për të aksesuar dashboard-in'
+                }
+              </div>
+            </div>
+          </div>
+        );
+
+      case 5:
+        // If somehow we get to step 5, show subscription required message
+        // Don't call setCurrentStep here to avoid render loops
+        console.log('ERROR: Reached step 5 without subscription, showing subscription required');
+        return (
+          <div className="step-content">
+            <h2 className="step-title">Abonimi i Detyrueshëm</h2>
+            <p className="step-description">
+              Për të aksesuar dashboard-in tuaj, duhet të përfundoni abonimin.
+            </p>
+            <div style={{ color: '#dc2626', padding: '12px', backgroundColor: '#fef2f2', borderRadius: '8px', marginBottom: '20px' }}>
+              ⚠️ Nuk mund të vazhdoni pa përfunduar pagimin e abonimit.
+            </div>
+            <button 
+              onClick={() => window.location.reload()}
+              style={{
+                background: '#3b82f6',
+                color: 'white',
+                border: 'none',
+                padding: '12px 24px',
+                borderRadius: '8px',
+                cursor: 'pointer'
+              }}
+            >
+              Rifresko Faqen
+            </button>
+          </div>
+        );
       default:
         return null;
     }
@@ -675,20 +1026,27 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
         <div className="onboarding-header">
           <div className="progress-bar">
             {/* Step circles */}
-            {steps.map((step, index) => (
-              <div key={step.id} className={`progress-step ${currentStep > step.id ? 'completed' : currentStep === step.id ? 'active' : 'pending'}`}>
-                <div className="step-circle">
-                  {currentStep > step.id ? (
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                      <path d="M13.5 4.5L6 12L2.5 8.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                  ) : (
-                    <span className="step-number">{step.id}</span>
-                  )}
+            {steps.map((step, index) => {
+              // Special logic for step 4 (subscription) - only show as completed if subscription is actually completed
+              const isStepCompleted = step.id === 4 
+                ? subscriptionCompleted 
+                : currentStep > step.id;
+              
+              return (
+                <div key={step.id} className={`progress-step ${isStepCompleted ? 'completed' : currentStep === step.id ? 'active' : 'pending'}`}>
+                  <div className="step-circle">
+                    {isStepCompleted ? (
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path d="M13.5 4.5L6 12L2.5 8.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    ) : (
+                      <span className="step-number">{step.id}</span>
+                    )}
+                  </div>
+                  <div className="step-label">{step.title}</div>
                 </div>
-                <div className="step-label">{step.title}</div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
 
