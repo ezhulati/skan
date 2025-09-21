@@ -39,9 +39,9 @@ const TRANSLATOR_CONFIG = {
 
 // PayPal Configuration
 const PAYPAL_CONFIG = {
-  clientId: process.env.PAYPAL_CLIENT_ID || "sandbox_client_id",
-  clientSecret: process.env.PAYPAL_CLIENT_SECRET || "sandbox_client_secret",
-  environment: process.env.PAYPAL_ENVIRONMENT || "sandbox", // sandbox or live
+  clientId: process.env.PAYPAL_CLIENT_ID || "AX3Ulz4TGQNK0i7aSAiswjqNp6FG2Ox4Ewj3aXvKwQMjaB_euPr5Jl3GSozx5GTYSQvRwnnD2coNaLop",
+  clientSecret: process.env.PAYPAL_CLIENT_SECRET || "EOcBR2IWQBrycA-wLexlOTv1A7Gs_kzxYziG10kMqE3t0bdVEZK2BbOXXV90u6J9Tq2C1ernFiaW1viN",
+  environment: process.env.PAYPAL_ENVIRONMENT || "live", // sandbox or live
   apiUrl: process.env.PAYPAL_ENVIRONMENT === "live" ? 
     "https://api.paypal.com" : "https://api.sandbox.paypal.com"
 };
@@ -469,7 +469,7 @@ app.get("/", (req, res) => {
       orders: ["/v1/orders", "/v1/venue/:venueId/orders"],
       users: ["/v1/users", "/v1/auth/register"],
       translation: ["/v1/translate/menu-item", "/v1/translate/menu-items/bulk"],
-      payments: ["/v1/payments/subscriptions", "/v1/payments/plans", "/v1/payments/webhooks"]
+      payments: ["/v1/payments/subscriptions", "/v1/payments/plans", "/v1/payments/setup-plans", "/v1/payments/test", "/v1/payments/webhooks"]
     }
   });
 });
@@ -4699,20 +4699,116 @@ app.get("/v1/payments/test", (req, res) => {
   res.json({ message: "PayPal routes are working", timestamp: new Date().toISOString() });
 });
 
-// Create PayPal subscription plan
+// Setup both monthly and annual plans (admin utility endpoint)
+app.post("/v1/payments/setup-plans", verifyAuth, async (req, res) => {
+  try {
+    const user = req.user;
+    
+    // Only allow admins to create plans
+    if (user.role !== 'admin') {
+      return res.status(403).json({ error: "Admin access required" });
+    }
+
+    const accessToken = await getPayPalAccessToken();
+    const createdPlans = [];
+
+    // Create monthly plan
+    const monthlyPlanData = {
+      product_id: "SKAN_AL_SUBSCRIPTION",
+      name: "SKAN.AL Monthly Subscription",
+      description: "QR code ordering system for Albanian restaurants - Monthly plan",
+      status: "ACTIVE",
+      billing_cycles: [{
+        frequency: { interval_unit: "MONTH", interval_count: 1 },
+        tenure_type: "REGULAR",
+        sequence: 1,
+        total_cycles: 0,
+        pricing_scheme: { fixed_price: { value: "35.00", currency_code: "EUR" }}
+      }],
+      payment_preferences: {
+        auto_bill_outstanding: true,
+        setup_fee: { value: "0.00", currency_code: "EUR" },
+        setup_fee_failure_action: "CONTINUE",
+        payment_failure_threshold: 3
+      }
+    };
+
+    const monthlyResponse = await axios.post(`${PAYPAL_CONFIG.apiUrl}/v1/billing/plans`, monthlyPlanData, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${accessToken}`,
+        'Accept': 'application/json',
+        'PayPal-Request-Id': uuidv4()
+      }
+    });
+    createdPlans.push({ type: 'monthly', plan: monthlyResponse.data });
+
+    // Create annual plan
+    const annualPlanData = {
+      product_id: "SKAN_AL_SUBSCRIPTION",
+      name: "SKAN.AL Annual Subscription",
+      description: "QR code ordering system for Albanian restaurants - Annual plan (10% discount)",
+      status: "ACTIVE",
+      billing_cycles: [{
+        frequency: { interval_unit: "YEAR", interval_count: 1 },
+        tenure_type: "REGULAR",
+        sequence: 1,
+        total_cycles: 0,
+        pricing_scheme: { fixed_price: { value: "378.00", currency_code: "EUR" }}
+      }],
+      payment_preferences: {
+        auto_bill_outstanding: true,
+        setup_fee: { value: "0.00", currency_code: "EUR" },
+        setup_fee_failure_action: "CONTINUE",
+        payment_failure_threshold: 3
+      }
+    };
+
+    const annualResponse = await axios.post(`${PAYPAL_CONFIG.apiUrl}/v1/billing/plans`, annualPlanData, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${accessToken}`,
+        'Accept': 'application/json',
+        'PayPal-Request-Id': uuidv4()
+      }
+    });
+    createdPlans.push({ type: 'annual', plan: annualResponse.data });
+
+    res.json({
+      message: "Both subscription plans created successfully",
+      plans: createdPlans,
+      note: "Save these plan IDs for use in subscription creation"
+    });
+
+  } catch (error) {
+    console.error("PayPal plans setup error:", error.response?.data || error.message);
+    res.status(500).json({ 
+      error: "Failed to setup subscription plans",
+      details: error.response?.data || error.message 
+    });
+  }
+});
+
+// Create PayPal subscription plan (monthly or annual)
 app.post("/v1/payments/plans", verifyAuth, async (req, res) => {
   try {
-    const { name, description } = req.body;
+    const { planType, name, description } = req.body; // planType: "monthly" or "annual"
     const accessToken = await getPayPalAccessToken();
+    
+    const isAnnual = planType === "annual";
+    const planName = name || (isAnnual ? "SKAN.AL Annual Subscription" : "SKAN.AL Monthly Subscription");
+    const planDesc = description || (isAnnual ? 
+      "QR code ordering system for Albanian restaurants - Annual plan (10% discount)" : 
+      "QR code ordering system for Albanian restaurants - Monthly plan");
     
     const planData = {
       product_id: "SKAN_AL_SUBSCRIPTION", // This would be created in PayPal dashboard
-      name: name || "SKAN.AL Monthly Subscription",
-      description: description || "QR code ordering system for Albanian restaurants",
+      name: planName,
+      description: planDesc,
       status: "ACTIVE",
       billing_cycles: [{
         frequency: {
-          interval_unit: "MONTH",
+          interval_unit: isAnnual ? "YEAR" : "MONTH",
           interval_count: 1
         },
         tenure_type: "REGULAR",
@@ -4720,7 +4816,7 @@ app.post("/v1/payments/plans", verifyAuth, async (req, res) => {
         total_cycles: 0, // Infinite
         pricing_scheme: {
           fixed_price: {
-            value: "35.00",
+            value: isAnnual ? "378.00" : "35.00", // €378 = €420 - 10% discount
             currency_code: "EUR"
           }
         }
@@ -4866,6 +4962,68 @@ app.get("/v1/payments/subscriptions/:subscriptionId", verifyAuth, async (req, re
     console.error("PayPal subscription get error:", error.response?.data || error.message);
     res.status(500).json({ 
       error: "Failed to get subscription",
+      details: error.response?.data || error.message 
+    });
+  }
+});
+
+// Activate subscription (after PayPal approval)
+app.post("/v1/payments/subscriptions/activate", verifyAuth, async (req, res) => {
+  try {
+    const { subscriptionId, planId } = req.body;
+    const user = req.user;
+    const accessToken = await getPayPalAccessToken();
+
+    if (!subscriptionId) {
+      return res.status(400).json({ error: "Subscription ID is required" });
+    }
+
+    // Get subscription details from PayPal
+    const subscriptionResponse = await axios.get(`${PAYPAL_CONFIG.apiUrl}/v1/billing/subscriptions/${subscriptionId}`, {
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${accessToken}`,
+        "Accept": "application/json"
+      }
+    });
+
+    const subscription = subscriptionResponse.data;
+
+    // Store or update subscription info in Firestore
+    await db.collection("subscriptions").doc(subscriptionId).set({
+      subscriptionId: subscriptionId,
+      venueId: user.venueId,
+      userId: user.id,
+      planId: planId || subscription.plan_id,
+      status: subscription.status,
+      createdAt: admin.firestore.FieldValue.serverTimestamp(),
+      activatedAt: subscription.status === "ACTIVE" ? admin.firestore.FieldValue.serverTimestamp() : null,
+      nextBillingTime: subscription.billing_info?.next_billing_time,
+      paypalSubscriptionData: subscription
+    }, { merge: true });
+
+    // Update venue with subscription status
+    await db.collection("venues").doc(user.venueId).update({
+      hasActiveSubscription: subscription.status === "ACTIVE",
+      subscriptionId: subscriptionId,
+      subscriptionStatus: subscription.status,
+      subscriptionUpdatedAt: admin.firestore.FieldValue.serverTimestamp()
+    });
+
+    res.json({
+      success: true,
+      message: "Subscription activated successfully",
+      subscription: {
+        id: subscriptionId,
+        status: subscription.status,
+        planId: subscription.plan_id,
+        nextBillingTime: subscription.billing_info?.next_billing_time
+      }
+    });
+  } catch (error) {
+    console.error("PayPal subscription activation error:", error.response?.data || error.message);
+    res.status(500).json({ 
+      error: "Failed to activate subscription",
       details: error.response?.data || error.message 
     });
   }
@@ -5043,6 +5201,103 @@ app.get("/v1/venue/:venueId/subscription", verifyAuth, async (req, res) => {
     res.status(500).json({ 
       error: "Failed to get subscription status",
       details: error.message 
+    });
+  }
+});
+
+// Albanian Lek conversion endpoint - immediate database update
+app.post("/v1/admin/convert-to-lek", async (req, res) => {
+  try {
+    console.log("🇦🇱 Starting Albanian Lek conversion for Beach Bar Durrës");
+    
+    const venueId = "beach-bar-durres";
+    
+    // Albanian Lek pricing data
+    const lekPricing = [
+      { id: "greek-salad", price: 900, nameAlbanian: "Sallatë Greke" },
+      { id: "fried-calamari", price: 1200, nameAlbanian: "Kallamar i Skuqur" },
+      { id: "seafood-risotto", price: 1800, nameAlbanian: "Rizoto me Fruta Deti" },
+      { id: "grilled-lamb", price: 2200, nameAlbanian: "Copë Qengji në Skarë" },
+      { id: "grilled-branzino", price: 2500, nameAlbanian: "Levrek në Skarë" },
+      { id: "albanian-beer", price: 350, nameAlbanian: "Birrë Shqiptare" },
+      { id: "raki", price: 400, nameAlbanian: "Raki Shqiptare" },
+      { id: "mojito", price: 750, nameAlbanian: "Mojito" },
+      { id: "tiramisu", price: 650, nameAlbanian: "Tiramisu" },
+      { id: "baklava", price: 550, nameAlbanian: "Bakllava" }
+    ];
+    
+    // Update venue currency to Albanian Lek
+    console.log("🏪 Updating venue currency...");
+    const venueRef = db.collection("venue").doc(venueId);
+    
+    await venueRef.update({
+      "settings.currency": "ALL"
+    });
+    console.log("✅ Venue currency updated to ALL");
+    
+    // Update menu item prices
+    console.log("🍽️ Updating menu item prices...");
+    let updateCount = 0;
+    let results = [];
+    
+    for (const item of lekPricing) {
+      try {
+        const menuItemRef = venueRef.collection("menuItem").doc(item.id);
+        const doc = await menuItemRef.get();
+        
+        if (doc.exists) {
+          const currentData = doc.data();
+          const oldPrice = currentData.price;
+          
+          await menuItemRef.update({
+            price: item.price,
+            nameAlbanian: item.nameAlbanian
+          });
+          
+          console.log(`✅ ${item.id}: €${oldPrice} → ${item.price} Lek`);
+          results.push({
+            itemId: item.id,
+            oldPrice: oldPrice,
+            newPrice: item.price,
+            status: "updated"
+          });
+          updateCount++;
+        } else {
+          console.log(`⚠️ ${item.id}: Not found`);
+          results.push({
+            itemId: item.id,
+            status: "not_found"
+          });
+        }
+      } catch (error) {
+        console.log(`❌ ${item.id}: Error - ${error.message}`);
+        results.push({
+          itemId: item.id,
+          status: "error",
+          error: error.message
+        });
+      }
+    }
+    
+    console.log(`🎉 Successfully updated ${updateCount} menu items!`);
+    
+    res.json({
+      success: true,
+      message: `Successfully converted Beach Bar Durrës to Albanian Lek pricing`,
+      venueId: venueId,
+      currency: "ALL",
+      itemsUpdated: updateCount,
+      totalItems: lekPricing.length,
+      results: results,
+      testUrl: "https://order.skan.al/beach-bar-durres/a1/menu"
+    });
+    
+  } catch (error) {
+    console.error("❌ Error converting to Albanian Lek:", error);
+    res.status(500).json({
+      success: false,
+      error: error.message,
+      message: "Failed to convert to Albanian Lek pricing"
     });
   }
 });

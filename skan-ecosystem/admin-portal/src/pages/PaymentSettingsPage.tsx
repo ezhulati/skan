@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 
 interface SubscriptionData {
@@ -24,13 +24,47 @@ interface SubscriptionInfo {
   recentPayments?: PaymentData[];
 }
 
+// PayPal Configuration (PRODUCTION)
+const PAYPAL_CLIENT_ID = 'AX3Ulz4TGQNK0i7aSAiswjqNp6FG2Ox4Ewj3aXvKwQMjaB_euPr5Jl3GSozx5GTYSQvRwnnD2coNaLop';
+const PAYPAL_PLAN_IDS = {
+  monthly: 'P-9Y307324WF9003921NDHV2TQ', // Production monthly plan (1 month free trial, then €35/month)
+  annual: 'P-3N801214MN709111UNDHWBFI' // Production annual plan (1 month free trial, then €357/year - 15% discount)
+};
+
+// PayPal SDK types
+interface PayPalWindow extends Window {
+  paypal?: {
+    Buttons: (options: PayPalButtonsOptions) => {
+      render: (selector: string) => Promise<void>;
+    };
+  };
+}
+
+interface PayPalButtonsOptions {
+  createSubscription: (data: any, actions: any) => Promise<string>;
+  onApprove: (data: any, actions: any) => Promise<void>;
+  onError?: (err: any) => void;
+  onCancel?: (data: any) => void;
+  style?: {
+    shape?: string;
+    color?: string;
+    layout?: string;
+    label?: string;
+  };
+}
+
+declare const window: PayPalWindow;
+
 const PaymentSettingsPage: React.FC = () => {
   const { auth } = useAuth();
   const [subscriptionInfo, setSubscriptionInfo] = useState<SubscriptionInfo>({ hasActiveSubscription: false });
+  const [selectedPlan, setSelectedPlan] = useState<'monthly' | 'annual'>('monthly');
   const [isLoading, setIsLoading] = useState(false);
   const [isCreatingSubscription, setIsCreatingSubscription] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [error, setError] = useState('');
+  const [paypalLoaded, setPaypalLoaded] = useState(false);
+  const paypalButtonRef = useRef<HTMLDivElement>(null);
 
   const API_BASE_URL = (typeof process !== 'undefined' && process.env?.REACT_APP_API_URL) || 'https://api-mkazmlu7ta-ew.a.run.app/v1';
 
@@ -47,12 +81,27 @@ const PaymentSettingsPage: React.FC = () => {
       if (response.ok) {
         const data = await response.json();
         setSubscriptionInfo(data);
+      } else if (response.status === 404) {
+        // Subscription endpoint doesn't exist yet - assume no active subscription
+        console.log('Subscription endpoint not available, assuming no active subscription');
+        setSubscriptionInfo({ hasActiveSubscription: false });
+        setError(''); // Clear any existing errors
       } else {
         throw new Error('Failed to load subscription info');
       }
     } catch (error) {
       console.error('Error loading subscription:', error);
-      setError('Dështoi të ngarkohen informacionet e abonimit');
+      // If it's a network error or API not available, assume no subscription and continue
+      const errorMessage = error instanceof Error ? error.message : '';
+      const errorName = error instanceof Error ? error.name : '';
+      
+      if (errorMessage.includes('fetch') || errorName === 'TypeError') {
+        console.log('API not available, assuming no active subscription for demo purposes');
+        setSubscriptionInfo({ hasActiveSubscription: false });
+        setError(''); // Don't show error to user
+      } else {
+        setError('Dështoi të ngarkohen informacionet e abonimit');
+      }
     } finally {
       setIsLoading(false);
     }
@@ -64,11 +113,99 @@ const PaymentSettingsPage: React.FC = () => {
     }
   }, [auth.user?.venueId, loadSubscriptionInfo]);
 
+  // Load PayPal SDK
+  useEffect(() => {
+    const loadPayPalScript = () => {
+      if (window.paypal) {
+        setPaypalLoaded(true);
+        return;
+      }
+
+      const script = document.createElement('script');
+      script.src = `https://www.paypal.com/sdk/js?client-id=${PAYPAL_CLIENT_ID}&vault=true&intent=subscription`;
+      script.async = true;
+      script.onload = () => {
+        setPaypalLoaded(true);
+      };
+      script.onerror = () => {
+        setError('Dështoi të ngarkohet PayPal SDK. Ju lutemi rifreskoni faqen.');
+      };
+      document.head.appendChild(script);
+    };
+
+    loadPayPalScript();
+  }, []);
+
+  // Render PayPal buttons when SDK is loaded and not subscribed
+  useEffect(() => {
+    if (paypalLoaded && !subscriptionInfo.hasActiveSubscription && paypalButtonRef.current && window.paypal) {
+      // Clear any existing buttons
+      paypalButtonRef.current.innerHTML = '';
+      
+      const planId = selectedPlan === 'annual' ? PAYPAL_PLAN_IDS.annual : PAYPAL_PLAN_IDS.monthly;
+      
+      window.paypal.Buttons({
+        createSubscription: function(data, actions) {
+          return actions.subscription.create({
+            'plan_id': planId
+          });
+        },
+        onApprove: function(data, actions) {
+          setSuccessMessage('Abonimi u krijua me sukses! Duke aktivizuar...');
+          
+          // Call our API to handle the subscription activation
+          fetch(`${API_BASE_URL}/payments/subscriptions/activate`, {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${auth.token}`,
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              subscriptionId: data.subscriptionID,
+              planId: planId
+            })
+          })
+          .then(response => response.json())
+          .then(result => {
+            if (result.success) {
+              setSuccessMessage('Abonimi u aktivizua me sukses!');
+              loadSubscriptionInfo();
+            } else {
+              setError('Dështoi të aktivizohet abonimi. Ju lutemi kontaktoni mbështetjen.');
+            }
+          })
+          .catch(error => {
+            console.error('Error activating subscription:', error);
+            setError('Dështoi të aktivizohet abonimi. Ju lutemi kontaktoni mbështetjen.');
+          });
+          
+          return Promise.resolve();
+        },
+        onError: function(err) {
+          console.error('PayPal error:', err);
+          setError('Ndodhi një gabim me PayPal. Ju lutemi provoni përsëri.');
+        },
+        onCancel: function(data) {
+          setError('Pagesa u anulua nga përdoruesi.');
+        },
+        style: {
+          shape: 'rect',
+          color: 'gold',
+          layout: 'vertical',
+          label: 'subscribe'
+        }
+      }).render('#paypal-button-container');
+    }
+  }, [paypalLoaded, subscriptionInfo.hasActiveSubscription, selectedPlan, API_BASE_URL, auth.token, loadSubscriptionInfo]);
+
   const createSubscription = async () => {
     setIsCreatingSubscription(true);
     setError('');
     
     try {
+      // Use the plan IDs that will be created in PayPal dashboard
+      const planId = selectedPlan === 'annual' ? 'SKAN_AL_ANNUAL_PLAN' : 'SKAN_AL_MONTHLY_PLAN';
+      
       const response = await fetch(`${API_BASE_URL}/payments/subscriptions`, {
         method: 'POST',
         headers: {
@@ -76,6 +213,7 @@ const PaymentSettingsPage: React.FC = () => {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
+          planId: planId,
           returnUrl: `${window.location.origin}/payment-success`,
           cancelUrl: `${window.location.origin}/payment-cancelled`
         })
@@ -252,29 +390,94 @@ const PaymentSettingsPage: React.FC = () => {
               </div>
             </div>
 
-            <div className="subscription-pricing">
-              <div className="price-highlight">
-                <span className="price-amount">€35</span>
-                <span className="price-period">në muaj</span>
+            <div className="plan-selection">
+              <div className="plan-selector">
+                <div className="plan-tabs">
+                  <button 
+                    className={`plan-tab ${selectedPlan === 'monthly' ? 'active' : ''}`}
+                    onClick={() => setSelectedPlan('monthly')}
+                  >
+                    Mujor
+                  </button>
+                  <button 
+                    className={`plan-tab ${selectedPlan === 'annual' ? 'active' : ''}`}
+                    onClick={() => setSelectedPlan('annual')}
+                  >
+                    Vjetor <span className="discount-badge">-15%</span>
+                  </button>
+                </div>
               </div>
-              <ul className="feature-list">
-                <li>✓ Porosi të pakufizuara</li>
-                <li>✓ QR code për të gjitha tavolinat</li>
-                <li>✓ Dashboard në kohë reale</li>
-                <li>✓ Menaxhim i stafit</li>
-                <li>✓ Statistika dhe raporte</li>
-                <li>✓ Mbështetje 24/7</li>
-              </ul>
+
+              <div className="subscription-pricing">
+                <div className="trial-highlight">
+                  <div className="trial-badge">
+                    🎉 PROVË FALAS
+                  </div>
+                  <div className="trial-details">
+                    <span className="trial-period">1 muaj falas</span>
+                    <span className="trial-description">
+                      pastaj €{selectedPlan === 'annual' ? '357/vit' : '35/muaj'}
+                    </span>
+                  </div>
+                </div>
+                
+                <div className="price-highlight">
+                  <span className="price-amount">€0</span>
+                  <span className="price-period">muaji i parë</span>
+                </div>
+                
+                {selectedPlan === 'annual' && (
+                  <div className="price-savings">
+                    <span className="savings-text">Kurseni €63 në vit!</span>
+                    <span className="monthly-equivalent">(€29.75/muaj në vend të €35)</span>
+                  </div>
+                )}
+                
+                <div className="price-after-trial">
+                  <span>
+                    Pastaj €{selectedPlan === 'annual' ? '357/vit' : '35/muaj'} - mund të anuloni në çdo kohë
+                  </span>
+                </div>
+                
+                <ul className="feature-list">
+                  <li>✓ Porosi të pakufizuara</li>
+                  <li>✓ QR code për të gjitha tavolinat</li>
+                  <li>✓ Dashboard në kohë reale</li>
+                  <li>✓ Menaxhim i stafit</li>
+                  <li>✓ Statistika dhe raporte</li>
+                  <li>✓ Mbështetje 24/7</li>
+                </ul>
+              </div>
             </div>
 
             <div className="subscription-actions">
-              <button 
-                className="btn btn-primary btn-paypal"
-                onClick={createSubscription}
-                disabled={isCreatingSubscription}
-              >
-                {isCreatingSubscription ? 'Duke krijuar...' : 'Krijo Abonim me PayPal'}
-              </button>
+              {paypalLoaded ? (
+                <div className="paypal-buttons-container">
+                  <div className="paypal-info">
+                    <h3>Filloni Provën Falas</h3>
+                    <p>1 muaj falas, pastaj €{selectedPlan === 'annual' ? '357/vit' : '35/muaj'} - Anuloni në çdo kohë</p>
+                  </div>
+                  <div id="paypal-button-container" ref={paypalButtonRef} className="paypal-buttons"></div>
+                </div>
+              ) : (
+                <div className="loading-paypal">
+                  <div className="loading-spinner"></div>
+                  <p>Duke ngarkuar PayPal...</p>
+                </div>
+              )}
+              
+              {/* Fallback button if PayPal SDK fails to load */}
+              {!paypalLoaded && (
+                <button 
+                  className="btn btn-primary btn-paypal"
+                  onClick={createSubscription}
+                  disabled={isCreatingSubscription}
+                  style={{ marginTop: '16px' }}
+                >
+                  {isCreatingSubscription ? 'Duke krijuar...' : 
+                   `Filloni Provën Falas ${selectedPlan === 'annual' ? 'Vjetore' : 'Mujore'} me PayPal`}
+                </button>
+              )}
             </div>
           </div>
         )}
@@ -492,8 +695,140 @@ const PaymentSettingsPage: React.FC = () => {
           color: #1a202c;
         }
 
+
+        .plan-selection {
+          margin-bottom: 24px;
+        }
+
+        .plan-selector {
+          margin-bottom: 24px;
+        }
+
+        .plan-tabs {
+          display: flex;
+          border-radius: 8px;
+          background: #f7fafc;
+          padding: 4px;
+          gap: 4px;
+        }
+
+        .plan-tab {
+          flex: 1;
+          padding: 12px 16px;
+          border: none;
+          border-radius: 6px;
+          background: transparent;
+          color: #4a5568;
+          font-weight: 500;
+          cursor: pointer;
+          transition: all 0.2s;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+        }
+
+        .plan-tab:hover {
+          background: #e2e8f0;
+        }
+
+        .plan-tab.active {
+          background: #3182ce;
+          color: white;
+          box-shadow: 0 2px 4px rgba(49, 130, 206, 0.3);
+        }
+
+        .discount-badge {
+          background: #38a169;
+          color: white;
+          padding: 2px 6px;
+          border-radius: 4px;
+          font-size: 12px;
+          font-weight: 600;
+        }
+
+        .plan-tab.active .discount-badge {
+          background: #2f855a;
+        }
+
         .subscription-pricing {
           margin-bottom: 24px;
+        }
+
+        .price-savings {
+          text-align: center;
+          margin-bottom: 16px;
+          padding: 12px;
+          background: #f0fff4;
+          border: 1px solid #c6f6d5;
+          border-radius: 8px;
+        }
+
+        .savings-text {
+          display: block;
+          color: #38a169;
+          font-weight: 600;
+          font-size: 16px;
+        }
+
+        .monthly-equivalent {
+          display: block;
+          color: #68d391;
+          font-size: 14px;
+          margin-top: 4px;
+        }
+
+        .trial-highlight {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 12px;
+          margin-bottom: 20px;
+          padding: 16px;
+          background: linear-gradient(135deg, #f0fff4 0%, #dcfce7 100%);
+          border: 2px solid #22c55e;
+          border-radius: 12px;
+        }
+
+        .trial-badge {
+          background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+          color: white;
+          padding: 8px 16px;
+          border-radius: 8px;
+          font-weight: 700;
+          font-size: 14px;
+          text-align: center;
+          box-shadow: 0 2px 4px rgba(34, 197, 94, 0.3);
+        }
+
+        .trial-details {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        }
+
+        .trial-period {
+          font-size: 20px;
+          font-weight: 700;
+          color: #15803d;
+        }
+
+        .trial-description {
+          font-size: 14px;
+          color: #16a34a;
+          font-weight: 500;
+        }
+
+        .price-after-trial {
+          text-align: center;
+          margin-bottom: 20px;
+          padding: 12px;
+          background: #f8fafc;
+          border: 1px solid #e2e8f0;
+          border-radius: 8px;
+          color: #64748b;
+          font-size: 14px;
+          font-weight: 500;
         }
 
         .price-highlight {
@@ -667,7 +1002,7 @@ const PaymentSettingsPage: React.FC = () => {
 
         .info-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+          grid-template-columns: repeat(2, 1fr);
           gap: 24px;
         }
 
@@ -704,6 +1039,62 @@ const PaymentSettingsPage: React.FC = () => {
           line-height: 1.6;
         }
 
+        .paypal-buttons-container {
+          width: 100%;
+          max-width: 400px;
+          margin: 0 auto;
+        }
+
+        .paypal-info {
+          text-align: center;
+          margin-bottom: 16px;
+        }
+
+        .paypal-info h3 {
+          margin: 0 0 4px 0;
+          font-size: 18px;
+          font-weight: 600;
+          color: #1a202c;
+        }
+
+        .paypal-info p {
+          margin: 0;
+          font-size: 14px;
+          color: #718096;
+        }
+
+        .paypal-buttons {
+          min-height: 50px;
+        }
+
+        .loading-paypal {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 12px;
+          padding: 24px;
+        }
+
+        .loading-spinner {
+          width: 24px;
+          height: 24px;
+          border: 3px solid #e2e8f0;
+          border-top: 3px solid #3182ce;
+          border-radius: 50%;
+          animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+
+        .loading-paypal p {
+          margin: 0;
+          color: #718096;
+          font-size: 14px;
+        }
+
         @media (max-width: 768px) {
           .payment-settings-page {
             padding: 16px;
@@ -733,6 +1124,10 @@ const PaymentSettingsPage: React.FC = () => {
 
           .info-grid {
             grid-template-columns: 1fr;
+          }
+
+          .paypal-buttons-container {
+            max-width: 100%;
           }
         }
       `}</style>
