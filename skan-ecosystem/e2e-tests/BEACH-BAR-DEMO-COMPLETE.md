@@ -9,23 +9,25 @@
 ## 🎯 DEMO URLS
 
 ### Customer Experience
-- **URL**: https://order.skan.al/beach-bar-durres/a1
+- **URL**: <https://order.skan.al/beach-bar-durres/a1>
 - **QR Options**:
-  - Table A1: https://order.skan.al/beach-bar-durres/a1
-  - Table A2: https://order.skan.al/beach-bar-durres/a2
-  - Table B1: https://order.skan.al/beach-bar-durres/b1
-  - Table B2: https://order.skan.al/beach-bar-durres/b2
+  - Table A1: <https://order.skan.al/beach-bar-durres/a1>
+  - Table A2: <https://order.skan.al/beach-bar-durres/a2>
+  - Table B1: <https://order.skan.al/beach-bar-durres/b1>
+  - Table B2: <https://order.skan.al/beach-bar-durres/b2>
 
 ### Admin Dashboard
-- **URL**: https://admin.skan.al
-- **Email**: demo.beachbar@skan.al
+- **URL**: <https://admin.skan.al>
+- **Email**: <demo.beachbar@skan.al>
 - **Password**: BeachBarDemo2024!
 
 ---
 
 ## 🍽️ MENU HIGHLIGHTS
 
-**5 Categories | 10 Menu Items | Real Albanian Pricing in Lek**
+### Menu Overview
+
+5 Categories | 10 Menu Items | Real Albanian Pricing in Lek
 
 ### Appetizers (2 items)
 - Greek Salad - 850 Lek
@@ -52,7 +54,7 @@
 ## 🎪 DEMO SCRIPT
 
 ### Customer Side Demo (2 minutes)
-1. **Open**: https://order.skan.al/beach-bar-durres/a1
+1. **Open**: <https://order.skan.al/beach-bar-durres/a1>
 2. **Highlight**: "This is a real Albanian restaurant, not a demo"
 3. **Browse**: Show bilingual menu (Albanian/English)
 4. **Add Items**: Albanian Beer (350 Lek) + Greek Salad (850 Lek)
@@ -61,8 +63,8 @@
 7. **Track**: Show real-time order tracking
 
 ### Admin Side Demo (2 minutes)
-1. **Login**: https://admin.skan.al
-2. **Credentials**: demo.beachbar@skan.al / BeachBarDemo2024!
+1. **Login**: <https://admin.skan.al>
+2. **Credentials**: <demo.beachbar@skan.al> / BeachBarDemo2024!
 3. **Dashboard**: Show real-time order notifications
 4. **Manage**: Update order status (new → preparing → ready → served)
 5. **Features**: Highlight one-click status updates
@@ -74,9 +76,9 @@
 
 ### Opening Lines
 > *"Let me show you our system with a real Albanian restaurant that's live in production."*
-
+>
 > *"This is Beach Bar Durrës in Durrës, Albania - they're using SKAN.AL right now to serve customers."*
-
+>
 > *"Everything you're about to see is real: real menu, real prices, real functionality."*
 
 ### Value Proposition
@@ -87,9 +89,9 @@
 
 ### Closing Points
 > *"Beach Bar Durrës transformed from traditional order-taking to this modern system."*
-
+>
 > *"Your restaurant can have the exact same setup running tomorrow."*
-
+>
 > *"Ready to see the same results in your establishment?"*
 
 ---
@@ -154,7 +156,7 @@
 - ✅ `/v1/orders/:orderId/status` - Status updates
 
 ### Demo Admin Account
-- **Created**: ✅ demo.beachbar@skan.al
+- **Created**: ✅ <demo.beachbar@skan.al>
 - **Permissions**: Manager access to Beach Bar Durrës
 - **Features**: Full order management capabilities
 
