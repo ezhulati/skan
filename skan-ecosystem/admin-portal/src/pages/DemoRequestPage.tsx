@@ -164,7 +164,7 @@ const DemoRequestPage: React.FC = () => {
                     fontSize: '14px',
                     fontWeight: '600'
                   }}>
-                    manager_email1@gmail.com
+                    demo.beachbar@skan.al {/* Updated credentials */}
                   </div>
                 </div>
                 
@@ -189,7 +189,7 @@ const DemoRequestPage: React.FC = () => {
                     fontSize: '14px',
                     fontWeight: '600'
                   }}>
-                    admin123
+                    BeachBarDemo2024!
                   </div>
                 </div>
               </div>
@@ -209,18 +209,63 @@ const DemoRequestPage: React.FC = () => {
                       'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                      email: 'manager_email1@gmail.com',
-                      password: 'admin123'
+                      email: 'demo.beachbar@skan.al',
+                      password: 'BeachBarDemo2024!'
                     }),
                   });
 
                   if (response.ok) {
                     const result = await response.json();
-                    localStorage.setItem('token', result.token);
-                    localStorage.setItem('user', JSON.stringify(result.user));
+                    
+                    // Store auth data in the format AuthContext expects
+                    const authData = {
+                      user: result.user,
+                      venue: result.venue,
+                      token: result.token,
+                      isAuthenticated: true,
+                      isLoading: false,
+                      needsOnboarding: false
+                    };
+                    localStorage.setItem('restaurantAuth', JSON.stringify(authData));
+                    
+                    // Force page reload to reinitialize AuthContext
                     window.location.href = '/dashboard';
                   } else if (response.status === 429) {
-                    setError('Shumë kërkesa. Ju lutemi provoni përsëri pas disa sekondash.');
+                    // For demo purposes, retry after a brief delay
+                    console.log('Rate limited, retrying in 3 seconds...');
+                    await new Promise(resolve => setTimeout(resolve, 3000));
+                    
+                    // Retry the login request
+                    const retryResponse = await fetch('https://api-mkazmlu7ta-ew.a.run.app/v1/auth/login', {
+                      method: 'POST',
+                      headers: {
+                        'Content-Type': 'application/json',
+                      },
+                      body: JSON.stringify({
+                        email: 'demo.beachbar@skan.al',
+                        password: 'BeachBarDemo2024!'
+                      }),
+                    });
+                    
+                    if (retryResponse.ok) {
+                      const retryResult = await retryResponse.json();
+                      
+                      // Store auth data in the format AuthContext expects
+                      const authData = {
+                        user: retryResult.user,
+                        venue: retryResult.venue,
+                        token: retryResult.token,
+                        isAuthenticated: true,
+                        isLoading: false,
+                        needsOnboarding: false
+                      };
+                      localStorage.setItem('restaurantAuth', JSON.stringify(authData));
+                      
+                      // Force page reload to reinitialize AuthContext
+                      window.location.href = '/dashboard';
+                    } else {
+                      setError('Shumë kërkesa. Ju lutemi provoni përsëri pas disa sekondash.');
+                    }
                   } else {
                     const errorResult = await response.json().catch(() => ({}));
                     setError(errorResult.error || 'Problem me hyrjen. Ju lutemi provoni përsëri.');

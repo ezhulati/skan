@@ -840,8 +840,8 @@ All endpoints return consistent error responses:
 ### DEMO CREDENTIALS
 
 **Demo Manager Login:**
-- Email: `manager_email1@gmail.com`
-- Password: `admin123`
+- Email: `demo.beachbar@skan.al`
+- Password: `BeachBarDemo2024!`
 - Venue ID: `beach-bar-durres`
 
 **Demo Venue:**
