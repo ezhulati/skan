@@ -374,5 +374,78 @@ app.post('/auth/login', async (req, res) => {
   }
 });
 
+// Beach Bar Lek Pricing Update Endpoint
+app.post('/v1/admin/update-beach-bar-lek-pricing', async (req, res) => {
+  try {
+    console.log('🇦🇱 Starting Beach Bar Durrës EUR to Lek conversion...');
+    
+    const venueId = 'beach-bar-durres';
+    const venueRef = db.collection('venues').doc(venueId);
+    
+    // Albanian Lek menu item updates
+    const beachBarLekItems = [
+      { id: "greek-salad", price: 900, nameAlbanian: "Sallatë Greke" },
+      { id: "fried-calamari", price: 1200, nameAlbanian: "Kallamar i Skuqur" },
+      { id: "seafood-risotto", price: 1800, nameAlbanian: "Rizoto me Fruta Deti" },
+      { id: "grilled-lamb-chops", price: 2200, nameAlbanian: "Copë Qengji në Skarë" },
+      { id: "grilled-sea-bass", price: 2500, nameAlbanian: "Levrek në Skarë" },
+      { id: "albanian-beer", price: 350, nameAlbanian: "Birrë Shqiptare" },
+      { id: "albanian-raki", price: 400, nameAlbanian: "Raki Shqiptare" },
+      { id: "mojito", price: 750, nameAlbanian: "Mojito" },
+      { id: "tiramisu", price: 650, nameAlbanian: "Tiramisu" },
+      { id: "baklava", price: 550, nameAlbanian: "Bakllava" }
+    ];
+    
+    // Step 1: Update venue currency to Albanian Lek
+    await venueRef.update({
+      'settings.currency': 'ALL'
+    });
+    
+    // Step 2: Update all menu item prices
+    const batch = db.batch();
+    let updateCount = 0;
+    
+    for (const item of beachBarLekItems) {
+      const menuItemRef = venueRef.collection('menuItem').doc(item.id);
+      const doc = await menuItemRef.get();
+      
+      if (doc.exists) {
+        const currentData = doc.data();
+        console.log(`Updating ${item.id}: €${(currentData.price/100).toFixed(2)} → ${item.price} Lek`);
+        
+        batch.update(menuItemRef, {
+          price: item.price,
+          nameAlbanian: item.nameAlbanian
+        });
+        updateCount++;
+      }
+    }
+    
+    await batch.commit();
+    
+    console.log(`✅ Beach Bar Durrës updated: ${updateCount} items converted to Albanian Lek`);
+    
+    res.json({
+      success: true,
+      message: 'Beach Bar Durrës pricing converted to Albanian Lek',
+      venueId: venueId,
+      currency: 'ALL',
+      itemsUpdated: updateCount,
+      details: beachBarLekItems.map(item => ({
+        id: item.id,
+        price: `${item.price} Lek`,
+        nameAlbanian: item.nameAlbanian
+      }))
+    });
+    
+  } catch (error) {
+    console.error('❌ Error updating Beach Bar pricing:', error);
+    res.status(500).json({ 
+      error: 'Failed to update Beach Bar pricing',
+      message: error.message 
+    });
+  }
+});
+
 // Mount the API routes
 exports.api = functions.region('europe-west1').https.onRequest(app);
