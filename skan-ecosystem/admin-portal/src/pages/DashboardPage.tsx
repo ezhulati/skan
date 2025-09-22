@@ -3,6 +3,11 @@ import { useAuth } from '../contexts/AuthContext';
 import { restaurantApiService, Order } from '../services/api';
 import WelcomeHeader from '../components/WelcomeHeader';
 import UndoToast from '../components/UndoToast';
+import ResponsiveKDSLayout from '../components/ResponsiveKDSLayout';
+import { useWakeLock } from '../hooks/useWakeLock';
+import { useWebSocketContext, useOrderEvents } from '../contexts/WebSocketContext';
+import { useOrderVersioning } from '../hooks/useOrderVersioning';
+import { useKDSNotifications } from '../hooks/useKDSNotifications';
 
 const DashboardPage: React.FC = () => {
   const { auth } = useAuth();
@@ -20,6 +25,80 @@ const DashboardPage: React.FC = () => {
   const [showNotificationSettings, setShowNotificationSettings] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   
+  // Wake lock for KDS - prevent screen sleep during operation
+  const wakeLock = useWakeLock({
+    enabled: true, // Always enabled for KDS
+    onStatusChange: (isActive) => {
+      console.log('Wake lock status changed:', isActive ? 'ACTIVE' : 'INACTIVE');
+    },
+    onError: (error) => {
+      console.warn('Wake lock error:', error.message);
+    }
+  });
+  
+  // WebSocket for real-time updates
+  const webSocket = useWebSocketContext();
+  
+  // Order versioning for conflict resolution and optimistic updates
+  const orderVersioning = useOrderVersioning({
+    onConflict: (event) => {
+      console.warn('Order version conflict:', event);
+      // Could show a toast notification here
+    },
+    onResolution: (event) => {
+      console.log('Order conflict resolved:', event);
+    },
+    onUpdate: (event) => {
+      console.log('Order version updated:', event);
+    },
+    enableOptimisticUpdates: true
+  });
+  
+  // Enhanced KDS notification system
+  const kdsNotifications = useKDSNotifications({
+    settings: {
+      audioEnabled: audioEnabled,
+      visualEnabled: true,
+      browserEnabled: notificationsEnabled,
+      vibrationEnabled: true,
+      volume: 0.8
+    },
+    onSettingsChange: (newSettings) => {
+      // Sync with legacy notification settings
+      setAudioEnabled(newSettings.audioEnabled);
+      setNotificationsEnabled(newSettings.browserEnabled);
+      localStorage.setItem('skan-audio-enabled', newSettings.audioEnabled.toString());
+      localStorage.setItem('skan-notifications-enabled', newSettings.browserEnabled.toString());
+    }
+  });
+  
+  // Listen for real-time order events
+  useOrderEvents(['order.created', 'order.updated'], useCallback((event) => {
+    console.log('Real-time order event:', event);
+    
+    if (event.type === 'order.created') {
+      // Add new order to the list
+      setOrders(prevOrders => [event.payload, ...prevOrders]);
+      
+      // Enhanced KDS notification
+      kdsNotifications.playNotification('new-order', {
+        title: 'New Order Received',
+        titleAlbanian: '🔔 Porosinë e Re!',
+        message: `Table ${event.payload.tableNumber} - ${event.payload.orderNumber}`,
+        messageAlbanian: `Tavolina ${event.payload.tableNumber} - ${event.payload.orderNumber}`,
+        orderId: event.payload.id,
+        priority: 'medium'
+      });
+    } else if (event.type === 'order.updated') {
+      // Update existing order
+      setOrders(prevOrders => 
+        prevOrders.map(order => 
+          order.id === event.payload.id ? event.payload : order
+        )
+      );
+    }
+  }, [audioEnabled, notificationsEnabled]));
+  
   // Undo functionality state
   interface UndoOperation {
     orderId: string;
@@ -36,29 +115,18 @@ const DashboardPage: React.FC = () => {
     if (previousOrderCount > 0 && newOrdersCount > previousOrderCount) {
       const newOrdersAdded = newOrdersCount - previousOrderCount;
       
-      // Play audio notification if enabled
-      if (audioEnabled && audioRef.current) {
-        audioRef.current.play().catch(e => console.log('Audio play failed:', e));
-      }
-      
-      // Show browser notification
-      if (notificationsEnabled) {
-        new Notification(`🔔 ${newOrdersAdded} porosinë të reja!`, {
-          body: 'Keni marrë porosinë të reja që duhen përpunuar.',
-          icon: '/favicon.ico',
-          tag: 'new-orders'
-        });
-      }
-      
-      // Add visual flash effect
-      document.body.style.backgroundColor = '#dc3545';
-      setTimeout(() => {
-        document.body.style.backgroundColor = '';
-      }, 200);
+      // Enhanced KDS notification for polling-based updates
+      kdsNotifications.playNotification('new-order', {
+        title: `${newOrdersAdded} New Orders`,
+        titleAlbanian: `🔔 ${newOrdersAdded} Porosinë të Reja!`,
+        message: 'You have received new orders that need processing.',
+        messageAlbanian: 'Keni marrë porosinë të reja që duhen përpunuar.',
+        priority: newOrdersAdded > 2 ? 'high' : 'medium'
+      });
     }
     
     setPreviousOrderCount(newOrdersCount);
-  }, [previousOrderCount, notificationsEnabled, audioEnabled]);
+  }, [previousOrderCount, kdsNotifications]);
 
   const loadOrders = useCallback(async () => {
     if (!auth.user?.venueId) {
@@ -257,6 +325,31 @@ const DashboardPage: React.FC = () => {
     
     const previousStatus = currentOrder.status;
     
+    // Use versioned update system for optimistic updates and conflict resolution
+    const success = await orderVersioning.updateOrder(orderId, {
+      status: newStatus as any
+    }, {
+      updatedBy: auth.user?.email,
+      reason: 'status-update',
+      source: 'kds-dashboard'
+    });
+    
+    if (success) {
+      console.log('Versioned order update successful');
+      
+      // Show undo toast for versioned update
+      setUndoOperation({
+        orderId,
+        previousStatus,
+        newStatus,
+        orderNumber: currentOrder.orderNumber
+      });
+      
+      return; // Exit early for versioned updates
+    } else {
+      console.warn('Versioned update failed, falling back to legacy system');
+    }
+    
     // If using mock data, handle the update locally
     if (usingMockData) {
       console.log('Using mock data - updating locally...');
@@ -416,7 +509,7 @@ const DashboardPage: React.FC = () => {
     }
   };
 
-  const getOrderUrgency = (dateString: string, status: string) => {
+  const getOrderUrgency = (dateString: string, status: string, orderId?: string) => {
     const date = new Date(dateString);
     const now = new Date();
     const diffMinutes = Math.floor((now.getTime() - date.getTime()) / (1000 * 60));
@@ -427,8 +520,30 @@ const DashboardPage: React.FC = () => {
     }
     
     if (diffMinutes > 20) {
+      // Critical escalation - trigger urgent notification
+      if (orderId && diffMinutes === 21) { // Trigger once at 21 minutes
+        kdsNotifications.playNotification('urgent-order', {
+          title: 'CRITICAL: Order Overdue',
+          titleAlbanian: 'KRITIK: Porosia me Vonë',
+          message: `Order is ${diffMinutes} minutes old and needs immediate attention!`,
+          messageAlbanian: `Porosia është ${diffMinutes} minuta dhe ka nevojë për vëmendje të menjëhershme!`,
+          orderId,
+          priority: 'critical'
+        });
+      }
       return { level: 'critical', className: 'order-urgent-critical' };
     } else if (diffMinutes > 10) {
+      // Warning escalation
+      if (orderId && diffMinutes === 11) { // Trigger once at 11 minutes
+        kdsNotifications.playNotification('urgent-order', {
+          title: 'Order Needs Attention',
+          titleAlbanian: 'Porosia Ka Nevojë për Vëmendje',
+          message: `Order is ${diffMinutes} minutes old`,
+          messageAlbanian: `Porosia është ${diffMinutes} minuta`,
+          orderId,
+          priority: 'high'
+        });
+      }
       return { level: 'warning', className: 'order-urgent-warning' };
     } else if (diffMinutes > 5) {
       return { level: 'attention', className: 'order-urgent-attention' };
@@ -622,6 +737,144 @@ const DashboardPage: React.FC = () => {
                 {notificationsEnabled ? 'ON' : 'OFF'}
               </button>
             </div>
+            
+            <div className="toggle-item" style={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'space-between',
+              padding: '8px 12px',
+              background: '#ffffff',
+              borderRadius: '6px',
+              border: '1px solid #dee2e6'
+            }}>
+              <div>
+                <div style={{ fontWeight: '500', fontSize: '14px' }}>📱 KDS - Mbaj Ekranin Aktiv</div>
+                <div style={{ fontSize: '12px', color: '#6c757d' }}>
+                  {wakeLock.isSupported ? 'Përdor Wake Lock API' : 'Përdor fallback video'} - {wakeLock.isActive ? 'Aktiv' : 'Joaktiv'}
+                </div>
+              </div>
+              <button
+                onClick={wakeLock.toggle}
+                style={{
+                  background: wakeLock.isActive ? '#28a745' : '#6c757d',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '20px',
+                  padding: '6px 16px',
+                  fontSize: '12px',
+                  cursor: 'pointer',
+                  minWidth: '60px',
+                  transition: 'background-color 0.2s'
+                }}
+              >
+                {wakeLock.isActive ? 'ON' : 'OFF'}
+              </button>
+            </div>
+            
+            <div className="toggle-item" style={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'space-between',
+              padding: '8px 12px',
+              background: '#ffffff',
+              borderRadius: '6px',
+              border: '1px solid #dee2e6'
+            }}>
+              <div>
+                <div style={{ fontWeight: '500', fontSize: '14px' }}>
+                  🔄 Përditësimet në Kohë Reale
+                </div>
+                <div style={{ fontSize: '12px', color: '#6c757d' }}>
+                  {webSocket.connected ? 'Të lidhura' : webSocket.connecting ? 'Duke u lidhur...' : 'E shkëputur'} 
+                  {webSocket.error && ` - ${webSocket.error}`}
+                </div>
+              </div>
+              <button
+                onClick={webSocket.toggleConnection}
+                style={{
+                  background: webSocket.connected ? '#28a745' : webSocket.connecting ? '#ffc107' : '#6c757d',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '20px',
+                  padding: '6px 16px',
+                  fontSize: '12px',
+                  cursor: 'pointer',
+                  minWidth: '60px',
+                  transition: 'background-color 0.2s'
+                }}
+                disabled={webSocket.connecting}
+              >
+                {webSocket.connecting ? '...' : webSocket.connected ? 'ON' : 'OFF'}
+              </button>
+            </div>
+            
+            <div className="toggle-item" style={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'space-between',
+              padding: '8px 12px',
+              background: '#ffffff',
+              borderRadius: '6px',
+              border: '1px solid #dee2e6'
+            }}>
+              <div>
+                <div style={{ fontWeight: '500', fontSize: '14px' }}>
+                  ⚡ Përditësimet Optimiste
+                </div>
+                <div style={{ fontSize: '12px', color: '#6c757d' }}>
+                  {orderVersioning.pendingUpdates.length} në pritje - {orderVersioning.cacheStats.totalOrders} të ruajtura
+                </div>
+              </div>
+              <div style={{
+                background: orderVersioning.pendingUpdates.length > 0 ? '#ffc107' : '#28a745',
+                color: 'white',
+                border: 'none',
+                borderRadius: '20px',
+                padding: '6px 16px',
+                fontSize: '12px',
+                minWidth: '60px',
+                textAlign: 'center'
+              }}>
+                {orderVersioning.isUpdating ? '...' : orderVersioning.pendingUpdates.length > 0 ? 'SYNC' : 'OK'}
+              </div>
+            </div>
+            
+            {kdsNotifications.activeAlerts.length > 0 && (
+              <div className="toggle-item" style={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'space-between',
+                padding: '8px 12px',
+                background: '#fff3cd',
+                borderRadius: '6px',
+                border: '1px solid #ffd60a'
+              }}>
+                <div>
+                  <div style={{ fontWeight: '500', fontSize: '14px' }}>
+                    🚨 Njoftimet Aktive
+                  </div>
+                  <div style={{ fontSize: '12px', color: '#856404' }}>
+                    {kdsNotifications.activeAlerts.length} njoftim{kdsNotifications.activeAlerts.length > 1 ? 'e' : ''} në pritje
+                  </div>
+                </div>
+                <button
+                  onClick={kdsNotifications.clearAllAlerts}
+                  style={{
+                    background: '#856404',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '20px',
+                    padding: '6px 16px',
+                    fontSize: '12px',
+                    cursor: 'pointer',
+                    minWidth: '60px',
+                    transition: 'background-color 0.2s'
+                  }}
+                >
+                  Fshij Të Gjitha
+                </button>
+              </div>
+            )}
           </div>
           
           <div style={{ 
@@ -650,62 +903,18 @@ const DashboardPage: React.FC = () => {
             <p>Nuk u gjetën porosite për filtrin e zgjedhur.</p>
           </div>
         ) : (
-          <div className="orders-grid">
-            {filteredOrders.map(order => {
-              const urgency = getOrderUrgency(order.createdAt, order.status);
-              return (
-              <div key={order.id} className={`order-card ${urgency.className}`}>
-                <div className="order-header">
-                  <div className="order-number">{order.orderNumber}</div>
-                  <div 
-                    className="order-status"
-                    style={{ backgroundColor: getStatusColor(order.status) }}
-                  >
-                    {order.status.toUpperCase()}
-                  </div>
-                </div>
-                
-                <div className="order-info">
-                  <div className="table-info">
-                    <strong>Tavolina: {order.tableNumber}</strong>
-                  </div>
-                  {order.customerName && order.customerName !== 'Anonymous' && (
-                    <div className="customer-name">
-                      Klienti: {order.customerName}
-                    </div>
-                  )}
-                  <div className="order-time">
-                    {formatTime(order.createdAt)}
-                  </div>
-                </div>
-                
-                <div className="order-items">
-                  {order.items.map((item, index) => (
-                    <div key={index} className="order-item">
-                      <span className="item-quantity">{item.quantity}x</span>
-                      <span className="item-name">{item.name}</span>
-                      <span className="item-price">{Math.round(item.price * item.quantity)} Lek</span>
-                    </div>
-                  ))}
-                </div>
-                
-                <div className="order-total">
-                  <strong>Totali: {Math.round(order.totalAmount)} Lek</strong>
-                </div>
-                
-                {getNextStatus(order.status) && (
-                  <button
-                    className="status-button"
-                    onClick={() => handleStatusUpdate(order.id, getNextStatus(order.status)!)}
-                    style={{ backgroundColor: getStatusColor(getNextStatus(order.status)!) }}
-                  >
-                    {getStatusLabel(order.status)}
-                  </button>
-                )}
-              </div>
-            );
-            })}
-          </div>
+          <ResponsiveKDSLayout
+            orders={orders}
+            onStatusUpdate={handleStatusUpdate}
+            selectedStatus={selectedStatus}
+            getStatusColor={getStatusColor}
+            getNextStatus={getNextStatus}
+            getStatusLabel={getStatusLabel}
+            getStatusDisplayName={getStatusDisplayName}
+            formatTime={formatTime}
+            getOrderUrgency={getOrderUrgency}
+            filteredOrders={filteredOrders}
+          />
         )}
       </div>
 

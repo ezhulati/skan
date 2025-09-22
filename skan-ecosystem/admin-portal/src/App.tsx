@@ -13,6 +13,7 @@ import UserProfilePage from './pages/UserProfilePage';
 import PaymentSettingsPage from './pages/PaymentSettingsPage';
 import OnboardingWizardPage from './pages/OnboardingWizardPage';
 import { AuthProvider } from './contexts/AuthContext';
+import { WebSocketProvider } from './contexts/WebSocketContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import Navigation from './components/Navigation';
 import ScrollToTop from './components/ScrollToTop';
@@ -21,9 +22,10 @@ import DevTools from './components/DevTools';
 function App() {
   return (
     <AuthProvider>
-      <Router>
-        <ScrollToTop />
-        <div className="App">
+      <WebSocketProvider>
+        <Router>
+          <ScrollToTop />
+          <div className="App">
           <Routes>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/demo-request" element={<DemoRequestPage />} />
@@ -102,6 +104,7 @@ function App() {
           <DevTools />
         </div>
       </Router>
+      </WebSocketProvider>
     </AuthProvider>
   );
 }
