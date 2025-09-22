@@ -47,7 +47,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const checkOnboardingStatus = useCallback(async () => {
     if (!auth.token) return;
     
-    const API_BASE_URL = (typeof process !== 'undefined' && process.env?.REACT_APP_API_URL) || 'https://api-mkazmlu7ta-ew.a.run.app/v1';
+    const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://api-mkazmlu7ta-ew.a.run.app/v1';
     
     try {
       const response = await fetch(`${API_BASE_URL}/onboarding/status`, {
@@ -145,7 +145,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   }, [checkOnboardingStatus]);
 
   const login = async (email: string, password: string) => {
-    const API_BASE_URL = (typeof process !== 'undefined' && process.env?.REACT_APP_API_URL) || 'https://api-mkazmlu7ta-ew.a.run.app/v1';
+    const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://api-mkazmlu7ta-ew.a.run.app/v1';
     
     try {
       const response = await fetch(`${API_BASE_URL}/auth/login`, {
