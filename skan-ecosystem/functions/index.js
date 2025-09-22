@@ -4715,7 +4715,7 @@ app.post("/v1/payments/setup-plans", verifyAuth, async (req, res) => {
     const user = req.user;
     
     // Only allow admins to create plans
-    if (user.role !== 'admin') {
+    if (user.role !== "admin") {
       return res.status(403).json({ error: "Admin access required" });
     }
 
@@ -4745,13 +4745,13 @@ app.post("/v1/payments/setup-plans", verifyAuth, async (req, res) => {
 
     const monthlyResponse = await axios.post(`${PAYPAL_CONFIG.apiUrl}/v1/billing/plans`, monthlyPlanData, {
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${accessToken}`,
-        'Accept': 'application/json',
-        'PayPal-Request-Id': uuidv4()
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${accessToken}`,
+        "Accept": "application/json",
+        "PayPal-Request-Id": uuidv4()
       }
     });
-    createdPlans.push({ type: 'monthly', plan: monthlyResponse.data });
+    createdPlans.push({ type: "monthly", plan: monthlyResponse.data });
 
     // Create annual plan
     const annualPlanData = {
@@ -4776,13 +4776,13 @@ app.post("/v1/payments/setup-plans", verifyAuth, async (req, res) => {
 
     const annualResponse = await axios.post(`${PAYPAL_CONFIG.apiUrl}/v1/billing/plans`, annualPlanData, {
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${accessToken}`,
-        'Accept': 'application/json',
-        'PayPal-Request-Id': uuidv4()
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${accessToken}`,
+        "Accept": "application/json",
+        "PayPal-Request-Id": uuidv4()
       }
     });
-    createdPlans.push({ type: 'annual', plan: annualResponse.data });
+    createdPlans.push({ type: "annual", plan: annualResponse.data });
 
     res.json({
       message: "Both subscription plans created successfully",
