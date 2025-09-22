@@ -11,7 +11,6 @@ import {
   OptimisticUpdate,
   ConflictResolution,
   OrderCache,
-  SyncResponse,
   OrderVersionEvent
 } from '../types/orderTypes';
 

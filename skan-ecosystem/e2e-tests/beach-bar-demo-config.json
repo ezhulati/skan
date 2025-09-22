@@ -6,10 +6,7 @@
     "phone": "+355 52 222 333",
     "description": "A beautiful beachfront bar and restaurant in Durrës offering fresh seafood, refreshing drinks, and stunning sea views. Perfect for sunset dining and relaxed beach atmosphere."
   },
-  "credentials": {
-    "email": "demo.beachbar@skan.al",
-    "password": "BeachBarDemo2024!"
-  },
+  "credentials": null,
   "urls": {
     "customer": "https://order.skan.al/beach-bar-durres",
     "admin": "https://admin.skan.al",
@@ -25,48 +22,48 @@
     "totalItems": 10,
     "sampleItems": [
       {
-        "name": "Greek salad",
-        "price": "€8.5",
+        "name": "Greek Salad",
+        "price": "€900",
         "category": "Appetizers"
       },
       {
         "name": "Fried Calamari",
-        "price": "€12",
+        "price": "€1200",
         "category": "Appetizers"
       },
       {
         "name": "Seafood Risotto",
-        "price": "€18.5",
+        "price": "€1800",
         "category": "Main Courses"
       },
       {
         "name": "Grilled Lamb Chops",
-        "price": "€22",
+        "price": "€2200",
         "category": "Main Courses"
       },
       {
         "name": "Grilled Sea Bass",
-        "price": "€24",
+        "price": "€2500",
         "category": "Fresh Seafood"
       },
       {
         "name": "Albanian Beer",
-        "price": "€3.5",
+        "price": "€350",
         "category": "Drinks"
       },
       {
         "name": "Albanian Raki",
-        "price": "€4",
+        "price": "€400",
         "category": "Drinks"
       },
       {
         "name": "Tiramisu",
-        "price": "€6.5",
+        "price": "€650",
         "category": "Desserts"
       },
       {
         "name": "Baklava",
-        "price": "€5.5",
+        "price": "€550",
         "category": "Desserts"
       }
     ]
@@ -81,8 +78,8 @@
     ],
     "admin": [
       "Login at: https://admin.skan.al",
-      "Email: demo.beachbar@skan.al",
-      "Password: BeachBarDemo2024!",
+      "Email: undefined",
+      "Password: undefined",
       "View incoming orders on dashboard",
       "Update order status (new → preparing → ready → served)"
     ]

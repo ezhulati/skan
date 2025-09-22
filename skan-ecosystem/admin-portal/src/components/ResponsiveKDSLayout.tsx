@@ -42,8 +42,6 @@ const ResponsiveKDSLayout: React.FC<ResponsiveKDSLayoutProps> = ({
   // Detect device type based on screen size and orientation
   const detectDeviceType = useCallback((): DeviceType => {
     const width = window.innerWidth;
-    const height = window.innerHeight;
-    const isLandscape = width > height;
 
     if (width <= 767) {
       return 'phone';

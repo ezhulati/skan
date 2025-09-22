@@ -1,5 +1,22 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 
+// TypeScript declarations for Screen Wake Lock API
+declare global {
+  interface WakeLockSentinel extends EventTarget {
+    readonly released: boolean;
+    readonly type: 'screen';
+    release(): Promise<void>;
+  }
+
+  interface WakeLock {
+    request(type: 'screen'): Promise<WakeLockSentinel>;
+  }
+
+  interface Navigator {
+    readonly wakeLock?: WakeLock;
+  }
+}
+
 interface WakeLockOptions {
   enabled?: boolean;
   onError?: (error: Error) => void;
@@ -69,7 +86,7 @@ export const useWakeLock = (options: WakeLockOptions = {}): WakeLockState => {
   // Acquire wake lock using native API
   const acquireNativeWakeLock = useCallback(async (): Promise<void> => {
     try {
-      if (!isSupported) {
+      if (!isSupported || !navigator.wakeLock) {
         throw new Error('Wake Lock API not supported');
       }
 
