@@ -152,7 +152,8 @@ export const useWebSocket = (options: WebSocketOptions): WebSocketState => {
         connect();
       }
     }, delay);
-  }, [autoReconnect, reconnectAttempts, maxReconnectAttempts, getReconnectDelay]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [autoReconnect, reconnectAttempts, maxReconnectAttempts, getReconnectDelay]); // connect creates circular dependency
 
   // Connect to WebSocket
   const connect = useCallback(() => {
@@ -231,7 +232,8 @@ export const useWebSocket = (options: WebSocketOptions): WebSocketState => {
       setConnecting(false);
       scheduleReconnect();
     }
-  }, [url, venueId, token, onConnectionChange, onError, handleMessage, startHeartbeat, clearTimeouts, scheduleReconnect]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [url, venueId, token, onConnectionChange, onError, handleMessage, startHeartbeat, clearTimeouts]); // scheduleReconnect creates circular dependency
 
   // Disconnect from WebSocket
   const disconnect = useCallback(() => {
@@ -275,6 +277,7 @@ export const useWebSocket = (options: WebSocketOptions): WebSocketState => {
     return () => {
       disconnect();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [url, venueId, token]); // Don't include connect/disconnect to avoid infinite loops
 
   // Cleanup on unmount

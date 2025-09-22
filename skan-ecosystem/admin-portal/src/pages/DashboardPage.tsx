@@ -97,7 +97,7 @@ const DashboardPage: React.FC = () => {
         )
       );
     }
-  }, [audioEnabled, notificationsEnabled]));
+  }, [kdsNotifications]));
   
   // Undo functionality state
   interface UndoOperation {

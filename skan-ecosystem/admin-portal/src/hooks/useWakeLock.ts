@@ -213,7 +213,7 @@ export const useWakeLock = (options: WakeLockOptions = {}): WakeLockState => {
     return () => {
       release();
     };
-  }, [isEnabled]); // Only depend on isEnabled
+  }, [isEnabled, acquire, release]);
 
   // Handle visibility change to re-acquire wake lock
   useEffect(() => {

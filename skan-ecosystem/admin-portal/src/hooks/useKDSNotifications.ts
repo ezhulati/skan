@@ -187,7 +187,7 @@ export const useKDSNotifications = (options: UseKDSNotificationsOptions = {}): U
         audioRef.current = null;
       }
     };
-  }, []);
+  }, [settings.volume]);
 
   // Update audio volume when settings change
   useEffect(() => {
@@ -199,8 +199,10 @@ export const useKDSNotifications = (options: UseKDSNotificationsOptions = {}): U
   // Clear escalation timers on unmount
   useEffect(() => {
     return () => {
-      escalationTimersRef.current.forEach(timer => clearTimeout(timer));
-      escalationTimersRef.current.clear();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      const timers = escalationTimersRef.current;
+      timers.forEach(timer => clearTimeout(timer));
+      timers.clear();
     };
   }, []);
 
@@ -310,7 +312,8 @@ export const useKDSNotifications = (options: UseKDSNotificationsOptions = {}): U
         acknowledgeAlert(event.id);
       }, 10000);
     }
-  }, [settings.visualEnabled]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [settings.visualEnabled]); // acknowledgeAlert creates circular dependency
 
   // Setup escalation timer
   const setupEscalation = useCallback((event: NotificationEvent): void => {
@@ -334,7 +337,8 @@ export const useKDSNotifications = (options: UseKDSNotificationsOptions = {}): U
     if (event.orderId) {
       escalationTimersRef.current.set(event.orderId, timerId);
     }
-  }, [settings.escalation]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [settings.escalation]); // playNotification creates circular dependency
 
   // Main notification function
   const playNotification = useCallback(async (
@@ -395,7 +399,8 @@ export const useKDSNotifications = (options: UseKDSNotificationsOptions = {}): U
       setupEscalation(notificationEvent);
     }
 
-  }, [settings, playAudio, showBrowserNotification, triggerVibration, showVisualAlert, setupEscalation]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [settings, playAudio, showBrowserNotification, triggerVibration, showVisualAlert]); // setupEscalation creates circular dependency
 
   // Request browser permissions
   const requestPermissions = useCallback(async (): Promise<boolean> => {
