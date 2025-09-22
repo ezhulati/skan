@@ -1400,71 +1400,6 @@ app.get("/v1/venue/:venueId/orders", async (req, res) => {
     const { venueId } = req.params;
     const { status, limit = 50 } = req.query;
     
-    // Return demo orders for demo venue
-    if (venueId === "beach-bar-durres") {
-      const now = new Date();
-      const demoOrders = [
-        {
-          id: "demo-order-1",
-          venueId: "beach-bar-durres",
-          tableNumber: "5",
-          orderNumber: "ORD-001",
-          customerName: "John Smith",
-          items: [
-            { name: "Margherita Pizza", price: 14.99, quantity: 1 },
-            { name: "Caesar Salad", price: 8.99, quantity: 1 },
-            { name: "Coca Cola", price: 2.99, quantity: 2 }
-          ],
-          totalAmount: 29.96,
-          status: "new",
-          createdAt: new Date(now.getTime() - 5 * 60 * 1000).toISOString(),
-          updatedAt: new Date(now.getTime() - 5 * 60 * 1000).toISOString()
-        },
-        {
-          id: "demo-order-2",
-          venueId: "beach-bar-durres",
-          tableNumber: "3",
-          orderNumber: "ORD-002",
-          customerName: "Sarah Johnson",
-          items: [
-            { name: "Chicken Burger", price: 12.99, quantity: 1 },
-            { name: "French Fries", price: 4.99, quantity: 1 }
-          ],
-          totalAmount: 17.98,
-          status: "preparing",
-          createdAt: new Date(now.getTime() - 15 * 60 * 1000).toISOString(),
-          updatedAt: new Date(now.getTime() - 10 * 60 * 1000).toISOString()
-        },
-        {
-          id: "demo-order-3",
-          venueId: "beach-bar-durres",
-          tableNumber: "7",
-          orderNumber: "ORD-003",
-          customerName: "Mike Davis",
-          items: [
-            { name: "Fish & Chips", price: 15.99, quantity: 1 },
-            { name: "Beer", price: 4.99, quantity: 2 }
-          ],
-          totalAmount: 25.97,
-          status: "ready",
-          createdAt: new Date(now.getTime() - 25 * 60 * 1000).toISOString(),
-          updatedAt: new Date(now.getTime() - 5 * 60 * 1000).toISOString()
-        }
-      ];
-      
-      // Filter by status if specified
-      let filteredOrders = demoOrders;
-      if (status && status !== "all") {
-        if (status === "active") {
-          filteredOrders = demoOrders.filter(order => ["new", "preparing", "ready"].includes(order.status));
-        } else {
-          filteredOrders = demoOrders.filter(order => order.status === status);
-        }
-      }
-      
-      return res.json(filteredOrders);
-    }
-    
     let query = db.collection("orders")
       .where("venueId", "==", venueId)
       .orderBy("createdAt", "desc")
@@ -1482,6 +1417,32 @@ app.get("/v1/venue/:venueId/orders", async (req, res) => {
       createdAt: doc.data().createdAt?.toDate()?.toISOString(),
       updatedAt: doc.data().updatedAt?.toDate()?.toISOString()
     }));
+    
+    // If no orders found locally, try to get all orders by venue ID using same logic as tracking
+    if (orders.length === 0) {
+      console.log(`No orders found locally for venue ${venueId}, searching all orders...`);
+      
+      try {
+        const allOrdersSnapshot = await db.collection("orders").get();
+        const venueOrders = allOrdersSnapshot.docs
+          .map(doc => ({
+            id: doc.id,
+            ...doc.data(),
+            createdAt: doc.data().createdAt?.toDate?.()?.toISOString() || doc.data().createdAt,
+            updatedAt: doc.data().updatedAt?.toDate?.()?.toISOString() || doc.data().updatedAt
+          }))
+          .filter(order => order.venueId === venueId)
+          .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+          .slice(0, parseInt(limit));
+        
+        if (venueOrders.length > 0) {
+          console.log(`Found ${venueOrders.length} orders via fallback search`);
+          return res.json(venueOrders);
+        }
+      } catch (fallbackError) {
+        console.error("Fallback search failed:", fallbackError);
+      }
+    }
     
     res.json(orders);
     

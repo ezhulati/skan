@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Clear SKAN.AL Storage</title>
+</head>
+<body>
+    <h1>Clear SKAN.AL Browser Storage</h1>
+    <button onclick="clearStorage()">Clear All Storage</button>
+    <div id="result"></div>
+    
+    <script>
+        function clearStorage() {
+            // Clear localStorage
+            localStorage.clear();
+            
+            // Clear sessionStorage  
+            sessionStorage.clear();
+            
+            // Clear specific SKAN auth items
+            localStorage.removeItem('restaurantAuth');
+            localStorage.removeItem('skanAuthToken');
+            localStorage.removeItem('skanUser');
+            localStorage.removeItem('skanVenue');
+            
+            document.getElementById('result').innerHTML = 
+                '<p style="color: green;">✅ All storage cleared! Now refresh http://localhost:3000</p>';
+        }
+        
+        // Show current storage contents
+        window.onload = function() {
+            const authData = localStorage.getItem('restaurantAuth');
+            const skanToken = localStorage.getItem('skanAuthToken');
+            
+            document.getElementById('result').innerHTML = 
+                '<p>Current storage:</p>' +
+                '<p>restaurantAuth: ' + (authData ? 'EXISTS' : 'NONE') + '</p>' +
+                '<p>skanAuthToken: ' + (skanToken ? 'EXISTS' : 'NONE') + '</p>';
+        }
+    </script>
+</body>
+</html>

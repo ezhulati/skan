@@ -1,6 +1,7 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "SKAN KDS",
+  "name": "SKAN Kitchen Display System",
+  "description": "Real-time kitchen display system for Albanian restaurants",
   "icons": [
     {
       "src": "favicon.ico",
@@ -8,18 +9,74 @@
       "type": "image/x-icon"
     },
     {
-      "src": "logo192.png",
+      "src": "favicon-192x192.png",
       "type": "image/png",
-      "sizes": "192x192"
+      "sizes": "192x192",
+      "purpose": "any maskable"
     },
     {
-      "src": "logo512.png",
+      "src": "favicon-512x512.png",
       "type": "image/png",
-      "sizes": "512x512"
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "apple-touch-icon.png",
+      "type": "image/png",
+      "sizes": "180x180"
     }
   ],
-  "start_url": ".",
-  "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "start_url": "/dashboard?source=kds",
+  "id": "/dashboard",
+  "scope": "/",
+  "display": "fullscreen",
+  "display_override": ["fullscreen", "standalone", "minimal-ui"],
+  "orientation": "any",
+  "theme_color": "#dc2626",
+  "background_color": "#fef2f2",
+  "categories": ["food", "business", "productivity"],
+  "lang": "sq",
+  "dir": "ltr",
+  "prefer_related_applications": false,
+  "edge_side_panel": {
+    "preferred_width": 400
+  },
+  "launch_handler": {
+    "client_mode": "navigate-existing"
+  },
+  "shortcuts": [
+    {
+      "name": "Porositë e Reja",
+      "short_name": "Porositë",
+      "description": "Shiko porositë e reja",
+      "url": "/dashboard?filter=new",
+      "icons": [
+        {
+          "src": "favicon-192x192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Menuja",
+      "short_name": "Menuja",
+      "description": "Menaxho artikujt e menysë",
+      "url": "/menu",
+      "icons": [
+        {
+          "src": "favicon-192x192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "favicon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Kitchen Display Dashboard"
+    }
+  ]
 }

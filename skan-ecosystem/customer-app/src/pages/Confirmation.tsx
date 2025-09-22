@@ -4,6 +4,7 @@ import { useVenue } from '../contexts/VenueContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import { CompactLanguagePicker } from '../components/LanguagePicker';
 import { formatPrice } from '../utils/currency';
+import { formatCustomerOrderNumber } from '../utils/orderNumber';
 
 interface ConfirmationState {
   orderNumber: string;
@@ -58,6 +59,13 @@ export function Confirmation() {
   const estimatedReadyTime = new Date(Date.now() + estimatedTime * 60000).toLocaleTimeString('en-US', {
     hour: '2-digit',
     minute: '2-digit'
+  });
+
+  const orderDate = new Date().toLocaleDateString('en-US', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
   });
 
   if (!confirmationData) {
@@ -124,7 +132,7 @@ export function Confirmation() {
           <div className="text-center mb-6">
             <div className="text-lg font-semibold text-gray-900 mb-1">{t('order_number')}</div>
             <div className="text-2xl font-bold text-primary-600 font-mono tracking-wider">
-              {confirmationData.orderNumber}
+              {formatCustomerOrderNumber(confirmationData.orderNumber)}
             </div>
           </div>
 
@@ -140,6 +148,13 @@ export function Confirmation() {
               <span className="text-gray-600">{t('table_number')}</span>
               <span className="font-semibold text-gray-900 uppercase">
                 {tableNumber}
+              </span>
+            </div>
+
+            <div className="flex justify-between items-center py-2 border-b border-gray-100">
+              <span className="text-gray-600">{t('order_date')}</span>
+              <span className="font-semibold text-gray-900">
+                {orderDate}
               </span>
             </div>
 

@@ -242,7 +242,7 @@ const CustomerMenuPreviewModal: React.FC<CustomerMenuPreviewModalProps> = ({
                           
                           <div className="item-controls">
                             <div className="price">
-                              {Math.round(item.price * 97)} Lek
+                              {Math.round(item.price)} Lek
                             </div>
                             
                             <div className="quantity-controls">
@@ -282,7 +282,7 @@ const CustomerMenuPreviewModal: React.FC<CustomerMenuPreviewModalProps> = ({
                       }
                     </span>
                     <span className="cart-total">
-                      {Math.round(getCartTotal() * 97)} Lek
+                      {Math.round(getCartTotal())} Lek
                     </span>
                   </div>
                   <button 

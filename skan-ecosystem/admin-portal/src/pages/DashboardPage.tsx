@@ -684,13 +684,13 @@ const DashboardPage: React.FC = () => {
                     <div key={index} className="order-item">
                       <span className="item-quantity">{item.quantity}x</span>
                       <span className="item-name">{item.name}</span>
-                      <span className="item-price">{Math.round(item.price * item.quantity * 97)} Lek</span>
+                      <span className="item-price">{Math.round(item.price * item.quantity)} Lek</span>
                     </div>
                   ))}
                 </div>
                 
                 <div className="order-total">
-                  <strong>Totali: {Math.round(order.totalAmount * 97)} Lek</strong>
+                  <strong>Totali: {Math.round(order.totalAmount)} Lek</strong>
                 </div>
                 
                 {getNextStatus(order.status) && (

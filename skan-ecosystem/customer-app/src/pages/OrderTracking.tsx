@@ -5,6 +5,7 @@ import { OrderTracking as OrderTrackingType } from '../types';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useVenue } from '../contexts/VenueContext';
 import { formatPrice } from '../utils/currency';
+import { formatCustomerOrderNumber } from '../utils/orderNumber';
 // import { CompactLanguagePicker } from '../components/LanguagePicker';
 
 export function OrderTracking() {
@@ -236,7 +237,7 @@ export function OrderTracking() {
             </p>
             
             <div className="text-sm text-gray-500 mb-4">
-              Order: <span className="font-mono font-semibold text-gray-900">{order.orderNumber}</span>
+              Order: <span className="font-mono font-semibold text-gray-900">{formatCustomerOrderNumber(order.orderNumber)}</span>
             </div>
 
             {/* Progress Bar */}

@@ -81,7 +81,7 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({
   };
 
   const formatRevenue = (amount: number) => {
-    return `${Math.round(amount * 97).toLocaleString()} Lek`;
+    return `${Math.round(amount).toLocaleString()} Lek`;
   };
 
   const greeting = getTimeBasedGreeting();

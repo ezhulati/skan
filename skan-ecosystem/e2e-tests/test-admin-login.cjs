@@ -25,7 +25,7 @@ async function testAdminLogin() {
     // Fill in Beach Bar credentials
     console.log('🔑 Entering Beach Bar credentials...');
     await page.type('input[type="email"]', 'demo.beachbar@skan.al');
-    await page.type('input[type="password"]', 'BeachBarDemo2024!');
+    await page.type('input[type="password"]', 'BeachBarDemo2024');
     
     // Submit login form
     console.log('🚀 Submitting login form...');

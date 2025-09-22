@@ -237,6 +237,129 @@ skan.al/blog/
 └── case-studies/           # Success stories and testimonials
 ```
 
+## Kitchen Display System (KDS) Requirements
+
+### **Dashboard-as-KDS Implementation Strategy**
+
+SKAN.AL admin portal will serve as a production-ready Kitchen Display System (KDS) running on iPads, Android tablets, and kitchen TVs. This approach provides immediate deployment capability without specialized hardware.
+
+### **Core Requirements: Never Sleep, Never Miss, Never Duplicate**
+
+#### **1. "Never Sleep" Implementation**
+- **Screen Wake Lock API**: Keep display active during service hours
+- **PWA (Progressive Web App)**: Full-screen mode without browser chrome
+- **Guided Access Support**: iOS/Android kiosk mode for dedicated kitchen devices
+- **Fallback Strategy**: Muted video loop trick for unsupported browsers
+
+#### **2. Real-Time Event Streaming**
+```typescript
+// Replace 10-second polling with WebSocket real-time
+interface OrderEvent {
+  type: 'order.created' | 'order.updated' | 'order.cancelled';
+  payload: Order;
+  version: number;
+  timestamp: string;
+}
+
+// WebSocket per venue with exponential backoff reconnection
+const websocketUrl = 'wss://api.skan.al/venues/{venueId}/orders';
+```
+
+#### **3. Order Versioning & Idempotency**
+```json
+{
+  "order_id": "SKN-20250922-008",
+  "version": 3,
+  "venueId": "beach-bar-durres",
+  "status": "NEW",
+  "items": [...],
+  "audit": {
+    "created_at": "2025-09-22T11:29:31Z",
+    "updated_at": "2025-09-22T11:32:15Z"
+  }
+}
+```
+
+#### **4. Enhanced Notification System**
+- **Audio Alerts**: New order sound + escalation beeps for aging orders
+- **Visual Flash**: Background color flash on new orders
+- **Mobile Vibration**: `navigator.vibrate(200)` for tablet notifications
+- **Browser Notifications**: Push notifications when app is backgrounded
+- **Order Count Badge**: Visible indicator of pending orders
+
+#### **5. Responsive Kitchen Layouts**
+- **Phone Mode**: Vertical list with swipe actions
+- **Tablet Mode**: 2-3 column card layout (current screenshot style)
+- **Kitchen TV Mode**: Horizontal lane view by cooking stations
+- **Station Routing**: Filter orders by BAR, HOT, COLD, GRILL stations
+
+#### **6. Offline Resilience**
+- **IndexedDB Cache**: Store last 100 orders for offline viewing
+- **Connection Status**: "⚠️ Offline – po ruajmë porositë" banner
+- **Optimistic Updates**: Instant UI feedback with server reconciliation
+- **Queue Sync**: Replay missed events on reconnection
+
+#### **7. Time-Based Escalation**
+```typescript
+const getOrderEscalation = (orderAge: number) => {
+  if (orderAge < 5) return { level: 'normal', color: 'green' };
+  if (orderAge < 10) return { level: 'warning', color: 'amber' };
+  return { level: 'critical', color: 'red' };
+};
+```
+
+#### **8. Albanian Kitchen Operations**
+- **Language Support**: Albanian (primary) + English + Italian
+- **Currency Format**: "16,100 Lek" with thousands separators
+- **Thermal Printing**: ESC/POS integration via QZ Tray (optional)
+- **Kitchen Roles**: Kuzhina (cook), Salla (server), Menaxher (manager)
+
+### **Implementation Phases**
+
+#### **Phase 1: Foundation (Weeks 1-2)**
+- PWA manifest + service worker
+- Screen Wake Lock implementation
+- WebSocket real-time connection
+- Order versioning system
+
+#### **Phase 2: UX Hardening (Weeks 3-4)**
+- Enhanced audio/visual alerts
+- Responsive layouts (phone/tablet/TV)
+- Offline cache (IndexedDB)
+- Connection resilience
+
+#### **Phase 3: Kitchen Operations (Weeks 5-6)**
+- Station-based order routing
+- Time-based escalation
+- Bulk actions (Accept All NEW)
+- Print integration (QZ Tray)
+
+#### **Phase 4: Production Hardening (Weeks 7-8)**
+- Albanian localization completion
+- Performance optimization
+- E2E testing with real kitchen workflow
+- Deployment to Beach Bar Durrës (beta test)
+
+### **Technical Specifications**
+
+#### **Performance Targets**
+- Order notification latency: <1 second
+- WebSocket reconnection: <5 seconds with exponential backoff
+- PWA load time: <3 seconds on 3G
+- Battery efficiency: Optimized polling intervals
+
+#### **Browser Support**
+- iOS Safari 14+ (iPad deployment)
+- Chrome 90+ (Android tablets)
+- Edge 90+ (Windows kitchen PCs)
+- Firefox 90+ (fallback support)
+
+#### **Hardware Compatibility**
+- **Primary**: iPad (9th gen or newer) with kiosk stand
+- **Secondary**: Android tablets (10+ inch recommended)
+- **Kitchen TV**: Chrome stick + wireless keyboard
+- **Backup**: Any modern smartphone for emergency use
+
 ## Current Status
 
 ### ✅ Production Ready
@@ -253,10 +376,22 @@ skan.al/blog/
 - Cross-domain integration testing
 
 ### 📋 Next Steps
-- Deploy customer app to dedicated domain
-- Complete admin portal integration
-- Content marketing execution
+
+#### **Priority 1: Kitchen Display System (8-week sprint)**
+- **Weeks 1-2**: PWA + WebSocket real-time + Screen Wake Lock
+- **Weeks 3-4**: Enhanced notifications + responsive layouts + offline cache
+- **Weeks 5-6**: Station routing + escalation + print integration
+- **Weeks 7-8**: Albanian localization + Beach Bar Durrës beta testing
+
+#### **Priority 2: Customer Experience Enhancement**
+- Deploy customer app to dedicated domain (`order.skan.al`)
+- Complete order tracking real-time updates (30s → instant)
+- Enhanced mobile PWA capabilities
+
+#### **Priority 3: Business Operations**
+- Content marketing execution for Albanian restaurant market
 - Performance optimization and monitoring
+- Multi-venue deployment preparation
 
 ## Troubleshooting
 
