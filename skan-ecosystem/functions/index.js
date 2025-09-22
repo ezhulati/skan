@@ -19,6 +19,16 @@ const {
 admin.initializeApp();
 const db = admin.firestore();
 
+// Helper function for server timestamps that works in emulator
+const getServerTimestamp = () => {
+  try {
+    return admin.firestore.FieldValue.serverTimestamp();
+  } catch (error) {
+    // Fallback for emulator or when serverTimestamp fails
+    return admin.firestore.Timestamp.now();
+  }
+};
+
 const app = express();
 
 // Enable trust proxy for Firebase Functions
@@ -201,7 +211,7 @@ const auditLog = async (action, userId, details = {}, ip = "unknown") => {
       userId,
       details,
       ip,
-      timestamp: admin.firestore.FieldValue.serverTimestamp(),
+      timestamp: getServerTimestamp(),
       userAgent: details.userAgent || "unknown"
     });
   } catch (error) {
@@ -229,7 +239,7 @@ const accountLockout = {
     if (!doc.exists) {
       await docRef.set({
         failedAttempts: 1,
-        lastAttempt: admin.firestore.FieldValue.serverTimestamp(),
+        lastAttempt: getServerTimestamp(),
         ip
       });
     } else {
@@ -241,13 +251,13 @@ const accountLockout = {
         await docRef.update({
           failedAttempts: attempts,
           lockedUntil: admin.firestore.Timestamp.fromDate(new Date(Date.now() + 30 * 60 * 1000)),
-          lastAttempt: admin.firestore.FieldValue.serverTimestamp(),
+          lastAttempt: getServerTimestamp(),
           ip
         });
       } else {
         await docRef.update({
           failedAttempts: attempts,
-          lastAttempt: admin.firestore.FieldValue.serverTimestamp(),
+          lastAttempt: getServerTimestamp(),
           ip
         });
       }
@@ -724,7 +734,7 @@ app.put("/v1/venue/:venueId/categories/:categoryId", verifyAuth, async (req, res
       name,
       nameAlbanian,
       sortOrder: sortOrder || categoryDoc.data().sortOrder || 999,
-      updatedAt: admin.firestore.FieldValue.serverTimestamp()
+      updatedAt: getServerTimestamp()
     });
     
     res.json({ message: "Category updated successfully" });
@@ -758,8 +768,8 @@ app.post("/v1/venue/:venueId/categories", verifyAuth, async (req, res) => {
       name,
       nameAlbanian,
       sortOrder: sortOrder || 999,
-      createdAt: admin.firestore.FieldValue.serverTimestamp(),
-      updatedAt: admin.firestore.FieldValue.serverTimestamp()
+      createdAt: getServerTimestamp(),
+      updatedAt: getServerTimestamp()
     });
     
     res.status(201).json({ 
@@ -841,7 +851,7 @@ app.put("/v1/venue/:venueId/items/:itemId", verifyAuth, async (req, res) => {
       name,
       nameAlbanian,
       price: parseFloat(price),
-      updatedAt: admin.firestore.FieldValue.serverTimestamp()
+      updatedAt: getServerTimestamp()
     };
     
     // Optional fields
@@ -902,8 +912,8 @@ app.post("/v1/venue/:venueId/items", verifyAuth, async (req, res) => {
       preparationTime: preparationTime ? parseInt(preparationTime) : 0,
       sortOrder: sortOrder ? parseInt(sortOrder) : 999,
       isActive: true,
-      createdAt: admin.firestore.FieldValue.serverTimestamp(),
-      updatedAt: admin.firestore.FieldValue.serverTimestamp()
+      createdAt: getServerTimestamp(),
+      updatedAt: getServerTimestamp()
     });
     
     res.status(201).json({ 
@@ -972,7 +982,7 @@ app.patch("/v1/venue/:venueId/items/:itemId/toggle", verifyAuth, async (req, res
     
     await itemRef.update({
       isActive: Boolean(isActive),
-      updatedAt: admin.firestore.FieldValue.serverTimestamp()
+      updatedAt: getServerTimestamp()
     });
     
     res.json({ 
@@ -1059,8 +1069,8 @@ app.post("/v1/venue/:venueId/categories", verifyAuth, async (req, res) => {
       nameAlbanian: nameEn, // Admin sends nameEn but we store as nameAlbanian
       sortOrder: maxSortOrder + 1,
       isActive: true,
-      createdAt: admin.firestore.FieldValue.serverTimestamp(),
-      updatedAt: admin.firestore.FieldValue.serverTimestamp()
+      createdAt: getServerTimestamp(),
+      updatedAt: getServerTimestamp()
     });
 
     res.status(201).json({
@@ -1098,7 +1108,7 @@ app.put("/v1/venue/:venueId/categories/:categoryId", verifyAuth, async (req, res
     await categoryRef.update({
       name: name,
       nameAlbanian: nameEn,
-      updatedAt: admin.firestore.FieldValue.serverTimestamp()
+      updatedAt: getServerTimestamp()
     });
 
     res.json({
@@ -1187,8 +1197,8 @@ app.post("/v1/venue/:venueId/categories/:categoryId/items", verifyAuth, async (r
       sortOrder: maxSortOrder + 1,
       isActive: isActive,
       isAvailable: true,
-      createdAt: admin.firestore.FieldValue.serverTimestamp(),
-      updatedAt: admin.firestore.FieldValue.serverTimestamp()
+      createdAt: getServerTimestamp(),
+      updatedAt: getServerTimestamp()
     };
 
     if (imageUrl) {
@@ -1224,7 +1234,7 @@ app.put("/v1/venue/:venueId/categories/:categoryId/items/:itemId", verifyAuth, a
     }
 
     const updateData = {
-      updatedAt: admin.firestore.FieldValue.serverTimestamp()
+      updatedAt: getServerTimestamp()
     };
 
     if (name !== undefined) updateData.name = name;
@@ -1289,7 +1299,7 @@ app.patch("/v1/venue/:venueId/items/:itemId/toggle", verifyAuth, async (req, res
 
     await itemRef.update({
       isActive: isActive,
-      updatedAt: admin.firestore.FieldValue.serverTimestamp()
+      updatedAt: getServerTimestamp()
     });
 
     res.json({
@@ -1355,8 +1365,8 @@ app.post("/v1/orders", async (req, res) => {
       totalAmount: Math.round(totalAmount * 100) / 100, // Round to 2 decimals
       specialInstructions: specialInstructions || "",
       status: "new",
-      createdAt: admin.firestore.FieldValue.serverTimestamp(),
-      updatedAt: admin.firestore.FieldValue.serverTimestamp()
+      createdAt: getServerTimestamp(),
+      updatedAt: getServerTimestamp()
     };
     
     const orderRef = await db.collection("orders").add(orderData);
@@ -1485,16 +1495,16 @@ app.put("/v1/orders/:orderId/status", async (req, res) => {
     
     const updateData = {
       status,
-      updatedAt: admin.firestore.FieldValue.serverTimestamp()
+      updatedAt: getServerTimestamp()
     };
     
     // Add timestamp for specific status changes
     if (status === "preparing") {
-      updateData.preparedAt = admin.firestore.FieldValue.serverTimestamp();
+      updateData.preparedAt = getServerTimestamp();
     } else if (status === "ready") {
-      updateData.readyAt = admin.firestore.FieldValue.serverTimestamp();
+      updateData.readyAt = getServerTimestamp();
     } else if (status === "served") {
-      updateData.servedAt = admin.firestore.FieldValue.serverTimestamp();
+      updateData.servedAt = getServerTimestamp();
     }
     
     await db.collection("orders").doc(orderId).update(updateData);
@@ -1598,7 +1608,7 @@ app.post("/v1/import/venue", async (req, res) => {
       description: venue.description,
       settings: venue.settings,
       isActive: true,
-      createdAt: admin.firestore.FieldValue.serverTimestamp()
+      createdAt: getServerTimestamp()
     });
     
     let categoriesAdded = 0;
@@ -1718,8 +1728,8 @@ app.post("/v1/auth/register", async (req, res) => {
       venueId: venueId || null,
       isActive: true,
       emailVerified: false,
-      createdAt: admin.firestore.FieldValue.serverTimestamp(),
-      updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+      createdAt: getServerTimestamp(),
+      updatedAt: getServerTimestamp(),
       onboarding: {
         isComplete: false,
         currentStep: 1,
@@ -1732,7 +1742,7 @@ app.post("/v1/auth/register", async (req, res) => {
           tableSetup: { completed: false, data: {} },
           staffSetup: { completed: false, data: {} }
         },
-        startedAt: admin.firestore.FieldValue.serverTimestamp(),
+        startedAt: getServerTimestamp(),
         completedAt: null
       }
     };
@@ -1805,7 +1815,7 @@ app.post("/v1/auth/reset-password", async (req, res) => {
     await userDoc.ref.update({
       resetToken,
       resetTokenExpiry: admin.firestore.Timestamp.fromDate(resetTokenExpiry),
-      updatedAt: admin.firestore.FieldValue.serverTimestamp()
+      updatedAt: getServerTimestamp()
     });
     
     // TODO: Send email with reset link
@@ -1866,7 +1876,7 @@ app.post("/v1/auth/reset-password/confirm", async (req, res) => {
       passwordHash: newPasswordHash,
       resetToken: admin.firestore.FieldValue.delete(),
       resetTokenExpiry: admin.firestore.FieldValue.delete(),
-      updatedAt: admin.firestore.FieldValue.serverTimestamp()
+      updatedAt: getServerTimestamp()
     });
     
     res.json({ message: "Password reset successfully" });
@@ -1926,7 +1936,7 @@ app.post("/v1/auth/change-password", verifyAuth, async (req, res) => {
     // Update password in database
     await userDoc.ref.update({
       passwordHash: newPasswordHash,
-      updatedAt: admin.firestore.FieldValue.serverTimestamp()
+      updatedAt: getServerTimestamp()
     });
     
     res.json({ message: "Password changed successfully" });
@@ -2076,7 +2086,7 @@ app.post("/v1/auth/login",
     await db.collection("refresh_tokens").doc(userDoc.id).set({
       token: refreshToken,
       userId: userDoc.id,
-      createdAt: admin.firestore.FieldValue.serverTimestamp(),
+      createdAt: getServerTimestamp(),
       expiresAt: admin.firestore.Timestamp.fromDate(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)),
       ip: clientIP,
       userAgent: req.headers["user-agent"] || "unknown"
@@ -2158,7 +2168,7 @@ app.post("/v1/auth/refresh", authLimiter, async (req, res) => {
     // Update refresh token in database
     await db.collection("refresh_tokens").doc(decoded.uid).update({
       token: newRefreshToken,
-      updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+      updatedAt: getServerTimestamp(),
       ip: req.ip,
       userAgent: req.headers["user-agent"] || "unknown"
     });
@@ -2401,7 +2411,7 @@ app.put("/v1/users/:userId", verifyAuth, async (req, res) => {
     }
     
     const updateData = {
-      updatedAt: admin.firestore.FieldValue.serverTimestamp()
+      updatedAt: getServerTimestamp()
     };
     
     if (fullName !== undefined) updateData.fullName = fullName;
@@ -2476,7 +2486,7 @@ app.post("/v1/users/invite", verifyAuth, async (req, res) => {
       inviteToken,
       inviteTokenExpiry: admin.firestore.Timestamp.fromDate(inviteTokenExpiry),
       status: "pending",
-      createdAt: admin.firestore.FieldValue.serverTimestamp()
+      createdAt: getServerTimestamp()
     };
     
     const inviteRef = await db.collection("invitations").add(inviteData);
@@ -2547,8 +2557,8 @@ app.post("/v1/auth/accept-invitation", async (req, res) => {
       venueId: inviteData.venueId,
       isActive: true,
       emailVerified: true, // Pre-verified through invitation
-      createdAt: admin.firestore.FieldValue.serverTimestamp(),
-      updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+      createdAt: getServerTimestamp(),
+      updatedAt: getServerTimestamp(),
       onboarding: {
         isComplete: inviteData.venueId ? true : false, // If invited to existing venue, skip onboarding
         currentStep: inviteData.venueId ? 6 : 1,
@@ -2561,8 +2571,8 @@ app.post("/v1/auth/accept-invitation", async (req, res) => {
           tableSetup: { completed: inviteData.venueId ? true : false, data: {} },
           staffSetup: { completed: inviteData.venueId ? true : false, data: {} }
         },
-        startedAt: admin.firestore.FieldValue.serverTimestamp(),
-        completedAt: inviteData.venueId ? admin.firestore.FieldValue.serverTimestamp() : null
+        startedAt: getServerTimestamp(),
+        completedAt: inviteData.venueId ? getServerTimestamp() : null
       }
     };
     
@@ -2571,7 +2581,7 @@ app.post("/v1/auth/accept-invitation", async (req, res) => {
     // Mark invitation as used
     await inviteDoc.ref.update({
       status: "accepted",
-      acceptedAt: admin.firestore.FieldValue.serverTimestamp(),
+      acceptedAt: getServerTimestamp(),
       userId: userRef.id
     });
     
@@ -2657,8 +2667,8 @@ app.post("/v1/venues", verifyAuth, async (req, res) => {
         estimatedPreparationTime: settings?.estimatedPreparationTime || 15
       },
       isActive: true,
-      createdAt: admin.firestore.FieldValue.serverTimestamp(),
-      updatedAt: admin.firestore.FieldValue.serverTimestamp()
+      createdAt: getServerTimestamp(),
+      updatedAt: getServerTimestamp()
     };
     
     const venueRef = await db.collection("venue").add(venueData);
@@ -2763,7 +2773,7 @@ app.put("/v1/venues/:venueId", verifyAuth, async (req, res) => {
     }
     
     const updateData = {
-      updatedAt: admin.firestore.FieldValue.serverTimestamp()
+      updatedAt: getServerTimestamp()
     };
     
     if (name !== undefined) {
@@ -2964,8 +2974,8 @@ app.post("/v1/register/venue", async (req, res) => {
         estimatedPreparationTime: 15
       },
       isActive: true,
-      createdAt: admin.firestore.FieldValue.serverTimestamp(),
-      updatedAt: admin.firestore.FieldValue.serverTimestamp()
+      createdAt: getServerTimestamp(),
+      updatedAt: getServerTimestamp()
     };
     
     const venueRef = await db.collection("venue").add(venueData);
@@ -2985,8 +2995,8 @@ app.post("/v1/register/venue", async (req, res) => {
       venueId: venueId,
       isActive: true,
       emailVerified: false, // Will need email verification
-      createdAt: admin.firestore.FieldValue.serverTimestamp(),
-      updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+      createdAt: getServerTimestamp(),
+      updatedAt: getServerTimestamp(),
       onboarding: {
         isComplete: true, // Venue registration completes most onboarding steps
         currentStep: 6,
@@ -2999,7 +3009,7 @@ app.post("/v1/register/venue", async (req, res) => {
           tableSetup: { completed: true, data: { tableCount } },
           staffSetup: { completed: false, data: {} } // Optional but recommended
         },
-        startedAt: admin.firestore.FieldValue.serverTimestamp(),
+        startedAt: getServerTimestamp(),
         completedAt: null // Not fully complete until menu items added
       }
     };
@@ -3015,7 +3025,7 @@ app.post("/v1/register/venue", async (req, res) => {
         capacity: 4,
         location: "Main dining area",
         isActive: true,
-        createdAt: admin.firestore.FieldValue.serverTimestamp()
+        createdAt: getServerTimestamp()
       };
       
       tablePromises.push(
@@ -3037,7 +3047,7 @@ app.post("/v1/register/venue", async (req, res) => {
       venueRef.collection("menuCategory").add({
         ...category,
         isActive: true,
-        createdAt: admin.firestore.FieldValue.serverTimestamp()
+        createdAt: getServerTimestamp()
       })
     );
     
@@ -3315,8 +3325,8 @@ app.post("/v1/venues/:venueId/tables", verifyAuth, async (req, res) => {
       capacity: capacity || 4,
       location: location || "Main dining area",
       isActive: true,
-      createdAt: admin.firestore.FieldValue.serverTimestamp(),
-      updatedAt: admin.firestore.FieldValue.serverTimestamp()
+      createdAt: getServerTimestamp(),
+      updatedAt: getServerTimestamp()
     });
     
     res.status(201).json({ 
@@ -3350,7 +3360,7 @@ app.put("/v1/venues/:venueId/tables/:tableId", verifyAuth, async (req, res) => {
     }
     
     const updateData = {
-      updatedAt: admin.firestore.FieldValue.serverTimestamp()
+      updatedAt: getServerTimestamp()
     };
     
     if (tableNumber !== undefined) updateData.tableNumber = tableNumber;
@@ -3464,7 +3474,7 @@ app.put("/v1/venues/:venueId/tables/:tableId/status", verifyAuth, async (req, re
     
     await tableRef.update({
       isActive: Boolean(isActive),
-      updatedAt: admin.firestore.FieldValue.serverTimestamp()
+      updatedAt: getServerTimestamp()
     });
     
     res.json({ 
@@ -3810,7 +3820,7 @@ app.put("/v1/venues/:venueId/settings", verifyAuth, async (req, res) => {
       settings: {
         ...currentSettings
       },
-      updatedAt: admin.firestore.FieldValue.serverTimestamp()
+      updatedAt: getServerTimestamp()
     };
     
     if (currency !== undefined) updateData.settings.currency = currency;
@@ -3896,7 +3906,7 @@ app.put("/v1/venues/:venueId/settings/notifications", verifyAuth, async (req, re
     
     await venueRef.update({
       "settings.notifications": updatedNotifications,
-      updatedAt: admin.firestore.FieldValue.serverTimestamp()
+      updatedAt: getServerTimestamp()
     });
     
     res.json({ 
@@ -3969,7 +3979,7 @@ app.put("/v1/venues/:venueId/settings/operating-hours", verifyAuth, async (req, 
     
     await venueRef.update({
       "settings.operatingHours": operatingHours,
-      updatedAt: admin.firestore.FieldValue.serverTimestamp()
+      updatedAt: getServerTimestamp()
     });
     
     res.json({ 
@@ -4015,9 +4025,9 @@ app.put("/v1/orders/:orderId/cancel", verifyAuth, async (req, res) => {
     await orderRef.update({
       status: "cancelled",
       cancellationReason: reason || "Cancelled by restaurant",
-      cancelledAt: admin.firestore.FieldValue.serverTimestamp(),
+      cancelledAt: getServerTimestamp(),
       cancelledBy: req.user.uid,
-      updatedAt: admin.firestore.FieldValue.serverTimestamp()
+      updatedAt: getServerTimestamp()
     });
     
     res.json({ 
@@ -4067,7 +4077,7 @@ app.post("/v1/orders/:orderId/refund", verifyAuth, async (req, res) => {
       amount: parseFloat(amount),
       reason: reason || "Refund processed",
       processedBy: req.user.uid,
-      processedAt: admin.firestore.FieldValue.serverTimestamp(),
+      processedAt: getServerTimestamp(),
       status: "pending" // In a real system, this would integrate with payment processor
     };
     
@@ -4078,8 +4088,8 @@ app.post("/v1/orders/:orderId/refund", verifyAuth, async (req, res) => {
       refundAmount: parseFloat(amount),
       refundReason: reason,
       refundId: refundRef.id,
-      refundedAt: admin.firestore.FieldValue.serverTimestamp(),
-      updatedAt: admin.firestore.FieldValue.serverTimestamp()
+      refundedAt: getServerTimestamp(),
+      updatedAt: getServerTimestamp()
     });
     
     res.json({ 
@@ -4322,7 +4332,7 @@ app.post("/v1/venue/complete-onboarding", verifyAuth, async (req, res) => {
     // Update venue to mark onboarding as completed
     await db.collection("venue").doc(venueId).update({
       onboardingCompleted: true,
-      onboardingCompletedAt: admin.firestore.FieldValue.serverTimestamp(),
+      onboardingCompletedAt: getServerTimestamp(),
       onboardingCompletedBy: req.user.uid
     });
     
@@ -4435,7 +4445,7 @@ app.put("/v1/onboarding/step/:stepName", verifyAuth, async (req, res) => {
     onboarding.steps[stepName] = {
       completed,
       data: data || {},
-      updatedAt: admin.firestore.FieldValue.serverTimestamp()
+      updatedAt: getServerTimestamp()
     };
     
     // Update completed steps array
@@ -4452,14 +4462,14 @@ app.put("/v1/onboarding/step/:stepName", verifyAuth, async (req, res) => {
     onboarding.isComplete = completedCount >= 4; // Profile, venue, categories, and items are required
     
     if (onboarding.isComplete && !onboarding.completedAt) {
-      onboarding.completedAt = admin.firestore.FieldValue.serverTimestamp();
+      onboarding.completedAt = getServerTimestamp();
     } else if (!onboarding.isComplete) {
       onboarding.completedAt = null;
     }
     
     await userRef.update({
       onboarding,
-      updatedAt: admin.firestore.FieldValue.serverTimestamp()
+      updatedAt: getServerTimestamp()
     });
     
     res.json({
@@ -4504,11 +4514,11 @@ app.post("/v1/onboarding/complete", verifyAuth, async (req, res) => {
     // Mark onboarding as complete
     onboarding.isComplete = true;
     onboarding.currentStep = 6;
-    onboarding.completedAt = admin.firestore.FieldValue.serverTimestamp();
+    onboarding.completedAt = getServerTimestamp();
     
     await userRef.update({
       onboarding,
-      updatedAt: admin.firestore.FieldValue.serverTimestamp()
+      updatedAt: getServerTimestamp()
     });
     
     res.json({
@@ -4905,7 +4915,7 @@ app.post("/v1/payments/subscriptions", verifyAuth, async (req, res) => {
       userId: user.id,
       planId: planId,
       status: response.data.status,
-      createdAt: admin.firestore.FieldValue.serverTimestamp()
+      createdAt: getServerTimestamp()
     });
 
     res.json({
@@ -4951,7 +4961,7 @@ app.get("/v1/payments/subscriptions/:subscriptionId", verifyAuth, async (req, re
     // Update local status
     await db.collection("subscriptions").doc(subscriptionId).update({
       status: response.data.status,
-      lastChecked: admin.firestore.FieldValue.serverTimestamp()
+      lastChecked: getServerTimestamp()
     });
 
     res.json({
@@ -4996,8 +5006,8 @@ app.post("/v1/payments/subscriptions/activate", verifyAuth, async (req, res) => 
       userId: user.id,
       planId: planId || subscription.plan_id,
       status: subscription.status,
-      createdAt: admin.firestore.FieldValue.serverTimestamp(),
-      activatedAt: subscription.status === "ACTIVE" ? admin.firestore.FieldValue.serverTimestamp() : null,
+      createdAt: getServerTimestamp(),
+      activatedAt: subscription.status === "ACTIVE" ? getServerTimestamp() : null,
       nextBillingTime: subscription.billing_info?.next_billing_time,
       paypalSubscriptionData: subscription
     }, { merge: true });
@@ -5007,7 +5017,7 @@ app.post("/v1/payments/subscriptions/activate", verifyAuth, async (req, res) => 
       hasActiveSubscription: subscription.status === "ACTIVE",
       subscriptionId: subscriptionId,
       subscriptionStatus: subscription.status,
-      subscriptionUpdatedAt: admin.firestore.FieldValue.serverTimestamp()
+      subscriptionUpdatedAt: getServerTimestamp()
     });
 
     res.json({
@@ -5063,7 +5073,7 @@ app.post("/v1/payments/subscriptions/:subscriptionId/cancel", verifyAuth, async 
     // Update local status
     await db.collection("subscriptions").doc(subscriptionId).update({
       status: "CANCELLED",
-      cancelledAt: admin.firestore.FieldValue.serverTimestamp(),
+      cancelledAt: getServerTimestamp(),
       cancelReason: reason
     });
 
@@ -5113,7 +5123,7 @@ async function handleSubscriptionActivated(event) {
   const subscription = event.resource;
   await db.collection("subscriptions").doc(subscription.id).update({
     status: "ACTIVE",
-    activatedAt: admin.firestore.FieldValue.serverTimestamp()
+    activatedAt: getServerTimestamp()
   });
 }
 
@@ -5121,7 +5131,7 @@ async function handleSubscriptionCancelled(event) {
   const subscription = event.resource;
   await db.collection("subscriptions").doc(subscription.id).update({
     status: "CANCELLED",
-    cancelledAt: admin.firestore.FieldValue.serverTimestamp()
+    cancelledAt: getServerTimestamp()
   });
 }
 
@@ -5135,7 +5145,7 @@ async function handlePaymentCompleted(event) {
     amount: payment.amount.total,
     currency: payment.amount.currency,
     status: "COMPLETED",
-    paymentDate: admin.firestore.FieldValue.serverTimestamp()
+    paymentDate: getServerTimestamp()
   });
 }
 
@@ -5143,7 +5153,7 @@ async function handlePaymentFailed(event) {
   const subscription = event.resource;
   await db.collection("subscriptions").doc(subscription.id).update({
     status: "PAYMENT_FAILED",
-    lastFailedAt: admin.firestore.FieldValue.serverTimestamp()
+    lastFailedAt: getServerTimestamp()
   });
 }
 
