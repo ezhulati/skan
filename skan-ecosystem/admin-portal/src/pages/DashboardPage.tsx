@@ -19,7 +19,7 @@ const DashboardPage: React.FC = () => {
   const [usingMockData, setUsingMockData] = useState(false);
   
   // Notification system state
-  const [previousOrderCount, setPreviousOrderCount] = useState(0);
+  const previousOrderCountRef = useRef(0); // FIXED: Use ref instead of state to avoid dependency cycle
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
   const [audioEnabled, setAudioEnabled] = useState(true);
   const [showNotificationSettings, setShowNotificationSettings] = useState(false);
@@ -72,6 +72,10 @@ const DashboardPage: React.FC = () => {
     }
   });
   
+  // Store kdsNotifications in a ref to avoid re-render cycles
+  const kdsNotificationsRef = useRef(kdsNotifications);
+  kdsNotificationsRef.current = kdsNotifications;
+
   // Listen for real-time order events
   useOrderEvents(['order.created', 'order.updated'], useCallback((event) => {
     console.log('Real-time order event:', event);
@@ -80,8 +84,8 @@ const DashboardPage: React.FC = () => {
       // Add new order to the list
       setOrders(prevOrders => [event.payload, ...prevOrders]);
       
-      // Enhanced KDS notification
-      kdsNotifications.playNotification('new-order', {
+      // Enhanced KDS notification using ref
+      kdsNotificationsRef.current.playNotification('new-order', {
         title: 'New Order Received',
         titleAlbanian: '🔔 Porosinë e Re!',
         message: `Table ${event.payload.tableNumber} - ${event.payload.orderNumber}`,
@@ -97,7 +101,7 @@ const DashboardPage: React.FC = () => {
         )
       );
     }
-  }, [kdsNotifications]));
+  }, [])); // FIXED: No dependencies to break circular re-render
   
   // Undo functionality state
   interface UndoOperation {
@@ -108,26 +112,7 @@ const DashboardPage: React.FC = () => {
   }
   const [undoOperation, setUndoOperation] = useState<UndoOperation | null>(null);
 
-  // Check for new orders and trigger notifications
-  const checkForNewOrders = useCallback((newOrders: Order[]) => {
-    const newOrdersCount = newOrders.filter(order => order.status === 'new').length;
-    
-    if (previousOrderCount > 0 && newOrdersCount > previousOrderCount) {
-      const newOrdersAdded = newOrdersCount - previousOrderCount;
-      
-      // Enhanced KDS notification for polling-based updates
-      kdsNotifications.playNotification('new-order', {
-        title: `${newOrdersAdded} New Orders`,
-        titleAlbanian: `🔔 ${newOrdersAdded} Porosinë të Reja!`,
-        message: 'You have received new orders that need processing.',
-        messageAlbanian: 'Keni marrë porosinë të reja që duhen përpunuar.',
-        priority: newOrdersAdded > 2 ? 'high' : 'medium'
-      });
-    }
-    
-    setPreviousOrderCount(newOrdersCount);
-  }, [previousOrderCount, kdsNotifications]);
-
+  // FINAL FIX: Completely removed dependencies that cause circular re-renders
   const loadOrders = useCallback(async () => {
     if (!auth.user?.venueId) {
       setLoading(false);
@@ -143,8 +128,23 @@ const DashboardPage: React.FC = () => {
       setOrders(ordersData);
       setUsingMockData(false); // We have real data
       
-      // Check for new orders and trigger notifications
-      checkForNewOrders(ordersData);
+      // FIXED: Use ref to avoid re-render dependency cycle
+      const newOrdersCount = ordersData.filter(order => order.status === 'new').length;
+      
+      if (previousOrderCountRef.current > 0 && newOrdersCount > previousOrderCountRef.current) {
+        const newOrdersAdded = newOrdersCount - previousOrderCountRef.current;
+        
+        // Enhanced KDS notification for polling-based updates using ref
+        kdsNotificationsRef.current.playNotification('new-order', {
+          title: `${newOrdersAdded} New Orders`,
+          titleAlbanian: `🔔 ${newOrdersAdded} Porosinë të Reja!`,
+          message: 'You have received new orders that need processing.',
+          messageAlbanian: 'Keni marrë porosinë të reja që duhen përpunuar.',
+          priority: newOrdersAdded > 2 ? 'high' : 'medium'
+        });
+      }
+      
+      previousOrderCountRef.current = newOrdersCount;
     } catch (err) {
       console.error('Error loading orders:', err);
       
@@ -209,7 +209,7 @@ const DashboardPage: React.FC = () => {
       setLoading(false);
       setRefreshing(false);
     }
-  }, [auth.user?.venueId, checkForNewOrders]);
+  }, [auth.user?.venueId]); // FIXED: Only depend on venueId - kdsNotifications is stable
 
   // Initialize notification system
   useEffect(() => {
@@ -466,9 +466,9 @@ const DashboardPage: React.FC = () => {
     }
     
     if (diffMinutes > 20) {
-      // Critical escalation - trigger urgent notification
+      // Critical escalation - trigger urgent notification using ref
       if (orderId && diffMinutes === 21) { // Trigger once at 21 minutes
-        kdsNotifications.playNotification('urgent-order', {
+        kdsNotificationsRef.current.playNotification('urgent-order', {
           title: 'CRITICAL: Order Overdue',
           titleAlbanian: 'KRITIK: Porosia me Vonë',
           message: `Order is ${diffMinutes} minutes old and needs immediate attention!`,
@@ -479,9 +479,9 @@ const DashboardPage: React.FC = () => {
       }
       return { level: 'critical', className: 'order-urgent-critical' };
     } else if (diffMinutes > 10) {
-      // Warning escalation
+      // Warning escalation using ref
       if (orderId && diffMinutes === 11) { // Trigger once at 11 minutes
-        kdsNotifications.playNotification('urgent-order', {
+        kdsNotificationsRef.current.playNotification('urgent-order', {
           title: 'Order Needs Attention',
           titleAlbanian: 'Porosia Ka Nevojë për Vëmendje',
           message: `Order is ${diffMinutes} minutes old`,

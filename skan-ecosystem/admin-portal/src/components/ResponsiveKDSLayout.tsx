@@ -3,7 +3,7 @@
  * Provides device-specific layouts: Phone, Tablet, and Kitchen TV modes
  */
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Order } from '../services/api';
 import '../styles/responsiveKDS.css';
 
@@ -22,6 +22,7 @@ interface ResponsiveKDSLayoutProps {
 
 type DeviceType = 'phone' | 'tablet' | 'tv';
 type StationLane = 'new' | 'preparing' | 'ready' | 'served';
+const STATION_LANES: StationLane[] = ['new', 'preparing', 'ready', 'served'];
 
 const ResponsiveKDSLayout: React.FC<ResponsiveKDSLayoutProps> = ({
   orders,
@@ -264,36 +265,40 @@ const ResponsiveKDSLayout: React.FC<ResponsiveKDSLayoutProps> = ({
     </div>
   );
 
-  // Kitchen TV Mode Component
-  const TVModeLayout = () => {
-    const stationLanes: StationLane[] = ['new', 'preparing', 'ready', 'served'];
-    
-    // Map numeric status codes to string statuses
-    const mapStatusToLane = (status: string): StationLane | null => {
-      switch (status) {
-        case '3': return 'new';
-        case '5': return 'preparing';
-        case '7': return 'ready';
-        case '9': return 'served';
-        case 'new': return 'new';
-        case 'preparing': return 'preparing';
-        case 'ready': return 'ready';
-        case 'served': return 'served';
-        default: return null;
-      }
-    };
-    
-    const getStationOrders = (station: StationLane) => {
-      // Use orders directly, not filteredOrders, to ensure real-time updates
-      const stationOrders = orders.filter(order => {
-        const mappedStatus = mapStatusToLane(order.status);
-        console.log(`🔄 Order ${order.orderNumber}: status=${order.status} mapped to=${mappedStatus} station=${station}`);
-        return mappedStatus === station;
-      });
-      console.log(`🏠 Station ${station}: ${stationOrders.length} orders`);
-      return stationOrders;
+  const mapStatusToLane = useCallback((status: string): StationLane | null => {
+    switch (status) {
+      case '3': return 'new';
+      case '5': return 'preparing';
+      case '7': return 'ready';
+      case '9': return 'served';
+      case 'new': return 'new';
+      case 'preparing': return 'preparing';
+      case 'ready': return 'ready';
+      case 'served': return 'served';
+      default: return null;
+    }
+  }, []);
+
+  const stationOrdersMap = useMemo(() => {
+    const map: Record<StationLane, Order[]> = {
+      new: [],
+      preparing: [],
+      ready: [],
+      served: []
     };
 
+    orders.forEach(order => {
+      const mappedStatus = mapStatusToLane(order.status);
+      if (mappedStatus) {
+        map[mappedStatus].push(order);
+      }
+    });
+
+    return map;
+  }, [orders, mapStatusToLane]);
+
+  // Kitchen TV Mode Component
+  const TVModeLayout = () => {
     const getStationTitle = (station: StationLane): string => {
       switch (station) {
         case 'new': return 'Të Reja';
@@ -307,14 +312,14 @@ const ResponsiveKDSLayout: React.FC<ResponsiveKDSLayoutProps> = ({
     return (
       <div className="kds-tv-mode">
         <div className="orders-grid">
-          {stationLanes.map(station => (
-            <div key={`${station}-${orders.length}-${JSON.stringify(orders.map(o => o.status))}`} className={`station-lane station-${station}`}>
+          {STATION_LANES.map(station => (
+            <div key={station} className={`station-lane station-${station}`}>
               <div className="station-header">
-                {getStationTitle(station)} ({getStationOrders(station).length})
+                {getStationTitle(station)} ({stationOrdersMap[station].length})
               </div>
               
               <div className="station-orders">
-                {getStationOrders(station).map(order => {
+                {stationOrdersMap[station].map(order => {
                   const urgency = getOrderUrgency(order.createdAt, order.status, order.id);
                   const nextStatus = getNextStatus(order.status);
                   
