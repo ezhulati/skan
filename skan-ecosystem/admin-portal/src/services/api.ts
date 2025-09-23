@@ -14,9 +14,36 @@ export interface Order {
   customerName?: string;
   items: OrderItem[];
   totalAmount: number;
-  status: 'new' | 'preparing' | 'ready' | 'served';
+  status: 'new' | 'preparing' | 'ready' | 'served' | '3' | '5' | '7' | '9';
   createdAt: string;
   updatedAt?: string;
+  preparedAt?: string;
+  readyAt?: string;
+  servedAt?: string;
+}
+
+export interface ActiveOrdersResponse {
+  data: Order[];
+  counts: {
+    new: number;
+    preparing: number;
+    ready: number;
+    total: number;
+  };
+  metadata: {
+    limit: number;
+    lastUpdated: string;
+  };
+}
+
+export interface RecentServedOrdersResponse {
+  data: Order[];
+  metadata: {
+    limit: number;
+    hours: number;
+    total: number;
+    lastUpdated: string;
+  };
 }
 
 class RestaurantApiService {
@@ -59,6 +86,27 @@ class RestaurantApiService {
   async getOrders(venueId: string, status?: string): Promise<Order[]> {
     const statusQuery = status && status !== 'all' ? `?status=${status}` : '';
     return this.request<Order[]>(`/venue/${venueId}/orders${statusQuery}`);
+  }
+
+  async getActiveOrders(venueId: string, params?: { limit?: number }): Promise<ActiveOrdersResponse> {
+    const search = new URLSearchParams();
+    if (params?.limit) {
+      search.set('limit', params.limit.toString());
+    }
+    const query = search.toString();
+    return this.request<ActiveOrdersResponse>(`/venue/${venueId}/orders/active${query ? `?${query}` : ''}`);
+  }
+
+  async getRecentServedOrders(venueId: string, params?: { limit?: number; hours?: number }): Promise<RecentServedOrdersResponse> {
+    const search = new URLSearchParams();
+    if (params?.limit) {
+      search.set('limit', params.limit.toString());
+    }
+    if (params?.hours) {
+      search.set('hours', params.hours.toString());
+    }
+    const query = search.toString();
+    return this.request<RecentServedOrdersResponse>(`/venue/${venueId}/orders/recent-served${query ? `?${query}` : ''}`);
   }
 
   async updateOrderStatus(orderId: string, status: string): Promise<{ message: string; orderId: string; status: string }> {

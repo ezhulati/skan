@@ -302,6 +302,33 @@ const sanitizeObject = (obj) => {
   return sanitized;
 };
 
+const formatOrderDoc = (doc) => {
+  const data = doc.data();
+
+  const toIso = (value) => {
+    if (!value) {
+      return undefined;
+    }
+    if (typeof value.toDate === "function") {
+      return value.toDate().toISOString();
+    }
+    if (value instanceof Date) {
+      return value.toISOString();
+    }
+    return value;
+  };
+
+  return {
+    id: doc.id,
+    ...data,
+    createdAt: toIso(data.createdAt),
+    updatedAt: toIso(data.updatedAt),
+    preparedAt: toIso(data.preparedAt),
+    readyAt: toIso(data.readyAt),
+    servedAt: toIso(data.servedAt)
+  };
+};
+
 // Enhanced Rate Limiting
 // const createRateLimiter = (windowMs, max, message) => {
 //   return rateLimit({
@@ -1448,6 +1475,78 @@ app.get("/v1/venue/:venueId/orders", async (req, res) => {
   } catch (error) {
     console.error("Error fetching orders:", error);
     res.status(500).json({ error: "Failed to fetch orders" });
+  }
+});
+
+// Enterprise-style active orders (new/preparing/ready only)
+app.get("/v1/venue/:venueId/orders/active", async (req, res) => {
+  try {
+    const { venueId } = req.params;
+    const limit = Math.min(Number(req.query.limit) || 200, 500);
+    const activeStatuses = ["new", "preparing", "ready", "3", "5", "7"];
+
+    const snapshot = await db.collection("orders")
+      .where("venueId", "==", venueId)
+      .where("status", "in", activeStatuses)
+      .orderBy("createdAt", "desc")
+      .limit(limit)
+      .get();
+
+    const orders = snapshot.docs.map(formatOrderDoc);
+
+    const counts = orders.reduce((acc, order) => {
+      const normalized = ["3", "new"].includes(order.status) ? "new" : ["5", "preparing"].includes(order.status) ? "preparing" : "ready";
+      acc[normalized] = (acc[normalized] || 0) + 1;
+      acc.total += 1;
+      return acc;
+    }, { new: 0, preparing: 0, ready: 0, total: 0 });
+
+    res.json({
+      data: orders,
+      counts,
+      metadata: {
+        limit,
+        lastUpdated: new Date().toISOString()
+      }
+    });
+  } catch (error) {
+    console.error("Error fetching active orders:", error);
+    res.status(500).json({ error: "Failed to fetch active orders" });
+  }
+});
+
+// Recent served orders (default last 24h, capped)
+app.get("/v1/venue/:venueId/orders/recent-served", async (req, res) => {
+  try {
+    const { venueId } = req.params;
+    const hours = Math.min(Number(req.query.hours) || 24, 168);
+    const limit = Math.min(Number(req.query.limit) || 100, 500);
+    const since = admin.firestore.Timestamp.fromDate(new Date(Date.now() - hours * 60 * 60 * 1000));
+
+    const servedStatuses = ["served", "9"];
+
+    const snapshot = await db.collection("orders")
+      .where("venueId", "==", venueId)
+      .where("status", "in", servedStatuses)
+      .where("updatedAt", ">=", since)
+      .orderBy("updatedAt", "desc")
+      .limit(limit)
+      .get();
+
+    const orders = snapshot.docs.map(formatOrderDoc);
+
+    res.json({
+      data: orders,
+      metadata: {
+        limit,
+        hours,
+        total: orders.length,
+        lastUpdated: new Date().toISOString()
+      }
+    });
+  } catch (error) {
+    console.error("Error fetching recent served orders:", error);
+    res.status(500).json({ error: "Failed to fetch recent served orders" });
   }
 });
 

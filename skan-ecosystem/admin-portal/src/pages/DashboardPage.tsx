@@ -18,6 +18,21 @@ const DashboardPage: React.FC = () => {
   const [refreshing, setRefreshing] = useState(false);
   const [usingMockData, setUsingMockData] = useState(false);
   
+  const normalizeStatus = useCallback((status: string): 'new' | 'preparing' | 'ready' | 'served' => {
+    switch (status) {
+      case '3':
+        return 'new';
+      case '5':
+        return 'preparing';
+      case '7':
+        return 'ready';
+      case '9':
+        return 'served';
+      default:
+        return status as 'new' | 'preparing' | 'ready' | 'served';
+    }
+  }, []);
+
   // Notification system state
   const previousOrderCountRef = useRef(0); // Track number of "new" orders between refreshes
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
@@ -129,53 +144,61 @@ const DashboardPage: React.FC = () => {
 
     try {
       setError(null);
-      const ordersData = await restaurantApiService.getOrders(
-        auth.user.venueId, 
-        'all'  // Always load all orders, filter client-side
-      );
+      const [activeResponse, servedResponse] = await Promise.all([
+        restaurantApiService.getActiveOrders(auth.user.venueId, { limit: 250 }),
+        restaurantApiService.getRecentServedOrders(auth.user.venueId, { limit: 80, hours: 24 })
+      ]);
       setUsingMockData(false); // We have real data
 
-      // Merge fresh data with any optimistic updates still pending
-      const mergedOrdersMap = new Map<string, Order>();
-
-      ordersData.forEach(order => {
-        const pendingUpdate = pendingStatusUpdatesRef.current.get(order.id);
-        if (pendingUpdate) {
-          if (order.status === pendingUpdate.status) {
-            // Server caught up; clear pending entry
-            pendingStatusUpdatesRef.current.delete(order.id);
-            mergedOrdersMap.set(order.id, order);
-          } else {
-            mergedOrdersMap.set(order.id, {
-              ...order,
-              status: pendingUpdate.status as Order['status'],
-              updatedAt: new Date().toISOString()
-            });
-          }
-        } else {
-          mergedOrdersMap.set(order.id, order);
-        }
-      });
+      const combinedOrders = [...activeResponse.data, ...servedResponse.data];
 
       setOrders(prevOrders => {
-        const previousMap = new Map(prevOrders.map(order => [order.id, order]));
+        const mergedOrdersMap = new Map<string, Order>();
 
-        // Preserve any locally created orders (e.g., mock data) not returned by API
-        previousMap.forEach((order, orderId) => {
-          if (!mergedOrdersMap.has(orderId)) {
-            mergedOrdersMap.set(orderId, order);
+        combinedOrders.forEach(order => {
+          const pendingUpdate = pendingStatusUpdatesRef.current.get(order.id);
+          if (pendingUpdate) {
+            if (order.status === pendingUpdate.status) {
+              pendingStatusUpdatesRef.current.delete(order.id);
+              mergedOrdersMap.set(order.id, order);
+            } else {
+              mergedOrdersMap.set(order.id, {
+                ...order,
+                status: pendingUpdate.status as Order['status'],
+                updatedAt: new Date().toISOString()
+              });
+            }
+          } else {
+            mergedOrdersMap.set(order.id, order);
+          }
+        });
+
+        prevOrders.forEach(order => {
+          if (!mergedOrdersMap.has(order.id)) {
+            const pendingUpdate = pendingStatusUpdatesRef.current.get(order.id);
+            if (pendingUpdate) {
+              mergedOrdersMap.set(order.id, {
+                ...order,
+                status: pendingUpdate.status as Order['status']
+              });
+            }
+          }
+        });
+
+        const now = Date.now();
+        pendingStatusUpdatesRef.current.forEach((value, key) => {
+          if (!mergedOrdersMap.has(key) && now - value.timestamp > 5 * 60 * 1000) {
+            pendingStatusUpdatesRef.current.delete(key);
           }
         });
 
         const finalOrders = Array.from(mergedOrdersMap.values())
           .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
-        const newOrdersCount = finalOrders.filter(order => order.status === 'new').length;
+        const newOrdersCount = finalOrders.filter(order => normalizeStatus(order.status) === 'new').length;
 
         if (previousOrderCountRef.current > 0 && newOrdersCount > previousOrderCountRef.current) {
           const newOrdersAdded = newOrdersCount - previousOrderCountRef.current;
-
-          // Notify only about genuinely new orders
           kdsNotificationsRef.current.playNotification('new-order', {
             title: `${newOrdersAdded} New Orders`,
             titleAlbanian: `🔔 ${newOrdersAdded} Porosinë të Reja!`,
@@ -253,7 +276,7 @@ const DashboardPage: React.FC = () => {
       setLoading(false);
       setRefreshing(false);
     }
-  }, [auth.user?.venueId]); // FIXED: Only depend on venueId - kdsNotifications is stable
+  }, [auth.user?.venueId, normalizeStatus]); // Depend on venueId and status normalizer
 
   // Initialize notification system
   useEffect(() => {
@@ -474,8 +497,14 @@ const DashboardPage: React.FC = () => {
 
   const filteredOrders = orders.filter(order => {
     if (selectedStatus === 'all') return true;
-    if (selectedStatus === 'active') return ['new', 'preparing', 'ready', '3', '5', '7'].includes(order.status);
-    return order.status === selectedStatus;
+    const normalizedStatus = normalizeStatus(order.status);
+    if (selectedStatus === 'active') {
+      return ['new', 'preparing', 'ready'].includes(normalizedStatus);
+    }
+    if (selectedStatus === 'served') {
+      return normalizedStatus === 'served';
+    }
+    return normalizedStatus === selectedStatus;
   });
 
   // Calculate statistics for WelcomeHeader
@@ -486,7 +515,7 @@ const DashboardPage: React.FC = () => {
   });
 
   const activeOrders = orders.filter(order => 
-    ['new', 'preparing', 'ready'].includes(order.status)
+    ['new', 'preparing', 'ready'].includes(normalizeStatus(order.status))
   );
 
   const todayRevenue = todayOrders.reduce((total, order) => {
@@ -514,7 +543,7 @@ const DashboardPage: React.FC = () => {
     const diffMinutes = Math.floor((now.getTime() - date.getTime()) / (1000 * 60));
     
     // Only show urgency for active orders
-    if (!['new', 'preparing', 'ready'].includes(status)) {
+    if (!['new', 'preparing', 'ready'].includes(normalizeStatus(status))) {
       return { level: 'normal', className: '' };
     }
     
