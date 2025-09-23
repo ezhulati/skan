@@ -1753,3 +1753,18 @@ input:checked + .slider:before {
     align-self: flex-start;
   }
 }
+
+/* Disable animations on notification emojis */
+.no-animation,
+.no-animation * {
+  animation: none !important;
+  -webkit-animation: none !important;
+  -moz-animation: none !important;
+  -o-animation: none !important;
+  -ms-animation: none !important;
+  transition: none !important;
+  -webkit-transition: none !important;
+  -moz-transition: none !important;
+  -o-transition: none !important;
+  -ms-transition: none !important;
+}

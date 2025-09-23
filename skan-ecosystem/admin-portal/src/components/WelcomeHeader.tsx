@@ -113,7 +113,7 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({
 
         <div className="stats-section">
           <div className="motivation-badge">
-            <div className="motivation-icon">
+            <div className={`motivation-icon ${motivation.type === 'active' ? 'no-animation' : ''}`}>
               {motivation.type === 'active' ? '🔔' : 
                motivation.type === 'success' ? '✨' : '🚀'}
             </div>
@@ -270,6 +270,11 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({
         .motivation-icon {
           font-size: 20px;
           filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+        }
+
+        .motivation-icon.no-animation {
+          animation: none !important;
+          transform: none !important;
         }
 
         .motivation-text {
