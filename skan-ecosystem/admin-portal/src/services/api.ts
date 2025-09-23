@@ -15,6 +15,7 @@ export interface Order {
   items: OrderItem[];
   totalAmount: number;
   status: 'new' | 'preparing' | 'ready' | 'served' | '3' | '5' | '7' | '9';
+  specialInstructions?: string;
   createdAt: string;
   updatedAt?: string;
   preparedAt?: string;

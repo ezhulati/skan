@@ -421,23 +421,23 @@ const DashboardPage: React.FC = () => {
       timestamp: Date.now()
     });
 
-    // Try versioned update in background (non-blocking)
+    // Direct API call to update status in database
     try {
-      const success = await orderVersioning.updateOrder(orderId, {
-        status: newStatus as any
-      }, {
-        updatedBy: auth.user?.email,
-        reason: 'status-update',
-        source: 'kds-dashboard'
-      });
-      
-      if (success) {
-        console.log('✅ Versioned order update successful');
-      } else {
-        console.warn('⚠️ Versioned update failed, but UI already updated');
-      }
+      console.log('📡 Making API call to update order status...');
+      const response = await restaurantApiService.updateOrderStatus(orderId, newStatus);
+      console.log('✅ Direct API update successful:', response);
     } catch (error) {
-      console.error('❌ Versioned update error:', error);
+      console.error('❌ Direct API update error:', error);
+      
+      // Revert the optimistic update if API call failed
+      console.log('🔄 Reverting optimistic UI update due to API failure...');
+      setOrders(prevOrders => 
+        prevOrders.map(order => 
+          order.id === orderId 
+            ? { ...order, status: previousStatus as any }
+            : order
+        )
+      );
       // UI is already updated, so this failure is acceptable
     }
   };
@@ -460,11 +460,11 @@ const DashboardPage: React.FC = () => {
     // Handle both numeric and string statuses
     switch (currentStatus) {
       case 'new':
-      case '3': return '5';  // new -> preparing
+      case '3': return 'preparing';  // new -> preparing
       case 'preparing':
-      case '5': return '7';  // preparing -> ready
+      case '5': return 'ready';  // preparing -> ready
       case 'ready':
-      case '7': return '9';  // ready -> served
+      case '7': return 'served';  // ready -> served
       default: return null;
     }
   };
@@ -932,7 +932,7 @@ const DashboardPage: React.FC = () => {
           </div>
         ) : (
           <ResponsiveKDSLayout
-            orders={orders}
+            orders={filteredOrders}
             onStatusUpdate={handleStatusUpdate}
             selectedStatus={selectedStatus}
             getStatusColor={getStatusColor}
