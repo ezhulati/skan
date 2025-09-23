@@ -3,7 +3,6 @@ const admin = require("firebase-admin");
 const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");
-const rateLimit = require("express-rate-limit");
 const { body, validationResult } = require("express-validator");
 const jwt = require("jsonwebtoken");
 const { v4: uuidv4 } = require("uuid");
@@ -107,7 +106,7 @@ app.use(cors({
 // JSON parsing with error handling and special character support
 app.use(express.json({ 
   limit: "1mb",
-  type: ['application/json'],
+  type: ["application/json"],
   verify: (req, res, buf) => {
     try {
       // Try to parse as-is first
@@ -115,7 +114,7 @@ app.use(express.json({
     } catch (e) {
       // If parsing fails, try to fix common issues with exclamation marks
       const str = buf.toString();
-      const fixed = str.replace(/BeachBarDemo2024!/g, 'BeachBarDemo2024');
+      const fixed = str.replace(/BeachBarDemo2024!/g, "BeachBarDemo2024");
       try {
         JSON.parse(fixed);
         // If fixed version works, replace the buffer
