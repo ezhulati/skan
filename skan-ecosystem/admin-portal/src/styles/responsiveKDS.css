@@ -344,10 +344,6 @@
     height: fit-content;
   }
   
-  .order-card:hover {
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    transform: translateY(-2px);
-  }
   
   .order-header {
     display: flex;
@@ -463,10 +459,6 @@
     transition: all 0.2s ease;
   }
   
-  .status-button:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  }
   
   .status-button:active {
     transform: translateY(0);
@@ -804,24 +796,62 @@
   }
 }
 
-/* Dark mode support */
-@media (prefers-color-scheme: dark) {
+/* Dark mode support - Dashboard pages only (NOT login) */
+@media (prefers-color-scheme: dark), 
+.dark-mode {
   :root {
     --kds-background: #0f172a;
     --kds-surface: #1e293b;
     --kds-border: #334155;
   }
   
-  .order-card {
+  /* Only make dashboard text white, NOT login page */
+  .dashboard-page,
+  .dashboard-page .orders-section-header,
+  .dashboard-page .section-title h2,
+  .dashboard-page .section-title p,
+  .dashboard-page .greeting-text,
+  .dashboard-page .venue-name,
+  .dashboard-page .current-time,
+  .dashboard-page .motivation-text,
+  .dashboard-page h1, 
+  .dashboard-page h2, 
+  .dashboard-page h3, 
+  .dashboard-page h4, 
+  .dashboard-page h5, 
+  .dashboard-page h6,
+  .dashboard-page p, 
+  .dashboard-page span, 
+  .dashboard-page div,
+  .dashboard-page .table-info,
+  .dashboard-page .customer-name,
+  .dashboard-page .order-time,
+  .dashboard-page .item-name,
+  .dashboard-page .order-number {
+    color: #f8fafc !important;
+  }
+  
+  .dashboard-page .order-card {
     background: var(--kds-surface);
     color: #f8fafc;
   }
   
-  .order-header {
+  .dashboard-page .order-header {
     background: #334155;
   }
   
-  .order-total {
+  .dashboard-page .order-total {
     background: #334155;
+    color: #f8fafc !important;
+  }
+  
+  /* Dashboard page background only */
+  .dashboard-page {
+    background: var(--kds-background) !important;
+  }
+  
+  /* Welcome header text should be white - only in dashboard */
+  .dashboard-page .welcome-header * {
+    color: #f8fafc !important;
   }
 }

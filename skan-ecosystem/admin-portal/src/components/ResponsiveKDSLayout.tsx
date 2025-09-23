@@ -169,7 +169,17 @@ const ResponsiveKDSLayout: React.FC<ResponsiveKDSLayoutProps> = ({
               {nextStatus && (
                 <button
                   className="status-button"
-                  onClick={() => onStatusUpdate(order.id, nextStatus)}
+                  onClick={async (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log('🔥 BUTTON CLICKED!', order.id, nextStatus);
+                    
+                    try {
+                      await onStatusUpdate(order.id, nextStatus);
+                    } catch (error) {
+                      console.error('Button click error:', error);
+                    }
+                  }}
                   style={{ backgroundColor: getStatusColor(nextStatus) }}
                 >
                   {getStatusLabel(order.status)}
@@ -231,7 +241,17 @@ const ResponsiveKDSLayout: React.FC<ResponsiveKDSLayoutProps> = ({
               {nextStatus && (
                 <button
                   className="status-button"
-                  onClick={() => onStatusUpdate(order.id, nextStatus)}
+                  onClick={async (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log('🔥 BUTTON CLICKED!', order.id, nextStatus);
+                    
+                    try {
+                      await onStatusUpdate(order.id, nextStatus);
+                    } catch (error) {
+                      console.error('Button click error:', error);
+                    }
+                  }}
                   style={{ backgroundColor: getStatusColor(nextStatus) }}
                 >
                   {getStatusLabel(order.status)}
@@ -248,8 +268,30 @@ const ResponsiveKDSLayout: React.FC<ResponsiveKDSLayoutProps> = ({
   const TVModeLayout = () => {
     const stationLanes: StationLane[] = ['new', 'preparing', 'ready', 'served'];
     
+    // Map numeric status codes to string statuses
+    const mapStatusToLane = (status: string): StationLane | null => {
+      switch (status) {
+        case '3': return 'new';
+        case '5': return 'preparing';
+        case '7': return 'ready';
+        case '9': return 'served';
+        case 'new': return 'new';
+        case 'preparing': return 'preparing';
+        case 'ready': return 'ready';
+        case 'served': return 'served';
+        default: return null;
+      }
+    };
+    
     const getStationOrders = (station: StationLane) => {
-      return filteredOrders.filter(order => order.status === station);
+      // Use orders directly, not filteredOrders, to ensure real-time updates
+      const stationOrders = orders.filter(order => {
+        const mappedStatus = mapStatusToLane(order.status);
+        console.log(`🔄 Order ${order.orderNumber}: status=${order.status} mapped to=${mappedStatus} station=${station}`);
+        return mappedStatus === station;
+      });
+      console.log(`🏠 Station ${station}: ${stationOrders.length} orders`);
+      return stationOrders;
     };
 
     const getStationTitle = (station: StationLane): string => {
@@ -266,7 +308,7 @@ const ResponsiveKDSLayout: React.FC<ResponsiveKDSLayoutProps> = ({
       <div className="kds-tv-mode">
         <div className="orders-grid">
           {stationLanes.map(station => (
-            <div key={station} className={`station-lane station-${station}`}>
+            <div key={`${station}-${orders.length}-${JSON.stringify(orders.map(o => o.status))}`} className={`station-lane station-${station}`}>
               <div className="station-header">
                 {getStationTitle(station)} ({getStationOrders(station).length})
               </div>
@@ -322,7 +364,17 @@ const ResponsiveKDSLayout: React.FC<ResponsiveKDSLayoutProps> = ({
                       {nextStatus && (
                         <button
                           className="status-button"
-                          onClick={() => onStatusUpdate(order.id, nextStatus)}
+                          onClick={async (e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            console.log('🔥 BUTTON CLICKED!', order.id, nextStatus);
+                            
+                            try {
+                              await onStatusUpdate(order.id, nextStatus);
+                            } catch (error) {
+                              console.error('Button click error:', error);
+                            }
+                          }}
                           style={{ backgroundColor: getStatusColor(nextStatus) }}
                         >
                           {getStatusLabel(order.status)}

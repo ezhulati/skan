@@ -1,3 +1,58 @@
+/* EMERGENCY FIX: Disable animations but keep button interactions */
+* {
+  animation: none !important;
+  transition: none !important;
+  -webkit-animation: none !important;
+  -webkit-transition: none !important;
+}
+
+/* Allow button interactions to work - FORCE VISIBILITY */
+button {
+  cursor: pointer !important;
+  pointer-events: auto !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  position: relative !important;
+}
+
+/* Ensure status buttons are always visible and clickable */
+.status-button {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  position: relative !important;
+  z-index: 999 !important;
+  min-height: 44px !important;
+  min-width: 120px !important;
+  margin: 8px !important;
+  left: 0 !important;
+  top: 0 !important;
+  right: auto !important;
+  bottom: auto !important;
+  transform: none !important;
+  clip: none !important;
+  overflow: visible !important;
+}
+
+/* Force order cards to be in viewport and buttons visible */
+.order-card {
+  overflow: visible !important;
+  position: relative !important;
+}
+
+.order-card .status-button {
+  position: relative !important;
+  display: inline-block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  z-index: 1000 !important;
+}
+
+button:hover {
+  transform: none !important;
+}
+
 /* Reset and base styles */
 * {
   box-sizing: border-box;
@@ -1767,4 +1822,52 @@ input:checked + .slider:before {
   -moz-transition: none !important;
   -o-transition: none !important;
   -ms-transition: none !important;
+}
+
+/* Dark Mode Support - Dashboard Only (NOT login page) */
+@media (prefers-color-scheme: dark) {
+  /* Only apply dark mode to dashboard pages, not login */
+  .dashboard-page,
+  .dashboard-page * {
+    color: #f8fafc !important;
+  }
+  
+  /* WelcomeHeader specific dark mode text */
+  .welcome-header .greeting-text,
+  .welcome-header .venue-greeting,
+  .welcome-header .venue-name,
+  .welcome-header .user-name,
+  .welcome-header .current-time,
+  .welcome-header .stats-value,
+  .welcome-header .stats-label,
+  .welcome-header .motivation-text {
+    color: #f8fafc !important;
+  }
+  
+  /* Order card text in dark mode */
+  .order-card .order-number,
+  .order-card .table-info,
+  .order-card .customer-name,
+  .order-card .order-time,
+  .order-card .item-name {
+    color: #f8fafc !important;
+  }
+  
+  /* Filter buttons in dark mode */
+  .dashboard-page .filter-button {
+    background-color: #334155 !important;
+    color: #f8fafc !important;
+    border-color: #475569 !important;
+  }
+  
+  .dashboard-page .filter-button:hover {
+    background-color: #475569 !important;
+    border-color: #60a5fa !important;
+  }
+  
+  .dashboard-page .filter-button.active {
+    background-color: #2563eb !important;
+    color: #ffffff !important;
+    border-color: #2563eb !important;
+  }
 }

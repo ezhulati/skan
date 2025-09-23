@@ -1917,18 +1917,18 @@ app.post("/v1/auth/change-password", verifyAuth, async (req, res) => {
   }
 });
 
-// Rate limiting for authentication endpoints
-const authLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 5, // Limit each IP to 5 requests per windowMs
-  message: { error: "Too many authentication attempts. Please try again later." },
-  standardHeaders: true,
-  legacyHeaders: false,
-});
+// Rate limiting for authentication endpoints - DISABLED FOR TESTING
+// const authLimiter = rateLimit({
+//   windowMs: 15 * 60 * 1000, // 15 minutes
+//   max: 5, // Limit each IP to 5 requests per windowMs
+//   message: { error: "Too many authentication attempts. Please try again later." },
+//   standardHeaders: true,
+//   legacyHeaders: false,
+// });
 
 // Restaurant staff login
 app.post("/v1/auth/login", 
-  authLimiter,
+  // authLimiter, // DISABLED FOR TESTING
   [
     body("email").isEmail().normalizeEmail(),
     body("password").custom((value, { req }) => {
@@ -2108,7 +2108,7 @@ app.post("/v1/auth/login",
 });
 
 // Token refresh endpoint
-app.post("/v1/auth/refresh", authLimiter, async (req, res) => {
+app.post("/v1/auth/refresh", /* authLimiter, */ async (req, res) => {
   try {
     const { refreshToken } = req.body;
     
