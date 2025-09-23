@@ -730,13 +730,13 @@
 .order-urgent-warning {
   border-left: 4px solid #ff6b35 !important;
   background: linear-gradient(90deg, rgba(255, 107, 53, 0.1) 0%, transparent 100%);
-  animation: pulse-warning 2s infinite;
+  /* animation: pulse-warning 2s infinite; - DISABLED: User requested no pulsating */
 }
 
 .order-urgent-critical {
   border-left: 4px solid var(--kds-danger) !important;
   background: linear-gradient(90deg, rgba(220, 38, 38, 0.15) 0%, transparent 100%);
-  animation: pulse-critical 1s infinite;
+  /* animation: pulse-critical 1s infinite; - DISABLED: User requested no pulsating */
   box-shadow: 0 0 20px rgba(220, 38, 38, 0.3) !important;
 }
 
@@ -754,6 +754,12 @@
     transform: scale(1.03); 
     box-shadow: 0 0 30px rgba(220, 38, 38, 0.5); 
   }
+}
+
+/* Globally disable all pulsating animations on order cards - User preference */
+.order-urgent-warning,
+.order-urgent-critical {
+  animation: none !important;
 }
 
 .order-urgent-critical .order-time {
