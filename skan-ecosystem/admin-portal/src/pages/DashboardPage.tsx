@@ -19,7 +19,7 @@ const DashboardPage: React.FC = () => {
   const [usingMockData, setUsingMockData] = useState(false);
   
   // Notification system state
-  const previousOrderCountRef = useRef(0); // FIXED: Use ref instead of state to avoid dependency cycle
+  const previousOrderCountRef = useRef(0); // Track number of "new" orders between refreshes
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
   const [audioEnabled, setAudioEnabled] = useState(true);
   const [showNotificationSettings, setShowNotificationSettings] = useState(false);
@@ -76,6 +76,9 @@ const DashboardPage: React.FC = () => {
   const kdsNotificationsRef = useRef(kdsNotifications);
   kdsNotificationsRef.current = kdsNotifications;
 
+  // Track optimistic status updates so auto-refresh doesn't undo them
+  const pendingStatusUpdatesRef = useRef<Map<string, { status: string; timestamp: number }>>(new Map());
+
   // Listen for real-time order events
   useOrderEvents(['order.created', 'order.updated'], useCallback((event) => {
     console.log('Real-time order event:', event);
@@ -83,7 +86,7 @@ const DashboardPage: React.FC = () => {
     if (event.type === 'order.created') {
       // Add new order to the list
       setOrders(prevOrders => [event.payload, ...prevOrders]);
-      
+
       // Enhanced KDS notification using ref
       kdsNotificationsRef.current.playNotification('new-order', {
         title: 'New Order Received',
@@ -100,6 +103,11 @@ const DashboardPage: React.FC = () => {
           order.id === event.payload.id ? event.payload : order
         )
       );
+
+      const pendingUpdate = pendingStatusUpdatesRef.current.get(event.payload.id);
+      if (pendingUpdate && pendingUpdate.status === event.payload.status) {
+        pendingStatusUpdatesRef.current.delete(event.payload.id);
+      }
     }
   }, [])); // FIXED: No dependencies to break circular re-render
   
@@ -125,26 +133,62 @@ const DashboardPage: React.FC = () => {
         auth.user.venueId, 
         'all'  // Always load all orders, filter client-side
       );
-      setOrders(ordersData);
       setUsingMockData(false); // We have real data
-      
-      // FIXED: Use ref to avoid re-render dependency cycle
-      const newOrdersCount = ordersData.filter(order => order.status === 'new').length;
-      
-      if (previousOrderCountRef.current > 0 && newOrdersCount > previousOrderCountRef.current) {
-        const newOrdersAdded = newOrdersCount - previousOrderCountRef.current;
-        
-        // Enhanced KDS notification for polling-based updates using ref
-        kdsNotificationsRef.current.playNotification('new-order', {
-          title: `${newOrdersAdded} New Orders`,
-          titleAlbanian: `🔔 ${newOrdersAdded} Porosinë të Reja!`,
-          message: 'You have received new orders that need processing.',
-          messageAlbanian: 'Keni marrë porosinë të reja që duhen përpunuar.',
-          priority: newOrdersAdded > 2 ? 'high' : 'medium'
+
+      // Merge fresh data with any optimistic updates still pending
+      const mergedOrdersMap = new Map<string, Order>();
+
+      ordersData.forEach(order => {
+        const pendingUpdate = pendingStatusUpdatesRef.current.get(order.id);
+        if (pendingUpdate) {
+          if (order.status === pendingUpdate.status) {
+            // Server caught up; clear pending entry
+            pendingStatusUpdatesRef.current.delete(order.id);
+            mergedOrdersMap.set(order.id, order);
+          } else {
+            mergedOrdersMap.set(order.id, {
+              ...order,
+              status: pendingUpdate.status as Order['status'],
+              updatedAt: new Date().toISOString()
+            });
+          }
+        } else {
+          mergedOrdersMap.set(order.id, order);
+        }
+      });
+
+      setOrders(prevOrders => {
+        const previousMap = new Map(prevOrders.map(order => [order.id, order]));
+
+        // Preserve any locally created orders (e.g., mock data) not returned by API
+        previousMap.forEach((order, orderId) => {
+          if (!mergedOrdersMap.has(orderId)) {
+            mergedOrdersMap.set(orderId, order);
+          }
         });
-      }
-      
-      previousOrderCountRef.current = newOrdersCount;
+
+        const finalOrders = Array.from(mergedOrdersMap.values())
+          .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+
+        const newOrdersCount = finalOrders.filter(order => order.status === 'new').length;
+
+        if (previousOrderCountRef.current > 0 && newOrdersCount > previousOrderCountRef.current) {
+          const newOrdersAdded = newOrdersCount - previousOrderCountRef.current;
+
+          // Notify only about genuinely new orders
+          kdsNotificationsRef.current.playNotification('new-order', {
+            title: `${newOrdersAdded} New Orders`,
+            titleAlbanian: `🔔 ${newOrdersAdded} Porosinë të Reja!`,
+            message: 'You have received new orders that need processing.',
+            messageAlbanian: 'Keni marrë porosinë të reja që duhen përpunuar.',
+            priority: newOrdersAdded > 2 ? 'high' : 'medium'
+          });
+        }
+
+        previousOrderCountRef.current = newOrdersCount;
+
+        return finalOrders;
+      });
     } catch (err) {
       console.error('Error loading orders:', err);
       
@@ -298,6 +342,10 @@ const DashboardPage: React.FC = () => {
             : order
         )
       );
+      pendingStatusUpdatesRef.current.set(operation.orderId, {
+        status: operation.previousStatus,
+        timestamp: Date.now()
+      });
     } else {
       // In production, also call API to revert
       try {
@@ -342,9 +390,14 @@ const DashboardPage: React.FC = () => {
       newStatus,
       orderNumber: currentOrder.orderNumber
     });
-    
+
     console.log('✅ Order status updated in UI successfully!');
-    
+
+    pendingStatusUpdatesRef.current.set(orderId, {
+      status: newStatus,
+      timestamp: Date.now()
+    });
+
     // Try versioned update in background (non-blocking)
     try {
       const success = await orderVersioning.updateOrder(orderId, {
