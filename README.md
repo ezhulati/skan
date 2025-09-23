@@ -13,26 +13,16 @@ A complete QR code ordering system built with Firebase Cloud Functions, React, a
 
 ```
 skan.al/
-├── functions/                 # Firebase Cloud Functions
-│   ├── index.js              # API implementation
-│   └── package.json          # Dependencies
-├── customer-frontend/         # Customer React app
-│   ├── src/
-│   │   ├── pages/            # QR, Menu, Cart, Confirmation
-│   │   ├── components/       # Reusable components
-│   │   ├── contexts/         # CartContext
-│   │   └── services/         # API calls
-│   └── package.json
-├── restaurant-dashboard/      # Restaurant React app
-│   ├── src/
-│   │   ├── pages/            # Login, Dashboard
-│   │   ├── components/       # ProtectedRoute
-│   │   ├── contexts/         # AuthContext
-│   │   └── services/         # API calls
-│   └── package.json
-├── firebase.json             # Firebase configuration
-├── .firebaserc               # Firebase project settings
-└── README.md                 # This file
+├── skan-ecosystem/               # Primary production stack
+│   ├── functions/                # Firebase Functions (v2 Express API)
+│   ├── customer-app/             # React PWA (order.skan.al)
+│   ├── admin-portal/             # React dashboard (admin.skan.al)
+│   ├── marketing-site/           # Astro marketing site (skan.al)
+│   └── firebase.json             # Functions + emulator config
+├── functions/                    # Legacy Cloud Functions (kept for reference only)
+├── enterprise-order-system/      # Enterprise-grade dashboard prototype
+├── tests/                        # Playwright specs (customer + admin flows)
+└── README.md                     # This file
 ```
 
 ## API Endpoints
@@ -56,16 +46,18 @@ skan.al/
   node -e "const crypto=require('crypto');const salt=crypto.randomBytes(16).toString('hex');const hash=crypto.scryptSync('demo123',salt,64).toString('hex');console.log(`${salt}:${hash}`);"
   ```
 - A temporary fallback environment variable (`LEGACY_DEMO_PASSWORD`) can be set while migrating existing accounts; remove it once every user has a hashed password stored.
-- To backfill hashes, use the helper script in the `functions` package. Provide either a JSON map of `{ "email": "plaintext" }` or set `DEFAULT_USER_PASSWORD` to reuse one temporary password:
+- To backfill hashes, use the helper script in `skan-ecosystem/functions`. Provide either a JSON map of `{ "email": "plaintext" }` or set `DEFAULT_USER_PASSWORD` to reuse one temporary password:
   ```bash
-  cd functions
+  cd skan-ecosystem/functions
   # Option 1: mapping file (array or object supported)
   node scripts/hashPasswords.js ../files/user-passwords.json
 
   # Option 2: single default password for all missing users
   DEFAULT_USER_PASSWORD="demo123" npm run hash-passwords
   ```
-  The script skips users that already have `passwordHash` set and reports any accounts it cannot update (for example when no password is provided).
+The script skips users that already have `passwordHash` set and reports any accounts it cannot update (for example when no password is provided).
+
+> **Note:** The top-level `functions/` directory contains the original Cloud Functions build and is retained for historical reference. All active development and deployments should use `skan-ecosystem/functions`.
 
 ## Features
 
@@ -111,9 +103,10 @@ orders/ (created by API)
 1. **Clone and install dependencies:**
    ```bash
    cd skan.al
-   npm install --prefix functions
-   npm install --prefix customer-frontend
-   npm install --prefix restaurant-dashboard
+   npm install --prefix skan-ecosystem/functions
+   npm install --prefix skan-ecosystem/customer-app
+   npm install --prefix skan-ecosystem/admin-portal
+   npm install --prefix skan-ecosystem/marketing-site
    ```
 
 2. **Firebase setup:**
@@ -125,33 +118,40 @@ orders/ (created by API)
 
 3. **Environment variables:**
    ```bash
-   # customer-frontend/.env
-   REACT_APP_API_URL=https://api-mkamlu7ta-e-europe-west1.cloudfunctions.net/api
+   # skan-ecosystem/customer-app/.env
+   REACT_APP_API_URL=https://api-mkazmlu7ta-ew.a.run.app/v1
 
-   # restaurant-dashboard/.env
-   REACT_APP_API_URL=https://api-mkamlu7ta-e-europe-west1.cloudfunctions.net/api
+   # skan-ecosystem/admin-portal/.env
+   REACT_APP_API_URL=https://api-mkazmlu7ta-ew.a.run.app/v1
    ```
 
 ### Development Commands
 
 **Firebase Functions:**
 ```bash
-cd functions
+cd skan-ecosystem/functions
 npm run serve     # Local development
 npm run deploy    # Deploy to Firebase
 ```
 
-**Customer Frontend:**
+**Customer PWA:**
 ```bash
-cd customer-frontend
+cd skan-ecosystem/customer-app
 npm start         # Development server
 npm run build     # Production build
 ```
 
-**Restaurant Dashboard:**
+**Restaurant Admin Portal:**
 ```bash
-cd restaurant-dashboard
+cd skan-ecosystem/admin-portal
 npm start         # Development server
+npm run build     # Production build
+```
+
+**Marketing Site:**
+```bash
+cd skan-ecosystem/marketing-site
+npm run dev       # Astro development server
 npm run build     # Production build
 ```
 
@@ -159,6 +159,7 @@ npm run build     # Production build
 
 ### Firebase Functions
 ```bash
+cd skan-ecosystem/functions
 firebase deploy --only functions
 ```
 
@@ -166,11 +167,14 @@ firebase deploy --only functions
 Build and deploy to static hosting (Netlify/Vercel):
 
 ```bash
-# Customer app (skan.al)
-npm run build --prefix customer-frontend
+# Customer app (order.skan.al)
+npm run build --prefix skan-ecosystem/customer-app
 
 # Restaurant dashboard (admin.skan.al)
-npm run build --prefix restaurant-dashboard
+npm run build --prefix skan-ecosystem/admin-portal
+
+# Marketing site (skan.al)
+npm run build --prefix skan-ecosystem/marketing-site
 ```
 
 ## Testing
@@ -181,16 +185,17 @@ npm run build --prefix restaurant-dashboard
 - **Sample QR**: skan.al/order/beach-bar-durres/a1
 
 ### Test Flow
-1. Visit: `http://localhost:3000/order/beach-bar-durres/a1`
-2. Browse menu and add items to cart
-3. Submit order with customer name
-4. Login to restaurant dashboard: `http://localhost:3001/login`
-5. View and manage orders
+1. Start API locally: `cd skan-ecosystem/functions && npm run serve`
+2. Visit customer app: `http://localhost:3000/order/beach-bar-durres/a1`
+3. Browse menu and add items to cart
+4. Submit order with customer name
+5. Login to restaurant dashboard: `http://localhost:3001/login`
+6. View and manage orders
 
 ## Production URLs
 - **Customer App**: https://skan.al
 - **Restaurant Dashboard**: https://admin.skan.al
-- **API**: https://api-mkamlu7ta-e-europe-west1.cloudfunctions.net/api
+- **API**: https://api-mkazmlu7ta-ew.a.run.app/v1
 
 ## Key Features
 

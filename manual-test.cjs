@@ -145,7 +145,7 @@ async function checkServers() {
   } else {
     console.log('Please run:');
     console.log('1. node local-api-server.cjs  (starts on port 5000)');
-    console.log('2. cd customer-frontend && npm start  (starts on port 3000)');
-    console.log('3. cd restaurant-dashboard && PORT=3001 npm start  (starts on port 3001)');
+    console.log('2. cd skan-ecosystem/customer-app && npm start  (starts on port 3000)');
+    console.log('3. cd skan-ecosystem/admin-portal && PORT=3001 npm start  (starts on port 3001)');
   }
 })();

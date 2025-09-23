@@ -32,7 +32,7 @@ const PAYPAL_PLAN_IDS = {
 };
 ```
 
-### **Backend (functions/index.js)**
+### **Backend (skan-ecosystem/functions/index.js)**
 ```javascript
 // PayPal Configuration
 const PAYPAL_CONFIG = {

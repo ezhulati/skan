@@ -74,12 +74,12 @@ export default defineConfig({
       reuseExistingServer: true,
     },
     {
-      command: 'cd customer-frontend && npm start',
+      command: 'cd skan-ecosystem/customer-app && npm start',
       port: 3000,
       reuseExistingServer: true,
     },
     {
-      command: 'cd restaurant-dashboard && PORT=3001 npm start',
+      command: 'cd skan-ecosystem/admin-portal && PORT=3001 npm start',
       port: 3001,
       reuseExistingServer: true,
     }
