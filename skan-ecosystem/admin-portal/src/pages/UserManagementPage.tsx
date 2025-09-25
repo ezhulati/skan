@@ -114,7 +114,7 @@ const UserManagementPage: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  }, [auth.token, auth.venue?.id, auth.user?.venueId]);
+  }, [auth.token, auth.venue?.id, auth.user?.venueId, auth.user?.email, auth.user?.fullName, auth.user?.role]);
 
   const handleInviteUser = async (e: React.FormEvent) => {
     e.preventDefault();
