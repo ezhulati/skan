@@ -1966,8 +1966,8 @@ app.post("/v1/auth/change-password", verifyAuth, async (req, res) => {
     
     // Handle demo user password change
     if (req.user.email === "manager_email1@gmail.com") {
-      // Simulate password validation - demo accepts "admin123" as current password
-      if (currentPassword !== "admin123") {
+      // Simulate password validation - demo accepts "demo123" as current password
+      if (currentPassword !== "demo123") {
         return res.status(400).json({ error: "Current password is incorrect" });
       }
       
@@ -2030,9 +2030,8 @@ app.post("/v1/auth/login",
   [
     body("email").isEmail().normalizeEmail(),
     body("password").custom((value, { req }) => {
-      // Allow demo passwords when explicitly enabled
-      if (req.body.email === "manager_email1@gmail.com" && 
-          (value === "admin123" || value === "demo123")) {
+      // Allow demo password when explicitly enabled
+      if (req.body.email === "manager_email1@gmail.com" && value === "demo123") {
         return true;
       }
       // Otherwise require minimum 8 characters
@@ -2061,7 +2060,7 @@ app.post("/v1/auth/login",
     }
     
     // Demo user - always enabled for testing
-    if (email === "manager_email1@gmail.com" && (password === "admin123" || password === "demo123")) {
+    if (email === "manager_email1@gmail.com" && password === "demo123") {
       return res.json({
         message: "Login successful",
         user: {

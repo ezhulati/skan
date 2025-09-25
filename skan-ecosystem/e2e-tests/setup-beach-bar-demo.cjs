@@ -37,8 +37,8 @@ async function setupBeachBarDemo() {
     console.log('\n3️⃣ Testing existing admin credentials...');
     
     const testCredentials = [
-      { email: 'manager_email1@gmail.com', password: 'admin123' },
-      { email: 'arditxhanaj@gmail.com', password: 'admin123' },
+      { email: 'manager_email1@gmail.com', password: 'demo123' },
+      { email: 'arditxhanaj@gmail.com', password: 'demo123' },
       { email: 'test@skan.al', password: 'TestPassword123!' }
     ];
     

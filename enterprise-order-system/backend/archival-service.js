@@ -179,7 +179,7 @@ class DataArchivalService {
         this.log(`Generating daily summaries for ${format(yesterday, 'yyyy-MM-dd')}`);
 
         // Get all active venues
-        const venuesSnapshot = await this.db.collection('venues').where('isActive', '==', true).get();
+        const venuesSnapshot = await this.db.collection('venue').where('isActive', '==', true).get();
         let summariesGenerated = 0;
 
         for (const venueDoc of venuesSnapshot.docs) {
@@ -212,8 +212,8 @@ class DataArchivalService {
     // Generate daily summary for a specific venue
     async generateVenueDailySummary(venueId, dayStart, dayEnd) {
         // Query orders for the specific day
-        const ordersSnapshot = await this.db.collection('venues').doc(venueId)
-            .collection('orders')
+        const ordersSnapshot = await this.db.collection('orders')
+            .where('venueId', '==', venueId)
             .where('createdAt', '>=', dayStart)
             .where('createdAt', '<=', dayEnd)
             .get();

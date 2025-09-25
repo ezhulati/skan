@@ -35,8 +35,8 @@ async function testFinalForms() {
       console.log(`🔘 Auto-login button: ${loginButton ? 'VISIBLE' : 'NOT VISIBLE'}`);
       
       // Check credentials display
-      const hasCorrectPassword = await page.textContent('body').then(text => text.includes('admin123')).catch(() => false);
-      console.log(`🔑 Shows correct password (admin123): ${hasCorrectPassword ? 'YES' : 'NO'}`);
+      const hasCorrectPassword = await page.textContent('body').then(text => text.includes('demo123')).catch(() => false);
+      console.log(`🔑 Shows correct password (demo123): ${hasCorrectPassword ? 'YES' : 'NO'}`);
     }
     
     // Test 2: Contact Form  

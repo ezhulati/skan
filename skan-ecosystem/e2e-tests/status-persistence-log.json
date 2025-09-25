@@ -1,0 +1,42 @@
+{
+  "testConfig": {
+    "ADMIN_URL": "http://localhost:3002",
+    "EMAIL": "demo.beachbar@skan.al",
+    "PASSWORD": "BeachBarDemo2024!",
+    "HEADLESS": false,
+    "TIMEOUT": 30000,
+    "AUTO_REFRESH_INTERVAL": 10000
+  },
+  "initialState": {
+    "orderNumber": "SKN-20250918-001",
+    "currentStatus": "Unknown",
+    "statusText": "T01",
+    "cardId": "no-id"
+  },
+  "finalState": {
+    "found": false
+  },
+  "positionLog": [
+    {
+      "timestamp": 1,
+      "event": "INITIAL_POSITION",
+      "orderNumber": "SKN-20250918-001",
+      "status": "T01",
+      "columnStatus": "Unknown",
+      "time": "2025-09-24T00:44:44.532Z"
+    },
+    {
+      "timestamp": 1129,
+      "event": "FINAL_CHECK",
+      "orderNumber": "SKN-20250918-001",
+      "status": "NOT_FOUND",
+      "columnStatus": "NOT_FOUND",
+      "time": "2025-09-24T00:44:45.660Z"
+    }
+  ],
+  "results": {
+    "cardMoved": true,
+    "cardBouncedBack": false,
+    "testPassed": true
+  }
+}

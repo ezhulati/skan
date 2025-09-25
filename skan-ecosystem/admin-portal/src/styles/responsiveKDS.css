@@ -104,14 +104,25 @@
   .order-card {
     background: var(--kds-surface);
     border-radius: var(--kds-card-radius);
-    border: 1px solid var(--kds-border);
+    border: 1px solid rgba(100, 116, 139, 0.5);
     overflow: hidden;
     position: relative;
     transition: all 0.2s ease;
+    margin-bottom: 12px;
+    cursor: grab;
     
     /* Swipe action preparation */
     touch-action: pan-x;
     user-select: none;
+  }
+  
+  .order-card:active {
+    cursor: grabbing;
+  }
+  
+  .order-card[draggable]:hover {
+    transform: translateY(-1px);
+    border-color: rgba(100, 116, 139, 0.8);
   }
   
   .order-card.swiping {
@@ -148,7 +159,7 @@
     justify-content: space-between;
     align-items: center;
     padding: 12px 16px 8px;
-    border-bottom: 1px solid var(--kds-border);
+    /* border-bottom: 1px solid var(--kds-border); */
   }
   
   .order-number {
@@ -195,7 +206,7 @@
     align-items: center;
     padding: 4px 0;
     font-size: 14px;
-    border-bottom: 1px solid #f1f5f9;
+    /* border-bottom: 1px solid #f1f5f9; */
   }
   
   .order-item:last-child {
@@ -228,29 +239,39 @@
   .order-total {
     padding: 8px 16px;
     background: #f8fafc;
-    border-top: 1px solid var(--kds-border);
+    /* REMOVED: border-top causing horizontal reflection bar */
     font-weight: 700;
     color: var(--kds-primary);
   }
   
   .status-button {
-    margin: 12px 16px;
-    padding: 12px;
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    border-radius: 8px;
-    color: white;
-    font-weight: 700;
-    font-size: 14px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    width: calc(100% - 32px);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.2);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    position: relative;
-    overflow: hidden;
+    /* AGGRESSIVE: Override ALL possible browser defaults */
+    margin: 12px 16px !important;
+    padding: 12px !important;
+    background: orange !important;
+    color: white !important;
+    cursor: pointer !important;
+    outline: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    appearance: none !important;
+    -webkit-tap-highlight-color: transparent !important;
+    -webkit-user-select: none !important;
+    user-select: none !important;
   }
 
+  .status-button:focus,
+  .status-button:focus-visible,
+  .status-button:active {
+    outline: none; /* REMOVE: focus outline causing light reflection */
+    -webkit-tap-highlight-color: transparent; /* REMOVE: webkit tap highlight */
+    box-shadow: none; /* REMOVE: any focus shadows */
+  }
+
+  /* DISABLED: Shimmer animation causing visual glitch
   .status-button::before {
     content: "";
     position: absolute;
@@ -261,15 +282,18 @@
     background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
     transition: left 0.5s;
   }
+  */
 
+  /* DISABLED: Shimmer animation hover effect
   .status-button:hover::before {
     left: 100%;
   }
+  */
 
   .status-button:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.3);
-    border-color: rgba(255, 255, 255, 0.5);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* REMOVED: inset highlight causing visual glitch */
+    /* border-color: rgba(255, 255, 255, 0.5); */
   }
   
   .status-button:active {
@@ -283,7 +307,7 @@
     left: 0;
     right: 0;
     background: white;
-    border-top: 1px solid var(--kds-border);
+    /* REMOVED: border-top causing horizontal reflection bar */
     border-radius: 16px 16px 0 0;
     padding: 20px;
     z-index: 1000;
@@ -362,7 +386,7 @@
   .order-card {
     background: var(--kds-surface);
     border-radius: var(--kds-card-radius);
-    border: 1px solid var(--kds-border);
+    border: 1px solid rgba(100, 116, 139, 0.5);
     transition: all 0.2s ease;
     overflow: hidden;
     display: flex;
@@ -376,7 +400,7 @@
     justify-content: space-between;
     align-items: center;
     padding: 16px 20px;
-    border-bottom: 1px solid var(--kds-border);
+    /* border-bottom: 1px solid var(--kds-border); */
     background: #fafbfc;
   }
   
@@ -435,7 +459,7 @@
     gap: 12px;
     align-items: center;
     padding: 8px 0;
-    border-bottom: 1px solid #f1f5f9;
+    /* border-bottom: 1px solid #f1f5f9; */
   }
   
   .order-item:last-child {
@@ -467,29 +491,23 @@
   .order-total {
     padding: 16px 20px;
     background: #f8fafc;
-    border-top: 1px solid var(--kds-border);
+    /* REMOVED: border-top causing horizontal reflection bar */
     font-weight: 700;
     font-size: 16px;
     color: var(--kds-primary);
   }
   
   .status-button {
+    /* DEBUGGING: Minimal CSS to identify light reflection source */
     margin: 16px 20px 20px;
     padding: 14px;
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    border-radius: 8px;
+    background: orange;
     color: white;
-    font-weight: 700;
-    font-size: 15px;
     cursor: pointer;
-    transition: all 0.2s ease;
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.2);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    position: relative;
-    overflow: hidden;
+    outline: none;
   }
 
+  /* DISABLED: Shimmer animation causing visual glitch
   .status-button::before {
     content: "";
     position: absolute;
@@ -500,15 +518,18 @@
     background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
     transition: left 0.5s;
   }
+  */
 
+  /* DISABLED: Shimmer animation hover effect
   .status-button:hover::before {
     left: 100%;
   }
+  */
 
   .status-button:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.3);
-    border-color: rgba(255, 255, 255, 0.5);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* REMOVED: inset highlight causing visual glitch */
+    /* border-color: rgba(255, 255, 255, 0.5); */
   }
   
   
@@ -547,7 +568,7 @@
     padding: 20px;
     background: var(--kds-surface);
     border-radius: 12px;
-    border: 1px solid var(--kds-border);
+    border: 1px solid rgba(100, 116, 139, 0.5);
   }
   
   .section-title h2 {
@@ -607,7 +628,7 @@
     padding: 16px;
     background: var(--kds-surface);
     border-radius: 12px;
-    border: 2px solid var(--kds-border);
+    /* border: 2px solid var(--kds-border); */
     min-height: 400px;
   }
   
@@ -623,30 +644,30 @@
     text-transform: uppercase;
   }
   
-  .station-new { border-color: var(--kds-danger); }
+  .station-new { border-color: transparent; }
   .station-new .station-header { background: var(--kds-danger); }
   
-  .station-preparing { border-color: var(--kds-warning); }
+  .station-preparing { border-color: transparent; }
   .station-preparing .station-header { background: var(--kds-warning); }
   
-  .station-ready { border-color: var(--kds-success); }
+  .station-ready { border-color: transparent; }
   .station-ready .station-header { background: var(--kds-success); }
   
-  .station-served { border-color: #64748b; }
+  .station-served { border-color: transparent; }
   .station-served .station-header { background: #64748b; }
   
   /* Compact TV cards */
   .order-card {
     background: white;
     border-radius: 8px;
-    border: 1px solid var(--kds-border);
+    border: 1px solid rgba(100, 116, 139, 0.5);
     overflow: hidden;
     transition: all 0.2s ease;
     cursor: pointer;
   }
   
   .order-card:hover {
-    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12);
+    /* box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12); */
     /* Removed transform to prevent conflict with button hover */
   }
   
@@ -656,7 +677,7 @@
     align-items: center;
     padding: 12px 16px;
     background: #f8fafc;
-    border-bottom: 1px solid var(--kds-border);
+    /* border-bottom: 1px solid var(--kds-border); */
   }
   
   .order-number {
@@ -735,7 +756,7 @@
   .order-total {
     padding: 8px 16px;
     background: #f8fafc;
-    border-top: 1px solid var(--kds-border);
+    /* REMOVED: border-top causing horizontal reflection bar */
     font-weight: 700;
     font-size: 13px;
     color: var(--kds-primary);
@@ -743,20 +764,13 @@
   }
   
   .status-button {
+    /* DEBUGGING: Minimal CSS to identify light reflection source */
     margin: 8px 12px 12px;
     padding: 8px 12px;
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    border-radius: 6px;
+    background: orange;
     color: white;
-    font-weight: 700;
-    font-size: 11px;
     cursor: pointer;
-    transition: all 0.2s ease;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.2);
-    position: relative;
-    overflow: hidden;
+    outline: none;
   }
 
   .status-button::before {
@@ -770,9 +784,11 @@
     transition: left 0.4s;
   }
 
+  /* DISABLED: Shimmer animation hover effect
   .status-button:hover::before {
     left: 100%;
   }
+  */
   
   .status-button:hover {
     transform: translateY(-1px);
@@ -785,18 +801,18 @@
    ========================================================================== */
 
 .order-urgent-attention {
-  border-left: 4px solid var(--kds-warning) !important;
-  background: linear-gradient(90deg, rgba(202, 138, 4, 0.05) 0%, transparent 100%);
+  /* border-left: 4px solid var(--kds-warning) !important; */
+  /* background: linear-gradient(90deg, rgba(202, 138, 4, 0.05) 0%, transparent 100%); */
 }
 
 .order-urgent-warning {
-  border-left: 4px solid #ff6b35 !important;
-  background: linear-gradient(90deg, rgba(255, 107, 53, 0.1) 0%, transparent 100%);
+  /* border-left: 4px solid #ff6b35 !important; */
+  /* background: linear-gradient(90deg, rgba(255, 107, 53, 0.1) 0%, transparent 100%); */
   /* animation: pulse-warning 2s infinite; - DISABLED: User requested no pulsating */
 }
 
 .order-urgent-critical {
-  border-left: 4px solid var(--kds-danger) !important;
+  /* border-left: 4px solid var(--kds-danger) !important; */
   background: linear-gradient(90deg, rgba(220, 38, 38, 0.15) 0%, transparent 100%);
   /* animation: pulse-critical 1s infinite; - DISABLED: User requested no pulsating */
   box-shadow: 0 0 20px rgba(220, 38, 38, 0.3) !important;
@@ -835,7 +851,7 @@
 }
 
 .order-urgent-attention .order-time {
-  color: var(--kds-warning) !important;
+  /* color: var(--kds-warning) !important; */
   font-weight: 500 !important;
 }
 
@@ -862,7 +878,7 @@
   }
   
   .order-status {
-    border: 2px solid currentColor;
+    /* border: 2px solid currentColor; */
   }
 }
 
@@ -924,4 +940,101 @@
   .dashboard-page .welcome-header * {
     color: #f8fafc !important;
   }
+}
+
+/* ==========================================================================
+   Beautiful Drag Orchestration Styles - ZERO JANK SYSTEM
+   ========================================================================== */
+
+/* CRITICAL: Dragging elements override all other CSS to prevent jank */
+.order-card.dragging,
+.order-card.dragging * {
+  will-change: transform !important;
+  transform-style: preserve-3d !important;
+  backface-visibility: hidden !important;
+  perspective: 1000px !important;
+}
+
+.order-card.dragging {
+  transition: none !important;
+  animation: none !important;
+  cursor: grabbing !important;
+  user-select: none !important;
+  pointer-events: none !important;
+  position: relative !important;
+  z-index: 9999 !important;
+}
+
+/* Enhanced drag state with beautiful visual feedback */
+.responsive-kds-layout .order-card.dragging-enhanced,
+.kds-phone-mode .order-card.dragging-enhanced,
+.kds-tablet-mode .order-card.dragging-enhanced,
+.kds-tv-mode .order-card.dragging-enhanced {
+  opacity: 0.95 !important;
+  transform: scale(1.05) rotate(2deg) !important;
+  z-index: 2000 !important;
+  cursor: grabbing !important;
+  box-shadow: 
+    0 12px 40px rgba(0,0,0,0.25), 
+    0 4px 15px rgba(59, 130, 246, 0.3),
+    0 2px 8px rgba(59, 130, 246, 0.2) !important;
+  transition: 
+    transform 0.2s cubic-bezier(0.4, 0.0, 0.2, 1), 
+    box-shadow 0.2s ease,
+    filter 0.2s ease !important;
+  border-radius: 12px !important;
+  backdrop-filter: blur(2px) !important;
+  filter: brightness(1.02) !important;
+  position: relative !important;
+}
+
+/* Smooth drop zone highlighting */
+.station-lane.drop-zone-highlighted {
+  background-color: rgba(59, 130, 246, 0.08) !important;
+  transform: scale(1.02) !important;
+  border-color: rgba(59, 130, 246, 0.3) !important;
+  box-shadow: 
+    0 4px 20px rgba(59, 130, 246, 0.15), 
+    inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+  transition: all 0.2s cubic-bezier(0.4, 0.0, 0.2, 1) !important;
+}
+
+/* Cards that move aside during orchestration */
+.order-card.orchestration-displaced {
+  transform: translateY(10px) scale(0.98) !important;
+  opacity: 0.85 !important;
+  transition: all 0.25s cubic-bezier(0.4, 0.0, 0.2, 1) !important;
+}
+
+/* Beautiful drop animation */
+.order-card.drop-settling {
+  transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+  transform: scale(1.02) rotate(0deg) !important;
+  opacity: 0.9 !important;
+  filter: brightness(1.1) !important;
+  box-shadow: 
+    0 8px 32px rgba(34, 197, 94, 0.3), 
+    0 4px 16px rgba(34, 197, 94, 0.2) !important;
+}
+
+/* Final celebration micro-animation */
+.order-card.drop-completed {
+  transition: all 0.2s ease !important;
+  transform: scale(1) !important;
+  filter: brightness(1) !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
+}
+
+/* Invalid drop bounce back */
+.order-card.drop-invalid {
+  transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55) !important;
+  transform: scale(1) rotate(0deg) !important;
+  filter: brightness(1) !important;
+}
+
+/* Cleanup animation for displaced cards */
+.order-card.cleanup-reset {
+  transform: none !important;
+  opacity: 1 !important;
+  transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1) !important;
 }

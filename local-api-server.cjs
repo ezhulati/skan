@@ -2,8 +2,22 @@ const express = require('express');
 const cors = require('cors');
 const crypto = require('crypto');
 
+let jwt;
+try {
+  jwt = require('jsonwebtoken');
+} catch (error) {
+  console.warn('jsonwebtoken module not found, using lightweight dev token signer');
+  jwt = {
+    sign(payload) {
+      const tokenPayload = { ...payload, iat: Math.floor(Date.now() / 1000) };
+      return Buffer.from(JSON.stringify(tokenPayload)).toString('base64url');
+    }
+  };
+}
+
 const app = express();
 const PORT = 5001;
+const JWT_SECRET = process.env.JWT_SECRET || 'development-secret';
 
 // Middleware
 app.use(cors({ origin: true }));
@@ -368,7 +382,7 @@ app.delete('/venue/:venueId/categories/:categoryId/items/:itemId', (req, res) =>
   });
 });
 
-app.post('/auth/login', (req, res) => {
+app.post(['/auth/login', '/v1/auth/login'], (req, res) => {
   const { email, password } = req.body;
   
   if (!email || !password) {
@@ -384,8 +398,18 @@ app.post('/auth/login', (req, res) => {
   
   const venue = Object.values(venues).find(v => v.id === user.venueId);
   
+  const tokenPayload = {
+    userId: user.id,
+    venueId: user.venueId,
+    role: user.role,
+    email: user.email
+  };
+
+  const token = jwt.sign(tokenPayload, JWT_SECRET, { expiresIn: '12h' });
+
   res.json({
     message: 'Login successful',
+    token,
     user: {
       id: user.id,
       email: user.email,
@@ -402,4 +426,5 @@ app.listen(PORT, () => {
   console.log(`📋 Health check: http://localhost:${PORT}/health`);
   console.log(`🍺 Demo venue: http://localhost:${PORT}/venue/beach-bar-durres/menu`);
   console.log(`🔑 Demo login: manager_email@gmail.com / demo123`);
+  console.log(`🔐 JWT Secret (dev): ${JWT_SECRET}`);
 });

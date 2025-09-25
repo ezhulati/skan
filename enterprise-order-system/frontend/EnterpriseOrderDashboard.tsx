@@ -50,21 +50,14 @@ const EnterpriseOrderDashboard: React.FC = () => {
     const [showSearch, setShowSearch] = useState(false);
     const [showNotifications, setShowNotifications] = useState(false);
     const [refreshing, setRefreshing] = useState(false);
-    
-    // Real-time connection
-    const {
-        connected,
-        notifications,
-        clearNotifications,
-        connectionStats
-    } = useRealtimeOrders(auth.user?.venueId, {
-        onOrderCreated: handleNewOrder,
-        onOrderStatusChanged: handleOrderStatusChange,
-        onOrderUpdated: handleOrderUpdate
-    });
-    
+
     // Audio notification
     const audioRef = useRef<HTMLAudioElement | null>(null);
+
+    // Sync API token with service layer
+    useEffect(() => {
+        enterpriseOrderService.setToken(auth.token || null);
+    }, [auth.token]);
     
     // Initialize dashboard
     useEffect(() => {
@@ -210,7 +203,7 @@ const EnterpriseOrderDashboard: React.FC = () => {
         // Update order in current view
         setActiveOrders(prev => prev.map(o => o.id === orderId ? order : o));
     }, []);
-    
+
     // Optimistic order status update
     const updateOrderStatus = async (orderId: string, newStatus: string) => {
         const order = activeOrders.find(o => o.id === orderId);
@@ -233,7 +226,23 @@ const EnterpriseOrderDashboard: React.FC = () => {
             throw error;
         }
     };
-    
+
+    // Real-time connection (initialize after callbacks are defined)
+    const {
+        connected,
+        notifications,
+        clearNotifications,
+        connectionStats
+    } = useRealtimeOrders(
+        auth.user?.venueId,
+        auth.token,
+        {
+            onOrderCreated: handleNewOrder,
+            onOrderStatusChanged: handleOrderStatusChange,
+            onOrderUpdated: handleOrderUpdate
+        }
+    );
+
     // Calculate total orders across all statuses
     const totalActiveOrders = orderCounts.active.total;
     const hasActiveOrders = totalActiveOrders > 0;

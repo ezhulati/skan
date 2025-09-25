@@ -6,7 +6,7 @@ const VENUE_ID = 'beach-bar-durres';
 // Manager credentials for testing
 const MANAGER_CREDENTIALS = {
   email: 'manager_email1@gmail.com',
-  password: 'admin123'
+  password: 'demo123'
 };
 
 console.log('\n👥 TESTING USER MANAGEMENT FLOW');

@@ -45,7 +45,7 @@
 
 ### 👨‍💼 Admin Portal Testing
 - **URL:** `https://admin.skan.al`
-- **Login Credentials:** manager_email1@gmail.com / admin123
+- **Login Credentials:** manager_email1@gmail.com / demo123
 - **Status:** ✅ PASS (Portal accessible)
 - **Demo Account:** Working ✅
 
@@ -110,7 +110,7 @@
 
 ### Demo Credentials:
 - **Email:** manager_email1@gmail.com
-- **Password:** admin123
+- **Password:** demo123
 - **Role:** Beach Bar Manager
 
 ---

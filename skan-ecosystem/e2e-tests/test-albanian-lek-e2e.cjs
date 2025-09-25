@@ -156,7 +156,7 @@ async function runCompleteE2ETest() {
     // Try demo login
     try {
       await adminPage.type('input[type="email"], input[name="email"]', 'manager_email1@gmail.com');
-      await adminPage.type('input[type="password"], input[name="password"]', 'admin123');
+      await adminPage.type('input[type="password"], input[name="password"]', 'demo123');
       
       const loginButton = await adminPage.$('button[type="submit"], button:contains("Login")');
       if (loginButton) {

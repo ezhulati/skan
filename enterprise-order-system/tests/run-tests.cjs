@@ -149,7 +149,7 @@ class EnterpriseTestRunner {
     // Check test credentials
     async checkTestCredentials() {
         const email = 'manager_email1@gmail.com';
-        const password = 'admin123';
+        const password = 'demo123';
         const apiUrl = process.env.API_BASE_URL || 'https://api-mkazmlu7ta-ew.a.run.app';
         
         try {

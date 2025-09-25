@@ -9,7 +9,7 @@ const config = {
     adminPortalUrl: process.env.ADMIN_PORTAL_URL || 'https://admin.skan.al',
     testVenueId: 'beach-bar-durres',
     testManagerEmail: 'manager_email1@gmail.com',
-    testManagerPassword: 'admin123',
+    testManagerPassword: 'demo123',
     timeout: 30000
 };
 
@@ -176,6 +176,12 @@ test.describe('Enterprise Order Management API Tests', () => {
         } else {
             console.log('ℹ️ Search endpoint not implemented');
         }
+    });
+
+    test('should block unauthorized pricing maintenance', async ({ request }) => {
+        const response = await request.post(`${config.baseUrl}/v1/admin/update-beach-bar-lek-pricing`);
+        expect(response.status()).toBe(401);
+        console.log('✅ Pricing endpoint correctly requires admin token');
     });
 });
 

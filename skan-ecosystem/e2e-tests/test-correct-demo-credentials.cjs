@@ -40,7 +40,7 @@ async function testCorrectDemoCredentials() {
     
     console.log('🚀 Testing CORRECT demo credentials...');
     console.log('📧 Email: manager_email1@gmail.com');
-    console.log('🔑 Password: admin123 (NOT demo123!)');
+    console.log('🔑 Password: demo123');
     
     // Navigate to login page
     await page.goto('http://localhost:3000/login', { waitUntil: 'networkidle0' });
@@ -57,7 +57,7 @@ async function testCorrectDemoCredentials() {
     
     // Fill in the CORRECT demo credentials
     await page.type('#email', 'manager_email1@gmail.com');
-    await page.type('#password', 'admin123');  // Using admin123 instead of demo123
+    await page.type('#password', 'demo123');
     console.log('✅ Correct credentials filled');
     
     // Check form values
@@ -83,7 +83,7 @@ async function testCorrectDemoCredentials() {
     if (finalUrl.includes('/dashboard')) {
       console.log('✅ Login successful with CORRECT credentials - redirected to dashboard');
     } else if (finalUrl.includes('/login')) {
-      console.log('❌ Login failed with admin123 - still on login page');
+      console.log('❌ Login failed with demo123 - still on login page');
       
       // Check for error messages
       const errorMessage = await page.$eval('.error-message', el => el.textContent).catch(() => 'No error message');

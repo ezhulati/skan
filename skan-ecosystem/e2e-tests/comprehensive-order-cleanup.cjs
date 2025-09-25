@@ -8,7 +8,7 @@ async function comprehensiveOrderCleanup() {
   // Prompt user for credentials since auto-detection didn't work
   console.log('🔑 CREDENTIAL OPTIONS:');
   console.log('1. demo.beachbar@skan.al / BeachBarDemo2024!');
-  console.log('2. manager_email1@gmail.com / admin123');
+  console.log('2. manager_email1@gmail.com / demo123');
   console.log('3. Custom credentials');
   console.log('\nSince you see 26 orders but my scripts found 0, you might be using different credentials.');
   console.log('Let me try a comprehensive approach...\n');

@@ -9,7 +9,7 @@ async function checkExistingDemo() {
     { email: 'demo@skan.al', password: 'Demo123!' },
     { email: 'demo@skan.al', password: 'DemoPassword123!' },
     { email: 'demo@skan.al', password: 'demo123' },
-    { email: 'manager_email1@gmail.com', password: 'admin123' },
+    { email: 'manager_email1@gmail.com', password: 'demo123' },
     { email: 'test@skan.al', password: 'TestPassword123!' }
   ];
   

@@ -42,6 +42,7 @@ const WS_HEARTBEAT_INTERVAL = 30000; // 30 seconds
 
 export const useRealtimeOrders = (
     venueId?: string,
+    authToken?: string | null,
     callbacks: RealtimeOrderCallbacks = {}
 ): UseRealtimeOrdersReturn => {
     const [connected, setConnected] = useState(false);
@@ -61,14 +62,15 @@ export const useRealtimeOrders = (
     const getWebSocketUrl = useCallback(() => {
         const baseUrl = process.env.REACT_APP_API_URL || 'https://api-mkazmlu7ta-ew.a.run.app';
         const wsUrl = baseUrl.replace(/^https?:\/\//, 'wss://').replace(/^http:\/\//, 'ws://');
-        
+
         // For development, fallback to mock WebSocket behavior
-        if (baseUrl.includes('localhost') || !venueId) {
+        if (baseUrl.includes('localhost') || !venueId || !authToken) {
             return null; // Will trigger mock mode
         }
-        
-        return `${wsUrl}/api/v1/realtime?venueId=${venueId}`;
-    }, [venueId]);
+
+        const params = new URLSearchParams({ venueId, token: authToken });
+        return `${wsUrl}/api/v1/realtime?${params.toString()}`;
+    }, [venueId, authToken]);
 
     // Add notification helper
     const addNotification = useCallback((notification: Omit<RealtimeNotification, 'id' | 'timestamp'>) => {
@@ -206,7 +208,12 @@ export const useRealtimeOrders = (
         }
 
         // Auto-reconnect if not a normal closure and under retry limit
-        if (event.code !== 1000 && reconnectAttemptsRef.current < WS_MAX_RECONNECT_ATTEMPTS && venueId) {
+        if (
+            event.code !== 1000 &&
+            reconnectAttemptsRef.current < WS_MAX_RECONNECT_ATTEMPTS &&
+            venueId &&
+            authToken
+        ) {
             reconnectAttemptsRef.current++;
             
             setConnectionStats(prev => ({
@@ -220,7 +227,7 @@ export const useRealtimeOrders = (
                 connect();
             }, WS_RECONNECT_INTERVAL);
         }
-    }, [callbacks, venueId]);
+    }, [callbacks, venueId, authToken]);
 
     // Handle connection error
     const handleError = useCallback((event: Event) => {
@@ -245,6 +252,11 @@ export const useRealtimeOrders = (
     const connect = useCallback(() => {
         if (!venueId) {
             console.log('No venue ID provided, skipping WebSocket connection');
+            return;
+        }
+
+        if (!authToken) {
+            console.log('No auth token available, skipping WebSocket connection');
             return;
         }
 
@@ -288,7 +300,7 @@ export const useRealtimeOrders = (
             console.error('Failed to create WebSocket connection:', error);
             handleError(new Event('error'));
         }
-    }, [venueId, getWebSocketUrl, handleOpen, handleMessage, handleClose, handleError, addNotification]);
+    }, [venueId, authToken, getWebSocketUrl, handleOpen, handleMessage, handleClose, handleError, addNotification]);
 
     // Send message
     const sendMessage = useCallback((message: any) => {
@@ -301,7 +313,7 @@ export const useRealtimeOrders = (
 
     // Initial connection and cleanup
     useEffect(() => {
-        if (venueId) {
+        if (venueId && authToken) {
             connect();
         }
 
@@ -319,11 +331,11 @@ export const useRealtimeOrders = (
                 wsRef.current.close(1000, 'Component unmounting');
             }
         };
-    }, [venueId, connect]);
+    }, [venueId, authToken, connect]);
 
     // Mock real-time updates for development/testing
     useEffect(() => {
-        if (!venueId || getWebSocketUrl()) {
+        if (!venueId || !authToken || getWebSocketUrl()) {
             return; // Only mock if no real WebSocket available
         }
 
@@ -350,7 +362,7 @@ export const useRealtimeOrders = (
         }, 30000);
 
         return () => clearInterval(mockInterval);
-    }, [venueId, getWebSocketUrl, addNotification]);
+    }, [venueId, authToken, getWebSocketUrl, addNotification]);
 
     return {
         connected,

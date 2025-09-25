@@ -44,7 +44,7 @@ async function testPayPalSubscriptionFlow() {
     // Step 2: Login with demo credentials
     await page.waitForSelector('#email', { timeout: 10000 });
     await page.type('#email', 'manager_email1@gmail.com');
-    await page.type('#password', 'admin123');
+    await page.type('#password', 'demo123');
     
     console.log('✉️ Attempting login with demo credentials...');
     await page.click('button[type="submit"]');

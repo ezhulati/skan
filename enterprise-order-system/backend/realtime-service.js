@@ -11,6 +11,7 @@ class RealtimeOrderService {
         this.userConnections = new Map(); // userId -> WebSocket connection
         this.updateQueue = new Map(); // venueId -> Array of pending updates
         this.db = admin.firestore();
+        this.jwtSecret = process.env.JWT_SECRET || 'development-secret';
         
         // Batch updates every second for performance
         setInterval(() => this.processBatchedUpdates(), 1000);
@@ -35,6 +36,7 @@ class RealtimeOrderService {
         try {
             // Extract authentication token from query params or headers
             const url = new URL(request.url, `http://${request.headers.host}`);
+            const requestedVenueId = url.searchParams.get('venueId');
             const token = url.searchParams.get('token') || request.headers.authorization?.replace('Bearer ', '');
             
             if (!token) {
@@ -43,11 +45,16 @@ class RealtimeOrderService {
             }
             
             // Verify JWT token
-            const decoded = jwt.verify(token, process.env.JWT_SECRET);
+            const decoded = jwt.verify(token, this.jwtSecret);
             const { userId, venueId, role } = decoded;
             
             if (!venueId) {
                 ws.close(1008, 'Venue ID required');
+                return;
+            }
+
+            if (requestedVenueId && requestedVenueId !== venueId) {
+                ws.close(1008, 'Invalid venue context');
                 return;
             }
             
@@ -187,10 +194,11 @@ class RealtimeOrderService {
         }
         
         const queue = this.updateQueue.get(venueId);
-        queue.push({
+        const cachedUpdate = {
             ...update,
             cachedAt: new Date().toISOString()
-        });
+        };
+        queue.push(cachedUpdate);
         
         // Keep only last 50 updates per venue
         if (queue.length > 50) {
@@ -201,7 +209,7 @@ class RealtimeOrderService {
         setTimeout(() => {
             const currentQueue = this.updateQueue.get(venueId);
             if (currentQueue) {
-                const index = currentQueue.findIndex(u => u.cachedAt === update.cachedAt);
+                const index = currentQueue.findIndex(u => u.cachedAt === cachedUpdate.cachedAt && u.type === cachedUpdate.type && u.orderId === cachedUpdate.orderId);
                 if (index !== -1) {
                     currentQueue.splice(index, 1);
                 }
@@ -296,12 +304,11 @@ class RealtimeOrderService {
             const { venueId } = ws;
             
             // Fetch current active orders
-            const activeQuery = this.db.collection('venues')
-                .doc(venueId)
-                .collection('orders')
+            const activeQuery = this.db.collection('orders')
+                .where('venueId', '==', venueId)
                 .where('status', 'in', ['new', 'preparing', 'ready'])
                 .orderBy('createdAt', 'desc');
-            
+
             const snapshot = await activeQuery.get();
             const orders = snapshot.docs.map(doc => ({
                 id: doc.id,

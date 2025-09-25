@@ -17,7 +17,7 @@ class SimpleValidator {
             apiUrl: 'https://api-mkazmlu7ta-ew.a.run.app',
             testVenueId: 'beach-bar-durres',
             testEmail: 'manager_email1@gmail.com',
-            testPassword: 'admin123',
+            testPassword: 'demo123',
             timeout: 10000
         };
     }

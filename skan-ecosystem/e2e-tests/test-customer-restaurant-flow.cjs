@@ -7,7 +7,7 @@ const VENUE_ID = 'beach-bar-durres';
 // Demo restaurant manager credentials
 const MANAGER_CREDENTIALS = {
   email: 'manager_email1@gmail.com',
-  password: 'admin123'
+  password: 'demo123'
 };
 
 console.log('\n🍽️  TESTING COMPLETE CUSTOMER-TO-RESTAURANT ORDER FLOW');

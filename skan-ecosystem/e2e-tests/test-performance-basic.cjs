@@ -50,7 +50,7 @@ async function testApiPerformance() {
     
     const tests = [
       { name: 'Menu Loading', path: '/venue/beach-bar-durres/menu', target: 500 },
-      { name: 'Login Request', path: '/auth/login', method: 'POST', body: { email: 'manager_email1@gmail.com', password: 'admin123' }, target: 500 },
+      { name: 'Login Request', path: '/auth/login', method: 'POST', body: { email: 'manager_email1@gmail.com', password: 'demo123' }, target: 500 },
     ];
     
     const results = [];

@@ -210,7 +210,7 @@ const EnhancedKDSCard: React.FC<EnhancedKDSCardProps> = ({
       onStatusUpdate(order.id, nextStatus);
       navigator.vibrate?.(50);
     } else if (deltaX < -100) {
-      // Swipe left - undo (would need undo functionality)
+      // Swipe left - previous status (drag functionality handles this)
       navigator.vibrate?.(100);
     }
     

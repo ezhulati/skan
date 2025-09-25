@@ -61,7 +61,7 @@ async function setupTestData() {
         method: 'POST',
         body: {
           email: 'manager_email1@gmail.com',
-          password: 'admin123'
+          password: 'demo123'
         }
       });
       

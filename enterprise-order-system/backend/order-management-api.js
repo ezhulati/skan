@@ -4,10 +4,32 @@
 const express = require('express');
 const admin = require('firebase-admin');
 const { FieldValue } = require('firebase-admin/firestore');
+const jwt = require('jsonwebtoken');
 const router = express.Router();
 
 // Initialize Firestore
 const db = admin.firestore();
+const JWT_SECRET = process.env.JWT_SECRET || 'development-secret';
+
+// Authentication middleware
+function authenticateRequest(req, res, next) {
+    const authHeader = req.headers.authorization || '';
+    if (!authHeader.startsWith('Bearer ')) {
+        return res.status(401).json({ error: 'Unauthorized' });
+    }
+
+    const token = authHeader.replace('Bearer ', '').trim();
+    try {
+        const decoded = jwt.verify(token, JWT_SECRET);
+        req.user = decoded;
+        next();
+    } catch (error) {
+        console.error('JWT verification failed', error);
+        return res.status(401).json({ error: 'Unauthorized' });
+    }
+}
+
+router.use(authenticateRequest);
 
 // Constants for performance optimization
 const DEFAULT_PAGE_SIZE = 50;
@@ -22,7 +44,7 @@ const paginate = (page = 1, limit = DEFAULT_PAGE_SIZE) => ({
 });
 
 const buildOrderQuery = (venueId, filters = {}) => {
-    let query = db.collection('venues').doc(venueId).collection('orders');
+    let query = db.collection('orders').where('venueId', '==', venueId);
     
     // Apply filters
     if (filters.status && filters.status !== 'all') {
@@ -69,9 +91,8 @@ router.get('/venues/:venueId/orders/active', async (req, res) => {
         const { venueId } = req.params;
         
         // Get only active orders (new, preparing, ready)
-        const activeQuery = db.collection('venues')
-            .doc(venueId)
-            .collection('orders')
+        const activeQuery = db.collection('orders')
+            .where('venueId', '==', venueId)
             .where('status', 'in', ['new', 'preparing', 'ready'])
             .orderBy('createdAt', 'desc');
         
@@ -118,9 +139,8 @@ router.get('/venues/:venueId/orders/recent', async (req, res) => {
         const yesterday = new Date();
         yesterday.setHours(yesterday.getHours() - 24);
         
-        const recentQuery = db.collection('venues')
-            .doc(venueId)
-            .collection('orders')
+        const recentQuery = db.collection('orders')
+            .where('venueId', '==', venueId)
             .where('status', '==', 'served')
             .where('servedAt', '>=', yesterday)
             .orderBy('servedAt', 'desc')
@@ -176,9 +196,8 @@ router.get('/venues/:venueId/orders/history', async (req, res) => {
         
         const { page: pageNum, limit: limitNum } = paginate(page, limit);
         
-        let query = db.collection('venues')
-            .doc(venueId)
-            .collection('orders');
+        let query = db.collection('orders')
+            .where('venueId', '==', venueId);
         
         // Apply date filters
         if (dateFrom) {
@@ -263,7 +282,7 @@ router.get('/venues/:venueId/orders/search', async (req, res) => {
         const { page: pageNum, limit: limitNum } = paginate(page, limit);
         
         // Set date range
-        let query = db.collection('venues').doc(venueId).collection('orders');
+        let query = db.collection('orders').where('venueId', '==', venueId);
         
         if (dateRange !== 'all') {
             const days = parseInt(dateRange.replace('d', ''));
@@ -334,20 +353,27 @@ router.put('/orders/:orderId/status', async (req, res) => {
             return res.status(400).json({ error: 'Invalid status' });
         }
         
-        // Find the order across all venues (for efficiency in high-volume scenarios)
-        const orderQuery = await db.collectionGroup('orders')
-            .where(admin.firestore.FieldPath.documentId(), '==', orderId)
-            .limit(1)
-            .get();
-        
-        if (orderQuery.empty) {
-            return res.status(404).json({ error: 'Order not found' });
+        // Look up the order in the top-level collection first, fall back to collection group for legacy paths
+        let orderRef = db.collection('orders').doc(orderId);
+        let orderDoc = await orderRef.get();
+
+        if (!orderDoc.exists) {
+            const orderQuery = await db.collectionGroup('orders')
+                .where(admin.firestore.FieldPath.documentId(), '==', orderId)
+                .limit(1)
+                .get();
+
+            if (orderQuery.empty) {
+                return res.status(404).json({ error: 'Order not found' });
+            }
+
+            orderDoc = orderQuery.docs[0];
+            orderRef = orderDoc.ref;
         }
-        
-        const orderDoc = orderQuery.docs[0];
+
         const orderData = orderDoc.data();
         const previousStatus = orderData.status;
-        
+
         // Prepare update data with timestamps
         const updateData = {
             status,
@@ -366,10 +392,10 @@ router.put('/orders/:orderId/status', async (req, res) => {
         // Update order in transaction
         await db.runTransaction(async (transaction) => {
             // Update order status
-            transaction.update(orderDoc.ref, updateData);
+            transaction.update(orderRef, updateData);
             
             // Add to status history
-            const historyRef = orderDoc.ref.collection('statusHistory').doc();
+            const historyRef = orderRef.collection('statusHistory').doc();
             transaction.set(historyRef, {
                 previousStatus,
                 newStatus: status,
@@ -380,7 +406,7 @@ router.put('/orders/:orderId/status', async (req, res) => {
         });
         
         // Get updated order for response
-        const updatedOrder = await orderDoc.ref.get();
+        const updatedOrder = await orderRef.get();
         const formattedOrder = formatOrderResponse(updatedOrder);
         
         res.json({
@@ -419,9 +445,8 @@ router.get('/venues/:venueId/analytics/daily', async (req, res) => {
         const nextDate = new Date(targetDate);
         nextDate.setDate(nextDate.getDate() + 1);
         
-        const ordersQuery = db.collection('venues')
-            .doc(venueId)
-            .collection('orders')
+        const ordersQuery = db.collection('orders')
+            .where('venueId', '==', venueId)
             .where('createdAt', '>=', targetDate)
             .where('createdAt', '<', nextDate);
         
@@ -495,14 +520,22 @@ router.post('/venues/:venueId/orders/bulk-update', async (req, res) => {
         const batch = db.batch();
         
         for (const orderId of orderIds) {
-            const orderRef = db.collection('venues').doc(venueId).collection('orders').doc(orderId);
-            
+            const orderRef = db.collection('orders').doc(orderId);
+            const orderDoc = await orderRef.get();
+
+            if (!orderDoc.exists || orderDoc.data()?.venueId !== venueId) {
+                results.push({ orderId, action: 'skipped', reason: 'order_not_found_for_venue' });
+                continue;
+            }
+
             if (action === 'updateStatus' && data.status) {
                 batch.update(orderRef, {
                     status: data.status,
                     updatedAt: FieldValue.serverTimestamp()
                 });
                 results.push({ orderId, action: 'updated' });
+            } else {
+                results.push({ orderId, action: 'skipped', reason: 'unsupported_action' });
             }
         }
         
@@ -517,6 +550,34 @@ router.post('/venues/:venueId/orders/bulk-update', async (req, res) => {
     } catch (error) {
         console.error('Error in bulk operation:', error);
         res.status(500).json({ error: 'Bulk operation failed' });
+    }
+});
+
+// 8. GET ORDER BY ID
+router.get('/orders/:orderId', async (req, res) => {
+    try {
+        const { orderId } = req.params;
+
+        let orderDoc = await db.collection('orders').doc(orderId).get();
+
+        if (!orderDoc.exists) {
+            const orderQuery = await db.collectionGroup('orders')
+                .where(admin.firestore.FieldPath.documentId(), '==', orderId)
+                .limit(1)
+                .get();
+
+            if (orderQuery.empty) {
+                return res.status(404).json({ error: 'Order not found' });
+            }
+
+            orderDoc = orderQuery.docs[0];
+        }
+
+        res.json(formatOrderResponse(orderDoc));
+
+    } catch (error) {
+        console.error('Error fetching order by ID:', error);
+        res.status(500).json({ error: 'Failed to fetch order' });
     }
 });
 

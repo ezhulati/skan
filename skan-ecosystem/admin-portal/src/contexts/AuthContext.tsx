@@ -87,19 +87,24 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     if (savedAuth) {
       try {
         const parsedAuth = JSON.parse(savedAuth);
-        const restoredAuth = {
-          ...parsedAuth,
-          isAuthenticated: true,
-          isLoading: false,
-          needsOnboarding: false
-        };
-        setAuth(restoredAuth);
-        
-        // Check onboarding status for restored sessions
-        setTimeout(() => {
-          checkOnboardingStatus();
-        }, 100);
-        return;
+        if (!parsedAuth.token) {
+          console.warn('Stored auth session missing token, clearing.');
+          localStorage.removeItem('restaurantAuth');
+        } else {
+          const restoredAuth = {
+            ...parsedAuth,
+            isAuthenticated: true,
+            isLoading: false,
+            needsOnboarding: false
+          };
+          setAuth(restoredAuth);
+          
+          // Check onboarding status for restored sessions
+          setTimeout(() => {
+            checkOnboardingStatus();
+          }, 100);
+          return;
+        }
       } catch (error) {
         console.error('Error parsing saved auth:', error);
         localStorage.removeItem('restaurantAuth');

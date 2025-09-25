@@ -3,6 +3,7 @@ const admin = require('firebase-admin');
 const express = require('express');
 const cors = require('cors');
 const crypto = require('crypto');
+const jwt = require('jsonwebtoken');
 
 // Initialize Firebase Admin
 admin.initializeApp();
@@ -39,6 +40,12 @@ function verifyPassword(password, storedHash) {
   }
 }
 
+const JWT_SECRET = process.env.JWT_SECRET || 'development-secret';
+
+function createAuthToken(payload) {
+  return jwt.sign(payload, JWT_SECRET, { expiresIn: '12h' });
+}
+
 // Helper function to generate order numbers
 function generateOrderNumber() {
   const date = new Date();
@@ -53,7 +60,7 @@ app.get('/health', (req, res) => {
 });
 
 // GET /api/venue/:slug/menu - Fetch menu by venue slug
-app.get('/venue/:slug/menu', async (req, res) => {
+app.get(['/venue/:slug/menu', '/v1/venue/:slug/menu'], async (req, res) => {
   try {
     const { slug } = req.params;
     
@@ -125,7 +132,7 @@ app.get('/venue/:slug/menu', async (req, res) => {
 });
 
 // POST /api/orders - Create new order
-app.post('/orders', async (req, res) => {
+app.post(['/orders', '/v1/orders'], async (req, res) => {
   try {
     const { venueId, tableNumber, customerName, items } = req.body;
     
@@ -219,7 +226,7 @@ app.post('/orders', async (req, res) => {
 });
 
 // GET /api/venue/:venueId/orders - Get orders for restaurant
-app.get('/venue/:venueId/orders', async (req, res) => {
+app.get(['/venue/:venueId/orders', '/v1/venue/:venueId/orders'], async (req, res) => {
   try {
     const { venueId } = req.params;
     const { status } = req.query;
@@ -250,7 +257,7 @@ app.get('/venue/:venueId/orders', async (req, res) => {
 });
 
 // PUT /api/orders/:orderId/status - Update order status
-app.put('/orders/:orderId/status', async (req, res) => {
+app.put(['/orders/:orderId/status', '/v1/orders/:orderId/status'], async (req, res) => {
   try {
     const { orderId } = req.params;
     const { status } = req.body;
@@ -288,8 +295,47 @@ app.put('/orders/:orderId/status', async (req, res) => {
   }
 });
 
+// GET /api/orders/:orderId - Fetch order by ID
+app.get(['/orders/:orderId', '/v1/orders/:orderId'], async (req, res) => {
+  try {
+    const { orderId } = req.params;
+
+    let orderDoc = await db.collection('orders').doc(orderId).get();
+
+    if (!orderDoc.exists) {
+      const orderQuery = await db.collectionGroup('orders')
+        .where(admin.firestore.FieldPath.documentId(), '==', orderId)
+        .limit(1)
+        .get();
+
+      if (orderQuery.empty) {
+        return res.status(404).json({ error: 'Order not found' });
+      }
+
+      orderDoc = orderQuery.docs[0];
+    }
+
+    const orderData = orderDoc.data();
+    const serializeTimestamp = (value) => value?.toDate?.()?.toISOString() || value || null;
+
+    res.json({
+      id: orderDoc.id,
+      ...orderData,
+      createdAt: serializeTimestamp(orderData.createdAt),
+      updatedAt: serializeTimestamp(orderData.updatedAt),
+      preparedAt: serializeTimestamp(orderData.preparedAt),
+      readyAt: serializeTimestamp(orderData.readyAt),
+      servedAt: serializeTimestamp(orderData.servedAt)
+    });
+
+  } catch (error) {
+    console.error('Error fetching order by ID:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 // POST /api/auth/login - Restaurant staff login
-app.post('/auth/login', async (req, res) => {
+app.post(['/auth/login', '/v1/auth/login'], async (req, res) => {
   try {
     const { email, password } = req.body;
     
@@ -299,8 +345,17 @@ app.post('/auth/login', async (req, res) => {
     
     // Demo user for testing - check first
     if (email === 'manager_email1@gmail.com' && password === 'demo123') {
+      const demoPayload = {
+        userId: 'demo-user-1',
+        venueId: 'beach-bar-durres',
+        role: 'manager',
+        email
+      };
+      const token = createAuthToken(demoPayload);
+
       return res.json({
         message: 'Login successful',
+        token,
         user: {
           id: 'demo-user-1',
           email: 'manager_email1@gmail.com',
@@ -352,8 +407,17 @@ app.post('/auth/login', async (req, res) => {
       }
     }
     
+    const tokenPayload = {
+      userId: userDoc.id,
+      venueId: userData.venueId || null,
+      role: userData.role || 'staff',
+      email: userData.email
+    };
+    const token = createAuthToken(tokenPayload);
+
     res.json({
       message: 'Login successful',
+      token,
       user: {
         id: userDoc.id,
         email: userData.email,
@@ -377,10 +441,29 @@ app.post('/auth/login', async (req, res) => {
 // Beach Bar Lek Pricing Update Endpoint
 app.post('/v1/admin/update-beach-bar-lek-pricing', async (req, res) => {
   try {
+    const adminToken = process.env.ADMIN_TASK_TOKEN;
+    const authHeader = req.headers.authorization || '';
+    const bearerToken = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : null;
+    const requestToken = bearerToken || req.query?.token;
+
+    if (!adminToken) {
+      console.error('ADMIN_TASK_TOKEN is not configured');
+      return res.status(500).json({ error: 'Service misconfiguration' });
+    }
+
+    if (requestToken !== adminToken) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+
     console.log('🇦🇱 Starting Beach Bar Durrës EUR to Lek conversion...');
     
     const venueId = 'beach-bar-durres';
-    const venueRef = db.collection('venues').doc(venueId);
+    const venueRef = db.collection('venue').doc(venueId);
+
+    const venueDoc = await venueRef.get();
+    if (!venueDoc.exists) {
+      return res.status(404).json({ error: 'Venue not found' });
+    }
     
     // Albanian Lek menu item updates
     const beachBarLekItems = [
@@ -415,7 +498,8 @@ app.post('/v1/admin/update-beach-bar-lek-pricing', async (req, res) => {
         
         batch.update(menuItemRef, {
           price: item.price,
-          nameAlbanian: item.nameAlbanian
+          nameAlbanian: item.nameAlbanian,
+          updatedAt: admin.firestore.FieldValue.serverTimestamp()
         });
         updateCount++;
       }

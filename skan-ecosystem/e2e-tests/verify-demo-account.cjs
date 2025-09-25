@@ -7,8 +7,8 @@ async function verifyDemoAccount() {
   
   const testCredentials = [
     { email: 'demo.beachbar@skan.al', password: 'BeachBarDemo2024!', name: 'New Demo Account' },
-    { email: 'manager_email1@gmail.com', password: 'admin123', name: 'Original Manager Account' },
-    { email: 'arditxhanaj@gmail.com', password: 'admin123', name: 'Ardit Account' }
+    { email: 'manager_email1@gmail.com', password: 'demo123', name: 'Original Manager Account' },
+    { email: 'arditxhanaj@gmail.com', password: 'demo123', name: 'Ardit Account' }
   ];
   
   for (const creds of testCredentials) {
