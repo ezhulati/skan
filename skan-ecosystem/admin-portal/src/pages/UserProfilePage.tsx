@@ -97,7 +97,16 @@ const UserProfilePage: React.FC = () => {
       setTimeout(() => setMessage(''), 500);
     } catch (err: any) {
       console.error('Error updating profile:', err);
-      setError(err.message);
+      
+      // Handle invalid token by redirecting to login
+      if (err.message.includes('Invalid token') || err.message.includes('401')) {
+        setError('Sesioni juaj ka skaduar. Ju lutemi hiqni dhe hyni përsëri për të vazhduar.');
+        setTimeout(() => {
+          window.location.href = '/login';
+        }, 3000);
+      } else {
+        setError(err.message);
+      }
     } finally {
       setSaving(false);
     }
@@ -159,7 +168,16 @@ const UserProfilePage: React.FC = () => {
       setTimeout(() => setMessage(''), 500);
     } catch (err: any) {
       console.error('Error changing password:', err);
-      setError(err.message);
+      
+      // Handle invalid token by redirecting to login
+      if (err.message.includes('Invalid token') || err.message.includes('401')) {
+        setError('Sesioni juaj ka skaduar. Ju lutemi hiqni dhe hyni përsëri për të vazhduar.');
+        setTimeout(() => {
+          window.location.href = '/login';
+        }, 3000);
+      } else {
+        setError(err.message);
+      }
     } finally {
       setChangingPassword(false);
     }
