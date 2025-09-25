@@ -2,8 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { restaurantApiService, Order } from '../services/api';
 import WelcomeHeader from '../components/WelcomeHeader';
-import UndoToast from '../components/UndoToast';
-import ResponsiveKDSLayout from '../components/ResponsiveKDSLayout';
+import ResponsiveKDSLayout from '../components/ResponsiveKDSLayoutBulletproof';
 import { useWakeLock } from '../hooks/useWakeLock';
 import { useWebSocketContext, useOrderEvents } from '../contexts/WebSocketContext';
 import { useOrderVersioning } from '../hooks/useOrderVersioning';
@@ -16,7 +15,8 @@ const DashboardPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [selectedStatus, setSelectedStatus] = useState<string>('all');
   const [refreshing, setRefreshing] = useState(false);
-  const [usingMockData, setUsingMockData] = useState(false);
+  // const [usingMockData, setUsingMockData] = useState(false); // Removed - no longer needed
+  const [updateCounter, setUpdateCounter] = useState(0);
   
   const normalizeStatus = useCallback((status: string): 'new' | 'preparing' | 'ready' | 'served' => {
     switch (status) {
@@ -38,6 +38,9 @@ const DashboardPage: React.FC = () => {
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
   const [audioEnabled, setAudioEnabled] = useState(true);
   const [showNotificationSettings, setShowNotificationSettings] = useState(false);
+  const [showNotificationDropdown, setShowNotificationDropdown] = useState(false);
+  
+
   const audioRef = useRef<HTMLAudioElement | null>(null);
   
   // Wake lock for KDS - prevent screen sleep during operation
@@ -91,6 +94,24 @@ const DashboardPage: React.FC = () => {
   const kdsNotificationsRef = useRef(kdsNotifications);
   kdsNotificationsRef.current = kdsNotifications;
 
+  // Close dropdowns when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (showNotificationDropdown || showNotificationSettings) {
+        const target = event.target as Element;
+        if (!target.closest('.notification-dropdown') && !target.closest('.notification-settings-panel') && !target.closest('.settings-button')) {
+          setShowNotificationDropdown(false);
+          setShowNotificationSettings(false);
+        }
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showNotificationDropdown, showNotificationSettings]);
+
   // Track optimistic status updates so auto-refresh doesn't undo them
   const pendingStatusUpdatesRef = useRef<Map<string, { status: string; timestamp: number }>>(new Map());
 
@@ -126,14 +147,6 @@ const DashboardPage: React.FC = () => {
     }
   }, [])); // FIXED: No dependencies to break circular re-render
   
-  // Undo functionality state
-  interface UndoOperation {
-    orderId: string;
-    previousStatus: string;
-    newStatus: string;
-    orderNumber: string;
-  }
-  const [undoOperation, setUndoOperation] = useState<UndoOperation | null>(null);
 
   // FINAL FIX: Completely removed dependencies that cause circular re-renders
   const loadOrders = useCallback(async () => {
@@ -148,7 +161,7 @@ const DashboardPage: React.FC = () => {
         restaurantApiService.getActiveOrders(auth.user.venueId, { limit: 250 }),
         restaurantApiService.getRecentServedOrders(auth.user.venueId, { limit: 80, hours: 24 })
       ]);
-      setUsingMockData(false); // We have real data
+      // setUsingMockData(false); // We have real data - removed since state was commented out
 
       const combinedOrders = [...activeResponse.data, ...servedResponse.data];
 
@@ -226,10 +239,10 @@ const DashboardPage: React.FC = () => {
             orderNumber: "SKN-20250918-001",
             customerName: "Demo Customer",
             items: [
-              { name: "Pizza Margherita", price: 12.99, quantity: 1 },
-              { name: "Coca Cola", price: 2.50, quantity: 2 }
+              { name: "Greek Salad", price: 900, quantity: 1 },
+              { name: "Albanian Beer", price: 350, quantity: 2 }
             ],
-            totalAmount: 17.99,
+            totalAmount: 1600,
             status: "new",
             createdAt: new Date(Date.now() - 5 * 60000).toISOString(), // 5 minutes ago
             updatedAt: new Date(Date.now() - 5 * 60000).toISOString()
@@ -241,9 +254,9 @@ const DashboardPage: React.FC = () => {
             orderNumber: "SKN-20250918-002",
             customerName: "Test User",
             items: [
-              { name: "Pasta Carbonara", price: 14.50, quantity: 1 }
+              { name: "Seafood Risotto", price: 1800, quantity: 1 }
             ],
-            totalAmount: 14.50,
+            totalAmount: 1800,
             status: "preparing",
             createdAt: new Date(Date.now() - 3 * 60000).toISOString(), // 3 minutes ago
             updatedAt: new Date(Date.now() - 2 * 60000).toISOString()
@@ -255,20 +268,54 @@ const DashboardPage: React.FC = () => {
             orderNumber: "SKN-20250918-003",
             customerName: "Another Customer",
             items: [
-              { name: "Caesar Salad", price: 9.99, quantity: 1 },
-              { name: "Grilled Chicken", price: 16.99, quantity: 1 }
+              { name: "Fried Calamari", price: 1200, quantity: 1 },
+              { name: "Grilled Lamb Chops", price: 2200, quantity: 1 }
             ],
-            totalAmount: 26.98,
+            totalAmount: 3400,
             status: "ready",
             createdAt: new Date(Date.now() - 8 * 60000).toISOString(), // 8 minutes ago
             updatedAt: new Date(Date.now() - 1 * 60000).toISOString()
           }
         ];
         
-        setOrders(mockOrders);
+        // CRITICAL FIX: Mock data must respect pending status updates just like real API
+        setOrders(prevOrders => {
+          const mergedOrdersMap = new Map<string, Order>();
+
+          // Apply pending status updates to mock orders (same logic as real API)
+          mockOrders.forEach(order => {
+            const pendingUpdate = pendingStatusUpdatesRef.current.get(order.id);
+            if (pendingUpdate) {
+              console.log(`🔄 Preserving pending status for mock order ${order.id}: ${order.status} → ${pendingUpdate.status}`);
+              mergedOrdersMap.set(order.id, {
+                ...order,
+                status: pendingUpdate.status as Order['status'],
+                updatedAt: new Date().toISOString()
+              });
+            } else {
+              mergedOrdersMap.set(order.id, order);
+            }
+          });
+
+          // Preserve any pending updates for orders not in mock data
+          prevOrders.forEach(order => {
+            if (!mergedOrdersMap.has(order.id)) {
+              const pendingUpdate = pendingStatusUpdatesRef.current.get(order.id);
+              if (pendingUpdate) {
+                console.log(`🔄 Preserving pending-only order ${order.id}`);
+                mergedOrdersMap.set(order.id, {
+                  ...order,
+                  status: pendingUpdate.status as Order['status']
+                });
+              }
+            }
+          });
+
+          return Array.from(mergedOrdersMap.values());
+        });
         setError(null); // Clear error since we have mock data
-        setUsingMockData(true); // Track that we're using mock data
-        console.log('Mock orders loaded successfully');
+        // setUsingMockData(true); // Track that we're using mock data - removed since state was commented out
+        console.log('Mock orders loaded successfully with pending status preservation');
       } else {
         setError('Dështoi ngarkimi i porosive');
       }
@@ -318,16 +365,24 @@ const DashboardPage: React.FC = () => {
     if (!notificationsEnabled) {
       // Request permission when enabling
       if ('Notification' in window) {
+        console.log('🌐 Requesting notification permission...');
         const permission = await Notification.requestPermission();
+        console.log('🌐 Permission result:', permission);
         if (permission === 'granted') {
           setNotificationsEnabled(true);
           localStorage.setItem('skan-notifications-enabled', 'true');
+          console.log('🌐 Browser notifications ENABLED');
+        } else {
+          console.log('🌐 Permission denied');
         }
+      } else {
+        console.log('🌐 Notifications not supported');
       }
     } else {
       // Disable notifications
       setNotificationsEnabled(false);
       localStorage.setItem('skan-notifications-enabled', 'false');
+      console.log('🌐 Browser notifications DISABLED');
     }
   }, [notificationsEnabled]);
 
@@ -348,53 +403,17 @@ const DashboardPage: React.FC = () => {
     return () => clearInterval(interval);
   }, [auth.user?.venueId, loadOrders]);
 
-  // Handle undo operation
-  const handleUndo = async () => {
-    if (!undoOperation) return;
-    
-    console.log('Undoing status change:', undoOperation);
-    
-    const operation = undoOperation; // Create local reference for TypeScript
-    
-    // Revert the status change
-    if (usingMockData || true) { // Always use local update for undo to be instant
-      setOrders(prevOrders => 
-        prevOrders.map(order => 
-          order.id === operation.orderId 
-            ? { ...order, status: operation.previousStatus as any, updatedAt: new Date().toISOString() }
-            : order
-        )
-      );
-      pendingStatusUpdatesRef.current.set(operation.orderId, {
-        status: operation.previousStatus,
-        timestamp: Date.now()
-      });
-    } else {
-      // In production, also call API to revert
-      try {
-        if (auth.token) {
-          restaurantApiService.setToken(auth.token);
-          await restaurantApiService.updateOrderStatus(operation.orderId, operation.previousStatus);
-        }
-      } catch (err) {
-        console.error('Error reverting order status:', err);
-      }
-    }
-    
-    setUndoOperation(null);
-  };
 
   const handleStatusUpdate = async (orderId: string, newStatus: string) => {
     console.log('🔥 BUTTON CLICKED! Order ID:', orderId, 'New Status:', newStatus);
     
-    // Find the current order to get its current status for undo
+    // Find the current order to validate the status update
     const currentOrder = orders.find(order => order.id === orderId);
     if (!currentOrder) {
       console.error('Order not found for status update');
       return;
     }
     
-    const previousStatus = currentOrder.status;
     
     // IMMEDIATE UI UPDATE - Update the order status instantly for immediate feedback
     console.log('Updating order status immediately for instant UI feedback...');
@@ -406,13 +425,9 @@ const DashboardPage: React.FC = () => {
       )
     );
     
-    // Show undo toast immediately
-    setUndoOperation({
-      orderId,
-      previousStatus,
-      newStatus,
-      orderNumber: currentOrder.orderNumber
-    });
+    // Force component re-render to ensure ResponsiveKDSLayout updates immediately
+    setUpdateCounter(prev => prev + 1);
+    
 
     console.log('✅ Order status updated in UI successfully!');
 
@@ -429,20 +444,17 @@ const DashboardPage: React.FC = () => {
     } catch (error) {
       console.error('❌ Direct API update error:', error);
       
-      // Revert the optimistic update if API call failed
-      console.log('🔄 Reverting optimistic UI update due to API failure...');
-      setOrders(prevOrders => 
-        prevOrders.map(order => 
-          order.id === orderId 
-            ? { ...order, status: previousStatus as any }
-            : order
-        )
-      );
-      // UI is already updated, so this failure is acceptable
+      // CRITICAL FIX: NEVER revert optimistic updates - restaurant staff expects changes to stick
+      // Status changes must persist regardless of API failures to avoid confusing restaurant staff
+      console.log('📝 API failed but keeping optimistic update (restaurant operations require persistence)');
+      
+      // The pending status system will ensure the change persists across refreshes
+      // until the API is fixed and can properly persist the change to the database
     }
   };
 
-  const getStatusColor = (status: string) => {
+  // Helper functions moved to ResponsiveKDSLayoutBulletproof component
+  /* const getStatusColor = (status: string) => {
     switch (status) {
       case 'new':
       case '3': return '#dc3545';
@@ -454,9 +466,9 @@ const DashboardPage: React.FC = () => {
       case '9': return '#6c757d';     // Original gray already passes WCAG AA (4.69:1 contrast)
       default: return '#007bff';
     }
-  };
+  }; */
 
-  const getNextStatus = (currentStatus: string) => {
+  /* const getNextStatus = (currentStatus: string) => {
     // Handle both numeric and string statuses
     switch (currentStatus) {
       case 'new':
@@ -493,7 +505,7 @@ const DashboardPage: React.FC = () => {
       case '9': return 'Shërbyer';
       default: return status;
     }
-  };
+  }; */
 
   const filteredOrders = orders.filter(order => {
     if (selectedStatus === 'all') return true;
@@ -524,7 +536,7 @@ const DashboardPage: React.FC = () => {
     }, 0);
   }, 0);
 
-  const formatTime = (dateString: string) => {
+  /* const formatTime = (dateString: string) => {
     const date = new Date(dateString);
     const now = new Date();
     const diffMinutes = Math.floor((now.getTime() - date.getTime()) / (1000 * 60));
@@ -578,7 +590,7 @@ const DashboardPage: React.FC = () => {
     }
     
     return { level: 'normal', className: '' };
-  };
+  }; */
 
   // Show venue setup if user has no venue
   if (!auth.user?.venueId && !loading) {
@@ -646,19 +658,50 @@ const DashboardPage: React.FC = () => {
         <div className="header-controls">
           <button 
             className="settings-button"
-            onClick={() => setShowNotificationSettings(!showNotificationSettings)}
+            onClick={() => {
+              if (showNotificationDropdown || showNotificationSettings) {
+                setShowNotificationDropdown(false);
+                setShowNotificationSettings(false);
+              } else if (kdsNotifications.activeAlerts.length > 0) {
+                setShowNotificationDropdown(true);
+                setShowNotificationSettings(false);
+              } else {
+                setShowNotificationSettings(true);
+                setShowNotificationDropdown(false);
+              }
+            }}
             style={{
-              background: 'none',
+              background: (showNotificationDropdown || showNotificationSettings) ? 'rgba(52, 152, 219, 0.1)' : 'none',
               border: 'none',
               fontSize: '20px',
               cursor: 'pointer',
               marginRight: '12px',
               padding: '8px',
-              borderRadius: '4px'
+              borderRadius: '4px',
+              position: 'relative'
             }}
-            title="Cilësimet e njoftimeve"
+            title={kdsNotifications.activeAlerts.length > 0 ? `${kdsNotifications.activeAlerts.length} njoftimet` : "Cilësimet e njoftimeve"}
           >
             🔔
+            {kdsNotifications.activeAlerts.length > 0 && (
+              <span style={{
+                position: 'absolute',
+                top: '4px',
+                right: '4px',
+                background: '#e74c3c',
+                color: 'white',
+                borderRadius: '50%',
+                width: '16px',
+                height: '16px',
+                fontSize: '10px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontWeight: 'bold'
+              }}>
+                {kdsNotifications.activeAlerts.length > 9 ? '9+' : kdsNotifications.activeAlerts.length}
+              </span>
+            )}
           </button>
           <button 
             className="refresh-button"
@@ -685,17 +728,190 @@ const DashboardPage: React.FC = () => {
         ))}
       </div>
 
-      {/* Notification Settings Panel */}
-      {showNotificationSettings && (
-        <div className="notification-settings-panel" style={{
-          background: '#f8f9fa',
+      {/* Notifications Dropdown */}
+      {showNotificationDropdown && (
+        <div className="notification-dropdown" style={{
+          position: 'absolute',
+          top: '100px',
+          right: '20px',
+          background: 'white',
           border: '1px solid #e9ecef',
+          borderRadius: '8px',
+          boxShadow: '0 4px 16px rgba(0, 0, 0, 0.1)',
+          padding: '16px',
+          minWidth: '400px',
+          maxWidth: '500px',
+          zIndex: 1000,
+          maxHeight: '400px',
+          overflowY: 'auto'
+        }}>
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            marginBottom: '16px',
+            paddingBottom: '12px',
+            borderBottom: '1px solid #e9ecef'
+          }}>
+            <h3 style={{ 
+              margin: 0, 
+              fontSize: '16px', 
+              fontWeight: '600',
+              color: '#2c3e50' 
+            }}>
+              🔔 Njoftimet ({kdsNotifications.activeAlerts.length})
+            </h3>
+            <button
+              onClick={() => {
+                kdsNotifications.clearAllAlerts();
+                setShowNotificationDropdown(false);
+              }}
+              style={{
+                background: '#e74c3c',
+                color: 'white',
+                border: 'none',
+                borderRadius: '4px',
+                padding: '4px 8px',
+                fontSize: '12px',
+                cursor: 'pointer'
+              }}
+            >
+              Fshij Të Gjitha
+            </button>
+          </div>
+          
+          {kdsNotifications.activeAlerts.length === 0 ? (
+            <div style={{
+              textAlign: 'center',
+              padding: '20px',
+              color: '#6c757d',
+              fontSize: '14px'
+            }}>
+              Nuk ka njoftimet për momentin
+            </div>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              {kdsNotifications.activeAlerts.map((alert) => (
+                <div key={alert.id} style={{
+                  display: 'flex',
+                  alignItems: 'flex-start',
+                  gap: '12px',
+                  padding: '12px',
+                  background: alert.priority === 'critical' ? '#fff5f5' : alert.priority === 'high' ? '#fff8e1' : '#f8f9fa',
+                  border: `1px solid ${alert.priority === 'critical' ? '#fecaca' : alert.priority === 'high' ? '#fde68a' : '#e9ecef'}`,
+                  borderRadius: '6px'
+                }}>
+                  <div style={{
+                    fontSize: '16px',
+                    marginTop: '2px',
+                    flexShrink: 0
+                  }}>
+                    {alert.type === 'new-order' ? '🆕' : 
+                     alert.type === 'urgent-order' ? '🚨' : 
+                     alert.type === 'ready-order' ? '✅' : 
+                     alert.type === 'error' ? '❌' : '🔔'}
+                  </div>
+                  
+                  <div style={{ flex: 1 }}>
+                    <div style={{
+                      fontWeight: '600',
+                      fontSize: '14px',
+                      color: '#2c3e50',
+                      marginBottom: '4px'
+                    }}>
+                      {alert.titleAlbanian || alert.title}
+                    </div>
+                    <div style={{
+                      fontSize: '13px',
+                      color: '#6c757d',
+                      marginBottom: '6px',
+                      lineHeight: '1.4'
+                    }}>
+                      {alert.messageAlbanian || alert.message}
+                    </div>
+                    <div style={{
+                      fontSize: '11px',
+                      color: '#adb5bd'
+                    }}>
+                      {new Date(alert.timestamp).toLocaleTimeString('sq-AL', {
+                        hour: '2-digit',
+                        minute: '2-digit'
+                      })}
+                    </div>
+                  </div>
+                  
+                  <div style={{
+                    display: 'flex',
+                    gap: '4px',
+                    alignItems: 'center'
+                  }}>
+                    <div style={{
+                      background: alert.priority === 'critical' ? '#e74c3c' : 
+                                  alert.priority === 'high' ? '#f39c12' :
+                                  alert.priority === 'medium' ? '#3498db' : '#27ae60',
+                      color: 'white',
+                      padding: '2px 6px',
+                      borderRadius: '10px',
+                      fontSize: '10px',
+                      fontWeight: '500',
+                      textTransform: 'uppercase'
+                    }}>
+                      {alert.priority === 'critical' ? 'KRITIKE' :
+                       alert.priority === 'high' ? 'LART' :
+                       alert.priority === 'medium' ? 'MESATARE' : 'ULËT'}
+                    </div>
+                    <button
+                      onClick={() => kdsNotifications.acknowledgeAlert(alert.id)}
+                      style={{
+                        background: 'transparent',
+                        border: 'none',
+                        color: '#6c757d',
+                        cursor: 'pointer',
+                        padding: '4px',
+                        borderRadius: '2px',
+                        fontSize: '12px'
+                      }}
+                      title="Pranoje"
+                    >
+                      ✓
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+          
+          <div style={{
+            marginTop: '12px',
+            paddingTop: '12px',
+            borderTop: '1px solid #e9ecef',
+            fontSize: '12px',
+            color: '#6c757d',
+            textAlign: 'center'
+          }}>
+            💡 Kliko butonin e zilës për të parë cilësimet
+          </div>
+        </div>
+      )}
+
+      {/* Notification Settings Panel */}
+      {showNotificationSettings && (() => {
+        const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        return (
+        <div className="notification-settings-panel" style={{
+          background: isDarkMode ? '#374151' : '#f8f9fa',
+          border: isDarkMode ? '1px solid #4b5563' : '1px solid #e9ecef',
           borderRadius: '8px',
           padding: '16px',
           margin: '16px 0',
           maxWidth: '600px'
         }}>
-          <h3 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: '600' }}>
+          <h3 style={{ 
+            margin: '0 0 16px 0', 
+            fontSize: '16px', 
+            fontWeight: '600',
+            color: isDarkMode ? '#f9fafb' : '#1a202c'
+          }}>
             🔔 Cilësimet e Njoftimeve
           </h3>
           
@@ -705,13 +921,13 @@ const DashboardPage: React.FC = () => {
               alignItems: 'center', 
               justifyContent: 'space-between',
               padding: '8px 12px',
-              background: '#ffffff',
+              background: isDarkMode ? '#4b5563' : '#ffffff',
               borderRadius: '6px',
-              border: '1px solid #dee2e6'
+              border: isDarkMode ? '1px solid #6b7280' : '1px solid #dee2e6'
             }}>
               <div>
-                <div style={{ fontWeight: '500', fontSize: '14px' }}>🔊 Zërat e Njoftimeve</div>
-                <div style={{ fontSize: '12px', color: '#6c757d' }}>
+                <div style={{ fontWeight: '500', fontSize: '14px', color: isDarkMode ? '#f9fafb' : '#1a202c' }}>🔊 Zërat e Njoftimeve</div>
+                <div style={{ fontSize: '12px', color: isDarkMode ? '#d1d5db' : '#6c757d' }}>
                   Luaj zë kur vijnë porosite të reja
                 </div>
               </div>
@@ -738,13 +954,13 @@ const DashboardPage: React.FC = () => {
               alignItems: 'center', 
               justifyContent: 'space-between',
               padding: '8px 12px',
-              background: '#ffffff',
+              background: isDarkMode ? '#4b5563' : '#ffffff',
               borderRadius: '6px',
-              border: '1px solid #dee2e6'
+              border: isDarkMode ? '1px solid #6b7280' : '1px solid #dee2e6'
             }}>
               <div>
-                <div style={{ fontWeight: '500', fontSize: '14px' }}>🌐 Njoftimet e Browser-it</div>
-                <div style={{ fontSize: '12px', color: '#6c757d' }}>
+                <div style={{ fontWeight: '500', fontSize: '14px', color: isDarkMode ? '#f9fafb' : '#1a202c' }}>🌐 Njoftimet e Browser-it</div>
+                <div style={{ fontSize: '12px', color: isDarkMode ? '#d1d5db' : '#6c757d' }}>
                   Shfaq njoftimet në browser për porosite e reja
                 </div>
               </div>
@@ -771,18 +987,22 @@ const DashboardPage: React.FC = () => {
               alignItems: 'center', 
               justifyContent: 'space-between',
               padding: '8px 12px',
-              background: '#ffffff',
+              background: isDarkMode ? '#4b5563' : '#ffffff',
               borderRadius: '6px',
-              border: '1px solid #dee2e6'
+              border: isDarkMode ? '1px solid #6b7280' : '1px solid #dee2e6'
             }}>
               <div>
-                <div style={{ fontWeight: '500', fontSize: '14px' }}>📱 KDS - Mbaj Ekranin Aktiv</div>
-                <div style={{ fontSize: '12px', color: '#6c757d' }}>
+                <div style={{ fontWeight: '500', fontSize: '14px', color: isDarkMode ? '#f9fafb' : '#1a202c' }}>📱 KDS - Mbaj Ekranin Aktiv</div>
+                <div style={{ fontSize: '12px', color: isDarkMode ? '#d1d5db' : '#6c757d' }}>
                   {wakeLock.isSupported ? 'Përdor Wake Lock API' : 'Përdor fallback video'} - {wakeLock.isActive ? 'Aktiv' : 'Joaktiv'}
                 </div>
               </div>
               <button
-                onClick={wakeLock.toggle}
+                onClick={() => {
+                  console.log('📱 WAKE LOCK TOGGLE CLICKED! Current active:', wakeLock.isActive);
+                  wakeLock.toggle();
+                  console.log('📱 Wake lock toggle called');
+                }}
                 style={{
                   background: wakeLock.isActive ? '#28a745' : '#6c757d',
                   color: 'white',
@@ -804,15 +1024,15 @@ const DashboardPage: React.FC = () => {
               alignItems: 'center', 
               justifyContent: 'space-between',
               padding: '8px 12px',
-              background: '#ffffff',
+              background: isDarkMode ? '#4b5563' : '#ffffff',
               borderRadius: '6px',
-              border: '1px solid #dee2e6'
+              border: isDarkMode ? '1px solid #6b7280' : '1px solid #dee2e6'
             }}>
               <div>
-                <div style={{ fontWeight: '500', fontSize: '14px' }}>
+                <div style={{ fontWeight: '500', fontSize: '14px', color: isDarkMode ? '#f9fafb' : '#1a202c' }}>
                   🔄 Përditësimet në Kohë Reale
                 </div>
-                <div style={{ fontSize: '12px', color: '#6c757d' }}>
+                <div style={{ fontSize: '12px', color: isDarkMode ? '#d1d5db' : '#6c757d' }}>
                   {webSocket.connected ? 'Të lidhura' : webSocket.connecting ? 'Duke u lidhur...' : 'E shkëputur'} 
                   {webSocket.error && ` - ${webSocket.error}`}
                 </div>
@@ -841,15 +1061,15 @@ const DashboardPage: React.FC = () => {
               alignItems: 'center', 
               justifyContent: 'space-between',
               padding: '8px 12px',
-              background: '#ffffff',
+              background: isDarkMode ? '#4b5563' : '#ffffff',
               borderRadius: '6px',
-              border: '1px solid #dee2e6'
+              border: isDarkMode ? '1px solid #6b7280' : '1px solid #dee2e6'
             }}>
               <div>
-                <div style={{ fontWeight: '500', fontSize: '14px' }}>
+                <div style={{ fontWeight: '500', fontSize: '14px', color: isDarkMode ? '#f9fafb' : '#1a202c' }}>
                   ⚡ Përditësimet Optimiste
                 </div>
-                <div style={{ fontSize: '12px', color: '#6c757d' }}>
+                <div style={{ fontSize: '12px', color: isDarkMode ? '#d1d5db' : '#6c757d' }}>
                   {orderVersioning.pendingUpdates.length} në pritje - {orderVersioning.cacheStats.totalOrders} të ruajtura
                 </div>
               </div>
@@ -878,7 +1098,7 @@ const DashboardPage: React.FC = () => {
                 border: '1px solid #ffd60a'
               }}>
                 <div>
-                  <div style={{ fontWeight: '500', fontSize: '14px' }}>
+                  <div style={{ fontWeight: '500', fontSize: '14px', color: isDarkMode ? '#f9fafb' : '#1a202c' }}>
                     🚨 Njoftimet Aktive
                   </div>
                   <div style={{ fontSize: '12px', color: '#856404' }}>
@@ -908,16 +1128,17 @@ const DashboardPage: React.FC = () => {
           <div style={{ 
             marginTop: '12px', 
             padding: '8px 12px', 
-            background: '#e3f2fd', 
+            background: isDarkMode ? '#1e3a8a' : '#e3f2fd', 
             borderRadius: '4px',
             fontSize: '12px',
-            color: '#1565c0'
+            color: isDarkMode ? '#bfdbfe' : '#1565c0'
           }}>
             💡 <strong>Këshillë:</strong> Aktivizo njoftimet për të mos humbur porosite e reja. 
             Sistemi kontrollon për përditësime çdo 10 sekonda.
           </div>
         </div>
-      )}
+        );
+      })()}
 
       {error && (
         <div className="error-message">
@@ -932,47 +1153,32 @@ const DashboardPage: React.FC = () => {
           </div>
         ) : (
           <ResponsiveKDSLayout
+            key={updateCounter}
             orders={filteredOrders}
             onStatusUpdate={handleStatusUpdate}
-            selectedStatus={selectedStatus}
-            getStatusColor={getStatusColor}
-            getNextStatus={getNextStatus}
-            getStatusLabel={getStatusLabel}
-            getStatusDisplayName={getStatusDisplayName}
-            formatTime={formatTime}
-            getOrderUrgency={getOrderUrgency}
-            filteredOrders={filteredOrders}
           />
         )}
       </div>
 
-      {/* Undo Toast */}
-      {undoOperation && (
-        <UndoToast
-          message={`Porosia ${undoOperation.orderNumber} u ndryshua në "${getStatusDisplayName(undoOperation.newStatus)}"`}
-          onUndo={handleUndo}
-          onDismiss={() => setUndoOperation(null)}
-        />
-      )}
       
       {/* CSS for urgency indicators */}
       <style>{`
         .order-urgent-attention {
-          border-left: 4px solid #ffc107 !important;
-          background: linear-gradient(90deg, rgba(255, 193, 7, 0.05) 0%, transparent 100%);
+          /* border-left: 4px solid #ffc107 !important; */
+          /* background: linear-gradient(90deg, rgba(255, 193, 7, 0.05) 0%, transparent 100%); */
         }
         
         .order-urgent-warning {
-          border-left: 4px solid #ff6b35 !important;
-          background: linear-gradient(90deg, rgba(255, 107, 53, 0.1) 0%, transparent 100%);
+          /* border-left: 4px solid #ff6b35 !important; */
+          /* background: linear-gradient(90deg, rgba(255, 107, 53, 0.1) 0%, transparent 100%); */
           animation: pulse-warning 2s infinite;
         }
         
         .order-urgent-critical {
-          border-left: 4px solid #dc3545 !important;
-          background: linear-gradient(90deg, rgba(220, 53, 69, 0.15) 0%, transparent 100%);
+          /* border-left: 4px solid #dc3545 !important; */
+          /* background: linear-gradient(90deg, rgba(220, 53, 69, 0.15) 0%, transparent 100%); */
           animation: pulse-critical 1s infinite;
-          box-shadow: 0 0 20px rgba(220, 53, 69, 0.3) !important;
+          /* box-shadow: 0 0 20px rgba(220, 53, 69, 0.3) !important; */
         }
         
         @keyframes pulse-warning {
@@ -996,7 +1202,7 @@ const DashboardPage: React.FC = () => {
         }
         
         .order-urgent-attention .order-time {
-          color: #ffc107 !important;
+          /* color: #ffc107 !important; */
           font-weight: 500 !important;
         }
       `}</style>

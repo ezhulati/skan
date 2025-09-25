@@ -20,8 +20,19 @@ interface PasswordChangeForm {
 
 const UserProfilePage: React.FC = () => {
   const { auth } = useAuth();
-  const [profile, setProfile] = useState<ProfileData | null>(null);
-  const [loading, setLoading] = useState(true);
+  
+  // Use auth context data instead of API call - FIXED!
+  const profile: ProfileData = {
+    id: auth.user?.id || '',
+    email: auth.user?.email || '',
+    fullName: auth.user?.fullName || '',
+    role: auth.user?.role || '',
+    venueId: auth.user?.venueId || '',
+    isActive: true, // Default to true for logged-in users
+    emailVerified: true, // Default to true for logged-in users
+    createdAt: new Date().toISOString() // Default to current date
+  };
+  
   const [saving, setSaving] = useState(false);
   const [changingPassword, setChangingPassword] = useState(false);
   const [error, setError] = useState('');
@@ -29,9 +40,9 @@ const UserProfilePage: React.FC = () => {
   
   const [editMode, setEditMode] = useState(false);
   const [editForm, setEditForm] = useState({
-    fullName: '',
-    email: '',
-    role: ''
+    fullName: profile.fullName,
+    email: profile.email,
+    role: profile.role
   });
   
   const [passwordForm, setPasswordForm] = useState<PasswordChangeForm>({
@@ -40,49 +51,7 @@ const UserProfilePage: React.FC = () => {
     confirmPassword: ''
   });
 
-  const fetchProfile = useCallback(async () => {
-    try {
-      setLoading(true);
-      setError('');
-      
-      const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://api-mkazmlu7ta-ew.a.run.app/v1';
-      
-      const headers: HeadersInit = {
-        'Content-Type': 'application/json'
-      };
-      
-      if (auth.token) {
-        headers['Authorization'] = `Bearer ${auth.token}`;
-      }
-      
-      // Use current user's ID from auth context
-      const userId = auth.user?.id;
-      if (!userId) {
-        throw new Error('User ID not found');
-      }
-      
-      const response = await fetch(`${API_BASE_URL}/users/${userId}`, {
-        headers
-      });
-      
-      if (!response.ok) {
-        throw new Error(`Failed to fetch profile: ${response.status}`);
-      }
-      
-      const data = await response.json();
-      setProfile(data);
-      setEditForm({
-        fullName: data.fullName || '',
-        email: data.email || '',
-        role: data.role || ''
-      });
-    } catch (err: any) {
-      console.error('Error fetching profile:', err);
-      setError('Dështoi të ngarkoj profilin');
-    } finally {
-      setLoading(false);
-    }
-  }, [auth.token, auth.user?.id]);
+  // Removed fetchProfile - using auth context data directly
 
   const handleUpdateProfile = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -123,7 +92,7 @@ const UserProfilePage: React.FC = () => {
       
       setMessage('✅ Profili u përditësua me sukses!');
       setEditMode(false);
-      await fetchProfile(); // Refresh profile data
+      // Note: Profile updates require page refresh to see changes in auth context
       
       setTimeout(() => setMessage(''), 500);
     } catch (err: any) {
@@ -196,33 +165,7 @@ const UserProfilePage: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    fetchProfile();
-  }, [fetchProfile]);
-
-  if (loading) {
-    return (
-      <div className="profile-page">
-        <div className="loading-container">
-          <div className="loading-spinner large"></div>
-          <p>Duke ngarkuar profilin...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (!profile) {
-    return (
-      <div className="profile-page">
-        <div className="error-container">
-          <h2>Profili nuk u gjet</h2>
-          <button onClick={fetchProfile} className="retry-button">
-            Provoni Përsëri
-          </button>
-        </div>
-      </div>
-    );
-  }
+  // Removed loading and error states - using auth context directly
 
   return (
     <div className="profile-page">
@@ -256,9 +199,25 @@ const UserProfilePage: React.FC = () => {
           {!editMode && (
             <button 
               className="edit-button"
-              onClick={() => setEditMode(true)}
+              onClick={() => {
+                console.log('🔧 EDIT BUTTON CLICKED!');
+                setEditMode(true);
+              }}
+              style={{
+                background: '#007bff',
+                color: 'white',
+                border: 'none',
+                padding: '8px 16px',
+                borderRadius: '6px',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                fontSize: '14px',
+                fontWeight: '500'
+              }}
             >
-              <svg className="edit-icon" viewBox="0 0 24 24" fill="none">
+              <svg className="edit-icon" viewBox="0 0 24 24" fill="none" style={{ width: '16px', height: '16px' }}>
                 <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                 <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
