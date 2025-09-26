@@ -110,8 +110,14 @@ const UserProfilePage: React.FC = () => {
       
       const updatedUser = await response.json();
       
-      // Update the auth context with the new user data
+      // Update localStorage with the new user data to persist changes
       if (updatedUser.user) {
+        const savedAuth = localStorage.getItem('restaurantAuth');
+        if (savedAuth) {
+          const parsedAuth = JSON.parse(savedAuth);
+          parsedAuth.user.fullName = updatedUser.user.fullName;
+          localStorage.setItem('restaurantAuth', JSON.stringify(parsedAuth));
+        }
         // Force a page refresh to update auth context
         window.location.reload();
       }

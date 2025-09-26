@@ -46,6 +46,9 @@ const TRANSLATOR_CONFIG = {
   region: process.env.TRANSLATOR_REGION || "westeurope"
 };
 
+// Demo User State Storage (in-memory for development)
+let DEMO_USER_NAME = "Beach Bar Manager"; // Default name that can be updated
+
 // PayPal Configuration
 const PAYPAL_CONFIG = {
   clientId: process.env.PAYPAL_CLIENT_ID || "AX3Ulz4TGQNK0i7aSAiswjqNp6FG2Ox4Ewj3aXvKwQMjaB_euPr5Jl3GSozx5GTYSQvRwnnD2coNaLop",
@@ -2066,7 +2069,7 @@ app.post("/v1/auth/login",
         user: {
           id: "demo-user-1",
           email: "manager_email1@gmail.com",
-          fullName: "Beach Bar Manager",
+          fullName: DEMO_USER_NAME,
           role: "manager",
           venueId: "beach-bar-durres"
         },
@@ -2086,7 +2089,7 @@ app.post("/v1/auth/login",
         user: {
           id: "demo-beach-bar-user",
           email: "demo.beachbar@skan.al",
-          fullName: "Beach Bar Manager",
+          fullName: DEMO_USER_NAME,
           role: "manager",
           venueId: "beach-bar-durres"
         },
@@ -2311,7 +2314,7 @@ app.get("/v1/users", verifyAuth, async (req, res) => {
         {
           id: "demo-user-1",
           email: "manager_email1@gmail.com",
-          fullName: "Beach Bar Manager",
+          fullName: DEMO_USER_NAME,
           role: "manager",
           venueId: "beach-bar-durres",
           isActive: true,
@@ -2415,7 +2418,7 @@ app.get("/v1/users/:userId", verifyAuth, async (req, res) => {
       return res.json({
         id: "demo-user-1",
         email: "manager_email1@gmail.com",
-        fullName: "Beach Bar Manager",
+        fullName: DEMO_USER_NAME,
         role: "manager",
         venueId: "beach-bar-durres",
         isActive: true,
@@ -2464,12 +2467,18 @@ app.put("/v1/users/:userId", verifyAuth, async (req, res) => {
     
     // Handle demo users - simulate successful update
     if (userId === "demo-beach-bar-user" || userId === "demo-user-1") {
+      // Update the stored demo user name if provided
+      if (fullName && fullName.trim()) {
+        DEMO_USER_NAME = fullName.trim();
+        console.log(`Demo user name updated to: ${DEMO_USER_NAME}`);
+      }
+      
       return res.json({
         message: "Demo user profile updated successfully",
         user: {
           id: "demo-beach-bar-user",
           email: "demo.beachbar@skan.al", 
-          fullName: fullName || "Beach Bar Manager",
+          fullName: DEMO_USER_NAME,
           role: role || "manager",
           venueId: "beach-bar-durres",
           isActive: isActive !== undefined ? isActive : true,
