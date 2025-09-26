@@ -325,8 +325,18 @@ const DashboardPage: React.FC = () => {
     }
   }, [auth.user?.venueId, normalizeStatus]); // Depend on venueId and status normalizer
 
+  // Track if preferences have been initialized to prevent race condition
+  const preferencesInitializedRef = useRef(false);
+  
   // Initialize notification system
   useEffect(() => {
+    // Prevent multiple initializations (React.StrictMode runs effects twice)
+    if (preferencesInitializedRef.current) {
+      return;
+    }
+    
+    preferencesInitializedRef.current = true;
+    
     // Load saved notification preferences
     const savedAudioEnabled = localStorage.getItem('skan-audio-enabled');
     const savedNotificationsEnabled = localStorage.getItem('skan-notifications-enabled');
@@ -356,10 +366,23 @@ const DashboardPage: React.FC = () => {
 
   // Toggle handlers for notification preferences
   const toggleAudioNotifications = useCallback(() => {
-    const newAudioEnabled = !audioEnabled;
-    setAudioEnabled(newAudioEnabled);
-    localStorage.setItem('skan-audio-enabled', newAudioEnabled.toString());
-  }, [audioEnabled]);
+    // Use functional update to avoid stale closure issues
+    setAudioEnabled(prevState => {
+      const newAudioEnabled = !prevState;
+      
+      // Update both the legacy localStorage and KDS system
+      localStorage.setItem('skan-audio-enabled', newAudioEnabled.toString());
+      
+      // Update KDS notification settings to stay in sync
+      if (kdsNotificationsRef.current?.updateSettings) {
+        kdsNotificationsRef.current.updateSettings({ 
+          audioEnabled: newAudioEnabled 
+        });
+      }
+      
+      return newAudioEnabled;
+    });
+  }, []);
 
   const toggleBrowserNotifications = useCallback(async () => {
     if (!notificationsEnabled) {
@@ -945,7 +968,7 @@ const DashboardPage: React.FC = () => {
                   transition: 'background-color 0.2s'
                 }}
               >
-                {audioEnabled ? 'ON' : 'OFF'}
+{audioEnabled ? 'ON' : 'OFF'}
               </button>
             </div>
             
