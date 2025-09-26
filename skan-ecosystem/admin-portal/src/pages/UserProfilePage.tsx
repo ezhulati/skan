@@ -4,7 +4,9 @@ import { useAuth } from '../contexts/AuthContext';
 interface ProfileData {
   id: string;
   email: string;
-  fullName: string;
+  firstName: string;
+  lastName: string;
+  fullName: string; // Keep for backward compatibility
   role: string;
   venueId: string;
   isActive: boolean;
@@ -21,11 +23,26 @@ interface PasswordChangeForm {
 const UserProfilePage: React.FC = () => {
   const { auth } = useAuth();
   
+  // Helper function to split full name
+  const splitFullName = (fullName: string) => {
+    const parts = fullName.trim().split(' ');
+    if (parts.length === 1) {
+      return { firstName: parts[0], lastName: '' };
+    }
+    const firstName = parts[0];
+    const lastName = parts.slice(1).join(' ');
+    return { firstName, lastName };
+  };
+  
+  const { firstName, lastName } = splitFullName(auth.user?.fullName || '');
+  
   // Use auth context data instead of API call - FIXED!
   const profile: ProfileData = {
     id: auth.user?.id || '',
     email: auth.user?.email || '',
-    fullName: auth.user?.fullName || '',
+    firstName,
+    lastName,
+    fullName: auth.user?.fullName || '', // Keep for backward compatibility
     role: auth.user?.role || '',
     venueId: auth.user?.venueId || '',
     isActive: true, // Default to true for logged-in users
@@ -40,7 +57,8 @@ const UserProfilePage: React.FC = () => {
   
   const [editMode, setEditMode] = useState(false);
   const [editForm, setEditForm] = useState({
-    fullName: profile.fullName,
+    firstName: profile.firstName,
+    lastName: profile.lastName,
     email: profile.email,
     role: profile.role
   });
@@ -79,7 +97,7 @@ const UserProfilePage: React.FC = () => {
         method: 'PUT',
         headers,
         body: JSON.stringify({
-          fullName: editForm.fullName,
+          fullName: `${editForm.firstName} ${editForm.lastName}`.trim(),
           email: editForm.email,
           role: editForm.role
         })
@@ -90,9 +108,16 @@ const UserProfilePage: React.FC = () => {
         throw new Error(errorData.error || 'Failed to update profile');
       }
       
+      const updatedUser = await response.json();
+      
+      // Update the auth context with the new user data
+      if (updatedUser.user) {
+        // Force a page refresh to update auth context
+        window.location.reload();
+      }
+      
       setMessage('✅ Profili u përditësua me sukses!');
       setEditMode(false);
-      // Note: Profile updates require page refresh to see changes in auth context
       
       setTimeout(() => setMessage(''), 500);
     } catch (err: any) {
@@ -248,13 +273,24 @@ const UserProfilePage: React.FC = () => {
           <form onSubmit={handleUpdateProfile} className="profile-form">
             <div className="form-grid">
               <div className="form-group">
-                <label htmlFor="fullName">Emri i Plotë</label>
+                <label htmlFor="firstName">Emri</label>
                 <input
                   type="text"
-                  id="fullName"
-                  value={editForm.fullName}
-                  onChange={(e) => setEditForm({...editForm, fullName: e.target.value})}
+                  id="firstName"
+                  value={editForm.firstName}
+                  onChange={(e) => setEditForm({...editForm, firstName: e.target.value})}
                   required
+                  disabled={saving}
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="lastName">Mbiemri</label>
+                <input
+                  type="text"
+                  id="lastName"
+                  value={editForm.lastName}
+                  onChange={(e) => setEditForm({...editForm, lastName: e.target.value})}
                   disabled={saving}
                 />
               </div>
@@ -294,7 +330,8 @@ const UserProfilePage: React.FC = () => {
                 onClick={() => {
                   setEditMode(false);
                   setEditForm({
-                    fullName: profile.fullName,
+                    firstName: profile.firstName,
+                    lastName: profile.lastName,
                     email: profile.email,
                     role: profile.role
                   });
@@ -323,8 +360,12 @@ const UserProfilePage: React.FC = () => {
           <div className="profile-info">
             <div className="info-grid">
               <div className="info-item">
-                <label>Emri i Plotë</label>
-                <p>{profile.fullName}</p>
+                <label>Emri</label>
+                <p>{profile.firstName}</p>
+              </div>
+              <div className="info-item">
+                <label>Mbiemri</label>
+                <p>{profile.lastName}</p>
               </div>
               <div className="info-item">
                 <label>Email</label>
