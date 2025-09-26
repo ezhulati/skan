@@ -369,10 +369,10 @@ const verifyAuth = async (req, res, next) => {
     }
     
     // Handle demo tokens (when demo credentials are enabled)
-    if (process.env.ALLOW_DEMO_CREDENTIALS === "true" && token.startsWith("demo_token_")) {
+    if (process.env.ALLOW_DEMO_CREDENTIALS === "true" && (token.startsWith("demo_token_") || token.startsWith("beach_bar_token_"))) {
       req.user = {
-        uid: "demo-user-1",
-        email: "manager_email1@gmail.com",
+        uid: "demo-beach-bar-user",
+        email: "demo.beachbar@skan.al",
         role: "manager",
         venueId: "beach-bar-durres"
       };
@@ -2463,12 +2463,12 @@ app.put("/v1/users/:userId", verifyAuth, async (req, res) => {
     const { fullName, role, isActive, venueId } = req.body;
     
     // Handle demo users - simulate successful update
-    if (userId === "demo-user-1") {
+    if (userId === "demo-beach-bar-user" || userId === "demo-user-1") {
       return res.json({
         message: "Demo user profile updated successfully",
         user: {
-          id: "demo-user-1",
-          email: "manager_email1@gmail.com", 
+          id: "demo-beach-bar-user",
+          email: "demo.beachbar@skan.al", 
           fullName: fullName || "Beach Bar Manager",
           role: role || "manager",
           venueId: "beach-bar-durres",
